@@ -130,6 +130,12 @@ trait LinkDigest_RestApi {
             'callback'            => [$this, 'testNotify'],
             'permission_callback' => fn() => current_user_can('manage_options'),
         ));
+
+        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/notify/telegram-chat-id', array(
+            'methods'             => 'POST',
+            'callback'            => [$this, 'getTelegramChatId'],
+            'permission_callback' => fn() => current_user_can('manage_options'),
+        ));
     }
 
     /**
@@ -357,6 +363,45 @@ trait LinkDigest_RestApi {
             default:
                 return new \WP_Error('invalid_type', __('Invalid notification type.', 'linkdigest'), array('status' => 400));
         }
+    }
+
+    /**
+     * Retrieve the chat ID from the bot's pending updates.
+     *
+     * @since 2.0.0
+     * @param \WP_REST_Request $request The REST request with bot token.
+     * @return mixed REST response with chat_id or WP_Error.
+     */
+    public function getTelegramChatId(\WP_REST_Request $request): mixed {
+        $token = sanitize_text_field((string) $request->get_param('token'));
+        if (empty($token)) {
+            return new \WP_Error('missing_token', __('Bot token is required.', 'linkdigest'), array('status' => 400));
+        }
+        $response = wp_remote_get('https://api.telegram.org/bot' . $token . '/getUpdates', array(
+            'timeout'  => 10,
+            'blocking' => true,
+        ));
+        if (is_wp_error($response)) {
+            return new \WP_Error('request_failed', $response->get_error_message(), array('status' => 500));
+        }
+        $code = wp_remote_retrieve_response_code($response);
+        if ($code !== 200) {
+            /* translators: %d: HTTP status code returned by the Telegram API */
+            return new \WP_Error('telegram_error', sprintf(__('Telegram returned HTTP %d. Check your bot token.', 'linkdigest'), $code), array('status' => 502));
+        }
+        $body = json_decode(wp_remote_retrieve_body($response), true);
+        if (empty($body['ok']) || empty($body['result'])) {
+            return new \WP_Error('no_messages', __('No messages found. Open Telegram and send any message to your bot first.', 'linkdigest'), array('status' => 404));
+        }
+        $last    = end($body['result']);
+        $chat_id = $last['message']['chat']['id']
+            ?? $last['channel_post']['chat']['id']
+            ?? $last['my_chat_member']['chat']['id']
+            ?? null;
+        if ($chat_id === null) {
+            return new \WP_Error('no_chat_id', __('Could not determine a chat ID from the bot updates.', 'linkdigest'), array('status' => 404));
+        }
+        return rest_ensure_response(array('chat_id' => (string) $chat_id));
     }
 
     /**

@@ -3,7 +3,8 @@
   margin-top: 16px;
 }
 
-.linkdigest-settings-actions {
+.linkdigest-settings-actions,
+.linkdigest-card-mt {
   margin-top: 16px;
 }
 
@@ -28,6 +29,12 @@
 
 .linkdigest-test-wrap {
   flex-shrink: 0;
+}
+
+.linkdigest-hint {
+  color: #757575;
+  font-size: 12px;
+  margin: 4px 0 0;
 }
 
 .linkdigest-snackbar-region {

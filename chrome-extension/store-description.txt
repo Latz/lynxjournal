@@ -1,0 +1,62 @@
+SHORT DESCRIPTION (max 132 characters)
+──────────────────────────────────────
+Save any webpage to your WordPress LinkDigest collection in one click — with title, URL, tags, and categories.
+
+
+DETAILED DESCRIPTION
+────────────────────
+This extension is the browser companion to the LinkDigest WordPress plugin. To understand why it's useful, it helps to know what LinkDigest does — and how this extension fits into the picture.
+
+─── WHAT IS LINKDIGEST? ───
+
+LinkDigest is a WordPress plugin for people who publish curated link roundups on their blog. The idea is simple: you collect interesting links throughout the week, organise them by topic, and publish them as a "links roundup" post for your readers — a format made popular by newsletters, link blogs, and weekly digest sites.
+
+The plugin gives you a dedicated admin area for this workflow. Links are stored privately as a custom post type, each with a title, URL, description, categories, and tags. When you're ready to publish, you can either post links individually or bundle all unpublished ones into a single grouped roundup post, sorted by category. The plugin also supports scheduled publishing — daily, weekly, monthly, or automatically triggered when a set number of links accumulates — and can notify you via email, Slack, or Discord after each run.
+
+In short: LinkDigest is a structured inbox for links that turns into a blog post on your schedule.
+
+─── WHERE THE EXTENSION COMES IN ───
+
+The weakest part of any link-collecting workflow is the moment you actually find a link. You're in the middle of reading something, you want to save it, and then you have to open a new tab, navigate to your WordPress admin, fill in a form, and come back. That interruption is enough to make you skip it or paste it into a notes app and forget about it.
+
+This extension removes that friction entirely. When you find something worth saving, you click the icon. The page title, URL, and description are already filled in. You pick a category, optionally add tags, and click Save. The link goes straight into your WordPress site. Then you close the popup and keep reading.
+
+That's the whole point: the extension makes the collection step fast enough that you actually do it, every time, without leaving your flow.
+
+─── KEY FEATURES ───
+
+▸ One-click saving from any page
+   Click the icon, confirm the details, press Save. The whole flow takes under five seconds.
+
+▸ Auto-fills title, URL, and description
+   The extension reads the active tab's title and meta description automatically. You rarely need to type anything.
+
+▸ Your WordPress categories, right there
+   Categories sync from your LinkDigest installation. Pick the right one before saving — no recategorising later in the admin.
+
+▸ Tag support
+   Add tags with a comma or Enter. They arrive in WordPress just as if you'd typed them manually.
+
+▸ Duplicate detection
+   Already saved this URL? The extension tells you immediately so you don't create a second entry.
+
+▸ Desktop notifications
+   A confirmation notification appears after each save so you know it worked without looking back at the popup.
+
+▸ Quick admin access
+   Right-click the extension icon for shortcuts: jump directly to your LinkDigest dashboard or refresh your category list without opening a new tab.
+
+▸ Secure, synced credentials
+   Your API key is stored in Chrome's encrypted sync storage. It never leaves your browser except to authenticate with your own WordPress site, and it follows you across any Chrome session where you're signed in.
+
+─── THE FULL WORKFLOW ───
+
+Collect links during the week using this extension — one click per page, no context switching. Then, once or twice a week, open your WordPress admin, check your inbox of unpublished links, and hit Publish. LinkDigest bundles them into a properly categorised roundup post. Or skip the manual step entirely and configure the scheduler to do it for you.
+
+─── REQUIREMENTS ───
+
+This extension requires the free LinkDigest plugin installed and active on a self-hosted WordPress site (WordPress.org). Setup takes about two minutes: generate an API key in LinkDigest › Settings, then paste the API endpoint and key into the extension settings. The extension walks you through it.
+
+─── PRIVACY ───
+
+All data is sent only to the WordPress site you configure. Nothing is transmitted to any third party, no analytics are collected, and no browsing history is stored. The full source is available alongside the plugin.

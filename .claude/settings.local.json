@@ -156,7 +156,26 @@
       "Bash(./bin/run-tests.sh)",
       "Bash(pest --testsuite=Unit)",
       "WebFetch(domain:sonarcloud.io)",
-      "Bash(jq '.issues[] | select\\(.message | contains\\(\"duplicate\"\\)\\) | {component: .component, line: .line, message: .message, rule: .rule}' -c)"
+      "Bash(jq '.issues[] | select\\(.message | contains\\(\"duplicate\"\\)\\) | {component: .component, line: .line, message: .message, rule: .rule}' -c)",
+      "Bash(dos2unix bin/build-plugin.sh)",
+      "Bash(sed -i 's/\\\\r$//' bin/build-plugin.sh)",
+      "Bash(echo:*)",
+      "Bash(cd:*)",
+      "Bash(node_modules/.bin/wp-scripts:*)",
+      "Bash(node:*)",
+      "PowerShell",
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(npx wp-scripts:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(Get-ChildItem:*)",
+      "mcp__nimbalyst-mcp__AskUserQuestion",
+      "Bash(test:*)",
+      "Bash(rm:*)"
     ]
   }
 }

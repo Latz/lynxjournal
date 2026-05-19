@@ -27,7 +27,7 @@ trait LinkDigest_Admin_Menu {
         $this->addSubmenu(__('Categories',       'linkdigest'), __('Categories',       'linkdigest'), 'manage_categories', 'linkdigest-categories',                                   'categoriesPage');
         $this->addSubmenu(__('Tags',             'linkdigest'), __('Tags',             'linkdigest'), 'manage_categories', 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest');
         $this->addSubmenu(__('Chrome Extension', 'linkdigest'), __('Chrome Extension', 'linkdigest'), 'manage_options',    'linkdigest-settings',                                     'settingsPage');
-        $this->addSubmenu(__('Settings',         'linkdigest'), __('Settings',         'linkdigest'), 'manage_options',    'linkdigest-setting-x',                                    'settingXPage');
+        $this->addSubmenu(__('Notifications',    'linkdigest'), __('Notifications',    'linkdigest'), 'manage_options',    'linkdigest-notifications',                                'notificationsPage');
         $this->addSubmenu(__('Schedule',         'linkdigest'), __('Schedule',         'linkdigest'), 'manage_options',    'linkdigest-schedule',                                     'schedulePage');
     }
 
@@ -284,7 +284,7 @@ trait LinkDigest_Admin_Menu {
             ));
         }
 
-        if (strpos($hook, 'linkdigest-setting-x') !== false) {
+        if (strpos($hook, 'linkdigest-notifications') !== false) {
             $asset_file = plugin_dir_path(LINKDIGEST_PLUGIN_FILE) . 'build/settings.asset.php';
             if (file_exists($asset_file)) {
                 $asset = require_once $asset_file;
@@ -345,15 +345,15 @@ trait LinkDigest_Admin_Menu {
     }
 
     /**
-     * Render the experimental Setting X configuration page.
+     * Render the Notifications configuration page.
      *
-     * @since 1.0.0
+     * @since 2.0.0
      * @return void
      */
-    public function settingXPage(): void {
+    public function notificationsPage(): void {
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('Settings', 'linkdigest'); ?></h1>
+            <h1><?php esc_html_e('Notifications', 'linkdigest'); ?></h1>
             <div id="linkdigest-settings-root"></div>
         </div>
         <?php

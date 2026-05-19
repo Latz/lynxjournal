@@ -21,6 +21,26 @@ const DEFAULT_NOTIFY = {
   telegram_chat_id: "",
 };
 
+function FetchChatIdButton({ token, onFetched, onError }) {
+  const [busy, setBusy] = useState(false);
+
+  function handleFetch() {
+    setBusy(true);
+    apiFetch({ path: "/linkdigest/v1/notify/telegram-chat-id", method: "POST", data: { token } })
+      .then((res) => onFetched(res.chat_id))
+      .catch((err) => onError(err.message || __("Failed to fetch chat ID.", "linkdigest")))
+      .finally(() => setBusy(false));
+  }
+
+  return (
+    <div className="linkdigest-test-wrap">
+      <Button variant="secondary" onClick={handleFetch} isBusy={busy} disabled={!token || busy}>
+        {__("Fetch Chat ID", "linkdigest")}
+      </Button>
+    </div>
+  );
+}
+
 function TestButton({ type, value, disabled, onResult, data = {} }) {
   const [busy, setBusy] = useState(false);
 
@@ -34,12 +54,7 @@ function TestButton({ type, value, disabled, onResult, data = {} }) {
 
   return (
     <div className="linkdigest-test-wrap">
-      <Button
-        variant="secondary"
-        onClick={handleTest}
-        isBusy={busy}
-        disabled={disabled || busy}
-      >
+      <Button variant="secondary" onClick={handleTest} isBusy={busy} disabled={disabled || busy}>
         {__("Test", "linkdigest")}
       </Button>
     </div>
@@ -79,9 +94,8 @@ export default function App() {
 
       <Card>
         <CardHeader>
-          <strong>{__("Notifications", "linkdigest")}</strong>
+          <strong>{__("Email", "linkdigest")}</strong>
         </CardHeader>
-
         <CardBody>
           <CheckboxControl
             label={__("Email me after each run", "linkdigest")}
@@ -99,10 +113,23 @@ export default function App() {
                 onChange={(email) => setNotify((n) => ({ ...n, email }))}
                 __nextHasNoMarginBottom
               />
-              <TestButton type="email" value={notify.email} disabled={false} onResult={setSnackbar} />
+              <TestButton
+                type="email"
+                value={notify.email}
+                disabled={false}
+                onResult={setSnackbar}
+              />
             </div>
           </div>
-          <div className="linkdigest-field-mt">
+        </CardBody>
+      </Card>
+
+      <div className="linkdigest-card-mt">
+        <Card>
+          <CardHeader>
+            <strong>{__("Webhooks", "linkdigest")}</strong>
+          </CardHeader>
+          <CardBody>
             <div className="linkdigest-field-row">
               <TextControl
                 label={__("Discord Webhook URL", "linkdigest")}
@@ -119,58 +146,77 @@ export default function App() {
                 onResult={setSnackbar}
               />
             </div>
-          </div>
-          <div className="linkdigest-field-mt">
-            <div className="linkdigest-field-row">
-              <TextControl
-                label={__("Slack Webhook URL", "linkdigest")}
-                type="url"
-                value={notify.slack_webhook}
-                placeholder="https://hooks.slack.com/services/…"
-                onChange={(slack_webhook) => setNotify((n) => ({ ...n, slack_webhook }))}
-                __nextHasNoMarginBottom
-              />
-              <TestButton
-                type="slack"
-                value={notify.slack_webhook}
-                disabled={!notify.slack_webhook}
-                onResult={setSnackbar}
-              />
+            <div className="linkdigest-field-mt">
+              <div className="linkdigest-field-row">
+                <TextControl
+                  label={__("Slack Webhook URL", "linkdigest")}
+                  type="url"
+                  value={notify.slack_webhook}
+                  placeholder="https://hooks.slack.com/services/…"
+                  onChange={(slack_webhook) => setNotify((n) => ({ ...n, slack_webhook }))}
+                  __nextHasNoMarginBottom
+                />
+                <TestButton
+                  type="slack"
+                  value={notify.slack_webhook}
+                  disabled={!notify.slack_webhook}
+                  onResult={setSnackbar}
+                />
+              </div>
             </div>
-          </div>
-          <div className="linkdigest-field-mt">
+          </CardBody>
+        </Card>
+      </div>
+
+      <div className="linkdigest-card-mt">
+        <Card>
+          <CardHeader>
+            <strong>{__("Telegram", "linkdigest")}</strong>
+          </CardHeader>
+          <CardBody>
             <div className="linkdigest-field-row">
               <TextControl
-                label={__("Telegram Bot Token", "linkdigest")}
+                label={__("Bot Token", "linkdigest")}
                 type="text"
                 value={notify.telegram_bot_token}
                 placeholder="1234567890:ABC-DEF…"
                 onChange={(telegram_bot_token) => setNotify((n) => ({ ...n, telegram_bot_token }))}
                 __nextHasNoMarginBottom
               />
-            </div>
-          </div>
-          <div className="linkdigest-field-mt">
-            <div className="linkdigest-field-row">
-              <TextControl
-                label={__("Telegram Chat ID", "linkdigest")}
-                type="text"
-                value={notify.telegram_chat_id}
-                placeholder="-1001234567890"
-                onChange={(telegram_chat_id) => setNotify((n) => ({ ...n, telegram_chat_id }))}
-                __nextHasNoMarginBottom
-              />
-              <TestButton
-                type="telegram"
-                value={notify.telegram_bot_token}
-                data={{ telegram_bot_token: notify.telegram_bot_token, telegram_chat_id: notify.telegram_chat_id }}
-                disabled={!notify.telegram_bot_token || !notify.telegram_chat_id}
-                onResult={setSnackbar}
+              <FetchChatIdButton
+                token={notify.telegram_bot_token}
+                onFetched={(chat_id) => setNotify((n) => ({ ...n, telegram_chat_id: chat_id }))}
+                onError={setSnackbar}
               />
             </div>
-          </div>
-        </CardBody>
-      </Card>
+            <p className="linkdigest-hint">
+              {__("Before fetching, open Telegram and send any message to your bot.", "linkdigest")}
+            </p>
+            <div className="linkdigest-field-mt">
+              <div className="linkdigest-field-row">
+                <TextControl
+                  label={__("Chat ID", "linkdigest")}
+                  type="text"
+                  value={notify.telegram_chat_id}
+                  placeholder="-1001234567890"
+                  onChange={(telegram_chat_id) => setNotify((n) => ({ ...n, telegram_chat_id }))}
+                  __nextHasNoMarginBottom
+                />
+                <TestButton
+                  type="telegram"
+                  value={notify.telegram_bot_token}
+                  data={{
+                    telegram_bot_token: notify.telegram_bot_token,
+                    telegram_chat_id: notify.telegram_chat_id,
+                  }}
+                  disabled={!notify.telegram_bot_token || !notify.telegram_chat_id}
+                  onResult={setSnackbar}
+                />
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
 
       <div className="linkdigest-settings-actions">
         <Button variant="primary" onClick={handleSave} isBusy={saving} disabled={saving}>
