@@ -26,9 +26,31 @@ trait LinkDigest_Admin_Menu {
         $this->addSubmenu(__('Add Link',         'linkdigest'), __('Add Link',         'linkdigest'), 'read',              'linkdigest-add',                                          'addLinkPage');
         $this->addSubmenu(__('Categories',       'linkdigest'), __('Categories',       'linkdigest'), 'manage_categories', 'linkdigest-categories',                                   'categoriesPage');
         $this->addSubmenu(__('Tags',             'linkdigest'), __('Tags',             'linkdigest'), 'manage_categories', 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest');
-        $this->addSubmenu(__('Chrome Extension', 'linkdigest'), __('Chrome Extension', 'linkdigest'), 'manage_options',    'linkdigest-settings',                                     'settingsPage');
-        $this->addSubmenu(__('Notifications',    'linkdigest'), __('Notifications',    'linkdigest'), 'manage_options',    'linkdigest-notifications',                                'notificationsPage');
-        $this->addSubmenu(__('Schedule',         'linkdigest'), __('Schedule',         'linkdigest'), 'manage_options',    'linkdigest-schedule',                                     'schedulePage');
+        $this->addSubmenu(__('Chrome Extension', 'linkdigest'), __('Chrome Extension', 'linkdigest'), 'manage_options', 'linkdigest-settings',          'settingsPage');
+        $this->addSubmenu(__('Notifications',    'linkdigest'), __('Notifications',    'linkdigest'), 'manage_options', 'linkdigest-notifications',     'notificationsPage');
+        $this->addSubmenu(__('Schedule',         'linkdigest'), __('Schedule',         'linkdigest'), 'manage_options', 'linkdigest-schedule',          'schedulePage');
+        $this->addSubmenu(__('Link Template',    'linkdigest'), __('Link Template',    'linkdigest'), 'manage_options', 'linkdigest-template-single',   'renderTemplateSinglePage');
+        $this->addSubmenu(__('Roundup Template', 'linkdigest'), __('Roundup Template', 'linkdigest'), 'manage_options', 'linkdigest-template-roundup',  'renderTemplateRoundupPage');
+    }
+
+    /**
+     * Render the single link template editor page (Gutenberg in an iframe).
+     *
+     * @since 2.1.0
+     * @return void
+     */
+    public function renderTemplateSinglePage(): void {
+        $this->renderTemplateEditorFrame('single_link');
+    }
+
+    /**
+     * Render the roundup item template editor page (Gutenberg in an iframe).
+     *
+     * @since 2.1.0
+     * @return void
+     */
+    public function renderTemplateRoundupPage(): void {
+        $this->renderTemplateEditorFrame('roundup_item');
     }
 
     /**
@@ -39,7 +61,10 @@ trait LinkDigest_Admin_Menu {
      * @return string The filtered parent menu file name.
      */
     public function parentFileFilter(string $parent_file): string {
-        return $this->isLinkDigestTag() ? 'linkdigest-dashboard' : $parent_file;
+        if ($this->isLinkDigestTag() || $this->isLinkDigestTemplate() !== null) {
+            return 'linkdigest-dashboard';
+        }
+        return $parent_file;
     }
 
     /**
@@ -50,9 +75,17 @@ trait LinkDigest_Admin_Menu {
      * @return string The filtered submenu file name.
      */
     public function submenuFileFilter(?string $submenu_file): string {
-        return $this->isLinkDigestTag()
-            ? 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest'
-            : ($submenu_file ?? '');
+        if ($this->isLinkDigestTag()) {
+            return 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest';
+        }
+        $template_type = $this->isLinkDigestTemplate();
+        if ($template_type === 'single_link') {
+            return 'linkdigest-template-single';
+        }
+        if ($template_type === 'roundup_item') {
+            return 'linkdigest-template-roundup';
+        }
+        return $submenu_file ?? '';
     }
 
     /**

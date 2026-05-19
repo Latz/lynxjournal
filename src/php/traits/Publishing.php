@@ -53,6 +53,21 @@ trait LinkDigest_Publishing {
      * @return string The formatted post content HTML.
      */
     public function buildPostContent(string $title, int $link_id, string $url, string $description): string {
+        $tags      = get_the_terms($link_id, 'linkdigest_tag');
+        $tag_names = ($tags && !is_wp_error($tags)) ? wp_list_pluck($tags, 'name') : array();
+
+        $template_html = $this->renderTemplate('single_link', array(
+            'title'       => $title,
+            'url'         => $url,
+            'description' => $description,
+            'tags'        => $tag_names,
+        ));
+
+        if (!empty($template_html)) {
+            return apply_filters('linkdigest_blog_post_content', $template_html, $link_id, $url, $description);
+        }
+
+        // Fallback when no template is configured.
         $post_content = '<h2>' . esc_html($title) . '</h2>';
         if (!empty($description)) {
             $post_content .= "\n\n" . wp_kses_post($description);

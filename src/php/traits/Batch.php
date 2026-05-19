@@ -185,22 +185,38 @@ trait LinkDigest_Batch {
      * @return string The formatted roundup content HTML.
      */
     private function buildRoundupContent(array $links_by_category, array $uncategorized_links): string {
-        $content = '';
+        $content              = '';
+        $has_roundup_template = $this->getTemplatePostId('roundup_item') !== null;
 
-        $render_list = function(array $ids) use (&$content) {
+        $render_list = function(array $ids) use (&$content, $has_roundup_template) {
             $content .= "<ul>\n";
             foreach ($ids as $link_id) {
                 $link = get_post($link_id);
                 $url  = get_post_meta($link_id, '_linkdigest_url', true);
                 $desc = trim($link->post_content);
-                $content .= '<li>';
-                $content .= !empty($url)
-                    ? '<a href="' . esc_url($url) . '" target="_blank" rel="noopener">' . esc_html($link->post_title) . '</a>'
-                    : esc_html($link->post_title);
-                if (!empty($desc)) {
-                    $content .= '<br>' . wp_kses_post($desc);
+
+                $item_html = '';
+                if ($has_roundup_template) {
+                    $tags      = get_the_terms($link_id, 'linkdigest_tag');
+                    $tag_names = ($tags && !is_wp_error($tags)) ? wp_list_pluck($tags, 'name') : array();
+                    $item_html = $this->renderTemplate('roundup_item', array(
+                        'title'       => $link->post_title,
+                        'url'         => $url,
+                        'description' => $desc,
+                        'tags'        => $tag_names,
+                    ));
                 }
-                $content .= "</li>\n";
+
+                if (empty($item_html)) {
+                    $item_html = !empty($url)
+                        ? '<a href="' . esc_url($url) . '" target="_blank" rel="noopener">' . esc_html($link->post_title) . '</a>'
+                        : esc_html($link->post_title);
+                    if (!empty($desc)) {
+                        $item_html .= '<br>' . wp_kses_post($desc);
+                    }
+                }
+
+                $content .= '<li>' . $item_html . "</li>\n";
             }
             $content .= "</ul>\n\n";
         };

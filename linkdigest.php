@@ -28,6 +28,7 @@ require_once __DIR__ . '/src/php/ScheduleMode.php';
 
 // Traits (must be required before the class)
 require_once __DIR__ . '/src/php/traits/trait-post-type.php';
+require_once __DIR__ . '/src/php/traits/Templates.php';
 require_once __DIR__ . '/src/php/traits/MetaBoxes.php';
 require_once __DIR__ . '/src/php/traits/Publishing.php';
 require_once __DIR__ . '/src/php/traits/Batch.php';

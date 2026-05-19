@@ -22,6 +22,7 @@ class LinkDigest {
     public const DEFAULT_TIME          = '09:00';
 
     use LinkDigest_PostType;
+    use LinkDigest_Templates;
     use LinkDigest_MetaBoxes;
     use LinkDigest_Publishing;
     use LinkDigest_Batch;
@@ -45,10 +46,12 @@ class LinkDigest {
         $instance = new self();
 
         // Universal hooks: run on every request (front-end, admin, REST, cron, CLI)
-        add_action('init', [$instance, 'register_post_type'],    0);
-        add_action('init', [$instance, 'register_taxonomies'],   0);
-        add_action('init', [$instance, 'maybeRunMigration'],     5);
-        add_action('init', [$instance, 'registerSchedulerHooks'], 0);
+        add_action('init', [$instance, 'register_post_type'],        0);
+        add_action('init', [$instance, 'register_taxonomies'],       0);
+        add_action('init', [$instance, 'registerTemplateCPT'],       0);
+        add_action('init', [$instance, 'registerPlaceholderBlocks'], 5);
+        add_action('init', [$instance, 'maybeRunMigration'],         5);
+        add_action('init', [$instance, 'registerSchedulerHooks'],    0);
         add_action('created_linkdigest_category', [$instance, 'invalidateCategoriesCache']);
         add_action('edited_linkdigest_category',  [$instance, 'invalidateCategoriesCache']);
         add_action('delete_linkdigest_category',  [$instance, 'invalidateCategoriesCache']);
@@ -74,6 +77,7 @@ class LinkDigest {
         add_action('add_meta_boxes',                       [$this, 'addMetaBoxes']);
         add_action('save_post_linkdigest',                 [$this, 'saveUrl']);
         add_action('wp_ajax_linkdigest_get_rest_nonce',    [$this, 'handleGetRestNonce']);
+        add_action('admin_init',                           [$this, 'ensureTemplatePosts']);
         add_action('admin_menu',                           [$this, 'adminMenu']);
         add_action('admin_enqueue_scripts',                [$this, 'enqueueAdminAssets']);
         add_action('wp_dashboard_setup',                   [$this, 'addDashboardWidget']);
