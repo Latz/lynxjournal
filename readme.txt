@@ -19,7 +19,7 @@ LinkDigest is a WordPress plugin for managing and publishing curated link roundu
 * Save links with title, URL, description, categories, and tags
 * Publish links individually or as a grouped roundup post
 * Organise links by category (inspired by frankysnotes.com)
-* REST API for integration with browser extensions
+* REST API (`linkdigest/v1`) for external integrations and browser extensions
 * Schedule automatic roundup publishing (daily, weekly, monthly, or by count/age)
 * Chrome extension support
 
@@ -111,6 +111,41 @@ LinkDigest › Settings contains:
 * **UI options** — date format, compact view, links per page, category badges, accent color
 * **Schedule** — see the dedicated Schedule page (above)
 * **Advanced** — public API access, CORS headers, cache duration, debug logging
+
+== REST API ==
+
+LinkDigest provides a REST API under the namespace `linkdigest/v1`. The full endpoint reference is in [docs/rest-api.md](docs/rest-api.md).
+
+**Base URL:**
+
+```
+https://your-site.com/wp-json/linkdigest/v1/
+```
+
+**Authentication:**
+
+* **API key** — pass the key from LinkDigest › Settings as an `X-LinkDigest-API-Key` request header. Grants access to the link-saving and category endpoints; intended for the Chrome extension and external scripts.
+* **WordPress user** — browser-based requests use the standard WordPress nonce/cookie flow. Required capabilities vary by endpoint (`edit_posts`, `delete_posts`, `manage_categories`, `manage_options`).
+
+**Endpoints summary:**
+
+| Method | Path | Description |
+|---|---|---|
+| POST | `/add-link` | Add a new link |
+| DELETE | `/links/{id}` | Delete a link |
+| GET | `/categories` | List all categories |
+| POST | `/categories/{id}` | Update a category |
+| GET | `/schedule` | Get schedule configuration |
+| POST | `/schedule` | Save schedule configuration |
+| POST | `/schedule/run` | Trigger schedule immediately |
+| POST | `/schedule/preview` | Preview next scheduled publish |
+| GET | `/schedule/diagnostics` | Scheduler status and history |
+| POST | `/schedule/dismiss-cron-notice` | Dismiss WP-Cron warning |
+| GET | `/notify` | Get notification configuration |
+| POST | `/notify` | Save notification configuration |
+| POST | `/notify/test` | Send a test notification |
+| POST | `/notify/telegram-chat-id` | Look up Telegram chat ID |
+| GET | `/api-key` | Retrieve the current API key |
 
 == Frequently Asked Questions ==
 
