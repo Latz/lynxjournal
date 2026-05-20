@@ -29,9 +29,10 @@ trait LinkDigest_Admin_Menu {
         $this->addSubmenu(__('Chrome Extension', 'linkdigest'), __('Chrome Extension', 'linkdigest'), 'manage_options', 'linkdigest-settings',          'settingsPage');
         $this->addSubmenu(__('Notifications',    'linkdigest'), __('Notifications',    'linkdigest'), 'manage_options', 'linkdigest-notifications',     'notificationsPage');
         $this->addSubmenu(__('Schedule',         'linkdigest'), __('Schedule',         'linkdigest'), 'manage_options', 'linkdigest-schedule',          'schedulePage');
-        $this->addSubmenu(__('Link Template',          'linkdigest'), __('Link Template',          'linkdigest'), 'manage_options', 'linkdigest-template-single',         'renderTemplateSinglePage');
-        $this->addSubmenu(__('Digest Item Template',  'linkdigest'), __('Digest Item Template',  'linkdigest'), 'manage_options', 'linkdigest-template-digest',        'renderTemplateDigestPage');
-        $this->addSubmenu(__('Digest Group Template', 'linkdigest'), __('Digest Group Template', 'linkdigest'), 'manage_options', 'linkdigest-template-digest-group',  'renderTemplateDigestGroupPage');
+        $this->addSubmenu(__('Templates', 'linkdigest'), __('Templates', 'linkdigest'), 'manage_options', 'linkdigest-templates', 'renderTemplatesOverviewPage');
+        add_submenu_page(null, __('Link Template',          'linkdigest'), '', 'manage_options', 'linkdigest-template-single',        [$this, 'renderTemplateSinglePage']);
+        add_submenu_page(null, __('Digest Item Template',   'linkdigest'), '', 'manage_options', 'linkdigest-template-digest',        [$this, 'renderTemplateDigestPage']);
+        add_submenu_page(null, __('Digest Group Template',  'linkdigest'), '', 'manage_options', 'linkdigest-template-digest-group',  [$this, 'renderTemplateDigestGroupPage']);
     }
 
     /**
@@ -65,6 +66,49 @@ trait LinkDigest_Admin_Menu {
     }
 
     /**
+     * Render the templates overview page with cards linking to each template editor.
+     *
+     * @since 2.3.0
+     * @return void
+     */
+    public function renderTemplatesOverviewPage(): void {
+        $templates = [
+            [
+                'title' => __('Link Template',         'linkdigest'),
+                'desc'  => __('Controls how a single link item is rendered inside a digest.', 'linkdigest'),
+                'icon'  => 'dashicons-admin-links',
+                'slug'  => 'linkdigest-template-single',
+            ],
+            [
+                'title' => __('Digest Item Template',  'linkdigest'),
+                'desc'  => __('Controls the layout of each link entry within a digest group.', 'linkdigest'),
+                'icon'  => 'dashicons-list-view',
+                'slug'  => 'linkdigest-template-digest',
+            ],
+            [
+                'title' => __('Digest Group Template', 'linkdigest'),
+                'desc'  => __('Defines the outer structure wrapping a group of digest links.', 'linkdigest'),
+                'icon'  => 'dashicons-category',
+                'slug'  => 'linkdigest-template-digest-group',
+            ],
+        ];
+        ?>
+        <div class="wrap">
+            <h1><?php esc_html_e('Templates', 'linkdigest'); ?></h1>
+            <div class="linkdigest-templates-grid">
+                <?php foreach ($templates as $tpl) : ?>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=' . $tpl['slug'])); ?>" class="linkdigest-template-card">
+                        <span class="linkdigest-template-card__icon dashicons <?php echo esc_attr($tpl['icon']); ?>"></span>
+                        <span class="linkdigest-template-card__title"><?php echo esc_html($tpl['title']); ?></span>
+                        <span class="linkdigest-template-card__desc"><?php echo esc_html($tpl['desc']); ?></span>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php
+    }
+
+    /**
      * Filter the parent menu file for tag management pages.
      *
      * @since 1.0.0
@@ -90,14 +134,8 @@ trait LinkDigest_Admin_Menu {
             return 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest';
         }
         $template_type = $this->isLinkDigestTemplate();
-        if ($template_type === 'single_link') {
-            return 'linkdigest-template-single';
-        }
-        if ($template_type === 'digest_item') {
-            return 'linkdigest-template-digest';
-        }
-        if ($template_type === 'digest_group') {
-            return 'linkdigest-template-digest-group';
+        if ($template_type !== null) {
+            return 'linkdigest-templates';
         }
         return $submenu_file ?? '';
     }

@@ -743,3 +743,55 @@ textarea.linkdigest-cat-inline-input {
 	width: 100%;
 	height: calc(100vh - 32px);
 }
+
+/* ── Templates overview grid ─────────────────────────────────── */
+.linkdigest-templates-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 16px;
+	margin-top: 16px;
+}
+
+.linkdigest-template-card {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 24px;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	text-decoration: none;
+	color: inherit;
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.linkdigest-template-card:hover {
+	border-color: #2271b1;
+	box-shadow: 0 0 0 1px #2271b1;
+	color: inherit;
+}
+
+.linkdigest-template-card__icon {
+	font-size: 32px;
+	width: 32px;
+	height: 32px;
+	color: #2271b1;
+}
+
+.linkdigest-template-card__title {
+	font-size: 15px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.linkdigest-template-card__desc {
+	font-size: 13px;
+	color: #646970;
+	line-height: 1.5;
+}
+
+@media (max-width: 782px) {
+	.linkdigest-templates-grid {
+		grid-template-columns: 1fr;
+	}
+}
