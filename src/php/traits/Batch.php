@@ -185,10 +185,22 @@ trait LinkDigest_Batch {
      * @return string The formatted roundup content HTML.
      */
     private function buildRoundupContent(array $links_by_category, array $uncategorized_links): string {
-        $content              = '';
-        $has_roundup_template = $this->getTemplatePostId('roundup_item') !== null;
+        $content               = '';
+        $has_item_template     = $this->getTemplatePostId('roundup_item') !== null;
+        $has_group_template    = $this->getTemplatePostId('roundup_group') !== null;
 
-        $render_list = function(array $ids) use (&$content, $has_roundup_template) {
+        $render_group_heading = function(string $name) use (&$content, $has_group_template) {
+            if ($has_group_template) {
+                $heading = $this->renderTemplate('roundup_group', array('category' => $name));
+                if (!empty($heading)) {
+                    $content .= $heading . "\n\n";
+                    return;
+                }
+            }
+            $content .= '<h2>' . esc_html($name) . "</h2>\n\n";
+        };
+
+        $render_list = function(array $ids) use (&$content, $has_item_template) {
             $content .= "<ul>\n";
             foreach ($ids as $link_id) {
                 $link = get_post($link_id);
@@ -196,7 +208,7 @@ trait LinkDigest_Batch {
                 $desc = trim($link->post_content);
 
                 $item_html = '';
-                if ($has_roundup_template) {
+                if ($has_item_template) {
                     $tags      = get_the_terms($link_id, 'linkdigest_tag');
                     $tag_names = ($tags && !is_wp_error($tags)) ? wp_list_pluck($tags, 'name') : array();
                     $item_html = $this->renderTemplate('roundup_item', array(
@@ -222,12 +234,12 @@ trait LinkDigest_Batch {
         };
 
         foreach ($links_by_category as $group) {
-            $content .= '<h2>' . esc_html($group['term']->name) . "</h2>\n\n";
+            $render_group_heading($group['term']->name);
             $render_list($group['links']);
         }
 
         if (!empty($uncategorized_links)) {
-            $content .= '<h2>' . esc_html__('Other', 'linkdigest') . "</h2>\n\n";
+            $render_group_heading(__('Other', 'linkdigest'));
             $render_list($uncategorized_links);
         }
 

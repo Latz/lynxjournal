@@ -29,8 +29,9 @@ trait LinkDigest_Admin_Menu {
         $this->addSubmenu(__('Chrome Extension', 'linkdigest'), __('Chrome Extension', 'linkdigest'), 'manage_options', 'linkdigest-settings',          'settingsPage');
         $this->addSubmenu(__('Notifications',    'linkdigest'), __('Notifications',    'linkdigest'), 'manage_options', 'linkdigest-notifications',     'notificationsPage');
         $this->addSubmenu(__('Schedule',         'linkdigest'), __('Schedule',         'linkdigest'), 'manage_options', 'linkdigest-schedule',          'schedulePage');
-        $this->addSubmenu(__('Link Template',    'linkdigest'), __('Link Template',    'linkdigest'), 'manage_options', 'linkdigest-template-single',   'renderTemplateSinglePage');
-        $this->addSubmenu(__('Roundup Template', 'linkdigest'), __('Roundup Template', 'linkdigest'), 'manage_options', 'linkdigest-template-roundup',  'renderTemplateRoundupPage');
+        $this->addSubmenu(__('Link Template',          'linkdigest'), __('Link Template',          'linkdigest'), 'manage_options', 'linkdigest-template-single',         'renderTemplateSinglePage');
+        $this->addSubmenu(__('Roundup Item Template',  'linkdigest'), __('Roundup Item Template',  'linkdigest'), 'manage_options', 'linkdigest-template-roundup',        'renderTemplateRoundupPage');
+        $this->addSubmenu(__('Roundup Group Template', 'linkdigest'), __('Roundup Group Template', 'linkdigest'), 'manage_options', 'linkdigest-template-roundup-group',  'renderTemplateRoundupGroupPage');
     }
 
     /**
@@ -51,6 +52,16 @@ trait LinkDigest_Admin_Menu {
      */
     public function renderTemplateRoundupPage(): void {
         $this->renderTemplateEditorFrame('roundup_item');
+    }
+
+    /**
+     * Render the roundup group template editor page (Gutenberg in an iframe).
+     *
+     * @since 2.2.0
+     * @return void
+     */
+    public function renderTemplateRoundupGroupPage(): void {
+        $this->renderTemplateEditorFrame('roundup_group');
     }
 
     /**
@@ -84,6 +95,9 @@ trait LinkDigest_Admin_Menu {
         }
         if ($template_type === 'roundup_item') {
             return 'linkdigest-template-roundup';
+        }
+        if ($template_type === 'roundup_group') {
+            return 'linkdigest-template-roundup-group';
         }
         return $submenu_file ?? '';
     }

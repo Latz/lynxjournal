@@ -61,6 +61,18 @@ trait LinkDigest_Templates {
                 'render_callback' => $callback,
             ));
         }
+
+        register_block_type('linkdigest/field-category', array(
+            'api_version'     => 3,
+            'editor_script'   => 'linkdigest-blocks',
+            'attributes'      => array(
+                'level' => array(
+                    'type'    => 'number',
+                    'default' => 2,
+                ),
+            ),
+            'render_callback' => array($this, 'renderBlockFieldCategory'),
+        ));
     }
 
     /**
@@ -80,8 +92,11 @@ trait LinkDigest_Templates {
             "<!-- wp:linkdigest/field-title-link /-->\n\n" .
             "<!-- wp:linkdigest/field-description /-->";
 
-        $this->ensureTemplatePost('single_link',  __('LinkDigest: Single Link Template', 'linkdigest'),  $single_default);
-        $this->ensureTemplatePost('roundup_item', __('LinkDigest: Roundup Item Template', 'linkdigest'), $roundup_default);
+        $roundup_group_default = "<!-- wp:linkdigest/field-category /-->";
+
+        $this->ensureTemplatePost('single_link',   __('LinkDigest: Single Link Template',   'linkdigest'), $single_default);
+        $this->ensureTemplatePost('roundup_item',  __('LinkDigest: Roundup Item Template',  'linkdigest'), $roundup_default);
+        $this->ensureTemplatePost('roundup_group', __('LinkDigest: Roundup Group Template', 'linkdigest'), $roundup_group_default);
     }
 
     /**
@@ -170,6 +185,9 @@ trait LinkDigest_Templates {
         }
         if ($post->ID === $this->getTemplatePostId('roundup_item')) {
             return 'roundup_item';
+        }
+        if ($post->ID === $this->getTemplatePostId('roundup_group')) {
+            return 'roundup_group';
         }
         return null;
     }
@@ -279,5 +297,22 @@ trait LinkDigest_Templates {
         $data = $GLOBALS['linkdigest_template_data'] ?? array();
         $tags = $data['tags'] ?? array();
         return empty($tags) ? '' : '<p>' . esc_html(implode(', ', $tags)) . '</p>';
+    }
+
+    /**
+     * @since 2.2.0
+     * @param array $attributes Block attributes. Expects 'level' (int 1–6, default 2).
+     * @return string
+     */
+    public function renderBlockFieldCategory(array $attributes): string {
+        $data     = $GLOBALS['linkdigest_template_data'] ?? array();
+        $category = $data['category'] ?? '';
+        if (empty($category)) {
+            return '';
+        }
+        $level = isset($attributes['level']) ? (int) $attributes['level'] : 2;
+        $level = max(1, min(6, $level));
+        $tag   = "h{$level}";
+        return "<{$tag}>" . esc_html($category) . "</{$tag}>";
     }
 }

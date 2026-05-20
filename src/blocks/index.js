@@ -1,5 +1,6 @@
 import { registerBlockType } from '@wordpress/blocks';
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, BlockControls } from '@wordpress/block-editor';
+import { ToolbarGroup, DropdownMenu } from '@wordpress/components';
 import './editor.css';
 
 const BLOCKS = [
@@ -62,4 +63,42 @@ BLOCKS.forEach( ( { name, title, description, label, icon } ) => {
 		},
 		save: () => null,
 	} );
+} );
+
+registerBlockType( 'linkdigest/field-category', {
+	apiVersion: 3,
+	title: 'Category Heading',
+	description: 'Outputs the category name as a heading. Use in the Roundup Group template.',
+	icon: 'heading',
+	category: 'text',
+	attributes: {
+		level: {
+			type: 'number',
+			default: 2,
+		},
+	},
+	edit: function CategoryEdit( { attributes, setAttributes } ) {
+		const { level } = attributes;
+		const blockProps = useBlockProps( { className: 'linkdigest-placeholder-block' } );
+		const levelControls = [ 1, 2, 3, 4, 5, 6 ].map( ( l ) => ( {
+			title: `H${ l }`,
+			isActive: level === l,
+			onClick: () => setAttributes( { level: l } ),
+		} ) );
+		return (
+			<>
+				<BlockControls>
+					<ToolbarGroup>
+						<DropdownMenu
+							icon="heading"
+							label="Heading level"
+							controls={ levelControls }
+						/>
+					</ToolbarGroup>
+				</BlockControls>
+				<div { ...blockProps }>{ `[ Category H${ level } ]` }</div>
+			</>
+		);
+	},
+	save: () => null,
 } );
