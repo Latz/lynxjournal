@@ -80,8 +80,9 @@ trait LinkDigest_Batch {
         update_object_term_cache($link_ids, 'linkdigest_tag');
 
         if (empty($post_title)) {
-            /* translators: %s: formatted date, e.g. "April 15, 2026" */
-            $post_title = sprintf(__('Links Digest - %s', 'linkdigest'), gmdate('F j, Y'));
+            $next = (int) get_option('linkdigest_digest_count', 0) + 1;
+            /* translators: %d: digest issue number, e.g. 1, 2, 3 */
+            $post_title = sprintf(__('Links #%d', 'linkdigest'), $next);
         }
 
         [$links_by_category, $uncategorized_links, $published_count] = $this->groupLinksByCategory($link_ids);
@@ -136,6 +137,8 @@ trait LinkDigest_Batch {
         if (is_wp_error($post_id) || !$post_id) {
             return array('success' => false, 'post_id' => 0, 'message' => __('Failed to create digest post.', 'linkdigest'), 'error_code' => 'insert_failed');
         }
+
+        update_option('linkdigest_digest_count', (int) get_option('linkdigest_digest_count', 0) + 1);
 
         $this->assignDigestCategories($post_id, $links_by_category);
         $this->assignDigestTags($post_id, $link_ids);

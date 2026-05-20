@@ -70,6 +70,27 @@ LinkDigest › All Links shows every saved link in a table:
 
 Both flows support draft mode — use the Draft toggle before confirming.
 
+=== Templates ===
+
+LinkDigest provides a Gutenberg-based template editor for customising how links look when published. Open any template from the LinkDigest menu and edit it like a normal WordPress post using the blocks described below.
+
+**Link Template** (LinkDigest › Link Template)
+Controls the layout of posts created by publishing individual links.
+Default: title heading, description, "Read more" link.
+
+**Digest Item Template** (LinkDigest › Digest Item Template)
+Controls the layout of each link row inside a grouped digest post.
+Default: linked title, description.
+
+**Digest Group Template** (LinkDigest › Digest Group Template)
+Controls the heading rendered above each category group in a digest.
+Use the `Category Heading` block to set the heading level (H1–H6).
+Use the `Items List` block to switch between a bulleted (`<ul>`) and numbered (`<ol>`) list. If the block is absent, `<ul>` is used.
+
+All templates use blocks from the **LinkDigest** block category: `Link: Title`, `Link: Title as Link`, `Link: URL`, `Link: Description`, `Link: Read More`, `Link: Tags`, `Category Heading`, `Items List`.
+
+See [docs/templates.md](docs/templates.md) for a full block reference and customisation examples.
+
 === Scheduling ===
 
 LinkDigest › Schedule lets automatic roundup publishing run without manual action:
