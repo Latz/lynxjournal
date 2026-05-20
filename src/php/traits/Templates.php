@@ -45,6 +45,19 @@ trait LinkDigest_Templates {
             true
         );
 
+        $supports = array(
+            'color'      => array('text' => true, 'background' => true),
+            'typography' => array(
+                'fontSize'       => true,
+                'lineHeight'     => true,
+                'fontStyle'      => true,
+                'fontWeight'     => true,
+                'textDecoration' => true,
+                'textTransform'  => true,
+            ),
+            'spacing'    => array('padding' => true, 'margin' => true),
+        );
+
         $blocks = array(
             'field-title'       => array($this, 'renderBlockFieldTitle'),
             'field-title-link'  => array($this, 'renderBlockFieldTitleLink'),
@@ -58,6 +71,7 @@ trait LinkDigest_Templates {
             register_block_type("linkdigest/{$block_name}", array(
                 'api_version'     => 3,
                 'editor_script'   => 'linkdigest-blocks',
+                'supports'        => $supports,
                 'render_callback' => $callback,
             ));
         }
@@ -77,6 +91,7 @@ trait LinkDigest_Templates {
         register_block_type('linkdigest/field-category', array(
             'api_version'     => 3,
             'editor_script'   => 'linkdigest-blocks',
+            'supports'        => $supports,
             'attributes'      => array(
                 'level' => array(
                     'type'    => 'number',
@@ -242,7 +257,7 @@ trait LinkDigest_Templates {
     public function renderBlockFieldTitle(array $attributes): string {
         $data  = $GLOBALS['linkdigest_template_data'] ?? array();
         $title = $data['title'] ?? '';
-        return empty($title) ? '' : '<h2>' . esc_html($title) . '</h2>';
+        return empty($title) ? '' : '<h2 ' . get_block_wrapper_attributes() . '>' . esc_html($title) . '</h2>';
     }
 
     /**
@@ -259,9 +274,9 @@ trait LinkDigest_Templates {
             return '';
         }
         if (empty($url)) {
-            return esc_html($title);
+            return '<span ' . get_block_wrapper_attributes() . '>' . esc_html($title) . '</span>';
         }
-        return '<a href="' . esc_url($url) . '" target="_blank" rel="noopener">' . esc_html($title) . '</a>';
+        return '<a href="' . esc_url($url) . '" target="_blank" rel="noopener" ' . get_block_wrapper_attributes() . '>' . esc_html($title) . '</a>';
     }
 
     /**
@@ -272,7 +287,7 @@ trait LinkDigest_Templates {
     public function renderBlockFieldUrl(array $attributes): string {
         $data = $GLOBALS['linkdigest_template_data'] ?? array();
         $url  = $data['url'] ?? '';
-        return empty($url) ? '' : esc_url($url);
+        return empty($url) ? '' : '<span ' . get_block_wrapper_attributes() . '>' . esc_url($url) . '</span>';
     }
 
     /**
@@ -283,7 +298,7 @@ trait LinkDigest_Templates {
     public function renderBlockFieldDescription(array $attributes): string {
         $data        = $GLOBALS['linkdigest_template_data'] ?? array();
         $description = $data['description'] ?? '';
-        return empty($description) ? '' : wp_kses_post($description);
+        return empty($description) ? '' : '<div ' . get_block_wrapper_attributes() . '>' . wp_kses_post($description) . '</div>';
     }
 
     /**
@@ -297,7 +312,7 @@ trait LinkDigest_Templates {
         if (empty($url)) {
             return '';
         }
-        return '<p><a href="' . esc_url($url) . '">' . esc_html__('Read more', 'linkdigest') . ' &rarr;</a></p>';
+        return '<p ' . get_block_wrapper_attributes() . '><a href="' . esc_url($url) . '">' . esc_html__('Read more', 'linkdigest') . ' &rarr;</a></p>';
     }
 
     /**
@@ -308,7 +323,7 @@ trait LinkDigest_Templates {
     public function renderBlockFieldTags(array $attributes): string {
         $data = $GLOBALS['linkdigest_template_data'] ?? array();
         $tags = $data['tags'] ?? array();
-        return empty($tags) ? '' : '<p>' . esc_html(implode(', ', $tags)) . '</p>';
+        return empty($tags) ? '' : '<p ' . get_block_wrapper_attributes() . '>' . esc_html(implode(', ', $tags)) . '</p>';
     }
 
     /**
@@ -336,6 +351,6 @@ trait LinkDigest_Templates {
         $level = isset($attributes['level']) ? (int) $attributes['level'] : 2;
         $level = max(1, min(6, $level));
         $tag   = "h{$level}";
-        return "<{$tag}>" . esc_html($category) . "</{$tag}>";
+        return "<{$tag} " . get_block_wrapper_attributes() . '>' . esc_html($category) . "</{$tag}>";
     }
 }

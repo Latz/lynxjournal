@@ -3,6 +3,19 @@ import { useBlockProps, BlockControls } from '@wordpress/block-editor';
 import { ToolbarGroup, DropdownMenu, ToolbarButton } from '@wordpress/components';
 import './editor.css';
 
+const BLOCK_SUPPORTS = {
+	color: { text: true, background: true },
+	typography: {
+		fontSize: true,
+		lineHeight: true,
+		fontStyle: true,
+		fontWeight: true,
+		textDecoration: true,
+		textTransform: true,
+	},
+	spacing: { padding: true, margin: true },
+};
+
 const BLOCKS = [
 	{
 		name: 'field-title',
@@ -55,6 +68,7 @@ BLOCKS.forEach( ( { name, title, description, label, icon } ) => {
 		description,
 		icon,
 		category: 'text',
+		supports: BLOCK_SUPPORTS,
 		edit: function PlaceholderEdit() {
 			const blockProps = useBlockProps( {
 				className: 'linkdigest-placeholder-block',
@@ -111,6 +125,7 @@ registerBlockType( 'linkdigest/field-category', {
 	description: 'Outputs the category name as a heading. Use in the Digest Group template.',
 	icon: 'heading',
 	category: 'text',
+	supports: BLOCK_SUPPORTS,
 	attributes: {
 		level: {
 			type: 'number',
