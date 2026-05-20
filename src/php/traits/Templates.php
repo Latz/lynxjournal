@@ -62,6 +62,18 @@ trait LinkDigest_Templates {
             ));
         }
 
+        register_block_type('linkdigest/field-items-list', array(
+            'api_version'     => 3,
+            'editor_script'   => 'linkdigest-blocks',
+            'attributes'      => array(
+                'listType' => array(
+                    'type'    => 'string',
+                    'default' => 'ul',
+                ),
+            ),
+            'render_callback' => array($this, 'renderBlockFieldItemsList'),
+        ));
+
         register_block_type('linkdigest/field-category', array(
             'api_version'     => 3,
             'editor_script'   => 'linkdigest-blocks',
@@ -297,6 +309,17 @@ trait LinkDigest_Templates {
         $data = $GLOBALS['linkdigest_template_data'] ?? array();
         $tags = $data['tags'] ?? array();
         return empty($tags) ? '' : '<p>' . esc_html(implode(', ', $tags)) . '</p>';
+    }
+
+    /**
+     * @since 2.2.0
+     * @param array $attributes Block attributes. Expects 'listType' ('ul' or 'ol', default 'ul').
+     * @return string Always empty — side-effect only: stores listType in global for buildDigestContent().
+     */
+    public function renderBlockFieldItemsList(array $attributes): string {
+        $type = ($attributes['listType'] ?? 'ul') === 'ol' ? 'ol' : 'ul';
+        $GLOBALS['linkdigest_list_type'] = $type;
+        return '';
     }
 
     /**

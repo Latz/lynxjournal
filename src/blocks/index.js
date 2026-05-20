@@ -1,6 +1,6 @@
 import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps, BlockControls } from '@wordpress/block-editor';
-import { ToolbarGroup, DropdownMenu } from '@wordpress/components';
+import { ToolbarGroup, DropdownMenu, ToolbarButton } from '@wordpress/components';
 import './editor.css';
 
 const BLOCKS = [
@@ -63,6 +63,46 @@ BLOCKS.forEach( ( { name, title, description, label, icon } ) => {
 		},
 		save: () => null,
 	} );
+} );
+
+registerBlockType( 'linkdigest/field-items-list', {
+	apiVersion: 3,
+	title: 'Items List',
+	description: 'Marks where the digest items list is rendered. Choose ul or ol.',
+	icon: 'list-view',
+	category: 'text',
+	attributes: {
+		listType: {
+			type: 'string',
+			default: 'ul',
+		},
+	},
+	edit: function ItemsListEdit( { attributes, setAttributes } ) {
+		const { listType } = attributes;
+		const blockProps = useBlockProps( { className: 'linkdigest-placeholder-block' } );
+		return (
+			<>
+				<BlockControls>
+					<ToolbarGroup>
+						<ToolbarButton
+							icon="editor-ul"
+							label="Unordered list"
+							isActive={ listType === 'ul' }
+							onClick={ () => setAttributes( { listType: 'ul' } ) }
+						/>
+						<ToolbarButton
+							icon="editor-ol"
+							label="Ordered list"
+							isActive={ listType === 'ol' }
+							onClick={ () => setAttributes( { listType: 'ol' } ) }
+						/>
+					</ToolbarGroup>
+				</BlockControls>
+				<div { ...blockProps }>{ `[ Items (${ listType }) ]` }</div>
+			</>
+		);
+	},
+	save: () => null,
 } );
 
 registerBlockType( 'linkdigest/field-category', {

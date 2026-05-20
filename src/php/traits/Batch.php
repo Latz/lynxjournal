@@ -201,7 +201,9 @@ trait LinkDigest_Batch {
         };
 
         $render_list = function(array $ids) use (&$content, $has_item_template) {
-            $content .= "<ul>\n";
+            $tag = isset($GLOBALS['linkdigest_list_type']) && $GLOBALS['linkdigest_list_type'] === 'ol' ? 'ol' : 'ul';
+            unset($GLOBALS['linkdigest_list_type']);
+            $content .= "<{$tag}>\n";
             foreach ($ids as $link_id) {
                 $link = get_post($link_id);
                 $url  = get_post_meta($link_id, '_linkdigest_url', true);
@@ -230,7 +232,7 @@ trait LinkDigest_Batch {
 
                 $content .= '<li>' . $item_html . "</li>\n";
             }
-            $content .= "</ul>\n\n";
+            $content .= "</{$tag}>\n\n";
         };
 
         foreach ($links_by_category as $group) {
