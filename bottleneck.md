@@ -57,19 +57,19 @@ Recommendations:
 
 - `src/php/traits/Batch.php:104` `groupLinksByCategory()` — `get_post()` + `get_the_terms()` per link.
 - `src/php/traits/Batch.php:184` `collectCategoryTerms()` — `get_the_terms()` per link **again**.
-- `src/php/traits/Batch.php:199` `assignRoundupTags()` — third `get_the_terms()` loop.
-- `src/php/traits/Batch.php:130` inside `buildRoundupContent()` — `get_post()` + `get_post_meta()` per link.
+- `src/php/traits/Batch.php:199` `assignDigestTags()` — third `get_the_terms()` loop.
+- `src/php/traits/Batch.php:130` inside `buildDigestContent()` — `get_post()` + `get_post_meta()` per link.
 - `src/php/traits/Batch.php:217` `markLinksAsPublished()` — three `update_post_meta()` calls per link plus `get_post()` again.
 - `src/php/traits/Publishing.php:55` `resolveWpCategoryIds()` — `get_category_by_slug()` per linkdigest category.
 
 Fixes:
-- Batch-prime caches once at the top of `createRoundupPost()`:
+- Batch-prime caches once at the top of `createDigestPost()`:
   - `_prime_post_caches($link_ids, true, true)` (loads posts, terms, meta in 3 queries total).
   - Single `get_post_meta($id)` returns all meta as array; no further DB calls.
 - Replace per-link `update_post_meta` triple with one `update_post_meta(..., 'json_blob')` *or* still 3 calls but no `get_post()` in the loop (already cached after priming).
 - `resolveWpCategoryIds` / `resolveOrCreateCategories`: do one `get_terms(['slug' => $slugs])` to resolve everything in one query.
 
-For 500 links a roundup currently issues **~5–7 queries × 500 ≈ 2500–3500 queries**; with priming this drops to ~10.
+For 500 links a digest currently issues **~5–7 queries × 500 ≈ 2500–3500 queries**; with priming this drops to ~10.
 
 ---
 
@@ -78,10 +78,10 @@ For 500 links a roundup currently issues **~5–7 queries × 500 ≈ 2500–3500
 ```php
 $link_ids = $this->getUnpublishedLinkIds();      // -1 fetch
 ...
-$this->createRoundupPost($link_ids, $title);     // can be huge
+$this->createDigestPost($link_ids, $title);     // can be huge
 ```
 
-A single late cron run after a long pause can attempt to publish thousands of links in one PHP process. Combined with the N+1 patterns in §4 this can hit `max_execution_time` mid-roundup and leave half-marked links.
+A single late cron run after a long pause can attempt to publish thousands of links in one PHP process. Combined with the N+1 patterns in §4 this can hit `max_execution_time` mid-digest and leave half-marked links.
 
 Fix: cap to e.g. 200 per run; if more remain, schedule a follow-up `wp_schedule_single_event(time()+60, 'linkdigest_execute_schedule')`. Also wrap in `wp_defer_term_counting(true)` / `wp_defer_comment_counting(true)` and `wp_suspend_cache_invalidation(true)` while bulk-writing meta.
 
@@ -130,7 +130,7 @@ Fixes:
 | 1 | 🔴 | `posts_per_page=-1` | Use `found_posts` / pagination / capped batches |
 | 2 | 🟠 | Dashboard re-queries | Memoize + transient invalidated on save |
 | 3 | 🟠 | meta_query on publish_status | Promote to custom post statuses |
-| 4 | 🟠 | N+1 in roundup path | `_prime_post_caches`, batch term lookups |
+| 4 | 🟠 | N+1 in digest path | `_prime_post_caches`, batch term lookups |
 | 5 | 🟠 | Cron unbounded | Cap per run + reschedule |
 | 6 | 🟢 | Schedule loop | Direct weekday math |
 | 7 | 🟠 | Bootstrap on every request | Lazy register, drop json_decode |
@@ -138,4 +138,4 @@ Fixes:
 | 9 | 🟢 | `enqueueAdminAssets` hook check | Case-sensitive bug — dashboard css not loaded |
 | 10 | 🟢 | Categories cache | Reuse transient in admin |
 
-The two changes with by far the biggest payoff are **#1 (statistics + grouping)** and **#3 (custom post statuses)** — together they remove the dominant cost on the admin dashboard for any non-trivial dataset. **#4** matters once roundups exceed ~50 links.
+The two changes with by far the biggest payoff are **#1 (statistics + grouping)** and **#3 (custom post statuses)** — together they remove the dominant cost on the admin dashboard for any non-trivial dataset. **#4** matters once digests exceed ~50 links.

@@ -1,6 +1,6 @@
 # LinkDigest Scheduler — User Manual
 
-The scheduler automatically publishes your saved links as roundup posts at times or under conditions you define. This manual covers every setting on the **LinkDigest › Schedule** admin page.
+The scheduler automatically publishes your saved links as digest posts at times or under conditions you define. This manual covers every setting on the **LinkDigest › Schedule** admin page.
 
 ---
 
@@ -30,7 +30,7 @@ _Operations_
 - [Saving the schedule](#saving-the-schedule)
 - [Running the schedule immediately](#running-the-schedule-immediately)
 - [Notifications](#notifications)
-- [What a roundup post looks like](#what-a-roundup-post-looks-like)
+- [What a digest post looks like](#what-a-digest-post-looks-like)
 - [Edge cases and caveats](#edge-cases-and-caveats)
 
 _Reference_
@@ -52,7 +52,7 @@ _Reference_
 2. Pick a mode (Daily is a good default).
 3. Set at least one **Execution Time** (e.g. `09:00`).
 4. Click **Save Schedule**.
-5. Add some links. The next time the scheduled moment arrives, LinkDigest will publish a roundup post.
+5. Add some links. The next time the scheduled moment arrives, LinkDigest will publish a digest post.
 
 To trigger a run on demand, use the **Run Now** button on the LinkDigest dashboard. To stop all automation, switch to [Manual mode](#manual-mode).
 
@@ -65,7 +65,7 @@ When you save a schedule, LinkDigest registers a WordPress cron event. At each s
 1. Collects all unpublished links.
 2. Caps the working set at **200 links per run** to avoid PHP timeouts (see [Large queues](#large-queues)).
 3. Checks whether the configured publish condition is met.
-4. If it is, groups the links by category and creates a single roundup blog post, then marks every included link as published so it won't appear in future roundups.
+4. If it is, groups the links by category and creates a single digest blog post, then marks every included link as published so it won't appear in future digests.
 5. Reschedules itself for the next run (except in [Manual mode](#manual-mode), where no automatic reschedule occurs).
 
 Nothing is published until the condition is satisfied. If you are in a time-based mode (Daily, Weekly, Monthly) and there are no unpublished links at the scheduled time, the run is skipped and the next event is set as usual.
@@ -79,7 +79,7 @@ flowchart TD
     D --> F{Publish condition met?}
     E --> F
     F -->|No| G[Skip this run]
-    F -->|Yes| H[Create roundup post,<br/>mark links as published]
+    F -->|Yes| H[Create digest post,<br/>mark links as published]
     H --> I{has_more?}
     I -->|Yes| J[Reschedule in 60s]
     I -->|No| K[Reschedule for next slot]
@@ -166,7 +166,7 @@ Toggle any combination of Mon, Tue, Wed, Thu, Fri, Sat, Sun. The compact UI labe
 
 Pair this with one or more [Execution Times](#execution-times).
 
-**Example:** Every 1 week on Monday and Thursday at 09:00 — a roundup is published on Monday morning and again Thursday morning, provided there are unpublished links each time.
+**Example:** Every 1 week on Monday and Thursday at 09:00 — a digest is published on Monday morning and again Thursday morning, provided there are unpublished links each time.
 
 **Timeline (Mon + Thu at 09:00):**
 
@@ -189,7 +189,7 @@ Enter a number between 1 and 12.
 
 **Setting: Day entries**
 
-Each entry defines one day within the month on which to publish. You can add multiple entries using **+ Add day**; each additional entry adds an "or" condition. The scheduler fires on **every** matching day in the month, not just the earliest — so two entries that resolve to two different dates produce two roundups in that month.
+Each entry defines one day within the month on which to publish. You can add multiple entries using **+ Add day**; each additional entry adds an "or" condition. The scheduler fires on **every** matching day in the month, not just the earliest — so two entries that resolve to two different dates produce two digests in that month.
 
 Each entry offers two selectors. Click one to activate it:
 
@@ -204,7 +204,7 @@ To remove an entry, click **✕** to its right. At least one entry must remain.
 
 Pair this with one or more [Execution Times](#execution-times).
 
-**Example:** Every 1 month, on the 1st _and_ the first Monday — in a month where these resolve to two different dates, both will fire (so up to two roundups). If the 1st itself falls on a Monday, only one run occurs that month.
+**Example:** Every 1 month, on the 1st _and_ the first Monday — in a month where these resolve to two different dates, both will fire (so up to two digests). If the 1st itself falls on a Monday, only one run occurs that month.
 
 ---
 
@@ -216,7 +216,7 @@ Publishes when the number of unpublished links reaches or exceeds a threshold. T
 
 Enter any positive integer. Default is 10.
 
-The check is: `unpublished count ≥ N`. When true, all current unpublished links are published in one roundup post (subject to the global [200-link per-run cap](#large-queues)).
+The check is: `unpublished count ≥ N`. When true, all current unpublished links are published in one digest post (subject to the global [200-link per-run cap](#large-queues)).
 
 **Example:** Set to 15. The scheduler wakes up each morning at 09:00. On days when you have fewer than 15 links saved, nothing happens. Once you reach 15, the next 09:00 check publishes them all and resets the queue.
 
@@ -232,7 +232,7 @@ Enter any positive integer. Default is 7.
 
 The check inspects the creation date of the oldest unpublished link. The condition is satisfied when that link's creation timestamp is strictly earlier than `now − N days` (i.e. the link has aged for more than N days). When true, the next scheduled check triggers a full publish of all unpublished links.
 
-**Example:** Set to 14. Links saved less than two weeks ago accumulate silently. Once any link has been sitting for more than 14 days, the next scheduled check publishes everything — even links that are only 1 day old — in one roundup.
+**Example:** Set to 14. Links saved less than two weeks ago accumulate silently. Once any link has been sitting for more than 14 days, the next scheduled check publishes everything — even links that are only 1 day old — in one digest.
 
 ---
 
@@ -240,7 +240,7 @@ The check inspects the creation date of the oldest unpublished link. The conditi
 
 Disables all automatic publishing. No cron event is scheduled.
 
-Use the **Run Now** button on the LinkDigest dashboard to trigger a roundup post on demand. (The dashboard's _Publish Links_ form, with its **Publish** / **Save as Draft** buttons, achieves the same result and lets you customise the post title.)
+Use the **Run Now** button on the LinkDigest dashboard to trigger a digest post on demand. (The dashboard's _Publish Links_ form, with its **Publish** / **Save as Draft** buttons, achieves the same result and lets you customise the post title.)
 
 Choose this mode if you want full control over timing, or if you are still building up your link queue and are not ready for automated publishing.
 
@@ -259,9 +259,9 @@ The **Execution Times** panel lets you specify one or more times of day (HH:MM, 
 
 **Multiple times per day**
 
-Adding several times means the scheduler can publish more than once per day. For trigger-based modes (By Count, By Age) this is useful if you want the condition checked frequently. For time-based modes it means a roundup is published at each matching time on qualifying days — _only if unpublished links exist at each check_.
+Adding several times means the scheduler can publish more than once per day. For trigger-based modes (By Count, By Age) this is useful if you want the condition checked frequently. For time-based modes it means a digest is published at each matching time on qualifying days — _only if unpublished links exist at each check_.
 
-**Example:** 08:00 and 18:00 in Weekly mode on Monday — one roundup in the morning if links are waiting, and another in the evening if more links have been added since.
+**Example:** 08:00 and 18:00 in Weekly mode on Monday — one digest in the morning if links are waiting, and another in the evening if more links have been added since.
 
 ---
 
@@ -300,7 +300,7 @@ The **Run Now** button on the **LinkDigest dashboard** triggers an immediate pub
 - In time-based modes: publishes if any unpublished links exist.
 - In Manual mode: publishes if any unpublished links exist (no other condition applies).
 
-In every mode, the run is silently skipped when there are no unpublished links — no empty roundup is ever created.
+In every mode, the run is silently skipped when there are no unpublished links — no empty digest is ever created.
 
 The automatic schedule is unaffected — the next cron event remains scheduled as normal.
 
@@ -311,7 +311,7 @@ The automatic schedule is unaffected — the next cron event remains scheduled a
 LinkDigest can notify you after each publish run via **email**, **Discord**, or **Slack**.
 Configure each channel in the **Notifications** panel on the Schedule page and click **Save Schedule**.
 
-Notifications fire only when a roundup post is actually created. Skipped runs (condition not met, no links, locked) produce no notification.
+Notifications fire only when a digest post is actually created. Skipped runs (condition not met, no links, locked) produce no notification.
 
 ### Email
 
@@ -319,7 +319,7 @@ Check **Email me after each run** to receive a notification email.
 
 - **Email address** — leave blank to use the WordPress admin email (`Settings › General`). Enter a specific address to override it.
 
-The email contains the link count and a direct URL to the roundup post.
+The email contains the link count and a direct URL to the digest post.
 
 ### Discord
 
@@ -331,7 +331,7 @@ Leave the field blank to disable Discord notifications.
 
 **Example message:**
 
-> **LinkDigest: roundup published**
+> **LinkDigest: digest published**
 > 12 links published. [View post](https://example.com/links-may-8-2026/)
 
 ### Slack
@@ -354,19 +354,19 @@ Leave the field blank to disable Slack notifications.
 
 ---
 
-## What a roundup post looks like
+## What a digest post looks like
 
 **Title.** Each run creates one WordPress post titled `Links: [Full Date]` — for example `Links: April 28, 2026`. The format is the translatable string `__('Links: %s', 'linkdigest')` with the current date formatted via `wp_date('F j, Y')`, so it follows the WordPress site timezone and locale.
 
-**Post type and status.** The roundup is created as a regular WordPress `post` (not a `linkdigest` custom-post-type entry), with `post_status = 'publish'`.
+**Post type and status.** The digest is created as a regular WordPress `post` (not a `linkdigest` custom-post-type entry), with `post_status = 'publish'`.
 
-**Author.** When the cron event runs unauthenticated (the usual case), LinkDigest temporarily switches the current user to the first administrator returned by `get_users(['role' => 'administrator'])` so the post insert passes its `current_user_can('publish_posts')` guard. The roundup is therefore attributed to that administrator. When **Run Now** is invoked from the admin UI, the post is attributed to the current user.
+**Author.** When the cron event runs unauthenticated (the usual case), LinkDigest temporarily switches the current user to the first administrator returned by `get_users(['role' => 'administrator'])` so the post insert passes its `current_user_can('publish_posts')` guard. The digest is therefore attributed to that administrator. When **Run Now** is invoked from the admin UI, the post is attributed to the current user.
 
 **Body.** The body contains one section per category, each with a `<ul>` list of links. Each `<li>` contains a link title (anchored to the saved URL when present, with `target="_blank" rel="noopener"`) and, optionally, a description below it (sanitised through `wp_kses_post`). Uncategorised links appear in their own section at the end.
 
-**Taxonomies.** No categories or tags are applied to the roundup post itself — it inherits the site's default category as configured in **Settings › Writing**.
+**Taxonomies.** No categories or tags are applied to the digest post itself — it inherits the site's default category as configured in **Settings › Writing**.
 
-**Side effects.** Every included link is marked as published (post meta `_linkdigest_publish_status = 'published'`) and is excluded from future roundups.
+**Side effects.** Every included link is marked as published (post meta `_linkdigest_publish_status = 'published'`) and is excluded from future digests.
 
 ---
 
@@ -386,7 +386,7 @@ In Monthly mode, if you set the 31st and the current month has only 30 days, tha
 
 ### No links available
 
-The scheduler never publishes an empty roundup. If there are no unpublished links when the cron fires, the run is silently skipped and the next event is scheduled normally.
+The scheduler never publishes an empty digest. If there are no unpublished links when the cron fires, the run is silently skipped and the next event is scheduled normally.
 
 ### Timezone and DST
 
@@ -397,15 +397,15 @@ Execution times use your WordPress site's configured timezone (Settings › Gene
 
 ### Backfill after long downtime
 
-If your site is offline (or WP-Cron isn't firing) when one or more scheduled moments pass, those events are missed silently — LinkDigest does **not** backfill multiple roundups. As soon as WordPress runs again, a single catch-up run executes (if a previously scheduled event is still pending) and the next slot is computed forward from the current time. To force a catch-up immediately, use **Run Now**.
+If your site is offline (or WP-Cron isn't firing) when one or more scheduled moments pass, those events are missed silently — LinkDigest does **not** backfill multiple digests. As soon as WordPress runs again, a single catch-up run executes (if a previously scheduled event is still pending) and the next slot is computed forward from the current time. To force a catch-up immediately, use **Run Now**.
 
 ### Run failures
 
-If `wp_insert_post` fails for the roundup post (for example due to a misconfigured filter or an out-of-disk condition), the included links remain marked as unpublished and will be retried on the next scheduled run. Individual link rendering errors are skipped silently and do not abort the run.
+If `wp_insert_post` fails for the digest post (for example due to a misconfigured filter or an out-of-disk condition), the included links remain marked as unpublished and will be retried on the next scheduled run. Individual link rendering errors are skipped silently and do not abort the run.
 
 ### Concurrent runs
 
-Each scheduled event is registered with `wp_schedule_single_event`, and a new event is only created after the previous one has fired. WordPress's cron system itself protects against parallel execution of the same event within a single page load, so you should not see duplicate roundup posts under normal conditions.
+Each scheduled event is registered with `wp_schedule_single_event`, and a new event is only created after the previous one has fired. WordPress's cron system itself protects against parallel execution of the same event within a single page load, so you should not see duplicate digest posts under normal conditions.
 
 ### Deactivating the plugin
 
@@ -508,13 +508,13 @@ The plugin currently exposes the following hook for the scheduler:
 
 - **Action `linkdigest_execute_schedule`** — fires when the cron event runs. Bound to `LinkDigest::executeSchedule()`. You can `add_action` your own callback to log runs, send notifications, or perform housekeeping. The action receives no arguments.
 
-There are no scheduler- or roundup-specific filters at present (post title, post body, post arguments are not filterable). If you need such hooks, file an issue describing the use case.
+There are no scheduler- or digest-specific filters at present (post title, post body, post arguments are not filterable). If you need such hooks, file an issue describing the use case.
 
 ---
 
 ## Internationalisation
 
-All user-facing strings in the schedule UI and the roundup post title are wrapped in `__()` / `_e()` against the **`linkdigest`** text domain. Translations live under `/languages/`; the canonical template is `languages/linkdigest.pot`.
+All user-facing strings in the schedule UI and the digest post title are wrapped in `__()` / `_e()` against the **`linkdigest`** text domain. Translations live under `/languages/`; the canonical template is `languages/linkdigest.pot`.
 
 To add or update a language:
 
@@ -525,7 +525,7 @@ composer run i18n:pot
 wp i18n make-pot . languages/linkdigest.pot --domain=linkdigest --exclude=vendor,node_modules,tests
 ```
 
-Date formatting in roundup post titles uses `wp_date()`, which respects both the site timezone and the active translation, so a German install will produce _Links: 28. April 2026_ automatically.
+Date formatting in digest post titles uses `wp_date()`, which respects both the site timezone and the active translation, so a German install will produce _Links: 28. April 2026_ automatically.
 
 ---
 
@@ -535,7 +535,7 @@ Date formatting in roundup post titles uses `wp_date()`, which respects both the
 
 1. Are there any unpublished links? (Check **LinkDigest › All Links**.)
 2. Is your WordPress timezone set correctly? (**Settings › General › Timezone**.)
-3. Is WP-Cron firing? Visit the front-end of your site, then check **Posts › All Posts** for a new roundup. If the site is low-traffic, set up [server-side cron](#server-side-cron-setup).
+3. Is WP-Cron firing? Visit the front-end of your site, then check **Posts › All Posts** for a new digest. If the site is low-traffic, set up [server-side cron](#server-side-cron-setup).
 4. In By Count / By Age modes: is the threshold actually met right now?
 5. In Weekly mode: is at least one weekday selected?
 
@@ -545,6 +545,6 @@ Date formatting in roundup post titles uses `wp_date()`, which respects both the
 
 **Where can I see exactly when the next run will fire?** Time-based modes: the **Next 10 Schedules** panel on the Schedule page. Trigger-based modes: there is no fixed time; the next _check_ is at the next configured Execution Time. For a precise timestamp in any mode, use `wp cron event list` or the _WP Crontrol_ plugin.
 
-**Can I edit a roundup post after it's been published?** Yes — it's a normal WordPress post. Edit it under **Posts › All Posts** like any other post. Your edits are not overwritten by future runs (each run creates a new post).
+**Can I edit a digest post after it's been published?** Yes — it's a normal WordPress post. Edit it under **Posts › All Posts** like any other post. Your edits are not overwritten by future runs (each run creates a new post).
 
 **What happens if I deactivate and reactivate the plugin?** Deactivation cancels the pending cron event. On reactivation, no event is registered until you save the schedule again (or trigger a Run Now).

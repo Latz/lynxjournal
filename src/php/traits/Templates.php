@@ -88,15 +88,15 @@ trait LinkDigest_Templates {
             "<!-- wp:linkdigest/field-description /-->\n\n" .
             "<!-- wp:linkdigest/field-read-more /-->";
 
-        $roundup_default =
+        $digest_default =
             "<!-- wp:linkdigest/field-title-link /-->\n\n" .
             "<!-- wp:linkdigest/field-description /-->";
 
-        $roundup_group_default = "<!-- wp:linkdigest/field-category /-->";
+        $digest_group_default = "<!-- wp:linkdigest/field-category /-->";
 
         $this->ensureTemplatePost('single_link',   __('LinkDigest: Single Link Template',   'linkdigest'), $single_default);
-        $this->ensureTemplatePost('roundup_item',  __('LinkDigest: Roundup Item Template',  'linkdigest'), $roundup_default);
-        $this->ensureTemplatePost('roundup_group', __('LinkDigest: Roundup Group Template', 'linkdigest'), $roundup_group_default);
+        $this->ensureTemplatePost('digest_item',  __('LinkDigest: Digest Item Template',  'linkdigest'), $digest_default);
+        $this->ensureTemplatePost('digest_group', __('LinkDigest: Digest Group Template', 'linkdigest'), $digest_group_default);
     }
 
     /**
@@ -132,7 +132,7 @@ trait LinkDigest_Templates {
      * Return the post ID of a template, or null if none exists.
      *
      * @since 2.1.0
-     * @param string $type Template identifier ('single_link' or 'roundup_item').
+     * @param string $type Template identifier ('single_link' or 'digest_item').
      * @return int|null
      */
     public function getTemplatePostId(string $type): ?int {
@@ -172,7 +172,7 @@ trait LinkDigest_Templates {
      * or null when not on a linkdigest_template post edit screen.
      *
      * @since 2.1.0
-     * @return string|null 'single_link', 'roundup_item', or null.
+     * @return string|null 'single_link', 'digest_item', or null.
      */
     public function isLinkDigestTemplate(): ?string {
         global $pagenow, $post;
@@ -183,11 +183,11 @@ trait LinkDigest_Templates {
         if ($post->ID === $this->getTemplatePostId('single_link')) {
             return 'single_link';
         }
-        if ($post->ID === $this->getTemplatePostId('roundup_item')) {
-            return 'roundup_item';
+        if ($post->ID === $this->getTemplatePostId('digest_item')) {
+            return 'digest_item';
         }
-        if ($post->ID === $this->getTemplatePostId('roundup_group')) {
-            return 'roundup_group';
+        if ($post->ID === $this->getTemplatePostId('digest_group')) {
+            return 'digest_group';
         }
         return null;
     }
@@ -197,7 +197,7 @@ trait LinkDigest_Templates {
      * Embeds the Gutenberg editor in an iframe so the user stays within the plugin.
      *
      * @since 2.1.0
-     * @param string $type Template identifier ('single_link' or 'roundup_item').
+     * @param string $type Template identifier ('single_link' or 'digest_item').
      * @return void
      */
     public function renderTemplateEditorFrame(string $type): void {

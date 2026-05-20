@@ -1,6 +1,6 @@
 # LinkDigest — Webhook Notifications
 
-After each successful publish run, LinkDigest can send a notification to **Discord** or **Slack** (or both). Notifications fire only when a roundup post is actually created — skipped runs produce nothing.
+After each successful publish run, LinkDigest can send a notification to **Discord** or **Slack** (or both). Notifications fire only when a digest post is actually created — skipped runs produce nothing.
 
 ---
 
@@ -16,7 +16,7 @@ To disable Discord notifications, clear the field and save.
 
 **What the message looks like:**
 
-> **LinkDigest: roundup published**
+> **LinkDigest: digest published**
 > 12 links published. [View post](https://example.com/links-may-8-2026/)
 
 The embed uses a blue accent colour (#2D9BF0).

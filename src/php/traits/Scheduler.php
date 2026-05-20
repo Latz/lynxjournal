@@ -116,10 +116,10 @@ trait LinkDigest_Scheduler {
     }
 
     /**
-     * Publish a roundup post and handle rescheduling.
+     * Publish a digest post and handle rescheduling.
      *
      * @since 1.0.0
-     * @param array  $link_ids   Link IDs to include in the roundup.
+     * @param array  $link_ids   Link IDs to include in the digest.
      * @param array  $config     Schedule configuration option.
      * @param string $mode       Schedule mode.
      * @param bool   $reschedule Whether to schedule the next regular event.
@@ -129,11 +129,11 @@ trait LinkDigest_Scheduler {
     private function attemptPublish(array $link_ids, array $config, string $mode, bool $reschedule, bool $has_more): array {
         /* translators: %s is the formatted date (e.g. "April 15, 2026") */
         $title = sprintf(__('Links: %s', 'linkdigest'), wp_date('F j, Y'));
-        $title = (string) apply_filters('linkdigest_roundup_title', $title, $link_ids, $mode);
+        $title = (string) apply_filters('linkdigest_digest_title', $title, $link_ids, $mode);
 
         // Use the stored publishAs user; fall back to first administrator.
         // WP-Cron runs unauthenticated, so we must elevate before calling
-        // createRoundupPost() which guards on current_user_can('publish_posts').
+        // createDigestPost() which guards on current_user_can('publish_posts').
         $publish_as   = (int) ($config['publishAs'] ?? 0);
         $prev_user_id = get_current_user_id();
         if ($publish_as === 0) {
@@ -146,14 +146,14 @@ trait LinkDigest_Scheduler {
 
         do_action('linkdigest_before_run', $link_ids, $mode);
         $as_draft = ($config['post_status'] ?? 'publish') === 'draft';
-        $roundup  = $this->createRoundupPost($link_ids, $title, $as_draft, $mode);
+        $digest  = $this->createDigestPost($link_ids, $title, $as_draft, $mode);
 
         // Restore previous user context.
         if (get_current_user_id() !== $prev_user_id) {
             wp_set_current_user($prev_user_id);
         }
 
-        $post_id = ($roundup['post_id'] ?? 0) ?: null;
+        $post_id = ($digest['post_id'] ?? 0) ?: null;
         do_action('linkdigest_after_run', $post_id, $link_ids, $mode);
 
         $scheduled_catchup = false;
@@ -166,10 +166,10 @@ trait LinkDigest_Scheduler {
         }
 
         return [
-            'published'  => $roundup['success'] ?? false,
+            'published'  => $digest['success'] ?? false,
             'post_id'    => $post_id,
             'link_count' => count($link_ids),
-            'reason'     => $roundup['message'] ?? null,
+            'reason'     => $digest['message'] ?? null,
         ];
     }
 
@@ -357,11 +357,11 @@ trait LinkDigest_Scheduler {
         }
         $to = !empty($notify['email']) ? $notify['email'] : get_option('admin_email');
         /* translators: %d: number of links published */
-        $subject = sprintf(__('[LinkDigest] Roundup published: %d links', 'linkdigest'), count($link_ids));
+        $subject = sprintf(__('[LinkDigest] Digest published: %d links', 'linkdigest'), count($link_ids));
         if ($post_id) {
             $message = sprintf(
                 /* translators: 1: link count, 2: post URL */
-                __("A new roundup was published.\n\nLinks: %1\$d\nView: %2\$s", 'linkdigest'),
+                __("A new digest was published.\n\nLinks: %1\$d\nView: %2\$s", 'linkdigest'),
                 count($link_ids),
                 get_permalink($post_id)
             );
@@ -435,7 +435,7 @@ trait LinkDigest_Scheduler {
         }
         $payload = [
             'embeds' => [[
-                'title'       => __('LinkDigest: roundup published', 'linkdigest'),
+                'title'       => __('LinkDigest: digest published', 'linkdigest'),
                 'description' => $description,
                 'color'       => 0x2D9BF0,
             ]],

@@ -30,8 +30,8 @@ trait LinkDigest_Admin_Menu {
         $this->addSubmenu(__('Notifications',    'linkdigest'), __('Notifications',    'linkdigest'), 'manage_options', 'linkdigest-notifications',     'notificationsPage');
         $this->addSubmenu(__('Schedule',         'linkdigest'), __('Schedule',         'linkdigest'), 'manage_options', 'linkdigest-schedule',          'schedulePage');
         $this->addSubmenu(__('Link Template',          'linkdigest'), __('Link Template',          'linkdigest'), 'manage_options', 'linkdigest-template-single',         'renderTemplateSinglePage');
-        $this->addSubmenu(__('Roundup Item Template',  'linkdigest'), __('Roundup Item Template',  'linkdigest'), 'manage_options', 'linkdigest-template-roundup',        'renderTemplateRoundupPage');
-        $this->addSubmenu(__('Roundup Group Template', 'linkdigest'), __('Roundup Group Template', 'linkdigest'), 'manage_options', 'linkdigest-template-roundup-group',  'renderTemplateRoundupGroupPage');
+        $this->addSubmenu(__('Digest Item Template',  'linkdigest'), __('Digest Item Template',  'linkdigest'), 'manage_options', 'linkdigest-template-digest',        'renderTemplateDigestPage');
+        $this->addSubmenu(__('Digest Group Template', 'linkdigest'), __('Digest Group Template', 'linkdigest'), 'manage_options', 'linkdigest-template-digest-group',  'renderTemplateDigestGroupPage');
     }
 
     /**
@@ -45,23 +45,23 @@ trait LinkDigest_Admin_Menu {
     }
 
     /**
-     * Render the roundup item template editor page (Gutenberg in an iframe).
+     * Render the digest item template editor page (Gutenberg in an iframe).
      *
      * @since 2.1.0
      * @return void
      */
-    public function renderTemplateRoundupPage(): void {
-        $this->renderTemplateEditorFrame('roundup_item');
+    public function renderTemplateDigestPage(): void {
+        $this->renderTemplateEditorFrame('digest_item');
     }
 
     /**
-     * Render the roundup group template editor page (Gutenberg in an iframe).
+     * Render the digest group template editor page (Gutenberg in an iframe).
      *
      * @since 2.2.0
      * @return void
      */
-    public function renderTemplateRoundupGroupPage(): void {
-        $this->renderTemplateEditorFrame('roundup_group');
+    public function renderTemplateDigestGroupPage(): void {
+        $this->renderTemplateEditorFrame('digest_group');
     }
 
     /**
@@ -93,11 +93,11 @@ trait LinkDigest_Admin_Menu {
         if ($template_type === 'single_link') {
             return 'linkdigest-template-single';
         }
-        if ($template_type === 'roundup_item') {
-            return 'linkdigest-template-roundup';
+        if ($template_type === 'digest_item') {
+            return 'linkdigest-template-digest';
         }
-        if ($template_type === 'roundup_group') {
-            return 'linkdigest-template-roundup-group';
+        if ($template_type === 'digest_group') {
+            return 'linkdigest-template-digest-group';
         }
         return $submenu_file ?? '';
     }

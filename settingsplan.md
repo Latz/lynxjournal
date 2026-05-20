@@ -80,7 +80,7 @@ add_submenu_page(
 
 Four cards in a 2×2 grid:
 
-- **Card 1 — Publishing** (`dashicons-admin-post`): toggles for "Auto-publish links" and "Roundup notifications"
+- **Card 1 — Publishing** (`dashicons-admin-post`): toggles for "Auto-publish links" and "Digest notifications"
 - **Card 2 — Display** (`dashicons-art`): color picker for accent color, toggle for compact view
 - **Card 3 — API** (`dashicons-rest-api`): toggles for "Enable public API" and "Allow CORS"
 - **Card 4 — Cleanup** (`dashicons-trash`): toggle for "Auto-trash after publishing", number input for days

@@ -105,22 +105,22 @@ trait LinkDigest_Admin_Dashboard {
     }
 
     /**
-     * Handle roundup creation form submission.
+     * Handle digest creation form submission.
      *
      * @since 1.0.0
-     * @return array|null Roundup result or null if no request was made.
+     * @return array|null Digest result or null if no request was made.
      */
-    public function handleRoundupRequest(): ?array {
-        if ( ! isset( $_POST['linkdigest_create_roundup'] ) ) {
+    public function handleDigestRequest(): ?array {
+        if ( ! isset( $_POST['linkdigest_create_digest'] ) ) {
             return null;
         }
-        $nonce = isset( $_POST['linkdigest_roundup_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['linkdigest_roundup_nonce'] ) ) : '';
-        if ( ! wp_verify_nonce( $nonce, 'linkdigest_create_roundup' ) ) {
+        $nonce = isset( $_POST['linkdigest_digest_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['linkdigest_digest_nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'linkdigest_create_digest' ) ) {
             return null;
         }
-        $roundup_title = isset( $_POST['roundup_title'] ) ? sanitize_text_field( wp_unslash( $_POST['roundup_title'] ) ) : '';
-        $as_draft      = isset( $_POST['roundup_as_draft'] ) && sanitize_text_field( wp_unslash( $_POST['roundup_as_draft'] ) ) === '1';
-        return $this->createRoundupPost( $this->getUnpublishedLinkIds(), $roundup_title, $as_draft );
+        $digest_title = isset( $_POST['digest_title'] ) ? sanitize_text_field( wp_unslash( $_POST['digest_title'] ) ) : '';
+        $as_draft      = isset( $_POST['digest_as_draft'] ) && sanitize_text_field( wp_unslash( $_POST['digest_as_draft'] ) ) === '1';
+        return $this->createDigestPost( $this->getUnpublishedLinkIds(), $digest_title, $as_draft );
     }
 
     /**
@@ -161,10 +161,10 @@ trait LinkDigest_Admin_Dashboard {
      *
      * @since 1.0.0
      * @param array|null $batch_result Batch publishing result.
-     * @param array|null $roundup_result Roundup creation result.
+     * @param array|null $digest_result Digest creation result.
      * @return void
      */
-    public function renderDashboardNotices( ?array $batch_result, ?array $roundup_result ): void {
+    public function renderDashboardNotices( ?array $batch_result, ?array $digest_result ): void {
         if ( $batch_result !== null ) {
             if ( $batch_result['success'] > 0 ) {
                 /* translators: 1: number of successfully processed links, 2: optional failure message */
@@ -178,12 +178,12 @@ trait LinkDigest_Admin_Dashboard {
                 echo '<div class="notice notice-error"><p>' . implode( '<br>', array_map( 'esc_html', $batch_result['messages'] ) ) . '</p></div>';
             }
         }
-        if ( $roundup_result !== null ) {
-            if ( $roundup_result['success'] ) {
-                echo '<div class="notice notice-success"><p>' . esc_html( $roundup_result['message'] );
-                echo ' <a href="' . esc_url( get_permalink( $roundup_result['post_id'] ) ) . '" target="_blank">' . esc_html__( 'View Post', 'linkdigest' ) . ' →</a></p></div>';
+        if ( $digest_result !== null ) {
+            if ( $digest_result['success'] ) {
+                echo '<div class="notice notice-success"><p>' . esc_html( $digest_result['message'] );
+                echo ' <a href="' . esc_url( get_permalink( $digest_result['post_id'] ) ) . '" target="_blank">' . esc_html__( 'View Post', 'linkdigest' ) . ' →</a></p></div>';
             } else {
-                echo '<div class="notice notice-error"><p>' . esc_html( $roundup_result['message'] ) . '</p></div>';
+                echo '<div class="notice notice-error"><p>' . esc_html( $digest_result['message'] ) . '</p></div>';
             }
         }
     }
@@ -389,24 +389,24 @@ trait LinkDigest_Admin_Dashboard {
                     );
                     ?>
                     <form method="post" action="">
-                        <?php wp_nonce_field( 'linkdigest_create_roundup', 'linkdigest_roundup_nonce' ); ?>
+                        <?php wp_nonce_field( 'linkdigest_create_digest', 'linkdigest_digest_nonce' ); ?>
                         <p>
-                            <label for="roundup_title"><strong><?php esc_html_e( 'Post Title', 'linkdigest' ); ?></strong></label><br>
-                            <input type="text" id="roundup_title" name="roundup_title" class="regular-text"
+                            <label for="digest_title"><strong><?php esc_html_e( 'Post Title', 'linkdigest' ); ?></strong></label><br>
+                            <input type="text" id="digest_title" name="digest_title" class="regular-text"
                                 value="<?php
                                 /* translators: %s is the current date (e.g. "April 15, 2026") */
-                                echo esc_attr( sprintf( __( 'Links Roundup - %s', 'linkdigest' ), gmdate( 'F j, Y' ) ) );
+                                echo esc_attr( sprintf( __( 'Links Digest - %s', 'linkdigest' ), gmdate( 'F j, Y' ) ) );
                                 ?>">
                         </p>
-                        <input type="hidden" name="roundup_as_draft" value="0">
+                        <input type="hidden" name="digest_as_draft" value="0">
                         <p>
-                            <button type="submit" name="linkdigest_create_roundup" class="button button-primary"><?php esc_html_e( 'Publish', 'linkdigest' ); ?></button>
+                            <button type="submit" name="linkdigest_create_digest" class="button button-primary"><?php esc_html_e( 'Publish', 'linkdigest' ); ?></button>
                             &nbsp;
-                            <button type="submit" name="linkdigest_create_roundup" value="1" onclick="this.form.elements['roundup_as_draft'].value='1';" class="button"><?php esc_html_e( 'Save as Draft', 'linkdigest' ); ?></button>
+                            <button type="submit" name="linkdigest_create_digest" value="1" onclick="this.form.elements['digest_as_draft'].value='1';" class="button"><?php esc_html_e( 'Save as Draft', 'linkdigest' ); ?></button>
                         </p>
                     </form>
                 <?php else : ?>
-                    <p class="linkdigest-muted"><?php esc_html_e( 'No pending links to publish. Add links first, then come back here to publish a roundup.', 'linkdigest' ); ?></p>
+                    <p class="linkdigest-muted"><?php esc_html_e( 'No pending links to publish. Add links first, then come back here to publish a digest.', 'linkdigest' ); ?></p>
                 <?php endif; ?>
             </div>
         </div>
@@ -597,7 +597,7 @@ trait LinkDigest_Admin_Dashboard {
      */
     public function dashboardPage(): void {
         $batch_result      = $this->handleBatchPublishRequest();
-        $roundup_result    = $this->handleRoundupRequest();
+        $digest_result    = $this->handleDigestRequest();
         $quick_add_success = $this->handleQuickAddRequest();
 
         $publish_stats     = $this->getPublishStatistics();
@@ -628,7 +628,7 @@ trait LinkDigest_Admin_Dashboard {
         <div class="wrap">
             <h1><?php esc_html_e( 'Overview', 'linkdigest' ); ?></h1>
 
-            <?php $this->renderDashboardNotices( $batch_result, $roundup_result ); ?>
+            <?php $this->renderDashboardNotices( $batch_result, $digest_result ); ?>
 
             <?php if ( $total_links === 0 ) : ?>
             <!-- Onboarding -->

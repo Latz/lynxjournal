@@ -50,17 +50,17 @@ trait LinkDigest_Batch {
     }
 
     /**
-     * Create a roundup post from multiple links.
+     * Create a digest post from multiple links.
      *
      * @since 1.0.0
      * @param mixed $link_ids Array of link post IDs.
-     * @param string $post_title The roundup post title.
+     * @param string $post_title The digest post title.
      * @param bool $as_draft Whether to create as draft instead of published.
      * @param string $mode The scheduling mode that triggered this ('manual', 'daily', etc).
      * @return array Result array with success status, post_id, link count, and message.
      */
-    public function createRoundupPost(mixed $link_ids, string $post_title, bool $as_draft = false, string $mode = 'manual'): array {
-        $guard = $this->validateRoundupRequest($link_ids);
+    public function createDigestPost(mixed $link_ids, string $post_title, bool $as_draft = false, string $mode = 'manual'): array {
+        $guard = $this->validateDigestRequest($link_ids);
         if ($guard !== null) {
             return $guard;
         }
@@ -81,7 +81,7 @@ trait LinkDigest_Batch {
 
         if (empty($post_title)) {
             /* translators: %s: formatted date, e.g. "April 15, 2026" */
-            $post_title = sprintf(__('Links Roundup - %s', 'linkdigest'), gmdate('F j, Y'));
+            $post_title = sprintf(__('Links Digest - %s', 'linkdigest'), gmdate('F j, Y'));
         }
 
         [$links_by_category, $uncategorized_links, $published_count] = $this->groupLinksByCategory($link_ids);
@@ -90,17 +90,17 @@ trait LinkDigest_Batch {
             return array('success' => false, 'post_id' => 0, 'message' => __('No valid links to publish.', 'linkdigest'), 'error_code' => 'no_valid_links');
         }
 
-        return $this->executeRoundupInsertion($post_title, $as_draft, $links_by_category, $uncategorized_links, $published_count, $link_ids, $mode);
+        return $this->executeDigestInsertion($post_title, $as_draft, $links_by_category, $uncategorized_links, $published_count, $link_ids, $mode);
     }
 
     /**
-     * Validate a roundup publish request.
+     * Validate a digest publish request.
      *
      * @since 1.0.0
      * @param mixed $link_ids Array of link post IDs.
      * @return array|null Validation error array or null if valid.
      */
-    private function validateRoundupRequest(mixed $link_ids): ?array {
+    private function validateDigestRequest(mixed $link_ids): ?array {
         if (!current_user_can('publish_posts')) {
             return array('success' => false, 'post_id' => 0, 'message' => __('You do not have permission to publish posts.', 'linkdigest'), 'error_code' => 'no_permission');
         }
@@ -111,10 +111,10 @@ trait LinkDigest_Batch {
     }
 
     /**
-     * Execute the roundup post insertion and metadata assignment.
+     * Execute the digest post insertion and metadata assignment.
      *
      * @since 1.0.0
-     * @param string $post_title The roundup post title.
+     * @param string $post_title The digest post title.
      * @param bool $as_draft Whether to create as draft.
      * @param array $links_by_category Links grouped by category.
      * @param array $uncategorized_links Links without a category.
@@ -123,22 +123,22 @@ trait LinkDigest_Batch {
      * @param string $mode The scheduling mode that triggered this.
      * @return array Result array with success status, post_id, link_count, and message.
      */
-    private function executeRoundupInsertion(string $post_title, bool $as_draft, array $links_by_category, array $uncategorized_links, int $count, array $link_ids, string $mode = 'manual'): array {
-        // post_type 'post': the roundup is a normal blog post, not a linkdigest CPT entry.
-        $args = apply_filters('linkdigest_roundup_post_args', array(
+    private function executeDigestInsertion(string $post_title, bool $as_draft, array $links_by_category, array $uncategorized_links, int $count, array $link_ids, string $mode = 'manual'): array {
+        // post_type 'post': the digest is a normal blog post, not a linkdigest CPT entry.
+        $args = apply_filters('linkdigest_digest_post_args', array(
             'post_title'   => $post_title,
-            'post_content' => $this->buildRoundupContent($links_by_category, $uncategorized_links),
+            'post_content' => $this->buildDigestContent($links_by_category, $uncategorized_links),
             'post_status'  => $as_draft ? 'draft' : 'publish',
             'post_type'    => 'post',
         ), $link_ids, $mode);
         $post_id = wp_insert_post($args);
 
         if (is_wp_error($post_id) || !$post_id) {
-            return array('success' => false, 'post_id' => 0, 'message' => __('Failed to create roundup post.', 'linkdigest'), 'error_code' => 'insert_failed');
+            return array('success' => false, 'post_id' => 0, 'message' => __('Failed to create digest post.', 'linkdigest'), 'error_code' => 'insert_failed');
         }
 
-        $this->assignRoundupCategories($post_id, $links_by_category);
-        $this->assignRoundupTags($post_id, $link_ids);
+        $this->assignDigestCategories($post_id, $links_by_category);
+        $this->assignDigestTags($post_id, $link_ids);
         $this->markLinksAsPublished($link_ids, $post_id, $as_draft);
 
         return array(
@@ -146,7 +146,7 @@ trait LinkDigest_Batch {
             'post_id'    => $post_id,
             'link_count' => $count,
             /* translators: %d: number of links */
-            'message'    => sprintf(__('Roundup post created successfully with %d link(s).', 'linkdigest'), $count),
+            'message'    => sprintf(__('Digest post created successfully with %d link(s).', 'linkdigest'), $count),
         );
     }
 
@@ -177,21 +177,21 @@ trait LinkDigest_Batch {
     }
 
     /**
-     * Build HTML content for a roundup post.
+     * Build HTML content for a digest post.
      *
      * @since 1.0.0
      * @param array $links_by_category Links grouped by category.
      * @param array $uncategorized_links Links without a category.
-     * @return string The formatted roundup content HTML.
+     * @return string The formatted digest content HTML.
      */
-    private function buildRoundupContent(array $links_by_category, array $uncategorized_links): string {
+    private function buildDigestContent(array $links_by_category, array $uncategorized_links): string {
         $content               = '';
-        $has_item_template     = $this->getTemplatePostId('roundup_item') !== null;
-        $has_group_template    = $this->getTemplatePostId('roundup_group') !== null;
+        $has_item_template     = $this->getTemplatePostId('digest_item') !== null;
+        $has_group_template    = $this->getTemplatePostId('digest_group') !== null;
 
         $render_group_heading = function(string $name) use (&$content, $has_group_template) {
             if ($has_group_template) {
-                $heading = $this->renderTemplate('roundup_group', array('category' => $name));
+                $heading = $this->renderTemplate('digest_group', array('category' => $name));
                 if (!empty($heading)) {
                     $content .= $heading . "\n\n";
                     return;
@@ -211,7 +211,7 @@ trait LinkDigest_Batch {
                 if ($has_item_template) {
                     $tags      = get_the_terms($link_id, 'linkdigest_tag');
                     $tag_names = ($tags && !is_wp_error($tags)) ? wp_list_pluck($tags, 'name') : array();
-                    $item_html = $this->renderTemplate('roundup_item', array(
+                    $item_html = $this->renderTemplate('digest_item', array(
                         'title'       => $link->post_title,
                         'url'         => $url,
                         'description' => $desc,
@@ -247,15 +247,15 @@ trait LinkDigest_Batch {
     }
 
     /**
-     * Assign categories to a roundup post.
+     * Assign categories to a digest post.
      *
      * @since 1.0.0
-     * @param int $post_id The roundup post ID.
+     * @param int $post_id The digest post ID.
      * @param array $links_by_category Links grouped by category.
      * @return void
      */
-    private function assignRoundupCategories(int $post_id, array $links_by_category): void {
-        // Mirrors linkdigest_category terms into native WP categories so the roundup
+    private function assignDigestCategories(int $post_id, array $links_by_category): void {
+        // Mirrors linkdigest_category terms into native WP categories so the digest
         // appears in standard category archives; creates the WP category if it doesn't exist.
         $all_cats = $this->collectCategoryTerms($links_by_category);
 
@@ -304,14 +304,14 @@ trait LinkDigest_Batch {
     }
 
     /**
-     * Assign tags from links to a roundup post.
+     * Assign tags from links to a digest post.
      *
      * @since 1.0.0
-     * @param int $post_id The roundup post ID.
+     * @param int $post_id The digest post ID.
      * @param array $link_ids Array of link post IDs.
      * @return void
      */
-    private function assignRoundupTags(int $post_id, array $link_ids): void {
+    private function assignDigestTags(int $post_id, array $link_ids): void {
         $tag_names = array();
         foreach ($link_ids as $link_id) {
             $tags = get_the_terms($link_id, 'linkdigest_tag');

@@ -1,6 +1,6 @@
 {
     "name": "latz/linkdigest",
-    "description": "LinkDigest WordPress plugin – curated link roundups",
+    "description": "LinkDigest WordPress plugin – curated link digests",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
     "autoload": {

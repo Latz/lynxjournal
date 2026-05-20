@@ -1,6 +1,6 @@
 # LinkDigest — Notifications
 
-After each publish run, LinkDigest can notify you via **email**, **Discord**, **Slack**, and **Telegram**. All channels are independent — enable any combination. Notifications fire only when a roundup post is actually created; skipped runs produce nothing.
+After each publish run, LinkDigest can notify you via **email**, **Discord**, **Slack**, and **Telegram**. All channels are independent — enable any combination. Notifications fire only when a digest post is actually created; skipped runs produce nothing.
 
 All notification settings live in **LinkDigest › Settings**.
 
@@ -23,11 +23,11 @@ Click **Test** next to the email field. A test message is sent immediately; a sn
 
 ### What the message looks like
 
-**Subject:** `[LinkDigest] Roundup published: 12 links`
+**Subject:** `[LinkDigest] Digest published: 12 links`
 
 **Body:**
 ```
-A new roundup was published.
+A new digest was published.
 
 Links: 12
 View: https://example.com/links-may-8-2026/
@@ -60,7 +60,7 @@ Click **Test** next to the Discord field. The button is disabled until you enter
 
 ### What the message looks like
 
-> **LinkDigest: roundup published**
+> **LinkDigest: digest published**
 > 12 links published. [View post](https://example.com/links-may-8-2026/)
 
 The embed uses a blue accent colour (`#2D9BF0`). If no post was published, the description reads: `12 links processed. No post published.`

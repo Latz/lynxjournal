@@ -14,7 +14,7 @@ const BLOCKS = [
 	{
 		name: 'field-title-link',
 		title: 'Link: Title as Link',
-		description: 'Outputs the link title as a hyperlink to the URL. Ideal for roundup item templates.',
+		description: 'Outputs the link title as a hyperlink to the URL. Ideal for digest item templates.',
 		label: '[ Title → URL ]',
 		icon: 'admin-links',
 	},
@@ -68,7 +68,7 @@ BLOCKS.forEach( ( { name, title, description, label, icon } ) => {
 registerBlockType( 'linkdigest/field-category', {
 	apiVersion: 3,
 	title: 'Category Heading',
-	description: 'Outputs the category name as a heading. Use in the Roundup Group template.',
+	description: 'Outputs the category name as a heading. Use in the Digest Group template.',
 	icon: 'heading',
 	category: 'text',
 	attributes: {
