@@ -51,7 +51,7 @@ trait LinkDigest_RestApi {
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/categories/(?P<id>\d+)', array(
             'methods'             => 'POST',
             'callback'            => [$this, 'updateCategory'],
-            'permission_callback' => fn() => current_user_can('manage_categories'),
+            'permission_callback' => fn() => current_user_can('edit_posts'),
             'args'                => array(
                 'id'          => array( 'required' => true,  'type' => 'integer' ),
                 'name'        => array( 'required' => true,  'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ),
@@ -70,31 +70,31 @@ trait LinkDigest_RestApi {
             array(
                 'methods'             => 'GET',
                 'callback'            => [$this, 'getSchedule'],
-                'permission_callback' => function() { return current_user_can('manage_options'); },
+                'permission_callback' => function() { return current_user_can('edit_posts'); },
             ),
             array(
                 'methods'             => 'POST',
                 'callback'            => [$this, 'saveSchedule'],
-                'permission_callback' => function() { return current_user_can('manage_options'); },
+                'permission_callback' => function() { return current_user_can('edit_posts'); },
             ),
         ));
 
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule/run', array(
             'methods'             => 'POST',
             'callback'            => [$this, 'runScheduleNow'],
-            'permission_callback' => function() { return current_user_can('manage_options'); },
+            'permission_callback' => function() { return current_user_can('edit_posts'); },
         ));
 
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule/preview', array(
             'methods'             => 'POST',
             'callback'            => fn() => rest_ensure_response($this->previewSchedule()),
-            'permission_callback' => fn() => current_user_can('manage_options'),
+            'permission_callback' => fn() => current_user_can('edit_posts'),
         ));
 
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule/diagnostics', array(
             'methods'             => 'GET',
             'callback'            => [$this, 'getScheduleDiagnostics'],
-            'permission_callback' => fn() => current_user_can('manage_options'),
+            'permission_callback' => fn() => current_user_can('edit_posts'),
         ));
 
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule/dismiss-cron-notice', array(
@@ -103,13 +103,13 @@ trait LinkDigest_RestApi {
                 update_option('linkdigest_cron_notice_dismissed', true);
                 return rest_ensure_response(array('success' => true));
             },
-            'permission_callback' => fn() => current_user_can('manage_options'),
+            'permission_callback' => fn() => current_user_can('edit_posts'),
         ));
 
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/api-key', array(
             'methods'             => 'GET',
             'callback'            => [$this, 'restGetApiKey'],
-            'permission_callback' => function() { return current_user_can('manage_options'); },
+            'permission_callback' => function() { return current_user_can('edit_posts'); },
         ));
     }
 
@@ -138,7 +138,7 @@ trait LinkDigest_RestApi {
         if (is_string($origin) && $this->isFromChromeExtension($origin)) {
             $this->setCorsOriginHeaders($origin);
         }
-        if (!current_user_can('manage_options')) {
+        if (!current_user_can('edit_posts')) {
             wp_send_json_error('Forbidden', 403);
         }
         wp_send_json_success(['nonce' => wp_create_nonce('wp_rest')]);

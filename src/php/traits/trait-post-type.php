@@ -191,6 +191,12 @@ trait LinkDigest_PostType {
             'show_in_nav_menus' => true,
             'show_tagcloud'     => true,
             'show_in_rest'      => true,
+            'capabilities'      => array(
+                'manage_terms' => 'edit_posts',
+                'edit_terms'   => 'edit_posts',
+                'delete_terms' => 'edit_posts',
+                'assign_terms' => 'edit_posts',
+            ),
         );
 
         register_taxonomy( 'linkdigest_category', array( 'linkdigest' ), $category_args );
@@ -228,6 +234,12 @@ trait LinkDigest_PostType {
             'show_in_nav_menus' => true,
             'show_tagcloud'     => true,
             'show_in_rest'      => true,
+            'capabilities'      => array(
+                'manage_terms' => 'edit_posts',
+                'edit_terms'   => 'edit_posts',
+                'delete_terms' => 'edit_posts',
+                'assign_terms' => 'edit_posts',
+            ),
         );
 
         register_taxonomy( 'linkdigest_tag', array( 'linkdigest' ), $tag_args );

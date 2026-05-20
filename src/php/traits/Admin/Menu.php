@@ -24,11 +24,11 @@ trait LinkDigest_Admin_Menu {
         $this->addSubmenu(__('Dashboard',        'linkdigest'), __('Dashboard',        'linkdigest'), 'read',              'linkdigest-dashboard',                                    'dashboardPage');
         $this->addSubmenu(__('Show Links',       'linkdigest'), __('All Links',        'linkdigest'), 'read',              'linkdigest-admin',                                        'showLinksPage');
         $this->addSubmenu(__('Add Link',         'linkdigest'), __('Add Link',         'linkdigest'), 'read',              'linkdigest-add',                                          'addLinkPage');
-        $this->addSubmenu(__('Categories',       'linkdigest'), __('Categories',       'linkdigest'), 'manage_categories', 'linkdigest-categories',                                   'categoriesPage');
-        $this->addSubmenu(__('Tags',             'linkdigest'), __('Tags',             'linkdigest'), 'manage_categories', 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest');
-        $this->addSubmenu(__('Chrome Extension', 'linkdigest'), __('Chrome Extension', 'linkdigest'), 'manage_options',    'linkdigest-settings',                                     'settingsPage');
-        $this->addSubmenu(__('Settings',         'linkdigest'), __('Settings',         'linkdigest'), 'manage_options',    'linkdigest-setting-x',                                    'settingXPage');
-        $this->addSubmenu(__('Schedule',         'linkdigest'), __('Schedule',         'linkdigest'), 'manage_options',    'linkdigest-schedule',                                     'schedulePage');
+        $this->addSubmenu(__('Categories',       'linkdigest'), __('Categories',       'linkdigest'), 'edit_posts', 'linkdigest-categories',                                   'categoriesPage');
+        $this->addSubmenu(__('Tags',             'linkdigest'), __('Tags',             'linkdigest'), 'edit_posts', 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest');
+        $this->addSubmenu(__('Chrome Extension', 'linkdigest'), __('Chrome Extension', 'linkdigest'), 'edit_posts', 'linkdigest-settings',                                     'settingsPage');
+        $this->addSubmenu(__('Settings',         'linkdigest'), __('Settings',         'linkdigest'), 'edit_posts', 'linkdigest-setting-x',                                    'settingXPage');
+        $this->addSubmenu(__('Schedule',         'linkdigest'), __('Schedule',         'linkdigest'), 'edit_posts', 'linkdigest-schedule',                                     'schedulePage');
     }
 
     /**
