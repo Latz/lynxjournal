@@ -316,12 +316,12 @@ trait LinkDigest_Admin_LinksPage {
 
         if ( $publish_status === 'published' ) {
             echo '<a href="' . esc_url( get_permalink( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Post', 'linkdigest' ) . '</a> | ';
-            echo '<a href="' . $unpublish_url . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'linkdigest' ) ) . '\');">' . esc_html__( 'Unpublish', 'linkdigest' ) . '</a> | ';
+            echo '<a href="' . esc_url( $unpublish_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'linkdigest' ) ) . '\');">' . esc_html__( 'Unpublish', 'linkdigest' ) . '</a> | ';
         } elseif ( $publish_status === 'draft' ) {
             echo '<a href="' . esc_url( get_edit_post_link( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Draft', 'linkdigest' ) . '</a> | ';
-            echo '<a href="' . $unpublish_url . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'linkdigest' ) ) . '\');">' . esc_html__( 'Unpublish', 'linkdigest' ) . '</a> | ';
+            echo '<a href="' . esc_url( $unpublish_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'linkdigest' ) ) . '\');">' . esc_html__( 'Unpublish', 'linkdigest' ) . '</a> | ';
         }
         echo '<a href="' . esc_url( get_edit_post_link( $link->ID ) ) . '">' . esc_html__( 'Edit', 'linkdigest' ) . '</a> | ';
-        echo '<a href="' . $delete_url . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete this link?', 'linkdigest' ) ) . '\');">' . esc_html__( 'Delete', 'linkdigest' ) . '</a>';
+        echo '<a href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete this link?', 'linkdigest' ) ) . '\');">' . esc_html__( 'Delete', 'linkdigest' ) . '</a>';
     }
 }
