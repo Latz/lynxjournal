@@ -311,23 +311,17 @@ trait LinkDigest_Admin_LinksPage {
     }
 
     private function renderLinkActions(\WP_Post $link, string $publish_status, mixed $published_post_id): void {
-        $confirm_unpublish = "return confirm('" . esc_js(__('Are you sure you want to unpublish this link?', 'linkdigest')) . "');";
-        $confirm_delete    = "return confirm('" . esc_js(__('Are you sure you want to delete this link?', 'linkdigest')) . "');";
-        $unpublish_url     = esc_url(wp_nonce_url(admin_url(self::ADMIN_LINKS_PAGE . '&action=unpublish_link&link_id=' . $link->ID), 'unpublish_link_' . $link->ID));
-        $delete_url        = esc_url(wp_nonce_url(admin_url(self::ADMIN_LINKS_PAGE . '&action=delete&link_id=' . $link->ID), 'delete_link_' . $link->ID));
-        $onclick_attr      = ' onclick="';
+        $unpublish_url = esc_url( wp_nonce_url( admin_url( self::ADMIN_LINKS_PAGE . '&action=unpublish_link&link_id=' . $link->ID ), 'unpublish_link_' . $link->ID ) );
+        $delete_url    = esc_url( wp_nonce_url( admin_url( self::ADMIN_LINKS_PAGE . '&action=delete&link_id=' . $link->ID ), 'delete_link_' . $link->ID ) );
 
-        if ($publish_status === 'published') {
-            echo '<a href="' . esc_url(get_permalink($published_post_id)) . '" target="_blank">' . esc_html__('View Post', 'linkdigest') . '</a> | ';
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $confirm_unpublish uses esc_js() internally
-            echo '<a href="' . esc_url($unpublish_url) . '"' . $onclick_attr . $confirm_unpublish . '">' . esc_html__('Unpublish', 'linkdigest') . '</a> | ';
-        } elseif ($publish_status === 'draft') {
-            echo '<a href="' . esc_url(get_edit_post_link($published_post_id)) . '" target="_blank">' . esc_html__('View Draft', 'linkdigest') . '</a> | ';
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $confirm_unpublish uses esc_js() internally
-            echo '<a href="' . esc_url($unpublish_url) . '"' . $onclick_attr . $confirm_unpublish . '">' . esc_html__('Unpublish', 'linkdigest') . '</a> | ';
+        if ( $publish_status === 'published' ) {
+            echo '<a href="' . esc_url( get_permalink( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Post', 'linkdigest' ) . '</a> | ';
+            echo '<a href="' . $unpublish_url . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'linkdigest' ) ) . '\');">' . esc_html__( 'Unpublish', 'linkdigest' ) . '</a> | ';
+        } elseif ( $publish_status === 'draft' ) {
+            echo '<a href="' . esc_url( get_edit_post_link( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Draft', 'linkdigest' ) . '</a> | ';
+            echo '<a href="' . $unpublish_url . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'linkdigest' ) ) . '\');">' . esc_html__( 'Unpublish', 'linkdigest' ) . '</a> | ';
         }
-        echo '<a href="' . esc_url(get_edit_post_link($link->ID)) . '">' . esc_html__('Edit', 'linkdigest') . '</a> | ';
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $confirm_delete uses esc_js() internally
-        echo '<a href="' . esc_url($delete_url) . '"' . $onclick_attr . $confirm_delete . '">' . esc_html__('Delete', 'linkdigest') . '</a>';
+        echo '<a href="' . esc_url( get_edit_post_link( $link->ID ) ) . '">' . esc_html__( 'Edit', 'linkdigest' ) . '</a> | ';
+        echo '<a href="' . $delete_url . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete this link?', 'linkdigest' ) ) . '\');">' . esc_html__( 'Delete', 'linkdigest' ) . '</a>';
     }
 }

@@ -574,7 +574,7 @@ trait LinkDigest_Admin_Dashboard {
                     <?php esc_html_e( 'No automatic schedule active.', 'linkdigest' ); ?>
                 </span>
             <?php endif; ?>
-            <a href="<?php echo $schedule_url; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>" class="linkdigest-schedule-status-link">
+            <a href="<?php echo esc_url( $schedule_url ); ?>" class="linkdigest-schedule-status-link">
                 <?php esc_html_e( 'Schedule settings →', 'linkdigest' ); ?>
             </a>
         </div>
@@ -643,22 +643,22 @@ trait LinkDigest_Admin_Dashboard {
             <?php else : ?>
             <!-- Statistics -->
             <div class="linkdigest-stats-grid">
-                <a href="<?php echo $all_links_url; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>" class="linkdigest-stat-card linkdigest-stat-card--link">
+                <a href="<?php echo esc_url( $all_links_url ); ?>" class="linkdigest-stat-card linkdigest-stat-card--link">
                     <span class="dashicons dashicons-admin-links linkdigest-stat-icon"></span>
                     <div><span class="linkdigest-stat-value" id="linkdigest-stat-total"><?php echo esc_html( number_format_i18n( $total_links ) ); ?></span>
                     <span class="linkdigest-stat-label"><?php esc_html_e( 'Total Links', 'linkdigest' ); ?></span></div>
                 </a>
-                <a href="<?php echo $categories_url; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>" class="linkdigest-stat-card linkdigest-stat-card--link">
+                <a href="<?php echo esc_url( $categories_url ); ?>" class="linkdigest-stat-card linkdigest-stat-card--link">
                     <span class="dashicons dashicons-category linkdigest-stat-icon"></span>
                     <div><span class="linkdigest-stat-value"><?php echo esc_html( number_format_i18n( $total_categories ) ); ?></span>
                     <span class="linkdigest-stat-label"><?php esc_html_e( 'Categories', 'linkdigest' ); ?></span></div>
                 </a>
-                <a href="<?php echo $all_links_url; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>" class="linkdigest-stat-card linkdigest-stat-card--link">
+                <a href="<?php echo esc_url( $all_links_url ); ?>" class="linkdigest-stat-card linkdigest-stat-card--link">
                     <span class="dashicons dashicons-yes-alt linkdigest-stat-icon"></span>
                     <div><span class="linkdigest-stat-value"><?php echo esc_html( number_format_i18n( $published_links ) ); ?></span>
                     <span class="linkdigest-stat-label"><?php esc_html_e( 'Published', 'linkdigest' ); ?></span></div>
                 </a>
-                <a href="<?php echo $all_links_url; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>" class="linkdigest-stat-card linkdigest-stat-card--link">
+                <a href="<?php echo esc_url( $all_links_url ); ?>" class="linkdigest-stat-card linkdigest-stat-card--link">
                     <span class="dashicons dashicons-clock linkdigest-stat-icon"></span>
                     <div><span class="linkdigest-stat-value" id="linkdigest-stat-unpublished"><?php echo esc_html( number_format_i18n( $unpublished_links ) ); ?></span>
                     <span class="linkdigest-stat-label"><?php esc_html_e( 'Unpublished', 'linkdigest' ); ?></span></div>

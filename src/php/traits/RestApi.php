@@ -340,8 +340,12 @@ trait LinkDigest_RestApi {
             $existing = get_posts(array(
                 'post_type'   => 'linkdigest',
                 'post_status' => 'any',
-                'meta_key'    => '_linkdigest_url', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-                'meta_value'  => $url, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+                'meta_query'  => array(
+                    array(
+                        'key'   => '_linkdigest_url',
+                        'value' => $url,
+                    ),
+                ),
                 'numberposts' => 1,
                 'fields'      => 'ids',
             ));

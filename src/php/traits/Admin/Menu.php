@@ -98,7 +98,6 @@ trait LinkDigest_Admin_Menu {
 
         $api_key     = get_option('linkdigest_api_key');
         $endpoint    = rest_url(LINKDIGEST_REST_NAMESPACE);
-        $has_key_attr = $api_key ? 'data-has-key="1"' : '';
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('LinkDigest Chrome Extension', 'linkdigest'); ?></h1>
@@ -164,7 +163,7 @@ trait LinkDigest_Admin_Menu {
                     </div>
                 <?php endif; ?>
 
-                <form method="post" action="" id="linkdigest-generate-form" <?php echo $has_key_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+                <form method="post" action="" id="linkdigest-generate-form" <?php if ( $api_key ) : ?>data-has-key="1"<?php endif; ?>>
                     <?php wp_nonce_field('linkdigest_settings', 'linkdigest_settings_nonce'); ?>
                     <?php if ($api_key) : ?>
                         <div class="notice notice-warning inline">

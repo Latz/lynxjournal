@@ -7,17 +7,13 @@ trait LinkDigest_Admin_AddLink {
     public function addLinkPage(): void {
         [$message, $error] = $this->processAddLinkSubmission();
 
-        // Pre-process POST values for form repopulation (nonce verified in processAddLinkSubmission).
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        $current_title   = isset($_POST['linkdigest_title'])   ? sanitize_text_field(wp_unslash($_POST['linkdigest_title']))   : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        $current_url     = isset($_POST['linkdigest_url'])     ? esc_url_raw(wp_unslash($_POST['linkdigest_url']))             : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        $current_content = isset($_POST['linkdigest_content']) ? wp_kses_post(wp_unslash($_POST['linkdigest_content']))        : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        $current_tags    = isset($_POST['linkdigest_tags'])    ? sanitize_text_field(wp_unslash($_POST['linkdigest_tags']))    : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        $current_cats    = isset($_POST['linkdigest_categories']) ? array_map('intval', $_POST['linkdigest_categories']) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        // Repopulate form fields from POST on submission; requires nonce to be present.
+        $nonce_ok        = isset( $_POST['linkdigest_add_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['linkdigest_add_nonce'] ) ), 'linkdigest_add_link' );
+        $current_title   = $nonce_ok && isset( $_POST['linkdigest_title'] )      ? sanitize_text_field( wp_unslash( $_POST['linkdigest_title'] ) )      : '';
+        $current_url     = $nonce_ok && isset( $_POST['linkdigest_url'] )        ? esc_url_raw( wp_unslash( $_POST['linkdigest_url'] ) )                : '';
+        $current_content = $nonce_ok && isset( $_POST['linkdigest_content'] )    ? wp_kses_post( wp_unslash( $_POST['linkdigest_content'] ) )           : '';
+        $current_tags    = $nonce_ok && isset( $_POST['linkdigest_tags'] )       ? sanitize_text_field( wp_unslash( $_POST['linkdigest_tags'] ) )       : '';
+        $current_cats    = $nonce_ok && isset( $_POST['linkdigest_categories'] ) ? array_map( 'intval', $_POST['linkdigest_categories'] )               : array();
 
         // Get all categories (cached for 1 hour, invalidated on term changes)
         $all_categories = $this->getCachedCategories();

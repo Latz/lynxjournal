@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -euo pipefail
 
@@ -25,7 +25,9 @@ echo "Deploying to $FTP_HOST$FTP_PATH ..."
 lftp -c "
   set ftp:ssl-allow no;
   open -u $FTP_USER,$FTP_PASS ftp://$FTP_ADDR;
-  mirror --reverse --delete --verbose $SOURCE/ $FTP_PATH/;
+  rm -rf $FTP_PATH/;
+  mkdir -p $FTP_PATH;
+  mirror --reverse --verbose $SOURCE/ $FTP_PATH/;
   bye
 "
 
