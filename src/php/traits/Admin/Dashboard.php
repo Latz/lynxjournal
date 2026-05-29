@@ -100,6 +100,9 @@ trait LinkDigest_Admin_Dashboard {
         if ( ! wp_verify_nonce( $nonce, 'linkdigest_batch_publish' ) ) {
             return null;
         }
+        if ( ! current_user_can( 'publish_posts' ) ) {
+            return null;
+        }
         $as_draft = isset( $_POST['publish_as_draft'] ) && sanitize_text_field( wp_unslash( $_POST['publish_as_draft'] ) ) === '1';
         return $this->batchPublishLinks( $this->getUnpublishedLinkIds(), $as_draft );
     }
@@ -116,6 +119,9 @@ trait LinkDigest_Admin_Dashboard {
         }
         $nonce = isset( $_POST['linkdigest_roundup_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['linkdigest_roundup_nonce'] ) ) : '';
         if ( ! wp_verify_nonce( $nonce, 'linkdigest_create_roundup' ) ) {
+            return null;
+        }
+        if ( ! current_user_can( 'publish_posts' ) ) {
             return null;
         }
         $roundup_title = isset( $_POST['roundup_title'] ) ? sanitize_text_field( wp_unslash( $_POST['roundup_title'] ) ) : '';
@@ -138,6 +144,9 @@ trait LinkDigest_Admin_Dashboard {
         $url      = isset( $_POST['quick_url'] )      ? esc_url_raw( wp_unslash( $_POST['quick_url'] ) )              : '';
         $category = isset( $_POST['quick_category'] ) ? (int) $_POST['quick_category']                                : 0;
         if ( ! wp_verify_nonce( $nonce, 'linkdigest_quick_add_link' ) || empty( $title ) ) {
+            return false;
+        }
+        if ( ! current_user_can( 'edit_posts' ) ) {
             return false;
         }
         $post_id = wp_insert_post( array(

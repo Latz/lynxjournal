@@ -73,6 +73,9 @@ trait LinkDigest_Admin_Categories {
         if ( ! wp_verify_nonce( $nonce, 'linkdigest_add_category' ) ) {
             return __( 'Security check failed.', 'linkdigest' );
         }
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            return __( 'Insufficient permissions.', 'linkdigest' );
+        }
         $name = sanitize_text_field( wp_unslash( $_POST['cat_name'] ?? '' ) );
         if ( empty( $name ) ) {
             return __( 'Category name is required.', 'linkdigest' );
@@ -90,6 +93,9 @@ trait LinkDigest_Admin_Categories {
     private function handleDeleteCategory(): bool {
         $nonce = isset( $_POST['linkdigest_cat_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['linkdigest_cat_nonce'] ) ) : '';
         if ( ! wp_verify_nonce( $nonce, 'linkdigest_delete_category' ) ) {
+            return false;
+        }
+        if ( ! current_user_can( 'edit_posts' ) ) {
             return false;
         }
         $term_id = isset( $_POST['cat_term_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['cat_term_id'] ) ) : 0;

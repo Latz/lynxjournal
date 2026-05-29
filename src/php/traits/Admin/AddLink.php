@@ -123,6 +123,10 @@ trait LinkDigest_Admin_AddLink {
             return ['', __('Security check failed.', 'linkdigest')];
         }
 
+        if (!current_user_can('edit_posts')) {
+            return ['', __('Insufficient permissions.', 'linkdigest')];
+        }
+
         $input = $this->validateAddLinkInput();
         return ($input['error'] !== '') ? ['', $input['error']] : $this->insertNewLink($input);
     }

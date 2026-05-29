@@ -260,6 +260,10 @@ trait LinkDigest_Admin_LinksPage {
             return [$message, $error];
         }
 
+        if (!current_user_can('edit_posts')) {
+            return [$message, $error];
+        }
+
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $action  = sanitize_key(wp_unslash($_GET['action']));
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended

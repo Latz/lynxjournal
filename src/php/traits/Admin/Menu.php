@@ -90,7 +90,7 @@ trait LinkDigest_Admin_Menu {
     public function settingsPage(): void {
         // Handle API key generation
         $nonce = isset($_POST['linkdigest_settings_nonce']) ? sanitize_text_field(wp_unslash($_POST['linkdigest_settings_nonce'])) : '';
-        if (isset($_POST['linkdigest_generate_api_key']) && wp_verify_nonce($nonce, 'linkdigest_settings')) {
+        if (isset($_POST['linkdigest_generate_api_key']) && wp_verify_nonce($nonce, 'linkdigest_settings') && current_user_can('edit_posts')) {
             $api_key = wp_generate_password(32, false);
             update_option('linkdigest_api_key', $api_key);
             echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('New API key generated successfully!', 'linkdigest') . '</p></div>';

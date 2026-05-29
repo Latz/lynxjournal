@@ -1,1 +1,0 @@
-claude --resume "fix-rest-link-validation"
