@@ -63,7 +63,9 @@ trait LinkDigest_RestApi {
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/links/(?P<id>\d+)', array(
             'methods'             => 'DELETE',
             'callback'            => [$this, 'restDeleteLink'],
-            'permission_callback' => function() { return current_user_can('delete_posts'); },
+            'permission_callback' => function( \WP_REST_Request $request ) {
+                return current_user_can('delete_post', (int) $request->get_param('id'));
+            },
         ));
 
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule', array(
@@ -103,13 +105,13 @@ trait LinkDigest_RestApi {
                 update_option('linkdigest_cron_notice_dismissed', true);
                 return rest_ensure_response(array('success' => true));
             },
-            'permission_callback' => fn() => current_user_can('edit_posts'),
+            'permission_callback' => fn() => current_user_can('manage_options'),
         ));
 
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/api-key', array(
             'methods'             => 'GET',
             'callback'            => [$this, 'restGetApiKey'],
-            'permission_callback' => function() { return current_user_can('edit_posts'); },
+            'permission_callback' => function() { return current_user_can('manage_options'); },
         ));
     }
 
