@@ -51,7 +51,7 @@ trait LinkDigest_RestApi {
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/categories/(?P<id>\d+)', array(
             'methods'             => 'POST',
             'callback'            => [$this, 'updateCategory'],
-            'permission_callback' => fn() => current_user_can('manage_categories'),
+            'permission_callback' => fn() => current_user_can('edit_posts'),
             'args'                => array(
                 'id'          => array( 'required' => true,  'type' => 'integer' ),
                 'name'        => array( 'required' => true,  'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ),
@@ -70,7 +70,7 @@ trait LinkDigest_RestApi {
             array(
                 'methods'             => 'GET',
                 'callback'            => [$this, 'getSchedule'],
-                'permission_callback' => function() { return current_user_can('manage_options'); },
+                'permission_callback' => function() { return current_user_can('edit_posts'); },
             ),
             array(
                 'methods'             => 'POST',
@@ -88,13 +88,13 @@ trait LinkDigest_RestApi {
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule/preview', array(
             'methods'             => 'POST',
             'callback'            => fn() => rest_ensure_response($this->previewSchedule()),
-            'permission_callback' => fn() => current_user_can('manage_options'),
+            'permission_callback' => fn() => current_user_can('edit_posts'),
         ));
 
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule/diagnostics', array(
             'methods'             => 'GET',
             'callback'            => [$this, 'getScheduleDiagnostics'],
-            'permission_callback' => fn() => current_user_can('manage_options'),
+            'permission_callback' => fn() => current_user_can('edit_posts'),
         ));
 
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule/dismiss-cron-notice', array(
@@ -103,38 +103,13 @@ trait LinkDigest_RestApi {
                 update_option('linkdigest_cron_notice_dismissed', true);
                 return rest_ensure_response(array('success' => true));
             },
-            'permission_callback' => fn() => current_user_can('manage_options'),
+            'permission_callback' => fn() => current_user_can('edit_posts'),
         ));
 
         register_rest_route(LINKDIGEST_REST_NAMESPACE, '/api-key', array(
             'methods'             => 'GET',
             'callback'            => [$this, 'restGetApiKey'],
-            'permission_callback' => function() { return current_user_can('manage_options'); },
-        ));
-
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/notify', array(
-            array(
-                'methods'             => 'GET',
-                'callback'            => [$this, 'getNotify'],
-                'permission_callback' => fn() => current_user_can('manage_options'),
-            ),
-            array(
-                'methods'             => 'POST',
-                'callback'            => [$this, 'saveNotify'],
-                'permission_callback' => fn() => current_user_can('manage_options'),
-            ),
-        ));
-
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/notify/test', array(
-            'methods'             => 'POST',
-            'callback'            => [$this, 'testNotify'],
-            'permission_callback' => fn() => current_user_can('manage_options'),
-        ));
-
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/notify/telegram-chat-id', array(
-            'methods'             => 'POST',
-            'callback'            => [$this, 'getTelegramChatId'],
-            'permission_callback' => fn() => current_user_can('manage_options'),
+            'permission_callback' => function() { return current_user_can('edit_posts'); },
         ));
     }
 
@@ -163,7 +138,7 @@ trait LinkDigest_RestApi {
         if (is_string($origin) && $this->isFromChromeExtension($origin)) {
             $this->setCorsOriginHeaders($origin);
         }
-        if (!current_user_can('manage_options')) {
+        if (!current_user_can('edit_posts')) {
             wp_send_json_error('Forbidden', 403);
         }
         wp_send_json_success(['nonce' => wp_create_nonce('wp_rest')]);
@@ -230,178 +205,9 @@ trait LinkDigest_RestApi {
         if (!array_key_exists('publishAs', $validated)) {
             $validated['publishAs'] = get_current_user_id() ?: null;
         }
-        $existing = get_option('linkdigest_schedule', array());
-        if (isset($existing['notify'])) {
-            $validated['notify'] = $existing['notify'];
-        }
         update_option('linkdigest_schedule', $validated);
         $this->scheduleNextEvent();
         return rest_ensure_response(array('success' => true));
-    }
-
-    /**
-     * Get the notification configuration.
-     *
-     * @since 2.0.0
-     * @return mixed REST response with notification configuration.
-     */
-    public function getNotify(): mixed {
-        $config  = get_option('linkdigest_schedule', array());
-        $default = array('enabled' => false, 'email' => '', 'discord_webhook' => '', 'slack_webhook' => '', 'telegram_bot_token' => '', 'telegram_chat_id' => '');
-        return rest_ensure_response(array_merge($default, (array) ($config['notify'] ?? array())));
-    }
-
-    /**
-     * Save the notification configuration.
-     *
-     * @since 2.0.0
-     * @param \WP_REST_Request $request The REST request with notification data.
-     * @return mixed REST response or error.
-     */
-    public function saveNotify(\WP_REST_Request $request): mixed {
-        $data  = array('notify' => $request->get_json_params());
-        $error = $this->validateNotify($data);
-        if ($error) {
-            return $error;
-        }
-        $config           = get_option('linkdigest_schedule', array());
-        $config['notify'] = $data['notify'];
-        update_option('linkdigest_schedule', $config);
-        return rest_ensure_response(array('success' => true));
-    }
-
-    /**
-     * Send a test notification for the given channel.
-     *
-     * @since 2.0.0
-     * @param \WP_REST_Request $request The REST request with type and value.
-     * @return mixed REST response or error.
-     */
-    public function testNotify(\WP_REST_Request $request): mixed {
-        $type  = sanitize_key((string) $request->get_param('type'));
-        $value = sanitize_text_field((string) $request->get_param('value'));
-
-        switch ($type) {
-            case 'email':
-                $to      = !empty($value) && is_email($value) ? $value : get_option('admin_email');
-                $subject = __('[LinkDigest] Test notification', 'linkdigest');
-                $message = __('This is a test notification from LinkDigest.', 'linkdigest');
-                $sent    = wp_mail($to, $subject, $message);
-                return $sent
-                    ? rest_ensure_response(array('success' => true))
-                    : new \WP_Error('mail_failed', __('Failed to send test email. Check your server mail configuration.', 'linkdigest'), array('status' => 500));
-
-            case 'discord':
-                if (empty($value) || !filter_var($value, FILTER_VALIDATE_URL)) {
-                    return new \WP_Error('invalid_url', __('Enter a valid Discord webhook URL first.', 'linkdigest'), array('status' => 400));
-                }
-                $payload  = array('embeds' => array(array(
-                    'title'       => __('LinkDigest: test notification', 'linkdigest'),
-                    'description' => __('This is a test message.', 'linkdigest'),
-                    'color'       => 0x2D9BF0,
-                )));
-                $response = wp_remote_post($value, array(
-                    'headers'     => array('Content-Type' => 'application/json'),
-                    'body'        => wp_json_encode($payload),
-                    'blocking'    => true,
-                    'data_format' => 'body',
-                ));
-                if (is_wp_error($response)) {
-                    return new \WP_Error('request_failed', $response->get_error_message(), array('status' => 500));
-                }
-                $code = wp_remote_retrieve_response_code($response);
-                return ($code >= 200 && $code < 300)
-                    ? rest_ensure_response(array('success' => true))
-                    /* translators: %d: HTTP status code returned by the webhook endpoint */
-                    : new \WP_Error('webhook_error', sprintf(__('Discord returned HTTP %d.', 'linkdigest'), $code), array('status' => 502));
-
-            case 'slack':
-                if (empty($value) || !filter_var($value, FILTER_VALIDATE_URL)) {
-                    return new \WP_Error('invalid_url', __('Enter a valid Slack webhook URL first.', 'linkdigest'), array('status' => 400));
-                }
-                $response = wp_remote_post($value, array(
-                    'headers'     => array('Content-Type' => 'application/json'),
-                    'body'        => wp_json_encode(array('text' => __('*LinkDigest:* This is a test message.', 'linkdigest'))),
-                    'blocking'    => true,
-                    'data_format' => 'body',
-                ));
-                if (is_wp_error($response)) {
-                    return new \WP_Error('request_failed', $response->get_error_message(), array('status' => 500));
-                }
-                $code = wp_remote_retrieve_response_code($response);
-                return ($code >= 200 && $code < 300)
-                    ? rest_ensure_response(array('success' => true))
-                    /* translators: %d: HTTP status code returned by the webhook endpoint */
-                    : new \WP_Error('webhook_error', sprintf(__('Slack returned HTTP %d.', 'linkdigest'), $code), array('status' => 502));
-
-            case 'telegram':
-                $token   = sanitize_text_field((string) $request->get_param('telegram_bot_token'));
-                $chat_id = sanitize_text_field((string) $request->get_param('telegram_chat_id'));
-                if (empty($token) || empty($chat_id)) {
-                    return new \WP_Error('missing_telegram', __('Enter a bot token and chat ID first.', 'linkdigest'), array('status' => 400));
-                }
-                $tg_url   = 'https://api.telegram.org/bot' . $token . '/sendMessage';
-                $response = wp_remote_post($tg_url, array(
-                    'headers'     => array('Content-Type' => 'application/json'),
-                    'body'        => wp_json_encode(array(
-                        'chat_id'    => $chat_id,
-                        'text'       => __('<b>LinkDigest:</b> This is a test message.', 'linkdigest'),
-                        'parse_mode' => 'HTML',
-                    )),
-                    'blocking'    => true,
-                    'data_format' => 'body',
-                ));
-                if (is_wp_error($response)) {
-                    return new \WP_Error('request_failed', $response->get_error_message(), array('status' => 500));
-                }
-                $code = wp_remote_retrieve_response_code($response);
-                return ($code >= 200 && $code < 300)
-                    ? rest_ensure_response(array('success' => true))
-                    /* translators: %d: HTTP status code returned by the Telegram API */
-                    : new \WP_Error('telegram_error', sprintf(__('Telegram returned HTTP %d.', 'linkdigest'), $code), array('status' => 502));
-
-            default:
-                return new \WP_Error('invalid_type', __('Invalid notification type.', 'linkdigest'), array('status' => 400));
-        }
-    }
-
-    /**
-     * Retrieve the chat ID from the bot's pending updates.
-     *
-     * @since 2.0.0
-     * @param \WP_REST_Request $request The REST request with bot token.
-     * @return mixed REST response with chat_id or WP_Error.
-     */
-    public function getTelegramChatId(\WP_REST_Request $request): mixed {
-        $token = sanitize_text_field((string) $request->get_param('token'));
-        if (empty($token)) {
-            return new \WP_Error('missing_token', __('Bot token is required.', 'linkdigest'), array('status' => 400));
-        }
-        $response = wp_remote_get('https://api.telegram.org/bot' . $token . '/getUpdates', array(
-            'timeout'  => 10,
-            'blocking' => true,
-        ));
-        if (is_wp_error($response)) {
-            return new \WP_Error('request_failed', $response->get_error_message(), array('status' => 500));
-        }
-        $code = wp_remote_retrieve_response_code($response);
-        if ($code !== 200) {
-            /* translators: %d: HTTP status code returned by the Telegram API */
-            return new \WP_Error('telegram_error', sprintf(__('Telegram returned HTTP %d. Check your bot token.', 'linkdigest'), $code), array('status' => 502));
-        }
-        $body = json_decode(wp_remote_retrieve_body($response), true);
-        if (empty($body['ok']) || empty($body['result'])) {
-            return new \WP_Error('no_messages', __('No messages found. Open Telegram and send any message to your bot first.', 'linkdigest'), array('status' => 404));
-        }
-        $last    = end($body['result']);
-        $chat_id = $last['message']['chat']['id']
-            ?? $last['channel_post']['chat']['id']
-            ?? $last['my_chat_member']['chat']['id']
-            ?? null;
-        if ($chat_id === null) {
-            return new \WP_Error('no_chat_id', __('Could not determine a chat ID from the bot updates.', 'linkdigest'), array('status' => 404));
-        }
-        return rest_ensure_response(array('chat_id' => (string) $chat_id));
     }
 
     /**
@@ -534,8 +340,13 @@ trait LinkDigest_RestApi {
             $existing = get_posts(array(
                 'post_type'   => 'linkdigest',
                 'post_status' => 'any',
-                'meta_key'    => '_linkdigest_url', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-                'meta_value'  => $url, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+                // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+                'meta_query'  => array(
+                    array(
+                        'key'   => '_linkdigest_url',
+                        'value' => $url,
+                    ),
+                ),
                 'numberposts' => 1,
                 'fields'      => 'ids',
             ));
