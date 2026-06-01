@@ -52,6 +52,7 @@
   "msgSettingsFailed":    { "message": "Failed to save settings. Please try again." },
   "msgChecking":          { "message": "Checking…" },
   "msgNoWp":              { "message": "✗ No WordPress installation found at this URL" },
+  "msgUrlCorrected":      { "message": "✓ WordPress found — URL updated to site root" },
   "msgNotLoggedIn":       { "message": "✗ Not logged in to WordPress" },
   "msgFetchingNonce":     { "message": "✓ Logged in — fetching nonce…" },
   "msgFetchingKey":       { "message": "✓ Logged in — fetching API key…" },

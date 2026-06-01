@@ -52,6 +52,7 @@
   "msgSettingsFailed":    { "message": "Einstellungen konnten nicht gespeichert werden. Bitte erneut versuchen." },
   "msgChecking":          { "message": "Wird geprüft…" },
   "msgNoWp":              { "message": "✗ Keine WordPress-Installation unter dieser URL gefunden" },
+  "msgUrlCorrected":      { "message": "✓ WordPress gefunden — URL auf Website-Wurzel aktualisiert" },
   "msgNotLoggedIn":       { "message": "✗ Nicht bei WordPress angemeldet" },
   "msgFetchingNonce":     { "message": "✓ Angemeldet — Nonce wird abgerufen…" },
   "msgFetchingKey":       { "message": "✓ Angemeldet — API-Schlüssel wird abgerufen…" },

@@ -1,5 +1,5 @@
 import { applyI18n } from './i18n.js';
-import { extractPageDescription as extractPageDescriptionUtil, renderCategories as renderCategoriesUtil } from '../src/js/popup-utils.js';
+import { renderCategories as renderCategoriesUtil } from './popup-utils.js';
 
 // Check if settings are configured
 export async function checkSettings() {
@@ -16,9 +16,27 @@ export async function checkSettings() {
     return true;
 }
 
-// Extract description from page meta tags (runs inside the tab's context)
+// Extract description from page meta tags (runs inside the tab's context).
+// Must be self-contained — no references to extension-scope imports,
+// since this function is serialized and injected into the target tab.
 export function extractPageDescription() {
-    return extractPageDescriptionUtil(document);
+    const candidates = [
+        ['property', 'og:description'],
+        ['name',     'description'],
+        ['name',     'twitter:description'],
+        ['name',     'og:description'],
+        ['http-equiv', 'description'],
+    ];
+    for (const [attr, value] of candidates) {
+        const nodes = document.querySelectorAll(`[${attr}="${value}" i]`);
+        for (const node of nodes) {
+            let text = (node.content || '').trim();
+            while (text.startsWith('\n')) text = text.slice(1);
+            while (text.endsWith('\n')) text = text.slice(0, -1);
+            if (text) return text;
+        }
+    }
+    return '';
 }
 
 // Load current page info
@@ -83,6 +101,11 @@ export async function loadCategories() {
                 'X-LinkDigest-API-Key': settings.apiKey
             }
         });
+        if (response.status === 401 || response.status === 403 || response.status === 404) {
+            document.getElementById('setupMessage').style.display = 'block';
+            document.getElementById('mainForm').style.display = 'none';
+            return;
+        }
         if (!response.ok) throw new Error('Failed to load categories');
         const categories = await response.json();
         await chrome.storage.local.set({ categories, categoriesTimestamp: Date.now() });
