@@ -131,27 +131,18 @@ trait LinkDigest_Scheduler {
         $title = sprintf(__('Links: %s', 'linkdigest'), wp_date('F j, Y'));
         $title = (string) apply_filters('linkdigest_digest_title', $title, $link_ids, $mode);
 
-        // Use the stored publishAs user; fall back to first administrator.
-        // WP-Cron runs unauthenticated, so we must elevate before calling
-        // createDigestPost() which guards on current_user_can('publish_posts').
-        $publish_as   = (int) ($config['publishAs'] ?? 0);
-        $prev_user_id = get_current_user_id();
-        if ($publish_as === 0) {
+        // Resolve the author for the digest post. WP-Cron runs unauthenticated
+        // (user 0), so we pass the stored publishAs user ID directly to
+        // createDigestPost() as post_author instead of using wp_set_current_user().
+        $publish_as = (int) ($config['publishAs'] ?? 0);
+        if ($publish_as === 0 || !user_can($publish_as, 'publish_posts')) {
             $admin_ids  = get_users(['role' => 'administrator', 'number' => 1, 'fields' => 'ids']);
             $publish_as = !empty($admin_ids) ? (int) $admin_ids[0] : 0;
-        }
-        if ($publish_as > 0 && get_current_user_id() !== $publish_as) {
-            wp_set_current_user($publish_as);
         }
 
         do_action('linkdigest_before_run', $link_ids, $mode);
         $as_draft = ($config['post_status'] ?? 'publish') === 'draft';
-        $digest  = $this->createDigestPost($link_ids, $title, $as_draft, $mode);
-
-        // Restore previous user context.
-        if (get_current_user_id() !== $prev_user_id) {
-            wp_set_current_user($prev_user_id);
-        }
+        $digest   = $this->createDigestPost($link_ids, $title, $as_draft, $mode, $publish_as);
 
         $post_id = ($digest['post_id'] ?? 0) ?: null;
         do_action('linkdigest_after_run', $post_id, $link_ids, $mode);

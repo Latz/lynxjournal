@@ -59,10 +59,9 @@ trait LinkDigest_Batch {
      * @param string $mode The scheduling mode that triggered this ('manual', 'daily', etc).
      * @return array Result array with success status, post_id, link count, and message.
      */
-    public function createDigestPost(mixed $link_ids, string $post_title, bool $as_draft = false, string $mode = 'manual'): array {
-        $guard = $this->validateDigestRequest($link_ids);
-        if ($guard !== null) {
-            return $guard;
+    public function createDigestPost(mixed $link_ids, string $post_title, bool $as_draft = false, string $mode = 'manual', int $author_id = 0): array {
+        if (empty($link_ids) || !is_array($link_ids)) {
+            return array('success' => false, 'post_id' => 0, 'message' => __('No links to publish.', 'linkdigest'), 'error_code' => 'no_links');
         }
 
         // Prime caches: 4 queries instead of ~5×N in the batch publishing path
@@ -91,24 +90,7 @@ trait LinkDigest_Batch {
             return array('success' => false, 'post_id' => 0, 'message' => __('No valid links to publish.', 'linkdigest'), 'error_code' => 'no_valid_links');
         }
 
-        return $this->executeDigestInsertion($post_title, $as_draft, $links_by_category, $uncategorized_links, $published_count, $link_ids, $mode);
-    }
-
-    /**
-     * Validate a digest publish request.
-     *
-     * @since 1.0.0
-     * @param mixed $link_ids Array of link post IDs.
-     * @return array|null Validation error array or null if valid.
-     */
-    private function validateDigestRequest(mixed $link_ids): ?array {
-        if (!current_user_can('publish_posts')) {
-            return array('success' => false, 'post_id' => 0, 'message' => __('You do not have permission to publish posts.', 'linkdigest'), 'error_code' => 'no_permission');
-        }
-        if (empty($link_ids) || !is_array($link_ids)) {
-            return array('success' => false, 'post_id' => 0, 'message' => __('No links to publish.', 'linkdigest'), 'error_code' => 'no_links');
-        }
-        return null;
+        return $this->executeDigestInsertion($post_title, $as_draft, $links_by_category, $uncategorized_links, $published_count, $link_ids, $mode, $author_id);
     }
 
     /**
@@ -122,16 +104,21 @@ trait LinkDigest_Batch {
      * @param int $count Total count of links.
      * @param array $link_ids All link post IDs.
      * @param string $mode The scheduling mode that triggered this.
+     * @param int $author_id Optional post author user ID.
      * @return array Result array with success status, post_id, link_count, and message.
      */
-    private function executeDigestInsertion(string $post_title, bool $as_draft, array $links_by_category, array $uncategorized_links, int $count, array $link_ids, string $mode = 'manual'): array {
+    private function executeDigestInsertion(string $post_title, bool $as_draft, array $links_by_category, array $uncategorized_links, int $count, array $link_ids, string $mode = 'manual', int $author_id = 0): array {
         // post_type 'post': the digest is a normal blog post, not a linkdigest CPT entry.
-        $args = apply_filters('linkdigest_digest_post_args', array(
+        $post_args = array(
             'post_title'   => $post_title,
             'post_content' => $this->buildDigestContent($links_by_category, $uncategorized_links),
             'post_status'  => $as_draft ? 'draft' : 'publish',
             'post_type'    => 'post',
-        ), $link_ids, $mode);
+        );
+        if ($author_id > 0) {
+            $post_args['post_author'] = $author_id;
+        }
+        $args    = apply_filters('linkdigest_digest_post_args', $post_args, $link_ids, $mode);
         $post_id = wp_insert_post($args);
 
         if (is_wp_error($post_id) || !$post_id) {
