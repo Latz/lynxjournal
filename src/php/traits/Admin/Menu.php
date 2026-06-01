@@ -18,7 +18,7 @@ trait LinkDigest_Admin_Menu {
             'linkdigest-dashboard',
             [$this, 'dashboardPage'],
             plugins_url('assets/icon-menu.png', LINKDIGEST_PLUGIN_FILE),
-            6
+            null
         );
 
         $this->addSubmenu(__('Dashboard',        'linkdigest'), __('Dashboard',        'linkdigest'), 'read',              'linkdigest-dashboard',                                    'dashboardPage');
@@ -300,9 +300,9 @@ trait LinkDigest_Admin_Menu {
             );
 
             wp_localize_script('linkdigest-schedule', 'linkdigestSchedule', array(
-                'allModes'     => array_column(\ScheduleMode::cases(), 'value'),
-                'timeModes'    => array_column(\ScheduleMode::timeBased(), 'value'),
-                'triggerModes' => array_column(\ScheduleMode::triggerBased(), 'value'),
+                'allModes'     => array_column(\LinkDigest_ScheduleMode::cases(), 'value'),
+                'timeModes'    => array_column(\LinkDigest_ScheduleMode::time_based(), 'value'),
+                'triggerModes' => array_column(\LinkDigest_ScheduleMode::trigger_based(), 'value'),
                 'timezone'     => wp_timezone_string(),
             ));
 

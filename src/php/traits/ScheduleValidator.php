@@ -36,7 +36,7 @@ trait LinkDigest_ScheduleValidator {
                 ['status' => 400]
             );
         }
-        $valid_modes = array_column(ScheduleMode::cases(), 'value');
+        $valid_modes = array_column(LinkDigest_ScheduleMode::cases(), 'value');
         if (!isset($data['mode']) || !in_array($data['mode'], $valid_modes, true)) {
             return new \WP_Error('invalid_mode', __('Invalid schedule mode', 'linkdigest'), ['status' => 400]);
         }
@@ -92,6 +92,9 @@ trait LinkDigest_ScheduleValidator {
             $data['publishAs'] = (int) $data['publishAs'];
             if ($data['publishAs'] < 0) {
                 return new \WP_Error('invalid_publish_as', __('publishAs must be a non-negative integer', 'linkdigest'), ['status' => 400]);
+            }
+            if ($data['publishAs'] > 0 && !user_can($data['publishAs'], 'edit_posts')) {
+                return new \WP_Error('invalid_publish_as', __('publishAs must refer to a user who can publish posts', 'linkdigest'), ['status' => 400]);
             }
         }
         if (isset($data['post_status']) && !in_array($data['post_status'], ['publish', 'draft'], true)) {

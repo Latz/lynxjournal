@@ -3,7 +3,7 @@
  * Plugin Name: LinkDigest
  * Description: Save and publish links to your blog
  * Version: 1.0.2
- * Author: Latz
+ * Author: latz
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: linkdigest
@@ -24,7 +24,7 @@ define('LINKDIGEST_POST_TYPE',      'linkdigest');
 
 define('LINKDIGEST_PLUGIN_FILE', __FILE__);
 
-require_once __DIR__ . '/src/php/ScheduleMode.php';
+require_once __DIR__ . '/src/php/schedule-mode.php';
 
 // Traits (must be required before the class)
 require_once __DIR__ . '/src/php/traits/trait-post-type.php';

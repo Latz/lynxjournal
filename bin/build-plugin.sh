@@ -19,12 +19,10 @@ if [ -z "$VERSION" ]; then
 fi
 
 PLUGIN_NAME="linkdigest"
-ZIP_NAME="${PLUGIN_NAME}-${VERSION}.zip"
-ZIP_PATH="$DIST_DIR/$ZIP_NAME"
 STAGE_DIR="$DIST_DIR/${PLUGIN_NAME}"
 
 echo "Version : $VERSION"
-echo "Output  : $ZIP_PATH"
+echo "Output  : $STAGE_DIR"
 echo ""
 
 # Require node_modules (avoid slow npm install inside a build script)
@@ -46,19 +44,36 @@ echo "Copying plugin files..."
 rsync -a \
     --exclude-from="$PROJECT_DIR/.distignore" \
     --exclude='dist/' \
+    --exclude='assets/' \
+    --exclude='chrome-extension/' \
+    --exclude='languages/' \
+    --exclude='.*' \
     "$PROJECT_DIR/" "$STAGE_DIR/"
+
+# Copy explicitly included folders
+echo "Copying assets/..."
+rsync -a "$PROJECT_DIR/assets/" "$STAGE_DIR/assets/"
+
+echo "Copying chrome-extension/..."
+rsync -a \
+    --exclude='*.zip' \
+    --exclude='README.md' \
+    "$PROJECT_DIR/chrome-extension/" "$STAGE_DIR/chrome-extension/"
+
+echo "Copying languages/..."
+rsync -a "$PROJECT_DIR/languages/" "$STAGE_DIR/languages/"
 
 # Flatten PHP into includes/ (src/ is excluded by .distignore above)
 echo "Flattening PHP into includes/..."
 mkdir -p "$STAGE_DIR/includes"
-cp "$PROJECT_DIR/src/php/ScheduleMode.php" "$STAGE_DIR/includes/"
+cp "$PROJECT_DIR/src/php/schedule-mode.php" "$STAGE_DIR/includes/"
 cp "$PROJECT_DIR/src/php/traits/"*.php "$STAGE_DIR/includes/"
 cp "$PROJECT_DIR/src/php/traits/Admin/"*.php "$STAGE_DIR/includes/"
 cp "$PROJECT_DIR/src/php/class-linkdigest.php" "$STAGE_DIR/includes/"
 
 # Patch require_once paths in the staged linkdigest.php
 sed -i \
-    -e "s|src/php/ScheduleMode\.php|includes/ScheduleMode.php|g" \
+    -e "s|src/php/schedule-mode\.php|includes/schedule-mode.php|g" \
     -e "s|src/php/traits/Admin/Menu\.php|includes/Menu.php|g" \
     -e "s|src/php/traits/Admin/Dashboard\.php|includes/Dashboard.php|g" \
     -e "s|src/php/traits/Admin/LinksPage\.php|includes/LinksPage.php|g" \
@@ -79,16 +94,11 @@ sed -i \
 mv "$STAGE_DIR/build" "$STAGE_DIR/schedule"
 sed -i "s|'build/|'schedule/|g" "$STAGE_DIR/includes/Menu.php"
 
-# Zip the staging directory
-echo "Creating archive..."
-(cd "$DIST_DIR" && zip -r -q "$ZIP_PATH" "$PLUGIN_NAME")
-
 echo ""
 echo "=========================================="
 echo "Build complete"
 echo "=========================================="
 echo ""
-echo "Archive : $ZIP_NAME"
-echo "Size    : $(du -h "$ZIP_PATH" | cut -f1)"
-echo "Path    : $ZIP_PATH"
+echo "Path : $STAGE_DIR"
+echo "Size : $(du -sh "$STAGE_DIR" | cut -f1)"
 echo ""
