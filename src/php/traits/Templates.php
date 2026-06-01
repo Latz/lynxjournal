@@ -64,7 +64,8 @@ trait LinkDigest_Templates {
             'field-url'         => array($this, 'renderBlockFieldUrl'),
             'field-description' => array($this, 'renderBlockFieldDescription'),
             'field-read-more'   => array($this, 'renderBlockFieldReadMore'),
-            'field-tags'        => array($this, 'renderBlockFieldTags'),
+            'field-tags'         => array($this, 'renderBlockFieldTags'),
+            'field-current-date' => array($this, 'renderBlockFieldCurrentDate'),
         );
 
         foreach ($blocks as $block_name => $callback) {
@@ -324,6 +325,15 @@ trait LinkDigest_Templates {
         $data = $GLOBALS['linkdigest_template_data'] ?? array();
         $tags = $data['tags'] ?? array();
         return empty($tags) ? '' : '<p ' . get_block_wrapper_attributes() . '>' . esc_html(implode(', ', $tags)) . '</p>';
+    }
+
+    /**
+     * @since 2.3.0
+     * @param array $attributes Block attributes (unused).
+     * @return string
+     */
+    public function renderBlockFieldCurrentDate(array $attributes): string {
+        return '<time ' . get_block_wrapper_attributes() . ' datetime="' . esc_attr(wp_date('Y-m-d')) . '">' . esc_html(wp_date(get_option('date_format'))) . '</time>';
     }
 
     /**

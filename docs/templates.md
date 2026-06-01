@@ -103,8 +103,13 @@ LinkDigest registers the following blocks under the **Text** category in the blo
 | `linkdigest/field-description` | Link: Description | Rich HTML (safe tags) | Any |
 | `linkdigest/field-read-more` | Link: Read More | `<p><a href="…">Read more →</a></p>` | Link Template |
 | `linkdigest/field-tags` | Link: Tags | `<p>tag1, tag2, …</p>` | Any |
+| `linkdigest/field-current-date` | Digest: Current Date | `<time datetime="…">…</time>` | Any |
 | `linkdigest/field-category` | Category Heading | `<h1>`–`<h6>` (configurable) | Digest Group Template |
 | `linkdigest/field-items-list` | Items List | *(none — sets list type)* | Digest Group Template |
+
+### Current Date (`field-current-date`)
+
+Outputs today's date at the moment the digest (or link post) is rendered. The date is formatted according to the site's **Settings › General › Date Format** and wrapped in a semantic `<time>` element with a machine-readable `datetime="YYYY-MM-DD"` attribute. No configuration is needed — just add the block and it always reflects the current date.
 
 ### Category Heading (`field-category`)
 
@@ -129,6 +134,7 @@ Each block handles missing data gracefully:
 * **field-read-more** — outputs nothing if no URL is saved.
 * **field-tags** — outputs nothing if no tags are assigned.
 * **field-category** — outputs nothing if no category name is available.
+* **field-current-date** — always outputs a value (the current date is always known).
 
 If a template post is missing entirely (e.g. deleted from the database), the plugin falls back to a minimal hardcoded layout:
 
@@ -162,7 +168,18 @@ The next digest will include `<p><a href="…">Read more →</a></p>` at the end
 
 ---
 
-### Example 3: Use a numbered list for digest items
+### Example 3: Add the publication date to a digest group heading
+
+1. Go to **LinkDigest › Digest Group Template**.
+2. Click the **+** inserter and search for "Current Date".
+3. Add the **Digest: Current Date** block above or below the **Category Heading** block.
+4. Click **Update**.
+
+The date is rendered using the format set in **Settings › General › Date Format**.
+
+---
+
+### Example 4: Use a numbered list for digest items
 
 1. Go to **LinkDigest › Digest Group Template**.
 2. If an **Items List** block is not already present, click **+** and add it.

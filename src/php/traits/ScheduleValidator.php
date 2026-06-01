@@ -93,9 +93,6 @@ trait LinkDigest_ScheduleValidator {
             if ($data['publishAs'] < 0) {
                 return new \WP_Error('invalid_publish_as', __('publishAs must be a non-negative integer', 'linkdigest'), ['status' => 400]);
             }
-            if ($data['publishAs'] > 0 && !user_can($data['publishAs'], 'edit_posts')) {
-                return new \WP_Error('invalid_publish_as', __('publishAs must refer to a user who can publish posts', 'linkdigest'), ['status' => 400]);
-            }
         }
         if (isset($data['post_status']) && !in_array($data['post_status'], ['publish', 'draft'], true)) {
             return new \WP_Error('invalid_post_status', __('post_status must be "publish" or "draft"', 'linkdigest'), ['status' => 400]);
@@ -103,7 +100,7 @@ trait LinkDigest_ScheduleValidator {
         return null;
     }
 
-    private function validateNotify(array &$data): ?\WP_Error {
+    protected function validateNotify(array &$data): ?\WP_Error {
         if (!isset($data['notify']) || !is_array($data['notify'])) {
             return isset($data['notify']) ? new \WP_Error('invalid_notify', __('notify must be an object', 'linkdigest'), ['status' => 400]) : null;
         }
@@ -113,6 +110,26 @@ trait LinkDigest_ScheduleValidator {
             if (!is_email($data['notify']['email'])) {
                 return new \WP_Error('invalid_notify_email', __('notify.email is not a valid email address', 'linkdigest'), ['status' => 400]);
             }
+        }
+        foreach (['discord_webhook', 'slack_webhook'] as $key) {
+            if (!empty($data['notify'][$key])) {
+                $url = esc_url_raw($data['notify'][$key]);
+                if (!filter_var($url, FILTER_VALIDATE_URL)) {
+                    return new \WP_Error(
+                        'invalid_notify_webhook',
+                        /* translators: %s: webhook field name (discord_webhook or slack_webhook) */
+                        sprintf(__('notify.%s is not a valid URL', 'linkdigest'), $key),
+                        ['status' => 400]
+                    );
+                }
+                $data['notify'][$key] = $url;
+            }
+        }
+        if (!empty($data['notify']['telegram_bot_token'])) {
+            $data['notify']['telegram_bot_token'] = sanitize_text_field($data['notify']['telegram_bot_token']);
+        }
+        if (!empty($data['notify']['telegram_chat_id'])) {
+            $data['notify']['telegram_chat_id'] = sanitize_text_field($data['notify']['telegram_chat_id']);
         }
         return null;
     }

@@ -18,17 +18,94 @@ trait LinkDigest_Admin_Menu {
             'linkdigest-dashboard',
             [$this, 'dashboardPage'],
             plugins_url('assets/icon-menu.png', LINKDIGEST_PLUGIN_FILE),
-            null
+            6
         );
 
         $this->addSubmenu(__('Dashboard',        'linkdigest'), __('Dashboard',        'linkdigest'), 'read',              'linkdigest-dashboard',                                    'dashboardPage');
         $this->addSubmenu(__('Show Links',       'linkdigest'), __('All Links',        'linkdigest'), 'read',              'linkdigest-admin',                                        'showLinksPage');
         $this->addSubmenu(__('Add Link',         'linkdigest'), __('Add Link',         'linkdigest'), 'read',              'linkdigest-add',                                          'addLinkPage');
-        $this->addSubmenu(__('Categories',       'linkdigest'), __('Categories',       'linkdigest'), 'edit_posts', 'linkdigest-categories',                                   'categoriesPage');
-        $this->addSubmenu(__('Tags',             'linkdigest'), __('Tags',             'linkdigest'), 'edit_posts', 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest');
-        $this->addSubmenu(__('Chrome Extension', 'linkdigest'), __('Chrome Extension', 'linkdigest'), 'edit_posts', 'linkdigest-settings',                                     'settingsPage');
-        $this->addSubmenu(__('Settings',         'linkdigest'), __('Settings',         'linkdigest'), 'edit_posts', 'linkdigest-setting-x',                                    'settingXPage');
-        $this->addSubmenu(__('Schedule',         'linkdigest'), __('Schedule',         'linkdigest'), 'edit_posts', 'linkdigest-schedule',                                     'schedulePage');
+        $this->addSubmenu(__('Categories',       'linkdigest'), __('Categories',       'linkdigest'), 'manage_categories', 'linkdigest-categories',                                   'categoriesPage');
+        $this->addSubmenu(__('Tags',             'linkdigest'), __('Tags',             'linkdigest'), 'manage_categories', 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest');
+        $this->addSubmenu(__('Chrome Extension', 'linkdigest'), __('Chrome Extension', 'linkdigest'), 'manage_options', 'linkdigest-settings',          'settingsPage');
+        $this->addSubmenu(__('Notifications',    'linkdigest'), __('Notifications',    'linkdigest'), 'manage_options', 'linkdigest-notifications',     'notificationsPage');
+        $this->addSubmenu(__('Schedule',         'linkdigest'), __('Schedule',         'linkdigest'), 'manage_options', 'linkdigest-schedule',          'schedulePage');
+        $this->addSubmenu(__('Templates', 'linkdigest'), __('Templates', 'linkdigest'), 'manage_options', 'linkdigest-templates', 'renderTemplatesOverviewPage');
+        add_submenu_page(null, __('Link Template',          'linkdigest'), '', 'manage_options', 'linkdigest-template-single',        [$this, 'renderTemplateSinglePage']);
+        add_submenu_page(null, __('Digest Item Template',   'linkdigest'), '', 'manage_options', 'linkdigest-template-digest',        [$this, 'renderTemplateDigestPage']);
+        add_submenu_page(null, __('Digest Group Template',  'linkdigest'), '', 'manage_options', 'linkdigest-template-digest-group',  [$this, 'renderTemplateDigestGroupPage']);
+    }
+
+    /**
+     * Render the single link template editor page (Gutenberg in an iframe).
+     *
+     * @since 2.1.0
+     * @return void
+     */
+    public function renderTemplateSinglePage(): void {
+        $this->renderTemplateEditorFrame('single_link');
+    }
+
+    /**
+     * Render the digest item template editor page (Gutenberg in an iframe).
+     *
+     * @since 2.1.0
+     * @return void
+     */
+    public function renderTemplateDigestPage(): void {
+        $this->renderTemplateEditorFrame('digest_item');
+    }
+
+    /**
+     * Render the digest group template editor page (Gutenberg in an iframe).
+     *
+     * @since 2.2.0
+     * @return void
+     */
+    public function renderTemplateDigestGroupPage(): void {
+        $this->renderTemplateEditorFrame('digest_group');
+    }
+
+    /**
+     * Render the templates overview page with cards linking to each template editor.
+     *
+     * @since 2.3.0
+     * @return void
+     */
+    public function renderTemplatesOverviewPage(): void {
+        $templates = [
+            [
+                'title' => __('Link Template',         'linkdigest'),
+                'desc'  => __('Controls how a single link item is rendered inside a digest.', 'linkdigest'),
+                'icon'  => 'dashicons-admin-links',
+                'slug'  => 'linkdigest-template-single',
+            ],
+            [
+                'title' => __('Digest Item Template',  'linkdigest'),
+                'desc'  => __('Controls the layout of each link entry within a digest group.', 'linkdigest'),
+                'icon'  => 'dashicons-list-view',
+                'slug'  => 'linkdigest-template-digest',
+            ],
+            [
+                'title' => __('Digest Group Template', 'linkdigest'),
+                'desc'  => __('Defines the outer structure wrapping a group of digest links.', 'linkdigest'),
+                'icon'  => 'dashicons-category',
+                'slug'  => 'linkdigest-template-digest-group',
+            ],
+        ];
+        ?>
+        <div class="wrap">
+            <h1><?php esc_html_e('Templates', 'linkdigest'); ?></h1>
+            <div class="linkdigest-templates-grid">
+                <?php foreach ($templates as $tpl) : ?>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=' . $tpl['slug'])); ?>" class="linkdigest-template-card">
+                        <span class="linkdigest-template-card__icon dashicons <?php echo esc_attr($tpl['icon']); ?>"></span>
+                        <span class="linkdigest-template-card__title"><?php echo esc_html($tpl['title']); ?></span>
+                        <span class="linkdigest-template-card__desc"><?php echo esc_html($tpl['desc']); ?></span>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php
     }
 
     /**
@@ -39,7 +116,10 @@ trait LinkDigest_Admin_Menu {
      * @return string The filtered parent menu file name.
      */
     public function parentFileFilter(string $parent_file): string {
-        return $this->isLinkDigestTag() ? 'linkdigest-dashboard' : $parent_file;
+        if ($this->isLinkDigestTag() || $this->isLinkDigestTemplate() !== null) {
+            return 'linkdigest-dashboard';
+        }
+        return $parent_file;
     }
 
     /**
@@ -50,9 +130,14 @@ trait LinkDigest_Admin_Menu {
      * @return string The filtered submenu file name.
      */
     public function submenuFileFilter(?string $submenu_file): string {
-        return $this->isLinkDigestTag()
-            ? 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest'
-            : ($submenu_file ?? '');
+        if ($this->isLinkDigestTag()) {
+            return 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest';
+        }
+        $template_type = $this->isLinkDigestTemplate();
+        if ($template_type !== null) {
+            return 'linkdigest-templates';
+        }
+        return $submenu_file ?? '';
     }
 
     /**
@@ -90,7 +175,7 @@ trait LinkDigest_Admin_Menu {
     public function settingsPage(): void {
         // Handle API key generation
         $nonce = isset($_POST['linkdigest_settings_nonce']) ? sanitize_text_field(wp_unslash($_POST['linkdigest_settings_nonce'])) : '';
-        if (isset($_POST['linkdigest_generate_api_key']) && wp_verify_nonce($nonce, 'linkdigest_settings') && current_user_can('edit_posts')) {
+        if (isset($_POST['linkdigest_generate_api_key']) && wp_verify_nonce($nonce, 'linkdigest_settings')) {
             $api_key = wp_generate_password(32, false);
             update_option('linkdigest_api_key', $api_key);
             echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('New API key generated successfully!', 'linkdigest') . '</p></div>';
@@ -98,6 +183,7 @@ trait LinkDigest_Admin_Menu {
 
         $api_key     = get_option('linkdigest_api_key');
         $endpoint    = rest_url(LINKDIGEST_REST_NAMESPACE);
+        $has_key_attr = $api_key ? 'data-has-key="1"' : '';
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('LinkDigest Chrome Extension', 'linkdigest'); ?></h1>
@@ -163,7 +249,7 @@ trait LinkDigest_Admin_Menu {
                     </div>
                 <?php endif; ?>
 
-                <form method="post" action="" id="linkdigest-generate-form" <?php if ( $api_key ) : ?>data-has-key="1"<?php endif; ?>>
+                <form method="post" action="" id="linkdigest-generate-form" <?php echo $has_key_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
                     <?php wp_nonce_field('linkdigest_settings', 'linkdigest_settings_nonce'); ?>
                     <?php if ($api_key) : ?>
                         <div class="notice notice-warning inline">
@@ -283,6 +369,32 @@ trait LinkDigest_Admin_Menu {
             ));
         }
 
+        if (strpos($hook, 'linkdigest-notifications') !== false) {
+            $asset_file = plugin_dir_path(LINKDIGEST_PLUGIN_FILE) . 'build/settings.asset.php';
+            if (file_exists($asset_file)) {
+                $asset = require_once $asset_file;
+            } else {
+                $asset = array('dependencies' => array(), 'version' => '1.0.0');
+            }
+
+            wp_enqueue_script(
+                'linkdigest-settings',
+                plugin_dir_url(LINKDIGEST_PLUGIN_FILE) . 'build/settings.js',
+                $asset['dependencies'],
+                $asset['version'],
+                true
+            );
+
+            if (file_exists(plugin_dir_path(LINKDIGEST_PLUGIN_FILE) . 'build/settings.css')) {
+                wp_enqueue_style(
+                    'linkdigest-settings-style',
+                    plugin_dir_url(LINKDIGEST_PLUGIN_FILE) . 'build/settings.css',
+                    array('wp-components'),
+                    $asset['version']
+                );
+            }
+        }
+
         if (strpos($hook, 'linkdigest-schedule') !== false) {
             $asset_file = plugin_dir_path(LINKDIGEST_PLUGIN_FILE) . 'build/schedule.asset.php';
             if (file_exists($asset_file)) {
@@ -318,15 +430,16 @@ trait LinkDigest_Admin_Menu {
     }
 
     /**
-     * Render the experimental Setting X configuration page.
+     * Render the Notifications configuration page.
      *
-     * @since 1.0.0
+     * @since 2.0.0
      * @return void
      */
-    public function settingXPage(): void {
+    public function notificationsPage(): void {
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('Settings', 'linkdigest'); ?></h1>
+            <h1><?php esc_html_e('Notifications', 'linkdigest'); ?></h1>
+            <div id="linkdigest-settings-root"></div>
         </div>
         <?php
     }

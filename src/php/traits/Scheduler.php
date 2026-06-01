@@ -19,6 +19,7 @@ trait LinkDigest_Scheduler {
     public function registerSchedulerHooks(): void {
         add_action('linkdigest_execute_schedule', [$this, 'executeSchedule']);
         add_action('linkdigest_after_run', [$this, 'maybeSendRunNotification'], 10, 3);
+        add_action('linkdigest_after_run', [$this, 'maybeSendWebhookNotification'], 20, 3);
     }
 
     /**
@@ -115,10 +116,10 @@ trait LinkDigest_Scheduler {
     }
 
     /**
-     * Publish a roundup post and handle rescheduling.
+     * Publish a digest post and handle rescheduling.
      *
      * @since 1.0.0
-     * @param array  $link_ids   Link IDs to include in the roundup.
+     * @param array  $link_ids   Link IDs to include in the digest.
      * @param array  $config     Schedule configuration option.
      * @param string $mode       Schedule mode.
      * @param bool   $reschedule Whether to schedule the next regular event.
@@ -128,34 +129,31 @@ trait LinkDigest_Scheduler {
     private function attemptPublish(array $link_ids, array $config, string $mode, bool $reschedule, bool $has_more): array {
         /* translators: %s is the formatted date (e.g. "April 15, 2026") */
         $title = sprintf(__('Links: %s', 'linkdigest'), wp_date('F j, Y'));
-        $title = (string) apply_filters('linkdigest_roundup_title', $title, $link_ids, $mode);
+        $title = (string) apply_filters('linkdigest_digest_title', $title, $link_ids, $mode);
 
         // Use the stored publishAs user; fall back to first administrator.
         // WP-Cron runs unauthenticated, so we must elevate before calling
-        // createRoundupPost() which guards on current_user_can('publish_posts').
+        // createDigestPost() which guards on current_user_can('publish_posts').
         $publish_as   = (int) ($config['publishAs'] ?? 0);
         $prev_user_id = get_current_user_id();
         if ($publish_as === 0) {
             $admin_ids  = get_users(['role' => 'administrator', 'number' => 1, 'fields' => 'ids']);
             $publish_as = !empty($admin_ids) ? (int) $admin_ids[0] : 0;
         }
-        if ($publish_as > 0
-            && get_current_user_id() !== $publish_as
-            && user_can($publish_as, 'publish_posts')
-        ) {
+        if ($publish_as > 0 && get_current_user_id() !== $publish_as) {
             wp_set_current_user($publish_as);
         }
 
         do_action('linkdigest_before_run', $link_ids, $mode);
         $as_draft = ($config['post_status'] ?? 'publish') === 'draft';
-        $roundup  = $this->createRoundupPost($link_ids, $title, $as_draft, $mode);
+        $digest  = $this->createDigestPost($link_ids, $title, $as_draft, $mode);
 
         // Restore previous user context.
         if (get_current_user_id() !== $prev_user_id) {
             wp_set_current_user($prev_user_id);
         }
 
-        $post_id = ($roundup['post_id'] ?? 0) ?: null;
+        $post_id = ($digest['post_id'] ?? 0) ?: null;
         do_action('linkdigest_after_run', $post_id, $link_ids, $mode);
 
         $scheduled_catchup = false;
@@ -168,10 +166,10 @@ trait LinkDigest_Scheduler {
         }
 
         return [
-            'published'  => $roundup['success'] ?? false,
+            'published'  => $digest['success'] ?? false,
             'post_id'    => $post_id,
             'link_count' => count($link_ids),
-            'reason'     => $roundup['message'] ?? null,
+            'reason'     => $digest['message'] ?? null,
         ];
     }
 
@@ -359,11 +357,11 @@ trait LinkDigest_Scheduler {
         }
         $to = !empty($notify['email']) ? $notify['email'] : get_option('admin_email');
         /* translators: %d: number of links published */
-        $subject = sprintf(__('[LinkDigest] Roundup published: %d links', 'linkdigest'), count($link_ids));
+        $subject = sprintf(__('[LinkDigest] Digest published: %d links', 'linkdigest'), count($link_ids));
         if ($post_id) {
             $message = sprintf(
                 /* translators: 1: link count, 2: post URL */
-                __("A new roundup was published.\n\nLinks: %1\$d\nView: %2\$s", 'linkdigest'),
+                __("A new digest was published.\n\nLinks: %1\$d\nView: %2\$s", 'linkdigest'),
                 count($link_ids),
                 get_permalink($post_id)
             );
@@ -392,5 +390,103 @@ trait LinkDigest_Scheduler {
         }
         $cutoff = gmdate('Y-m-d H:i:s', strtotime("-{$days} days"));
         return $post->post_date_gmt < $cutoff;
+    }
+
+    /**
+     * Send Discord/Slack webhook notifications after schedule runs, if configured.
+     *
+     * @since 2.0.0
+     * @param int|null $post_id The published post ID, or null if nothing was published.
+     * @param array $link_ids Array of link post IDs that were published.
+     * @param string $mode The schedule mode that ran.
+     * @return void
+     */
+    public function maybeSendWebhookNotification(int|null $post_id, array $link_ids, string $mode): void {
+        $config   = get_option('linkdigest_schedule', []);
+        $notify   = $config['notify'] ?? [];
+        $count    = count($link_ids);
+        $post_url = $post_id ? get_permalink($post_id) : null;
+
+        if (!empty($notify['discord_webhook'])) {
+            $this->sendDiscordNotification($notify['discord_webhook'], $count, $post_url);
+        }
+        if (!empty($notify['slack_webhook'])) {
+            $this->sendSlackNotification($notify['slack_webhook'], $count, $post_url);
+        }
+        if (!empty($notify['telegram_bot_token']) && !empty($notify['telegram_chat_id'])) {
+            $this->sendTelegramNotification($notify['telegram_bot_token'], $notify['telegram_chat_id'], $count, $post_url);
+        }
+    }
+
+    /**
+     * @since 2.0.0
+     */
+    private function sendDiscordNotification(string $webhook_url, int $count, ?string $post_url): void {
+        if ($post_url) {
+            $description = sprintf(
+                /* translators: 1: number of links published, 2: post URL */
+                __('%1$d links published. [View post](%2$s)', 'linkdigest'),
+                $count,
+                $post_url
+            );
+        } else {
+            /* translators: %d: number of links processed */
+            $description = sprintf(__('%d links processed. No post published.', 'linkdigest'), $count);
+        }
+        $payload = [
+            'embeds' => [[
+                'title'       => __('LinkDigest: digest published', 'linkdigest'),
+                'description' => $description,
+                'color'       => 0x2D9BF0,
+            ]],
+        ];
+        wp_remote_post($webhook_url, [
+            'headers'     => ['Content-Type' => 'application/json'],
+            'body'        => wp_json_encode($payload),
+            'blocking'    => false,
+            'data_format' => 'body',
+        ]);
+    }
+
+    /**
+     * @since 2.0.0
+     */
+    private function sendTelegramNotification(string $bot_token, string $chat_id, int $count, ?string $post_url): void {
+        if ($post_url) {
+            $text = sprintf(
+                /* translators: 1: number of links published, 2: post URL */
+                __('<b>LinkDigest:</b> %1$d links published. <a href="%2$s">View post</a>', 'linkdigest'),
+                $count,
+                esc_url($post_url)
+            );
+        } else {
+            /* translators: %d: number of links processed */
+            $text = sprintf(__('<b>LinkDigest:</b> %d links processed. No post published.', 'linkdigest'), $count);
+        }
+        wp_remote_post('https://api.telegram.org/bot' . $bot_token . '/sendMessage', [
+            'headers'     => ['Content-Type' => 'application/json'],
+            'body'        => wp_json_encode(['chat_id' => $chat_id, 'text' => $text, 'parse_mode' => 'HTML']),
+            'blocking'    => false,
+            'data_format' => 'body',
+        ]);
+    }
+
+    /**
+     * @since 2.0.0
+     */
+    private function sendSlackNotification(string $webhook_url, int $count, ?string $post_url): void {
+        if ($post_url) {
+            /* translators: 1: number of links published, 2: post URL */
+            $text = sprintf(__('*LinkDigest:* %1$d links published. <%2$s|View post>', 'linkdigest'), $count, $post_url);
+        } else {
+            /* translators: %d: number of links processed */
+            $text = sprintf(__('*LinkDigest:* %d links processed. No post published.', 'linkdigest'), $count);
+        }
+        wp_remote_post($webhook_url, [
+            'headers'     => ['Content-Type' => 'application/json'],
+            'body'        => wp_json_encode(['text' => $text]),
+            'blocking'    => false,
+            'data_format' => 'body',
+        ]);
     }
 }

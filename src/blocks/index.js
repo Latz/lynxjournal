@@ -59,6 +59,13 @@ const BLOCKS = [
 		label: '[ Tags ]',
 		icon: 'tag',
 	},
+	{
+		name: 'field-current-date',
+		title: 'Digest: Current Date',
+		description: 'Outputs the current date when the digest is rendered.',
+		label: '[ Current Date ]',
+		icon: 'calendar-alt',
+	},
 ];
 
 BLOCKS.forEach( ( { name, title, description, label, icon } ) => {
