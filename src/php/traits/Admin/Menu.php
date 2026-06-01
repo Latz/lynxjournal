@@ -18,7 +18,7 @@ trait LinkDigest_Admin_Menu {
             'linkdigest-dashboard',
             [$this, 'dashboardPage'],
             plugins_url('assets/icon-menu.png', LINKDIGEST_PLUGIN_FILE),
-            6
+            100
         );
 
         $this->addSubmenu(__('Dashboard',        'linkdigest'), __('Dashboard',        'linkdigest'), 'read',              'linkdigest-dashboard',                                    'dashboardPage');
