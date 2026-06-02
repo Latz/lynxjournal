@@ -140,6 +140,13 @@ trait LinkDigest_Batch {
         );
     }
 
+    /**
+     * Group link IDs by their primary linkdigest category.
+     *
+     * @since 1.0.0
+     * @param array $link_ids Array of link post IDs.
+     * @return array Tuple of [links_by_category, uncategorized_links, count].
+     */
     private function groupLinksByCategory(array $link_ids): array {
         $links_by_category  = array();
         $uncategorized_links = array();

@@ -25,6 +25,13 @@ trait LinkDigest_ScheduleValidator {
         return $error ?? $data;
     }
 
+    /**
+     * Validate that mode is present and no unknown keys exist.
+     *
+     * @since 1.0.0
+     * @param array $data The schedule configuration data.
+     * @return \WP_Error|null WP_Error on failure, null on success.
+     */
     private function validateModeAndKeys(array $data): ?\WP_Error {
         $allowed = ['mode', 'times', 'recurrence', 'trigger', 'publishAs', 'notify', 'post_status'];
         $unknown = array_diff(array_keys($data), $allowed);
@@ -43,6 +50,13 @@ trait LinkDigest_ScheduleValidator {
         return null;
     }
 
+    /**
+     * Validate and normalise the times array (HH:MM format, deduped, sorted).
+     *
+     * @since 1.0.0
+     * @param array $data The schedule configuration data (passed by reference).
+     * @return \WP_Error|null WP_Error on failure, null on success.
+     */
     private function validateTimes(array &$data): ?\WP_Error {
         if (!isset($data['times']) || !is_array($data['times'])) {
             return isset($data['times']) ? new \WP_Error('invalid_times', __('times must be an array', 'linkdigest'), ['status' => 400]) : null;
@@ -57,6 +71,13 @@ trait LinkDigest_ScheduleValidator {
         return null;
     }
 
+    /**
+     * Validate that the recurrence field, if present, is an array/object.
+     *
+     * @since 1.0.0
+     * @param array $data The schedule configuration data.
+     * @return \WP_Error|null WP_Error on failure, null on success.
+     */
     private function validateRecurrence(array $data): ?\WP_Error {
         if (isset($data['recurrence']) && !is_array($data['recurrence'])) {
             return new \WP_Error('invalid_recurrence', __('recurrence must be an object', 'linkdigest'), ['status' => 400]);
@@ -64,6 +85,13 @@ trait LinkDigest_ScheduleValidator {
         return null;
     }
 
+    /**
+     * Validate the trigger field shape and delegate to value validation.
+     *
+     * @since 1.0.0
+     * @param array $data The schedule configuration data (passed by reference).
+     * @return \WP_Error|null WP_Error on failure, null on success.
+     */
     private function validateTrigger(array &$data): ?\WP_Error {
         if (!isset($data['trigger']) || !is_array($data['trigger'])) {
             return isset($data['trigger']) ? new \WP_Error('invalid_trigger', __('trigger must be an object', 'linkdigest'), ['status' => 400]) : null;
@@ -71,6 +99,13 @@ trait LinkDigest_ScheduleValidator {
         return $this->validateTriggerValues($data['trigger']);
     }
 
+    /**
+     * Validate trigger count and days values are positive integers.
+     *
+     * @since 1.0.0
+     * @param array $trigger The trigger sub-array (passed by reference for coercion).
+     * @return \WP_Error|null WP_Error on failure, null on success.
+     */
     private function validateTriggerValues(array &$trigger): ?\WP_Error {
         if (isset($trigger['count'])) {
             $trigger['count'] = (int) $trigger['count'];
@@ -87,6 +122,13 @@ trait LinkDigest_ScheduleValidator {
         return null;
     }
 
+    /**
+     * Validate publishAs (user ID) and post_status fields.
+     *
+     * @since 1.0.0
+     * @param array $data The schedule configuration data (passed by reference).
+     * @return \WP_Error|null WP_Error on failure, null on success.
+     */
     private function validatePublishOptions(array &$data): ?\WP_Error {
         if (isset($data['publishAs'])) {
             $data['publishAs'] = (int) $data['publishAs'];

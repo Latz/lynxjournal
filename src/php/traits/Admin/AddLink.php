@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 trait LinkDigest_Admin_AddLink {
 
+    /**
+     * Render the Add New Link admin page.
+     *
+     * @since 1.0.0
+     * @return void
+     */
     public function addLinkPage(): void {
         [$message, $error] = $this->processAddLinkSubmission();
 
@@ -113,6 +119,12 @@ trait LinkDigest_Admin_AddLink {
         <?php
     }
 
+    /**
+     * Handle the Add Link form submission.
+     *
+     * @since 1.0.0
+     * @return array Tuple of [success_message, error_message].
+     */
     private function processAddLinkSubmission(): array {
         if (!isset($_POST['linkdigest_add_submit'])) {
             return ['', ''];
@@ -131,6 +143,12 @@ trait LinkDigest_Admin_AddLink {
         return ($input['error'] !== '') ? ['', $input['error']] : $this->insertNewLink($input);
     }
 
+    /**
+     * Sanitize and validate Add Link form input.
+     *
+     * @since 1.0.0
+     * @return array Associative array with title, url, content, categories, tags, and error keys.
+     */
     private function validateAddLinkInput(): array {
         $nonce = isset($_POST['linkdigest_add_nonce']) ? sanitize_text_field(wp_unslash($_POST['linkdigest_add_nonce'])) : '';
         if (!wp_verify_nonce($nonce, 'linkdigest_add_link')) {
@@ -147,6 +165,13 @@ trait LinkDigest_Admin_AddLink {
         return compact('title', 'url', 'content', 'categories', 'tags', 'error');
     }
 
+    /**
+     * Insert a new linkdigest post and assign its taxonomies.
+     *
+     * @since 1.0.0
+     * @param array $input Sanitized input from validateAddLinkInput().
+     * @return array Tuple of [success_message, error_message].
+     */
     private function insertNewLink(array $input): array {
         $post_id = wp_insert_post(array(
             'post_title'   => $input['title'],

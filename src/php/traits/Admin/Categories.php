@@ -8,6 +8,12 @@ trait LinkDigest_Admin_Categories {
     // Page entry point
     // -------------------------------------------------------------------------
 
+    /**
+     * Render the Link Categories admin page.
+     *
+     * @since 1.0.0
+     * @return void
+     */
     public function categoriesPage(): void {
         $notice = null;
 
@@ -50,6 +56,12 @@ trait LinkDigest_Admin_Categories {
     // POST handlers
     // -------------------------------------------------------------------------
 
+    /**
+     * Process the add-category POST and build a notice array.
+     *
+     * @since 1.0.0
+     * @return array Notice array with 'type' (success|error) and 'msg' keys.
+     */
     private function buildAddCategoryNotice(): array {
         $error = $this->handleAddCategory();
         if ( $error ) {
@@ -58,6 +70,12 @@ trait LinkDigest_Admin_Categories {
         return array( 'type' => 'success', 'msg' => __( 'Category added.', 'linkdigest' ) );
     }
 
+    /**
+     * Process the delete-category POST and build a notice array.
+     *
+     * @since 1.0.0
+     * @return array Notice array with 'type' (success|error) and 'msg' keys.
+     */
     private function buildDeleteCategoryNotice(): array {
         $deleted = $this->handleDeleteCategory();
         return array(
@@ -68,6 +86,12 @@ trait LinkDigest_Admin_Categories {
         );
     }
 
+    /**
+     * Validate, sanitize, and insert a new linkdigest category.
+     *
+     * @since 1.0.0
+     * @return string|null Error message string, or null on success.
+     */
     private function handleAddCategory(): ?string {
         $nonce = isset( $_POST['linkdigest_cat_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['linkdigest_cat_nonce'] ) ) : '';
         if ( ! wp_verify_nonce( $nonce, 'linkdigest_add_category' ) ) {
@@ -90,6 +114,12 @@ trait LinkDigest_Admin_Categories {
         return null;
     }
 
+    /**
+     * Validate nonce, permissions, and delete a linkdigest category term.
+     *
+     * @since 1.0.0
+     * @return bool True on successful deletion, false otherwise.
+     */
     private function handleDeleteCategory(): bool {
         $nonce = isset( $_POST['linkdigest_cat_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['linkdigest_cat_nonce'] ) ) : '';
         if ( ! wp_verify_nonce( $nonce, 'linkdigest_delete_category' ) ) {
@@ -115,6 +145,12 @@ trait LinkDigest_Admin_Categories {
     // Queries
     // -------------------------------------------------------------------------
 
+    /**
+     * Get the number of linkdigest posts per category via a direct DB query.
+     *
+     * @since 1.0.0
+     * @return array Map of term_id => link count.
+     */
     private function getCategoryLinkCounts(): array {
         global $wpdb;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -138,6 +174,14 @@ trait LinkDigest_Admin_Categories {
     // Rendering
     // -------------------------------------------------------------------------
 
+    /**
+     * Render the categories list table with edit and delete actions.
+     *
+     * @since 1.0.0
+     * @param array $terms  Array of linkdigest category term objects.
+     * @param array $counts Map of term_id => link count from getCategoryLinkCounts().
+     * @return void
+     */
     private function renderCategoriesTable( array $terms, array $counts ): void {
         if ( empty( $terms ) ) {
             echo '<p>' . esc_html__( 'No categories yet. Use the form to add your first category.', 'linkdigest' ) . '</p>';
@@ -188,6 +232,12 @@ trait LinkDigest_Admin_Categories {
         <?php
     }
 
+    /**
+     * Render the Add New Category form postbox.
+     *
+     * @since 1.0.0
+     * @return void
+     */
     private function renderCategoryForm(): void {
         ?>
         <div class="postbox">

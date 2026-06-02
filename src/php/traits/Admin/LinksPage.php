@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 trait LinkDigest_Admin_LinksPage {
 
+    /**
+     * Render the All Links admin page with filters, table, and pagination.
+     *
+     * @since 1.0.0
+     * @return void
+     */
     public function showLinksPage(): void {
         global $wpdb, $wp_locale;
 
@@ -84,6 +90,19 @@ trait LinkDigest_Admin_LinksPage {
         <?php
     }
 
+    /**
+     * Render the date/category/search filter form above the links table.
+     *
+     * @since 1.0.0
+     * @param array         $date_options     Distinct year/month rows from the DB.
+     * @param array         $categories       Array of linkdigest category terms.
+     * @param array         $filters          Active filters: month, cat, search.
+     * @param int           $total_items      Total matching link count.
+     * @param int           $max_num_pages    Total page count.
+     * @param string        $pagination_links Pre-built paginate_links() output.
+     * @param \WP_Locale|null $wp_locale      Locale object for month names.
+     * @return void
+     */
     private function renderLinksFilterForm(array $date_options, array $categories, array $filters, int $total_items, int $max_num_pages, string $pagination_links, ?\WP_Locale $wp_locale = null): void {
         if ($wp_locale === null && isset($GLOBALS['wp_locale'])) {
             $wp_locale = $GLOBALS['wp_locale'];
@@ -150,6 +169,15 @@ trait LinkDigest_Admin_LinksPage {
         <?php
     }
 
+    /**
+     * Render the links table section or an appropriate empty-state message.
+     *
+     * @since 1.0.0
+     * @param bool  $has_links     Whether any links matched the current filters.
+     * @param bool  $is_filtered   Whether any filters are currently active.
+     * @param array $grouped_links Links grouped by category name.
+     * @return void
+     */
     private function renderLinksTableSection(bool $has_links, bool $is_filtered, array $grouped_links): void {
         if (!$has_links && !$is_filtered) {
             echo '<p>' . esc_html__('No links found. Add your first link!', 'linkdigest') . '</p>';
@@ -178,6 +206,13 @@ trait LinkDigest_Admin_LinksPage {
         $this->renderCategoryLinks($grouped_links);
     }
 
+    /**
+     * Check whether any category group contains at least one link.
+     *
+     * @since 1.0.0
+     * @param array $grouped_links Links grouped by category name.
+     * @return bool True if at least one link exists.
+     */
     private function hasLinks(array $grouped_links): bool {
         foreach ($grouped_links as $category_links) {
             if (!empty($category_links)) {
@@ -187,6 +222,13 @@ trait LinkDigest_Admin_LinksPage {
         return false;
     }
 
+    /**
+     * Render one table per category group.
+     *
+     * @since 1.0.0
+     * @param array $grouped_links Links grouped by category name.
+     * @return void
+     */
     private function renderCategoryLinks(array $grouped_links): void {
         foreach ($grouped_links as $category_name => $category_links) : ?>
             <div class="linkdigest-category-section">
@@ -213,6 +255,13 @@ trait LinkDigest_Admin_LinksPage {
         <?php endforeach;
     }
 
+    /**
+     * Render a single table row for a link post.
+     *
+     * @since 1.0.0
+     * @param \WP_Post $link The link post object.
+     * @return void
+     */
     private function renderLinkTableRow(\WP_Post $link): void {
         $url = get_post_meta($link->ID, '_linkdigest_url', true);
         $publish_status = get_post_meta($link->ID, '_linkdigest_publish_status', true);
@@ -251,6 +300,12 @@ trait LinkDigest_Admin_LinksPage {
         <?php
     }
 
+    /**
+     * Process a GET action (publish, draft, unpublish, delete) from the links page.
+     *
+     * @since 1.0.0
+     * @return array Tuple of [success_message, error_message].
+     */
     private function processLinksPageAction(): array {
         $message = '';
         $error   = '';
@@ -285,6 +340,14 @@ trait LinkDigest_Admin_LinksPage {
         return [$message, $error];
     }
 
+    /**
+     * Publish or draft a single link and return a message tuple.
+     *
+     * @since 1.0.0
+     * @param int  $link_id  The link post ID.
+     * @param bool $as_draft Whether to create as draft instead of published.
+     * @return array Tuple of [success_message, error_message].
+     */
     private function executePublishAction(int $link_id, bool $as_draft): array {
         $result = $this->createBlogPost($link_id, $as_draft);
         if (!$result['success']) {
@@ -296,6 +359,13 @@ trait LinkDigest_Admin_LinksPage {
         return [esc_html($result['message']) . ' <a href="' . esc_url(get_permalink($result['post_id'])) . '" target="_blank">' . esc_html__('View Post', 'linkdigest') . '</a>', ''];
     }
 
+    /**
+     * Unpublish a single link and return a message tuple.
+     *
+     * @since 1.0.0
+     * @param int $link_id The link post ID.
+     * @return array Tuple of [success_message, error_message].
+     */
     private function executeUnpublishAction(int $link_id): array {
         $result = $this->unpublishLink($link_id);
         if ($result['success']) {
@@ -304,6 +374,13 @@ trait LinkDigest_Admin_LinksPage {
         return ['', $result['message']];
     }
 
+    /**
+     * Output the status badge HTML for a link row.
+     *
+     * @since 1.0.0
+     * @param string $publish_status The link publish status ('published', 'draft', 'unpublished').
+     * @return void
+     */
     private function renderLinkStatusBadge(string $publish_status): void {
         if ($publish_status === 'published') {
             echo esc_html__('Published', 'linkdigest');
@@ -314,6 +391,15 @@ trait LinkDigest_Admin_LinksPage {
         }
     }
 
+    /**
+     * Output action links (View, Unpublish, Edit, Delete) for a link row.
+     *
+     * @since 1.0.0
+     * @param \WP_Post $link             The link post object.
+     * @param string   $publish_status   The link publish status.
+     * @param mixed    $published_post_id ID of the associated blog post, if any.
+     * @return void
+     */
     private function renderLinkActions(\WP_Post $link, string $publish_status, mixed $published_post_id): void {
         $unpublish_url = esc_url( wp_nonce_url( admin_url( self::ADMIN_LINKS_PAGE . '&action=unpublish_link&link_id=' . $link->ID ), 'unpublish_link_' . $link->ID ) );
         $delete_url    = esc_url( wp_nonce_url( admin_url( self::ADMIN_LINKS_PAGE . '&action=delete&link_id=' . $link->ID ), 'delete_link_' . $link->ID ) );

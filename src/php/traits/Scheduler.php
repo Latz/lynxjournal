@@ -410,7 +410,13 @@ trait LinkDigest_Scheduler {
     }
 
     /**
+     * Send a Discord webhook notification after a digest run.
+     *
      * @since 2.0.0
+     * @param string      $webhook_url Discord incoming webhook URL.
+     * @param int         $count       Number of links published.
+     * @param string|null $post_url    URL of the published post, or null if none.
+     * @return void
      */
     private function sendDiscordNotification(string $webhook_url, int $count, ?string $post_url): void {
         if ($post_url) {
@@ -440,7 +446,14 @@ trait LinkDigest_Scheduler {
     }
 
     /**
+     * Send a Telegram bot message notification after a digest run.
+     *
      * @since 2.0.0
+     * @param string      $bot_token Telegram bot token.
+     * @param string      $chat_id   Telegram chat ID.
+     * @param int         $count     Number of links published.
+     * @param string|null $post_url  URL of the published post, or null if none.
+     * @return void
      */
     private function sendTelegramNotification(string $bot_token, string $chat_id, int $count, ?string $post_url): void {
         if ($post_url) {
@@ -463,7 +476,13 @@ trait LinkDigest_Scheduler {
     }
 
     /**
+     * Send a Slack webhook notification after a digest run.
+     *
      * @since 2.0.0
+     * @param string      $webhook_url Slack incoming webhook URL.
+     * @param int         $count       Number of links published.
+     * @param string|null $post_url    URL of the published post, or null if none.
+     * @return void
      */
     private function sendSlackNotification(string $webhook_url, int $count, ?string $post_url): void {
         if ($post_url) {

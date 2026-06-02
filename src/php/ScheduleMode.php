@@ -14,12 +14,20 @@ enum ScheduleMode: string {
     case Age     = 'age';
     case Manual  = 'manual';
 
-    /** Returns the modes that use a calendar-based recurrence config. */
+    /**
+     * Returns the modes that use a calendar-based recurrence config.
+     *
+     * @return self[]
+     */
     public static function timeBased(): array {
         return [self::Daily, self::Weekly, self::Monthly];
     }
 
-    /** Returns the modes that use a threshold trigger instead of a schedule. */
+    /**
+     * Returns the modes that use a threshold trigger instead of a schedule.
+     *
+     * @return self[]
+     */
     public static function triggerBased(): array {
         return [self::Count, self::Age];
     }
