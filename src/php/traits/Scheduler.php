@@ -81,13 +81,7 @@ trait LinkDigest_Scheduler {
             $link_ids = array_slice($link_ids, 0, $max_per_run);
         }
 
-        $should_publish = match ($mode) {
-            'count' => $total_count >= (int) ($trigger['count'] ?? 10),
-            // Reuse the already-fetched list: oldest link is index 0 (ASC order).
-            // No second WP_Query needed.
-            'age'   => $oldest_link_id !== null && $this->isLinkOlderThan($oldest_link_id, (int) ($trigger['days'] ?? 7)),
-            default => !empty($link_ids), // daily/weekly/monthly: publish if any links exist
-        };
+        $should_publish = $this->evaluateTrigger($mode, $trigger, $total_count, $oldest_link_id);
         $should_publish = (bool) apply_filters('linkdigest_should_publish', $should_publish, $link_ids, $mode, $trigger);
 
         if ($should_publish && !empty($link_ids)) {
@@ -165,121 +159,21 @@ trait LinkDigest_Scheduler {
     }
 
     /**
-     * Calculate the next schedule timestamp based on configuration.
-     *
-     * Returns next UNIX timestamp in UTC based on schedule config, or null for manual mode.
+     * Evaluate whether the trigger condition is met for the current mode.
      *
      * @since 1.0.0
-     * @return int|null Next schedule timestamp or null if manual mode.
+     * @param string   $mode           Schedule mode.
+     * @param array    $trigger        Trigger configuration (count/days).
+     * @param int      $total_count    Total number of pending links.
+     * @param int|null $oldest_link_id Post ID of the oldest pending link, or null if none.
+     * @return bool True if publishing should proceed.
      */
-    public function getNextScheduleTimestamp(): ?int {
-        $config     = get_option('linkdigest_schedule', []);
-        $mode       = $config['mode']       ?? 'daily';
-        $times      = $config['times']      ?? [];
-        if (empty($times)) {
-            $times = [self::DEFAULT_TIME];
-        }
-        $recurrence = $config['recurrence'] ?? [];
-
-        if ($mode === 'manual') {
-            return null;
-        }
-
-        $tz  = wp_timezone();
-        $now = new \DateTime('now', $tz);
-        sort($times);
-
-        // 367-day window handles monthly schedules where no day matches in the current
-        // month (e.g., 31st in a 30-day month) and leap-year edge cases.
-        for ($i = 0; $i <= self::SEARCH_HORIZON_DAYS; $i++) {
-            $day = (clone $now)->modify("+{$i} days");
-
-            if (!$this->dayMatchesSchedule($day, $mode, $recurrence)) {
-                continue;
-            }
-
-            foreach ($times as $t) {
-                [$h, $m] = explode(':', $t);
-                $candidate = (clone $day)->setTime((int) $h, (int) $m, 0);
-                if ($candidate > $now) {
-                    return $candidate->getTimestamp();
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Check if a date matches the schedule mode and recurrence settings.
-     *
-     * @since 1.0.0
-     * @param \DateTime $date The date to check.
-     * @param string $mode The schedule mode.
-     * @param array $rec The recurrence settings.
-     * @return bool True if date matches schedule.
-     */
-    private function dayMatchesSchedule(\DateTime $date, string $mode, array $rec): bool {
-        if (in_array($mode, ['daily', 'count', 'age'], true)) {
-            return true;
-        }
+    private function evaluateTrigger(string $mode, array $trigger, int $total_count, ?int $oldest_link_id): bool {
         return match ($mode) {
-            'weekly'  => $this->matchesWeeklySchedule($date, $rec),
-            'monthly' => $this->matchesMonthlySchedule($date, $rec),
-            default   => true,
+            'count' => $total_count >= (int) ($trigger['count'] ?? 10),
+            'age'   => $oldest_link_id !== null && $this->isLinkOlderThan($oldest_link_id, (int) ($trigger['days'] ?? 7)),
+            default => $total_count > 0,
         };
-    }
-
-    /**
-     * Check if a date matches the weekly schedule.
-     *
-     * @since 1.0.0
-     * @param \DateTime $date The date to check.
-     * @param array $rec The recurrence settings with weekdays.
-     * @return bool True if date is on a scheduled weekday.
-     */
-    private function matchesWeeklySchedule(\DateTime $date, array $rec): bool {
-        $map = ['MO' => 1, 'TU' => 2, 'WE' => 3, 'TH' => 4, 'FR' => 5, 'SA' => 6, 'SU' => 7];
-        $dow = (int) $date->format('N');
-        foreach ($rec['weekdays'] ?? [] as $wd) {
-            if (($map[$wd] ?? 0) === $dow) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Check if a date matches the monthly schedule.
-     *
-     * @since 1.0.0
-     * @param \DateTime $date The date to check.
-     * @param array $rec The recurrence settings with month days and weekday patterns.
-     * @return bool True if date matches the monthly schedule.
-     */
-    private function matchesMonthlySchedule(\DateTime $date, array $rec): bool {
-        $dom = (int) $date->format('j');
-        $map = ['MO' => 1, 'TU' => 2, 'WE' => 3, 'TH' => 4, 'FR' => 5, 'SA' => 6, 'SU' => 7];
-        foreach ($rec['monthDays'] ?? [] as $md) {
-            $type = $md['type'] ?? '';
-            if ($type === 'day' && (int) ($md['value'] ?? 0) === $dom) {
-                return true;
-            }
-            if ($type === 'weekday') {
-                $target_dow = $map[$md['weekday'] ?? ''] ?? 0;
-                $nth        = (int) ($md['nth'] ?? 0);
-                if ($target_dow === 0 || $nth === 0) {
-                    continue;
-                }
-                $first      = (clone $date)->modify('first day of this month');
-                $offset     = ($target_dow - (int) $first->format('N') + 7) % 7;
-                $target_dom = 1 + $offset + ($nth - 1) * 7;
-                if ($dom === $target_dom) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
@@ -299,12 +193,7 @@ trait LinkDigest_Scheduler {
         $max_per_run    = (int) apply_filters('linkdigest_max_per_run', self::MAX_PER_RUN);
         $batch_ids      = array_slice($link_ids, 0, $max_per_run);
 
-        $would_publish = match ($mode) {
-            'count'  => $total_count >= (int) ($trigger['count'] ?? 10),
-            'age'    => $oldest_link_id !== null && $this->isLinkOlderThan($oldest_link_id, (int) ($trigger['days'] ?? 7)),
-            'manual' => false,
-            default  => !empty($batch_ids),
-        };
+        $would_publish = $mode !== 'manual' && $this->evaluateTrigger($mode, $trigger, $total_count, $oldest_link_id);
 
         $by_category = [];
         if ($would_publish && !empty($batch_ids)) {
@@ -332,41 +221,6 @@ trait LinkDigest_Scheduler {
     }
 
     /**
-     * Send notification email after schedule runs, if enabled.
-     *
-     * @since 1.0.0
-     * @param int|null $post_id The published post ID, or null if nothing was published.
-     * @param array $link_ids Array of link post IDs that were published.
-     * @param string $mode The schedule mode that ran.
-     * @return void
-     */
-    public function maybeSendRunNotification(int|null $post_id, array $link_ids, string $mode): void {
-        $config = get_option('linkdigest_schedule', []);
-        $notify = $config['notify'] ?? [];
-        if (empty($notify['enabled'])) {
-            return;
-        }
-        $to = !empty($notify['email']) ? $notify['email'] : get_option('admin_email');
-        /* translators: %d: number of links published */
-        $subject = sprintf(__('[LinkDigest] Digest published: %d links', 'linkdigest'), count($link_ids));
-        if ($post_id) {
-            $message = sprintf(
-                /* translators: 1: link count, 2: post URL */
-                __("A new digest was published.\n\nLinks: %1\$d\nView: %2\$s", 'linkdigest'),
-                count($link_ids),
-                get_permalink($post_id)
-            );
-        } else {
-            $message = sprintf(
-                /* translators: %s: schedule mode */
-                __('Schedule ran in %s mode but no post was published.', 'linkdigest'),
-                $mode
-            );
-        }
-        wp_mail($to, $subject, $message);
-    }
-
-    /**
      * Check if a link is older than a specified number of days.
      *
      * @since 1.0.0
@@ -381,122 +235,5 @@ trait LinkDigest_Scheduler {
         }
         $cutoff = gmdate('Y-m-d H:i:s', strtotime("-{$days} days"));
         return $post->post_date_gmt < $cutoff;
-    }
-
-    /**
-     * Send Discord/Slack webhook notifications after schedule runs, if configured.
-     *
-     * @since 2.0.0
-     * @param int|null $post_id The published post ID, or null if nothing was published.
-     * @param array $link_ids Array of link post IDs that were published.
-     * @param string $mode The schedule mode that ran.
-     * @return void
-     */
-    public function maybeSendWebhookNotification(int|null $post_id, array $link_ids, string $mode): void {
-        $config   = get_option('linkdigest_schedule', []);
-        $notify   = $config['notify'] ?? [];
-        $count    = count($link_ids);
-        $post_url = $post_id ? get_permalink($post_id) : null;
-
-        if (!empty($notify['discord_webhook'])) {
-            $this->sendDiscordNotification($notify['discord_webhook'], $count, $post_url);
-        }
-        if (!empty($notify['slack_webhook'])) {
-            $this->sendSlackNotification($notify['slack_webhook'], $count, $post_url);
-        }
-        if (!empty($notify['telegram_bot_token']) && !empty($notify['telegram_chat_id'])) {
-            $this->sendTelegramNotification($notify['telegram_bot_token'], $notify['telegram_chat_id'], $count, $post_url);
-        }
-    }
-
-    /**
-     * Send a Discord webhook notification after a digest run.
-     *
-     * @since 2.0.0
-     * @param string      $webhook_url Discord incoming webhook URL.
-     * @param int         $count       Number of links published.
-     * @param string|null $post_url    URL of the published post, or null if none.
-     * @return void
-     */
-    private function sendDiscordNotification(string $webhook_url, int $count, ?string $post_url): void {
-        if ($post_url) {
-            $description = sprintf(
-                /* translators: 1: number of links published, 2: post URL */
-                __('%1$d links published. [View post](%2$s)', 'linkdigest'),
-                $count,
-                $post_url
-            );
-        } else {
-            /* translators: %d: number of links processed */
-            $description = sprintf(__('%d links processed. No post published.', 'linkdigest'), $count);
-        }
-        $payload = [
-            'embeds' => [[
-                'title'       => __('LinkDigest: digest published', 'linkdigest'),
-                'description' => $description,
-                'color'       => 0x2D9BF0,
-            ]],
-        ];
-        wp_remote_post($webhook_url, [
-            'headers'     => ['Content-Type' => 'application/json'],
-            'body'        => wp_json_encode($payload),
-            'blocking'    => false,
-            'data_format' => 'body',
-        ]);
-    }
-
-    /**
-     * Send a Telegram bot message notification after a digest run.
-     *
-     * @since 2.0.0
-     * @param string      $bot_token Telegram bot token.
-     * @param string      $chat_id   Telegram chat ID.
-     * @param int         $count     Number of links published.
-     * @param string|null $post_url  URL of the published post, or null if none.
-     * @return void
-     */
-    private function sendTelegramNotification(string $bot_token, string $chat_id, int $count, ?string $post_url): void {
-        if ($post_url) {
-            $text = sprintf(
-                /* translators: 1: number of links published, 2: post URL */
-                __('<b>LinkDigest:</b> %1$d links published. <a href="%2$s">View post</a>', 'linkdigest'),
-                $count,
-                esc_url($post_url)
-            );
-        } else {
-            /* translators: %d: number of links processed */
-            $text = sprintf(__('<b>LinkDigest:</b> %d links processed. No post published.', 'linkdigest'), $count);
-        }
-        wp_remote_post('https://api.telegram.org/bot' . $bot_token . '/sendMessage', [
-            'headers'     => ['Content-Type' => 'application/json'],
-            'body'        => wp_json_encode(['chat_id' => $chat_id, 'text' => $text, 'parse_mode' => 'HTML']),
-            'blocking'    => false,
-            'data_format' => 'body',
-        ]);
-    }
-
-    /**
-     * Send a Slack webhook notification after a digest run.
-     *
-     * @since 2.0.0
-     * @param string      $webhook_url Slack incoming webhook URL.
-     * @param int         $count       Number of links published.
-     * @param string|null $post_url    URL of the published post, or null if none.
-     * @return void
-     */
-    private function sendSlackNotification(string $webhook_url, int $count, ?string $post_url): void {
-        if ($post_url) {
-            /* translators: 1: number of links published, 2: post URL */
-            $text = sprintf(__('*LinkDigest:* %1$d links published. <%2$s|View post>', 'linkdigest'), $count, $post_url);
-        } else {
-            /* translators: %d: number of links processed */
-            $text = sprintf(__('*LinkDigest:* %d links processed. No post published.', 'linkdigest'), $count);
-        }
-        wp_remote_post($webhook_url, [
-            'headers'     => ['Content-Type' => 'application/json'],
-            'body'        => wp_json_encode(['text' => $text]),
-            'blocking'    => false,
-            'data_format' => 'body',
-        ]);
     }
 }
