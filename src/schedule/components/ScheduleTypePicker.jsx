@@ -1,5 +1,20 @@
 import { __ } from '@wordpress/i18n';
 
+/**
+ * @typedef {object} ModeDefinition
+ * @property {string} value - Mode identifier (e.g. 'daily').
+ * @property {string} label - Translated display label.
+ * @property {string} desc  - Translated short description.
+ */
+
+/**
+ * Creates a translated mode definition object.
+ *
+ * @param {string} value - Mode identifier.
+ * @param {string} label - Display label (untranslated).
+ * @param {string} desc  - Short description (untranslated).
+ * @returns {ModeDefinition}
+ */
 const createMode = (value, label, desc) => ({ value, label: __(label, 'linkdigest'), desc: __(desc, 'linkdigest') });
 
 const GROUPS = [
@@ -26,6 +41,13 @@ const GROUPS = [
   },
 ];
 
+/**
+ * Radio-card group for selecting a schedule mode.
+ *
+ * @param {string}   value    - Currently selected mode value.
+ * @param {Function} onChange - Called with the new mode value when selection changes.
+ * @returns {JSX.Element}
+ */
 export default function ScheduleTypePicker({ value, onChange }) {
   return (
     <div className="linkdigest-mode-picker-v2" role="radiogroup">

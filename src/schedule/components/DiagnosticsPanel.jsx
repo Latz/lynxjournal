@@ -1,7 +1,17 @@
+/**
+ * Sidebar diagnostics panel showing last run, next run, WP-Cron status, and run history.
+ */
+
 import { useState } from '@wordpress/element';
 import { Button } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 
+/**
+ * Formats a Unix timestamp as a locale-aware medium date + short time string.
+ *
+ * @param {number} ts - Unix timestamp (seconds).
+ * @returns {string}
+ */
 function fmtTs(ts) {
   return new Date(ts * 1000).toLocaleString(undefined, {
     dateStyle: 'medium',
@@ -14,10 +24,22 @@ const REASON_LABELS = {
   locked:            __('Run was locked', 'linkdigest'),
 };
 
+/**
+ * Returns a human-readable label for a run skip reason, falling back to the raw value.
+ *
+ * @param {string} reason - Raw reason string from the run record.
+ * @returns {string}
+ */
 function formatReason(reason) {
   return REASON_LABELS[reason] ?? reason;
 }
 
+/**
+ * Coloured status badge for a run record.
+ *
+ * @param {'success'|string} status - Run status value.
+ * @returns {JSX.Element}
+ */
 function RunBadge({ status }) {
   const cls = status === 'success'
     ? 'linkdigest-diag-badge linkdigest-diag-badge--success'
@@ -25,6 +47,14 @@ function RunBadge({ status }) {
   return <span className={cls}>{status}</span>;
 }
 
+/**
+ * Inline link to the published digest post, with a link-count label.
+ * Renders nothing when linkCount is falsy.
+ *
+ * @param {number|null} postId    - WordPress post ID, or null if not yet saved.
+ * @param {number}      linkCount - Number of links in the digest.
+ * @returns {JSX.Element|null}
+ */
 function PostLink({ postId, linkCount }) {
   if (!linkCount) return null;
   /* translators: %d: number of links in the published digest */
@@ -39,6 +69,15 @@ function PostLink({ postId, linkCount }) {
   );
 }
 
+/**
+ * Sidebar panel showing schedule diagnostics: next/last run, WP-Cron status, and run history.
+ *
+ * @param {object|null} data      - Diagnostics data from the REST API.
+ * @param {boolean}     loading   - True while the data is being fetched.
+ * @param {Function}    onRefresh - Callback to re-fetch diagnostics data.
+ * @param {string}      mode      - Active schedule mode (affects which rows are shown).
+ * @returns {JSX.Element}
+ */
 export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
   const [showHistory, setShowHistory] = useState(false);
 

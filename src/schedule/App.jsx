@@ -11,6 +11,16 @@ import TimePicker from './components/TimePicker';
 import NextSchedules from './components/NextSchedules';
 import DiagnosticsPanel from './components/DiagnosticsPanel';
 
+/**
+ * @typedef {object} FormState
+ * @property {string}   mode        - Active schedule mode.
+ * @property {object}   recurrence  - Recurrence config (interval, weekdays, monthDays, nthWeek).
+ * @property {object}   trigger     - Trigger config (count, tag_id, days).
+ * @property {string[]} times       - Execution times as HH:MM strings.
+ * @property {string}   post_status - Post status for published digests ('publish'|'draft').
+ */
+
+/** @type {FormState} */
 const DEFAULT_FORM = {
   mode: 'daily',
   recurrence: { interval: 1, weekdays: [], monthDays: [{ type: 'day', value: 1, nth: 1, weekday: 'MO' }], nthWeek: null },
@@ -19,6 +29,13 @@ const DEFAULT_FORM = {
   post_status: 'publish',
 };
 
+/**
+ * Labelled content section wrapper.
+ *
+ * @param {string}      title    - Section heading text.
+ * @param {JSX.Element} children - Section body content.
+ * @returns {JSX.Element}
+ */
 function Section({ title, children }) {
   return (
     <div className="linkdigest-section">
@@ -28,6 +45,15 @@ function Section({ title, children }) {
   );
 }
 
+/**
+ * Root schedule settings component.
+ *
+ * Loads schedule config from the REST API, renders mode/recurrence/trigger/time
+ * controls, and persists changes back via POST. Also fetches diagnostics and
+ * surfaces a WP-Cron warning when DISABLE_WP_CRON is active.
+ *
+ * @returns {JSX.Element}
+ */
 export default function App() {
   const [form, setForm]             = useState(DEFAULT_FORM);
   const [savedForm, setSavedForm]   = useState(null);
@@ -41,6 +67,10 @@ export default function App() {
   const [diag, setDiag]           = useState(null);
   const [diagLoading, setDiagLoading] = useState(true);
 
+  /**
+   * Fetches fresh diagnostics data from the REST API and updates state.
+   * Stable reference via useCallback so it can be listed as a useEffect dep.
+   */
   const refreshDiag = useCallback(() => {
     setDiagLoading(true);
     apiFetch({ path: '/linkdigest/v1/schedule/diagnostics' })
@@ -73,6 +103,10 @@ export default function App() {
     return () => window.removeEventListener('beforeunload', handler);
   }, [isDirty]);
 
+  /**
+   * Validates and POSTs the current form state to the schedule REST endpoint.
+   * Rejects duplicate times before sending to avoid ambiguous WP-Cron events.
+   */
   async function handleSave() {
     setSaving(true);
     setNotice(null);
@@ -93,6 +127,12 @@ export default function App() {
     }
   }
 
+  /**
+   * Switches the active mode and resets recurrence to defaults when switching
+   * into a time-based mode to avoid stale config from a previous selection.
+   *
+   * @param {string} mode - New mode value.
+   */
   function handleModeChange(mode) {
     setForm(f => ({
       ...f,
@@ -118,6 +158,11 @@ export default function App() {
 
   const section02Label = isSchedule ? __('Recurrence', 'linkdigest') : __('Condition', 'linkdigest');
 
+  /**
+   * Returns the appropriate recurrence/trigger/manual UI for the current mode.
+   *
+   * @returns {JSX.Element}
+   */
   function renderConditionSection() {
     if (isSchedule) return (
       <RecurrenceConfig
