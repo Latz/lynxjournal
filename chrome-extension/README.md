@@ -1,6 +1,7 @@
-# LinkDigest Chrome Extension
+# LynxJournal Chrome Extension
 
-Save links to your WordPress LinkDigest plugin directly from any webpage!
+Save links to your WordPress LynxJournal plugin directly from any webpage. The plugin is avaiable at
+https://wordpress.org/plugins/lynxjournal/
 
 ## Features
 
@@ -16,7 +17,7 @@ Save links to your WordPress LinkDigest plugin directly from any webpage!
 ### 1. Prepare WordPress Plugin
 
 1. Go to your WordPress admin panel
-2. Navigate to **LinkDigest → Settings**
+2. Navigate to **LynxJournal → Settings**
 3. Click **Generate API Key**
 4. Copy the **API Endpoint** and **API Key**
 
@@ -25,14 +26,14 @@ Save links to your WordPress LinkDigest plugin directly from any webpage!
 1. Open Chrome and go to `chrome://extensions/`
 2. Enable **Developer mode** (toggle in top right)
 3. Click **Load unpacked**
-4. Select the `chrome-extension` folder from your LinkDigest plugin directory
-5. The LinkDigest extension should now appear in your extensions list
+4. Select the `chrome-extension` folder from your LynxJournal plugin directory
+5. The LynxJournal extension should now appear in your extensions list
 
 ### 3. Configure Extension
 
-1. Click the LinkDigest extension icon in Chrome toolbar
+1. Click the LynxJournal extension icon in Chrome toolbar
 2. Click **Settings** (or **Open Settings**)
-3. Paste your **API Endpoint** (e.g., `https://yoursite.com/wp-json/linkdigest/v1`)
+3. Paste your **API Endpoint** (e.g., `https://yoursite.com/wp-json/lynxjournal/v1`)
 4. Paste your **API Key**
 5. Click **Save Settings**
 6. The extension will test the connection and confirm if successful
@@ -40,13 +41,13 @@ Save links to your WordPress LinkDigest plugin directly from any webpage!
 ## Usage
 
 1. Navigate to any webpage you want to save
-2. Click the LinkDigest extension icon
+2. Click the LynxJournal extension icon
 3. The title and URL are automatically filled
 4. (Optional) Add a description
 5. (Optional) Select categories
 6. (Optional) Add tags (comma-separated)
 7. Click **Save Link**
-8. Done! The link is now in your WordPress LinkDigest
+8. Done! The link is now in your WordPress LynxJournal
 
 ## Icons
 
@@ -56,7 +57,7 @@ Save links to your WordPress LinkDigest plugin directly from any webpage!
 - `icon48.png` (48x48 pixels)
 - `icon128.png` (128x128 pixels)
 
-Place these files in the `chrome-extension` folder. You can create simple icons with your logo or the LinkDigest branding.
+Place these files in the `chrome-extension` folder. You can create simple icons with your logo or the LynxJournal branding.
 
 ## Troubleshooting
 
@@ -65,7 +66,7 @@ Place these files in the `chrome-extension` folder. You can create simple icons 
 - Check that your API Endpoint URL is correct
 - Ensure your API Key is copied correctly (no extra spaces)
 - Verify that your WordPress site is accessible
-- Check that the LinkDigest plugin is activated in WordPress
+- Check that the LynxJournal plugin is activated in WordPress
 
 ### "Please configure your API settings first"
 
@@ -75,13 +76,13 @@ Place these files in the `chrome-extension` folder. You can create simple icons 
 
 ### Categories not loading
 
-- Make sure you have created at least one category in WordPress (LinkDigest → Categories)
+- Make sure you have created at least one category in WordPress (LynxJournal → Categories)
 - Check your API credentials are correct
 
 ### CORS errors in console
 
 - The WordPress plugin automatically handles CORS for Chrome extensions
-- Ensure you're using the latest version of the LinkDigest WordPress plugin
+- Ensure you're using the latest version of the LynxJournal WordPress plugin
 
 ## Security
 
@@ -104,4 +105,4 @@ The extension consists of:
 
 ## Support
 
-For issues or questions, please refer to the LinkDigest WordPress plugin documentation or create an issue in the plugin repository.
+For issues or questions, please refer to the LynxJournal WordPress plugin documentation or create an issue in the plugin repository.

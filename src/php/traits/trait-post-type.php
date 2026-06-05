@@ -1,16 +1,16 @@
 <?php
 /**
- * Trait for registering the linkdigest post type, statuses, and taxonomies.
+ * Trait for registering the lynxjournal post type, statuses, and taxonomies.
  *
- * @package LinkDigest
+ * @package LynxJournal
  */
 
 declare(strict_types=1);
 
-trait LinkDigest_PostType {
+trait LynxJournal_PostType {
 
     /**
-     * Registers the linkdigest custom post type and its meta.
+     * Registers the lynxjournal custom post type and its meta.
      *
      * @since 1.0.0
      * @return void
@@ -19,47 +19,47 @@ trait LinkDigest_PostType {
         $this->register_post_statuses();
 
         $labels = array(
-            'name'                  => _x( 'Links', 'Post Type General Name', 'linkdigest' ),
-            'singular_name'         => _x( 'Link', 'Post Type Singular Name', 'linkdigest' ),
-            'menu_name'             => __( 'linkdigest', 'linkdigest' ),
-            'name_admin_bar'        => __( 'Link', 'linkdigest' ),
-            'archives'              => __( 'Link Archives', 'linkdigest' ),
-            'attributes'            => __( 'Link Attributes', 'linkdigest' ),
-            'parent_item_colon'     => __( 'Parent Link:', 'linkdigest' ),
-            'all_items'             => __( 'All Links', 'linkdigest' ),
-            'add_new_item'          => __( 'Add New Link', 'linkdigest' ),
-            'add_new'               => __( 'Add New', 'linkdigest' ),
-            'new_item'              => __( 'New Link', 'linkdigest' ),
-            'edit_item'             => __( 'Edit Link', 'linkdigest' ),
-            'update_item'           => __( 'Update Link', 'linkdigest' ),
-            'view_item'             => __( 'View Link', 'linkdigest' ),
-            'view_items'            => __( 'View Links', 'linkdigest' ),
-            'search_items'          => __( 'Search Link', 'linkdigest' ),
-            'not_found'             => __( 'Not found', 'linkdigest' ),
-            'not_found_in_trash'    => __( 'Not found in Trash', 'linkdigest' ),
-            'featured_image'        => __( 'Featured Image', 'linkdigest' ),
-            'set_featured_image'    => __( 'Set featured image', 'linkdigest' ),
-            'remove_featured_image' => __( 'Remove featured image', 'linkdigest' ),
-            'use_featured_image'    => __( 'Use as featured image', 'linkdigest' ),
-            'insert_into_item'      => __( 'Insert into link', 'linkdigest' ),
-            'uploaded_to_this_item' => __( 'Uploaded to this link', 'linkdigest' ),
-            'items_list'            => __( 'Links list', 'linkdigest' ),
-            'items_list_navigation' => __( 'Links list navigation', 'linkdigest' ),
-            'filter_items_list'     => __( 'Filter links list', 'linkdigest' ),
+            'name'                  => _x( 'Links', 'Post Type General Name', 'lynxjournal' ),
+            'singular_name'         => _x( 'Link', 'Post Type Singular Name', 'lynxjournal' ),
+            'menu_name'             => __( 'lynxjournal', 'lynxjournal' ),
+            'name_admin_bar'        => __( 'Link', 'lynxjournal' ),
+            'archives'              => __( 'Link Archives', 'lynxjournal' ),
+            'attributes'            => __( 'Link Attributes', 'lynxjournal' ),
+            'parent_item_colon'     => __( 'Parent Link:', 'lynxjournal' ),
+            'all_items'             => __( 'All Links', 'lynxjournal' ),
+            'add_new_item'          => __( 'Add New Link', 'lynxjournal' ),
+            'add_new'               => __( 'Add New', 'lynxjournal' ),
+            'new_item'              => __( 'New Link', 'lynxjournal' ),
+            'edit_item'             => __( 'Edit Link', 'lynxjournal' ),
+            'update_item'           => __( 'Update Link', 'lynxjournal' ),
+            'view_item'             => __( 'View Link', 'lynxjournal' ),
+            'view_items'            => __( 'View Links', 'lynxjournal' ),
+            'search_items'          => __( 'Search Link', 'lynxjournal' ),
+            'not_found'             => __( 'Not found', 'lynxjournal' ),
+            'not_found_in_trash'    => __( 'Not found in Trash', 'lynxjournal' ),
+            'featured_image'        => __( 'Featured Image', 'lynxjournal' ),
+            'set_featured_image'    => __( 'Set featured image', 'lynxjournal' ),
+            'remove_featured_image' => __( 'Remove featured image', 'lynxjournal' ),
+            'use_featured_image'    => __( 'Use as featured image', 'lynxjournal' ),
+            'insert_into_item'      => __( 'Insert into link', 'lynxjournal' ),
+            'uploaded_to_this_item' => __( 'Uploaded to this link', 'lynxjournal' ),
+            'items_list'            => __( 'Links list', 'lynxjournal' ),
+            'items_list_navigation' => __( 'Links list navigation', 'lynxjournal' ),
+            'filter_items_list'     => __( 'Filter links list', 'lynxjournal' ),
         );
 
         $args = array(
-            'label'               => __( 'Link', 'linkdigest' ),
-            'description'         => __( 'Links to publish on blog', 'linkdigest' ),
+            'label'               => __( 'Link', 'lynxjournal' ),
+            'description'         => __( 'Links to publish on blog', 'lynxjournal' ),
             'labels'              => $labels,
             'supports'            => array( 'title', 'editor', 'custom-fields' ),
-            'taxonomies'          => array( 'linkdigest_category', 'linkdigest_tag' ),
+            'taxonomies'          => array( 'lynxjournal_category', 'lynxjournal_tag' ),
             'hierarchical'        => false,
             'public'              => true,
             'show_ui'             => true,
             'show_in_menu'        => false,      // Suppressed: plugin uses a custom admin menu.
             'menu_position'       => 5,
-            'menu_icon'           => plugins_url( 'assets/icon-menu.png', LINKDIGEST_PLUGIN_FILE ),
+            'menu_icon'           => plugins_url( 'assets/icon-menu.png', LYNXJOURNAL_PLUGIN_FILE ),
             'show_in_admin_bar'   => true,
             'show_in_nav_menus'   => true,
             'can_export'          => true,
@@ -70,13 +70,13 @@ trait LinkDigest_PostType {
             'show_in_rest'        => true,
         );
 
-        register_post_type( 'linkdigest', $args );
+        register_post_type( 'lynxjournal', $args );
 
         // Expose publish status in REST so the block editor and external tools can read it.
         // auth_callback '__return_true' is safe: the field is non-sensitive tracking data.
         register_post_meta(
-            'linkdigest',
-            '_linkdigest_publish_status',
+            'lynxjournal',
+            '_lynxjournal_publish_status',
             array(
                 'show_in_rest'  => true,
                 'single'        => true,
@@ -85,8 +85,8 @@ trait LinkDigest_PostType {
             )
         );
         register_post_meta(
-            'linkdigest',
-            '_linkdigest_url',
+            'lynxjournal',
+            '_lynxjournal_url',
             array(
                 'show_in_rest'      => false,
                 'single'            => true,
@@ -98,16 +98,16 @@ trait LinkDigest_PostType {
     }
 
     /**
-     * Registers the linkdigest custom post statuses.
+     * Registers the lynxjournal custom post statuses.
      *
      * @since 1.0.0
      * @return void
      */
     private function register_post_statuses(): void {
         register_post_status(
-            'linkdigest_pending',
+            'lynxjournal_pending',
             array(
-                'label'                     => _x( 'Pending', 'linkdigest post status', 'linkdigest' ),
+                'label'                     => _x( 'Pending', 'lynxjournal post status', 'lynxjournal' ),
                 'public'                    => true,
                 'show_in_admin_all_list'    => true,
                 'show_in_admin_status_list' => true,
@@ -115,44 +115,44 @@ trait LinkDigest_PostType {
                 'label_count'               => _n_noop(
                     'Pending <span class="count">(%s)</span>',
                     'Pending <span class="count">(%s)</span>',
-                    'linkdigest'
+                    'lynxjournal'
                 ),
             )
         );
         register_post_status(
-            'linkdigest_published',
+            'lynxjournal_published',
             array(
-                'label'                     => _x( 'In Digest', 'linkdigest post status', 'linkdigest' ),
+                'label'                     => _x( 'In Roundup', 'lynxjournal post status', 'lynxjournal' ),
                 'public'                    => true,
                 'show_in_admin_all_list'    => true,
                 'show_in_admin_status_list' => true,
                 // translators: %s: number of posts with this status.
                 'label_count'               => _n_noop(
-                    'In Digest <span class="count">(%s)</span>',
-                    'In Digest <span class="count">(%s)</span>',
-                    'linkdigest'
+                    'In Roundup <span class="count">(%s)</span>',
+                    'In Roundup <span class="count">(%s)</span>',
+                    'lynxjournal'
                 ),
             )
         );
         register_post_status(
-            'linkdigest_draft',
+            'lynxjournal_draft',
             array(
-                'label'                     => _x( 'In Draft Digest', 'linkdigest post status', 'linkdigest' ),
+                'label'                     => _x( 'In Draft Roundup', 'lynxjournal post status', 'lynxjournal' ),
                 'public'                    => false,
                 'show_in_admin_all_list'    => true,
                 'show_in_admin_status_list' => true,
                 // translators: %s: number of posts with this status.
                 'label_count'               => _n_noop(
-                    'In Draft Digest <span class="count">(%s)</span>',
-                    'In Draft Digest <span class="count">(%s)</span>',
-                    'linkdigest'
+                    'In Draft Roundup <span class="count">(%s)</span>',
+                    'In Draft Roundup <span class="count">(%s)</span>',
+                    'lynxjournal'
                 ),
             )
         );
     }
 
     /**
-     * Registers the linkdigest custom taxonomies (categories and tags).
+     * Registers the lynxjournal custom taxonomies (categories and tags).
      *
      * @since 1.0.0
      * @return void
@@ -160,26 +160,26 @@ trait LinkDigest_PostType {
     public function register_taxonomies(): void {
         // Register Category taxonomy.
         $category_labels = array(
-            'name'                       => _x( 'Link Categories', 'Taxonomy General Name', 'linkdigest' ),
-            'singular_name'              => _x( 'Link Category', 'Taxonomy Singular Name', 'linkdigest' ),
-            'menu_name'                  => __( 'Categories', 'linkdigest' ),
-            'all_items'                  => __( 'All Categories', 'linkdigest' ),
-            'parent_item'                => __( 'Parent Category', 'linkdigest' ),
-            'parent_item_colon'          => __( 'Parent Category:', 'linkdigest' ),
-            'new_item_name'              => __( 'New Category Name', 'linkdigest' ),
-            'add_new_item'               => __( 'Add New Category', 'linkdigest' ),
-            'edit_item'                  => __( 'Edit Category', 'linkdigest' ),
-            'update_item'                => __( 'Update Category', 'linkdigest' ),
-            'view_item'                  => __( 'View Category', 'linkdigest' ),
-            'separate_items_with_commas' => __( 'Separate categories with commas', 'linkdigest' ),
-            'add_or_remove_items'        => __( 'Add or remove categories', 'linkdigest' ),
-            'choose_from_most_used'      => __( 'Choose from the most used', 'linkdigest' ),
-            'popular_items'              => __( 'Popular Categories', 'linkdigest' ),
-            'search_items'               => __( 'Search Categories', 'linkdigest' ),
-            'not_found'                  => __( 'Not Found', 'linkdigest' ),
-            'no_terms'                   => __( 'No categories', 'linkdigest' ),
-            'items_list'                 => __( 'Categories list', 'linkdigest' ),
-            'items_list_navigation'      => __( 'Categories list navigation', 'linkdigest' ),
+            'name'                       => _x( 'Link Categories', 'Taxonomy General Name', 'lynxjournal' ),
+            'singular_name'              => _x( 'Link Category', 'Taxonomy Singular Name', 'lynxjournal' ),
+            'menu_name'                  => __( 'Categories', 'lynxjournal' ),
+            'all_items'                  => __( 'All Categories', 'lynxjournal' ),
+            'parent_item'                => __( 'Parent Category', 'lynxjournal' ),
+            'parent_item_colon'          => __( 'Parent Category:', 'lynxjournal' ),
+            'new_item_name'              => __( 'New Category Name', 'lynxjournal' ),
+            'add_new_item'               => __( 'Add New Category', 'lynxjournal' ),
+            'edit_item'                  => __( 'Edit Category', 'lynxjournal' ),
+            'update_item'                => __( 'Update Category', 'lynxjournal' ),
+            'view_item'                  => __( 'View Category', 'lynxjournal' ),
+            'separate_items_with_commas' => __( 'Separate categories with commas', 'lynxjournal' ),
+            'add_or_remove_items'        => __( 'Add or remove categories', 'lynxjournal' ),
+            'choose_from_most_used'      => __( 'Choose from the most used', 'lynxjournal' ),
+            'popular_items'              => __( 'Popular Categories', 'lynxjournal' ),
+            'search_items'               => __( 'Search Categories', 'lynxjournal' ),
+            'not_found'                  => __( 'Not Found', 'lynxjournal' ),
+            'no_terms'                   => __( 'No categories', 'lynxjournal' ),
+            'items_list'                 => __( 'Categories list', 'lynxjournal' ),
+            'items_list_navigation'      => __( 'Categories list navigation', 'lynxjournal' ),
         );
 
         $category_args = array(
@@ -199,30 +199,30 @@ trait LinkDigest_PostType {
             ),
         );
 
-        register_taxonomy( 'linkdigest_category', array( 'linkdigest' ), $category_args );
+        register_taxonomy( 'lynxjournal_category', array( 'lynxjournal' ), $category_args );
 
         // Register Tag taxonomy.
         $tag_labels = array(
-            'name'                       => _x( 'Link Tags', 'Taxonomy General Name', 'linkdigest' ),
-            'singular_name'              => _x( 'Link Tag', 'Taxonomy Singular Name', 'linkdigest' ),
-            'menu_name'                  => __( 'Tags', 'linkdigest' ),
-            'all_items'                  => __( 'All Tags', 'linkdigest' ),
-            'parent_item'                => __( 'Parent Tag', 'linkdigest' ),
-            'parent_item_colon'          => __( 'Parent Tag:', 'linkdigest' ),
-            'new_item_name'              => __( 'New Tag Name', 'linkdigest' ),
-            'add_new_item'               => __( 'Add New Tag', 'linkdigest' ),
-            'edit_item'                  => __( 'Edit Tag', 'linkdigest' ),
-            'update_item'                => __( 'Update Tag', 'linkdigest' ),
-            'view_item'                  => __( 'View Tag', 'linkdigest' ),
-            'separate_items_with_commas' => __( 'Separate tags with commas', 'linkdigest' ),
-            'add_or_remove_items'        => __( 'Add or remove tags', 'linkdigest' ),
-            'choose_from_most_used'      => __( 'Choose from the most used', 'linkdigest' ),
-            'popular_items'              => __( 'Popular Tags', 'linkdigest' ),
-            'search_items'               => __( 'Search Tags', 'linkdigest' ),
-            'not_found'                  => __( 'Not Found', 'linkdigest' ),
-            'no_terms'                   => __( 'No tags', 'linkdigest' ),
-            'items_list'                 => __( 'Tags list', 'linkdigest' ),
-            'items_list_navigation'      => __( 'Tags list navigation', 'linkdigest' ),
+            'name'                       => _x( 'Link Tags', 'Taxonomy General Name', 'lynxjournal' ),
+            'singular_name'              => _x( 'Link Tag', 'Taxonomy Singular Name', 'lynxjournal' ),
+            'menu_name'                  => __( 'Tags', 'lynxjournal' ),
+            'all_items'                  => __( 'All Tags', 'lynxjournal' ),
+            'parent_item'                => __( 'Parent Tag', 'lynxjournal' ),
+            'parent_item_colon'          => __( 'Parent Tag:', 'lynxjournal' ),
+            'new_item_name'              => __( 'New Tag Name', 'lynxjournal' ),
+            'add_new_item'               => __( 'Add New Tag', 'lynxjournal' ),
+            'edit_item'                  => __( 'Edit Tag', 'lynxjournal' ),
+            'update_item'                => __( 'Update Tag', 'lynxjournal' ),
+            'view_item'                  => __( 'View Tag', 'lynxjournal' ),
+            'separate_items_with_commas' => __( 'Separate tags with commas', 'lynxjournal' ),
+            'add_or_remove_items'        => __( 'Add or remove tags', 'lynxjournal' ),
+            'choose_from_most_used'      => __( 'Choose from the most used', 'lynxjournal' ),
+            'popular_items'              => __( 'Popular Tags', 'lynxjournal' ),
+            'search_items'               => __( 'Search Tags', 'lynxjournal' ),
+            'not_found'                  => __( 'Not Found', 'lynxjournal' ),
+            'no_terms'                   => __( 'No tags', 'lynxjournal' ),
+            'items_list'                 => __( 'Tags list', 'lynxjournal' ),
+            'items_list_navigation'      => __( 'Tags list navigation', 'lynxjournal' ),
         );
 
         $tag_args = array(
@@ -242,6 +242,6 @@ trait LinkDigest_PostType {
             ),
         );
 
-        register_taxonomy( 'linkdigest_tag', array( 'linkdigest' ), $tag_args );
+        register_taxonomy( 'lynxjournal_tag', array( 'lynxjournal' ), $tag_args );
     }
 }

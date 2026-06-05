@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
 /**
  * Returns user ID from Basic Auth headers, or null if unavailable.
  */
-function linkdigest_basic_auth_user_id(): ?int {
+function lynxjournal_basic_auth_user_id(): ?int {
     $username = isset($_SERVER['PHP_AUTH_USER']) ? sanitize_text_field(wp_unslash($_SERVER['PHP_AUTH_USER'])) : null;
     $password = isset($_SERVER['PHP_AUTH_PW']) ? sanitize_text_field(wp_unslash($_SERVER['PHP_AUTH_PW'])) : null;
 
@@ -38,7 +38,7 @@ add_filter( 'determine_current_user', function ( $user_id ) {
     if ( ! empty( $user_id ) ) {
         return $user_id; // Already authenticated (cookie or app password).
     }
-    return linkdigest_basic_auth_user_id() ?? $user_id;
+    return lynxjournal_basic_auth_user_id() ?? $user_id;
 }, 30 );
 
 // Clear any Application Password WP_Error from rest_authentication_errors.
@@ -47,7 +47,7 @@ add_filter( 'rest_authentication_errors', function ( $result ) {
     if ( ! is_wp_error( $result ) ) {
         return $result;
     }
-    $user_id = linkdigest_basic_auth_user_id();
+    $user_id = lynxjournal_basic_auth_user_id();
     if ( $user_id ) {
         wp_set_current_user( $user_id );
         return null;

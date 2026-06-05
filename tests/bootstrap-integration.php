@@ -23,15 +23,15 @@ if (!defined('ABSPATH')) {
  *   vendor/bin/pest --testsuite=Integration
  */
 
-$linkdigest_wp_tests_dir = getenv('WP_TESTS_DIR') ?: '/tmp/wordpress-tests-lib';
+$lynxjournal_wp_tests_dir = getenv('WP_TESTS_DIR') ?: '/tmp/wordpress-tests-lib';
 
-if (! is_dir($linkdigest_wp_tests_dir)) {
-    echo "\nERROR: WP test suite not found at {$linkdigest_wp_tests_dir}.\n";
+if (! is_dir($lynxjournal_wp_tests_dir)) {
+    echo "\nERROR: WP test suite not found at {$lynxjournal_wp_tests_dir}.\n";
     echo "Run bin/install-wp-tests.sh or set WP_TESTS_DIR.\n\n";
     exit(1);
 }
 
-define('LINKDIGEST_TESTS_DIR', dirname(__DIR__));
+define('LYNXJOURNAL_TESTS_DIR', dirname(__DIR__));
 
 // Point WP test bootstrap to the Composer-installed polyfills.
 if (!defined('WP_TESTS_PHPUNIT_POLYFILLS_PATH')) {
@@ -41,11 +41,11 @@ if (!defined('WP_TESTS_PHPUNIT_POLYFILLS_PATH')) {
     );
 }
 
-require_once $linkdigest_wp_tests_dir . '/includes/functions.php';
+require_once $lynxjournal_wp_tests_dir . '/includes/functions.php';
 
 tests_add_filter('muplugins_loaded', static function (): void {
-    require_once LINKDIGEST_TESTS_DIR . '/linkdigest.php';
+    require_once LYNXJOURNAL_TESTS_DIR . '/lynxjournal.php';
 });
 
-require_once $linkdigest_wp_tests_dir . '/includes/bootstrap.php';
+require_once $lynxjournal_wp_tests_dir . '/includes/bootstrap.php';
 require_once dirname(__DIR__) . '/vendor/autoload.php';

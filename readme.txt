@@ -1,6 +1,6 @@
-=== LinkDigest ===
+=== LynxJournal ===
 Contributors: latz
-Tags: links, blogging, digest, curation
+Tags: links, blogging, roundup, curation
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
@@ -12,37 +12,36 @@ Save and publish curated link digests to your blog.
 
 == Description ==
 
-LinkDigest is a WordPress plugin for managing and publishing curated link digests. Save interesting links, organise them by category, and publish them as blog post digests — individually or as a grouped collection.
+LynxJournal is a WordPress plugin for managing and publishing curated link digests. Save interesting links, organise them by category, and publish them as blog post digests.
 
 **Features:**
 
 * Save links with title, URL, description, categories, and tags
-* Publish links individually or as a grouped digest post
 * Organise links by category (inspired by frankysnotes.com)
 * REST API for integration with browser extensions
-* Schedule automatic digest publishing (daily, weekly, monthly, or by count/age)
+* Schedule automatic roundup publishing (daily, weekly, monthly, or by count/age)
 * Chrome extension support
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/linkdigest` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/lynxjournal` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. Use the LinkDigest menu in the admin dashboard to start adding links.
+3. Use the LynxJournal menu in the admin dashboard to start adding links.
 
 == Usage ==
 
 === Dashboard ===
 
-The LinkDigest dashboard (LinkDigest › Dashboard) gives you an at-a-glance overview:
+The LynxJournal dashboard (LynxJournal › Dashboard) gives you an at-a-glance overview:
 
 * **Stats bar** — total links, categories, published, and unpublished counts
 * **Quick Add** — enter a title and URL to save a link in seconds without leaving the dashboard
 * **Recent Unpublished** — the last five unsaved links; delete any of them directly from this list
-* **Recently Published** — the last five published digest posts with their status
+* **Recently Published** — the last five published roundup posts with their status
 
 === Adding Links ===
 
-**Manually (full form):** Go to LinkDigest › Add Link. Fill in:
+**Manually (full form):** Go to LynxJournal › Add Link. Fill in:
 
 * Title (required)
 * URL
@@ -56,7 +55,7 @@ The LinkDigest dashboard (LinkDigest › Dashboard) gives you an at-a-glance ove
 
 === Managing Links ===
 
-LinkDigest › All Links shows every saved link in a table:
+LynxJournal › All Links shows every saved link in a table:
 
 * **Status badges** — Unpublished, Draft, or Published
 * **Publish** — creates a WordPress post immediately for that single link
@@ -66,13 +65,13 @@ LinkDigest › All Links shows every saved link in a table:
 
 **Individual post:** Click Publish on any link in All Links. A new WordPress post is created with the link's title, description, and a "Read more" link to the source URL.
 
-**Digest post:** Click Publish on the Dashboard. All unpublished links are bundled into one post, grouped by category. Enter a custom title or leave the default ("Links Digest – [date]"). Choose to publish immediately or save as draft.
+**Roundup post:** Click Publish on the Dashboard. All unpublished links are bundled into one post, grouped by category. Enter a custom title or leave the default ("Links Roundup – [date]"). Choose to publish immediately or save as draft.
 
 Both flows support draft mode — use the Draft toggle before confirming.
 
 === Scheduling ===
 
-LinkDigest › Schedule lets automatic digest publishing run without manual action. Open **LinkDigest › Schedule**, choose a mode, set at least one Execution Time, and click **Save Schedule**. The next time that moment arrives, LinkDigest publishes a digest post from all unpublished links. To trigger a run immediately, use the **Run Now** button on the dashboard. To stop all automation, switch to Manual mode.
+LynxJournal › Schedule lets automatic roundup publishing run without manual action. Open **LynxJournal › Schedule**, choose a mode, set at least one Execution Time, and click **Save Schedule**. The next time that moment arrives, LynxJournal publishes a roundup post from all unpublished links. To trigger a run immediately, use the **Run Now** button on the dashboard. To stop all automation, switch to Manual mode.
 
 **Modes**
 
@@ -97,9 +96,9 @@ Click **Save Schedule** at the bottom of the settings column. On save, any previ
 
 **Running the schedule immediately**
 
-The **Run Now** button on the LinkDigest dashboard triggers an immediate publish run. It respects the same publish condition as the automatic schedule. In every mode, the run is silently skipped when there are no unpublished links — no empty digest is ever created. The automatic schedule is unaffected.
+The **Run Now** button on the LynxJournal dashboard triggers an immediate publish run. It respects the same publish condition as the automatic schedule. In every mode, the run is silently skipped when there are no unpublished links — no empty roundup is ever created. The automatic schedule is unaffected.
 
-**What a digest post looks like**
+**What a roundup post looks like**
 
 Each run creates one WordPress post titled `Links: [Full Date]` (e.g. `Links: April 28, 2026`), published immediately as a standard post. The body contains one section per category, each with a list of links. Each link shows its title (linked to the saved URL, opening in a new tab) and, optionally, a description below it. Uncategorised links appear in their own section at the end. Every included link is marked as published and excluded from future digests.
 
@@ -109,7 +108,7 @@ Each run creates one WordPress post titled `Links: [Full Date]` (e.g. `Links: Ap
 * **Timezone and DST** — Execution times use your WordPress site timezone (Settings › General › Timezone). On daylight-saving transitions, spring-forward runs may be delayed by ~1 hour; fall-back runs fire once at the first occurrence of the repeated local time.
 * **Backfill after downtime** — Missed events are not backfilled. As soon as WordPress runs again, a single catch-up run executes and the next slot is computed from the current time. Use **Run Now** to force a catch-up immediately.
 * **Deactivating the plugin** — Deactivation automatically cancels any pending cron event. No event is re-registered until you save the schedule again after reactivation.
-* **Uninstalling the plugin** — Uninstall does not delete saved links or the `linkdigest_schedule` option. To clean up, run `wp option delete linkdigest_schedule` before reinstalling.
+* **Uninstalling the plugin** — Uninstall does not delete saved links or the `lynxjournal_schedule` option. To clean up, run `wp option delete lynxjournal_schedule` before reinstalling.
 
 **Server-side cron setup**
 
@@ -124,12 +123,12 @@ WP-Cron only fires when a visitor hits the site. For reliable scheduling:
 
 **WP-CLI usage**
 
-LinkDigest does not register custom WP-CLI commands, but the standard cron commands work:
+LynxJournal does not register custom WP-CLI commands, but the standard cron commands work:
 
-* `wp cron event list | grep linkdigest` — list pending LinkDigest cron events
-* `wp cron event run linkdigest_execute_schedule` — force an immediate run (equivalent to Run Now)
-* `wp option get linkdigest_schedule --format=json` — inspect the saved schedule
-* `wp option delete linkdigest_schedule` — delete the schedule configuration
+* `wp cron event list | grep lynxjournal` — list pending LynxJournal cron events
+* `wp cron event run lynxjournal_execute_schedule` — force an immediate run (equivalent to Run Now)
+* `wp option get lynxjournal_schedule --format=json` — inspect the saved schedule
+* `wp option delete lynxjournal_schedule` — delete the schedule configuration
 
 **Logging and observability**
 
@@ -141,17 +140,17 @@ Viewing the Schedule page, saving the schedule, and triggering Run Now all requi
 
 === Chrome Extension ===
 
-The Chrome Extension will soon be available at the Chrome Webstore. Until then you have to install it from the plugin directory.
-
-1. Open Chrome and navigate to `chrome://extensions`
-2. Enable **Developer mode** (top-right toggle)
-3. Click **Load unpacked** and select the `chrome-extension` folder inside the plugin directory
-4. In WordPress, go to LinkDigest › Settings, generate an API key, and copy the API Endpoint URL and key
+1. install the Chrome Extension "LynxJournal" from https://chromewebstore.google.com/detail/link-digest/majjnembpebmpoaeoildijhhgbjfgjmn
+4. In WordPress, go to LynxJournal › Settings, generate an API key, and copy the API Endpoint URL and key
 5. Click the extension icon › **Settings**, paste both values, and save
 6. From now on, click the extension icon on any page to save the current URL directly to your WordPress site
 
+== Source Code & Build Tools ==
+The production JavaScript assets in `schedule/schedule.js` are compiled from React components. 
+The unminified source code, build scripts, and configuration files are publicly maintained at:
+https://github.com/Latz/lynxjournal/tree/master/
 
 == Changelog ==
 
-= 1.0.1 =
+= 1.0.2 =
 * Initial release.

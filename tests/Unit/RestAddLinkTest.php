@@ -9,7 +9,7 @@ if (!defined("ABSPATH")) {
 use Brain\Monkey\Functions;
 
 /**
- * Tests for LinkDigest::restAddLink()
+ * Tests for LynxJournal::restAddLink()
  */
 
 beforeEach(function (): void {
@@ -17,13 +17,13 @@ beforeEach(function (): void {
     Functions\when('rest_ensure_response')->returnArg();
     Functions\when('sanitize_text_field')->returnArg();
     Functions\when('esc_url_raw')->returnArg();
-    $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
-describe('LinkDigest::restAddLink()', function (): void {
+describe('LynxJournal::restAddLink()', function (): void {
 
     it('returns a WP_Error with status 400 when title is empty', function (): void {
-        $request = linkdigest_make_request(['title' => '']);
+        $request = lynxjournal_make_request(['title' => '']);
 
         $result = $this->plugin->restAddLink($request);
 
@@ -36,7 +36,7 @@ describe('LinkDigest::restAddLink()', function (): void {
         Functions\when('wp_insert_post')
             ->justReturn(new WP_Error('db_error', 'Database error'));
 
-        $request = linkdigest_make_request(['title' => 'Valid Title']);
+        $request = lynxjournal_make_request(['title' => 'Valid Title']);
 
         $result = $this->plugin->restAddLink($request);
 
@@ -48,7 +48,7 @@ describe('LinkDigest::restAddLink()', function (): void {
         Functions\when('wp_insert_post')->justReturn(42);
         Functions\when('update_post_meta')->justReturn(true);
 
-        $request = linkdigest_make_request(['title' => 'My Link', 'url' => LINKDIGEST_URL_EXAMPLE]);
+        $request = lynxjournal_make_request(['title' => 'My Link', 'url' => LYNXJOURNAL_URL_EXAMPLE]);
 
         $result = $this->plugin->restAddLink($request);
 
@@ -66,10 +66,10 @@ describe('LinkDigest::restAddLink()', function (): void {
                 return true;
             });
 
-        $request = linkdigest_make_request(['title' => 'Link', 'url' => LINKDIGEST_URL_EXAMPLE]);
+        $request = lynxjournal_make_request(['title' => 'Link', 'url' => LYNXJOURNAL_URL_EXAMPLE]);
         $this->plugin->restAddLink($request);
 
-        expect($savedMeta['_linkdigest_url'])->toBe(LINKDIGEST_URL_EXAMPLE);
+        expect($savedMeta['_lynxjournal_url'])->toBe(LYNXJOURNAL_URL_EXAMPLE);
     });
 
     it('does not call update_post_meta for url when url is empty', function (): void {
@@ -82,10 +82,10 @@ describe('LinkDigest::restAddLink()', function (): void {
                 return true;
             });
 
-        $request = linkdigest_make_request(['title' => 'Link', 'url' => '']);
+        $request = lynxjournal_make_request(['title' => 'Link', 'url' => '']);
         $this->plugin->restAddLink($request);
 
-        expect($metaKeys)->not->toContain('_linkdigest_url');
+        expect($metaKeys)->not->toContain('_lynxjournal_url');
     });
 
     it('assigns categories when provided', function (): void {
@@ -102,10 +102,10 @@ describe('LinkDigest::restAddLink()', function (): void {
             }
         );
 
-        $request = linkdigest_make_request(['title' => 'Link', 'categories' => ['Tech']]);
+        $request = lynxjournal_make_request(['title' => 'Link', 'categories' => ['Tech']]);
         $this->plugin->restAddLink($request);
 
-        expect($termsCall)->toBe([42, [99], 'linkdigest_category']);
+        expect($termsCall)->toBe([42, [99], 'lynxjournal_category']);
     });
 
     it('creates a new category term when it does not exist yet', function (): void {
@@ -122,10 +122,10 @@ describe('LinkDigest::restAddLink()', function (): void {
         );
         Functions\when('wp_set_object_terms')->justReturn([]);
 
-        $request = linkdigest_make_request(['title' => 'Link', 'categories' => ['NewCat']]);
+        $request = lynxjournal_make_request(['title' => 'Link', 'categories' => ['NewCat']]);
         $this->plugin->restAddLink($request);
 
-        expect($insertedTerm)->toBe(['NewCat', 'linkdigest_category']);
+        expect($insertedTerm)->toBe(['NewCat', 'lynxjournal_category']);
     });
 
     it('assigns tags when provided as a comma-separated string', function (): void {
@@ -140,11 +140,11 @@ describe('LinkDigest::restAddLink()', function (): void {
             }
         );
 
-        $request = linkdigest_make_request(['title' => 'Link', 'tags' => 'php, wordpress']);
+        $request = lynxjournal_make_request(['title' => 'Link', 'tags' => 'php, wordpress']);
         $this->plugin->restAddLink($request);
 
         expect($tagsCall[0])->toBe(42);
         expect($tagsCall[1])->toBe(['php', 'wordpress']);
-        expect($tagsCall[2])->toBe('linkdigest_tag');
+        expect($tagsCall[2])->toBe('lynxjournal_tag');
     });
 });

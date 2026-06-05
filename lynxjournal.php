@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: LinkDigest
+ * Plugin Name: LynxJournal
  * Description: Save and publish links to your blog
  * Version: 1.0.2
  * Author: latz
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: linkdigest
+ * Text Domain: lynxjournal
  */
 
 // Exit if accessed directly
@@ -19,10 +19,10 @@ if (!defined('ABSPATH')) {
 // Inlined to avoid file_get_contents + json_decode on every request.
 // constants.json is imported separately by Vitest and Playwright tests.
 // ---------------------------------------------------------------------------
-define('LINKDIGEST_REST_NAMESPACE', 'linkdigest/v1');
-define('LINKDIGEST_POST_TYPE',      'linkdigest');
+define('LYNXJOURNAL_REST_NAMESPACE', 'lynxjournal/v1');
+define('LYNXJOURNAL_POST_TYPE',      'lynxjournal');
 
-define('LINKDIGEST_PLUGIN_FILE', __FILE__);
+define('LYNXJOURNAL_PLUGIN_FILE', __FILE__);
 
 require_once __DIR__ . '/src/php/schedule-mode.php';
 
@@ -40,10 +40,10 @@ require_once __DIR__ . '/src/php/traits/Admin/LinksPage.php';
 require_once __DIR__ . '/src/php/traits/Admin/AddLink.php';
 require_once __DIR__ . '/src/php/traits/Admin/Categories.php';
 require_once __DIR__ . '/src/php/traits/Scheduler.php';
-require_once __DIR__ . '/src/php/class-linkdigest.php';
+require_once __DIR__ . '/src/php/class-lynxjournal.php';
 
-register_deactivation_hook(LINKDIGEST_PLUGIN_FILE, function() {
-    wp_clear_scheduled_hook('linkdigest_execute_schedule');
+register_deactivation_hook(LYNXJOURNAL_PLUGIN_FILE, function() {
+    wp_clear_scheduled_hook('lynxjournal_execute_schedule');
 });
 
-LinkDigest::register();
+LynxJournal::register();

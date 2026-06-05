@@ -1,14 +1,14 @@
 /**
- * LinkDigest Chrome Extension — background service worker.
+ * LynxJournal Chrome Extension — background service worker.
  *
  * @since 1.0.0
  */
 
-const MENU_ID = 'linkdigest-admin';
-const MENU_ID_REFRESH = 'linkdigest-refresh-categories';
+const MENU_ID = 'lynxjournal-admin';
+const MENU_ID_REFRESH = 'lynxjournal-refresh-categories';
 
 /**
- * Fetch and cache categories from the LinkDigest API.
+ * Fetch and cache categories from the LynxJournal API.
  *
  * @since 1.0.0
  * @async
@@ -24,7 +24,7 @@ export async function refreshCategories() {
             cache: 'no-store',
             headers: {
                 'Content-Type': 'application/json',
-                'X-LinkDigest-API-Key': apiKey
+                'X-LynxJournal-API-Key': apiKey
             }
         });
         if (!response.ok) return;
@@ -81,7 +81,7 @@ export async function handleContextMenuClick(info) {
     }
 
     const wpBase = apiEndpoint.split('/wp-json/')[0];
-    chrome.tabs.create({ url: `${wpBase}/wp-admin/admin.php?page=linkdigest-dashboard` });
+    chrome.tabs.create({ url: `${wpBase}/wp-admin/admin.php?page=lynxjournal-dashboard` });
 }
 
 chrome.contextMenus.onClicked.addListener(handleContextMenuClick);

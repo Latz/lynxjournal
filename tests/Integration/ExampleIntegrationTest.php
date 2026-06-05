@@ -16,22 +16,22 @@ if (!defined('ABSPATH')) {
  * The WP_TESTS_DIR env var must point to that suite.
  */
 
-it('registers the linkdigest custom post type', function (): void {
+it('registers the lynxjournal custom post type', function (): void {
     // WP is fully loaded here – post types are registered.
-    expect(post_type_exists('linkdigest'))->toBeTrue();
+    expect(post_type_exists('lynxjournal'))->toBeTrue();
 });
 
 it('creates a link post and retrieves it', function (): void {
     $postId = wp_insert_post([
-        'post_type'   => 'linkdigest',
+        'post_type'   => 'lynxjournal',
         'post_title'  => 'Test Link',
         'post_status' => 'publish',
-        'meta_input'  => ['_linkdigest_url' => 'https://example.com'],
+        'meta_input'  => ['_lynxjournal_url' => 'https://example.com'],
     ]);
 
     expect($postId)->toBeInt()->toBeGreaterThan(0);
 
-    $url = get_post_meta($postId, '_linkdigest_url', true);
+    $url = get_post_meta($postId, '_lynxjournal_url', true);
 
     expect($url)->toBe('https://example.com');
 });

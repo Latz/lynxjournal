@@ -9,10 +9,10 @@ if (!defined("ABSPATH")) {
 use Brain\Monkey\Functions;
 
 beforeEach(function (): void {
-    $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
-describe('LinkDigest CORS helpers', function (): void { // NOSONAR
+describe('LynxJournal CORS helpers', function (): void { // NOSONAR
 
     describe('addCorsHeaders()', function (): void {
 

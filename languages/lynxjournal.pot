@@ -1,0 +1,1162 @@
+# Copyright (C) 2026 Latz
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: LynxJournal 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/LynxJournal\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-04-26T20:14:58+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: lynxjournal\n"
+
+#. Plugin Name of the plugin
+#: lynxjournal.php
+msgid "LynxJournal"
+msgstr ""
+
+#. Description of the plugin
+#: lynxjournal.php
+msgid "Save and publish links to your blog"
+msgstr ""
+
+#. Author of the plugin
+#: lynxjournal.php
+msgid "Latz"
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:29
+#: src/php/traits/PostType.php:17
+msgid "Add New Link"
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:49
+#: src/php/traits/Admin/Dashboard.php:325
+#: src/php/traits/Admin/LinksPage.php:51
+msgid "Title"
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:58
+#: src/php/traits/Admin/Dashboard.php:330
+#: src/php/traits/Admin/LinksPage.php:52
+msgid "URL"
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:67
+msgid "Text/Description"
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:82
+#: src/php/traits/Admin/AddLink.php:86
+#: src/php/traits/Admin/Dashboard.php:476
+#: src/php/traits/Admin/Menu.php:47
+#: src/php/traits/Admin/Menu.php:48
+#: src/php/traits/PostType.php:77
+msgid "Categories"
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:97
+msgid "No categories available. Create categories first in LynxJournal > Categories."
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:105
+#: src/php/traits/Admin/Menu.php:55
+#: src/php/traits/Admin/Menu.php:56
+#: src/php/traits/PostType.php:114
+msgid "Tags"
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:108
+#: src/php/traits/PostType.php:123
+msgid "Separate tags with commas"
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:109
+msgid "Separate multiple tags with commas (e.g., tag1, tag2, tag3)"
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:115
+#: src/php/traits/Admin/Dashboard.php:335
+#: src/php/traits/Admin/Menu.php:38
+#: src/php/traits/Admin/Menu.php:39
+msgid "Add Link"
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:116
+#: src/php/traits/Admin/Dashboard.php:350
+msgid "Cancel"
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:130
+msgid "Security check failed."
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:149
+#: src/php/traits/RestApi.php:191
+msgid "Title is required."
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:162
+msgid "Failed to add link."
+msgstr ""
+
+#: src/php/traits/Admin/AddLink.php:176
+#: src/php/traits/Admin/Dashboard.php:320
+#: src/php/traits/RestApi.php:185
+msgid "Link added successfully!"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:35
+msgid "Total"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:39
+#: src/php/traits/Admin/Dashboard.php:294
+#: src/php/traits/Admin/Dashboard.php:481
+#: src/php/traits/Admin/LinksPage.php:152
+msgid "Published"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:43
+#: src/php/traits/Admin/Dashboard.php:486
+#: src/php/traits/Admin/LinksPage.php:156
+msgid "Unpublished"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:49
+msgid "Recent Unpublished"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:71
+msgid "Go to LynxJournal"
+msgstr ""
+
+#. translators: 1: number of successfully processed links, 2: optional failure message
+#: src/php/traits/Admin/Dashboard.php:140
+#, php-format
+msgid "%d failed."
+msgstr ""
+
+#. translators: 1: number of successfully processed links, 2: optional failure message
+#: src/php/traits/Admin/Dashboard.php:143
+#, php-format
+msgid "Successfully processed %1$d link(s). %2$s"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:153
+#: src/php/traits/Admin/Dashboard.php:275
+#: src/php/traits/Admin/LinksPage.php:139
+#: src/php/traits/Admin/LinksPage.php:173
+msgid "View Post"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:164
+msgid "Recent Unpublished Links"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:168
+#: src/php/traits/Admin/Dashboard.php:255
+msgid "No unpublished links at the moment."
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:179
+msgid "Delete link"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:199
+msgid "View All Links"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:212
+msgid "Recently Published"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:216
+msgid "No published links yet."
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:229
+msgid "Publish Links"
+msgstr ""
+
+#. translators: %d is the number of unpublished links
+#: src/php/traits/Admin/Dashboard.php:235
+#, php-format
+msgid "You have <strong>%d</strong> unpublished link(s) ready to publish."
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:240
+msgid "Post Title"
+msgstr ""
+
+#. translators: %s is the current date (e.g. "April 15, 2026")
+#. translators: %s: formatted date, e.g. "April 15, 2026"
+#: src/php/traits/Admin/Dashboard.php:244
+#: src/php/traits/Batch.php:57
+#, php-format
+msgid "Links Roundup - %s"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:249
+#: src/php/traits/Admin/LinksPage.php:170
+#: src/php/traits/Admin/LinksPage.php:177
+#: src/php/traits/Admin/Menu.php:436
+msgid "Publish"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:251
+#: src/php/traits/Admin/LinksPage.php:171
+msgid "Save as Draft"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:275
+#: src/php/traits/Admin/LinksPage.php:178
+msgid "View Draft"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:296
+#: src/php/traits/Admin/LinksPage.php:154
+#: src/php/traits/Admin/Menu.php:435
+msgid "Draft"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:316
+msgid "Quick Add"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:327
+msgid "Enter link title"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:348
+msgid "Delete?"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:349
+msgid "Yes"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:462
+#: src/php/traits/Admin/Menu.php:9
+#: src/php/traits/Admin/Menu.php:10
+#: src/php/traits/PostType.php:11
+msgid "lynxjournal"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:471
+msgid "Total Links"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:13
+msgid "LynxJournal - All Links"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:14
+#: src/php/traits/PostType.php:18
+msgid "Add New"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:26
+msgid "No links found. Add your first link!"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:53
+msgid "Status"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:54
+msgid "Published Date"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:55
+msgid "Date"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:56
+msgid "Actions"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:125
+msgid "Link deleted successfully."
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:137
+msgid "Edit Draft"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:161
+msgid "Are you sure you want to unpublish this link?"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:162
+msgid "Are you sure you want to delete this link?"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:175
+#: src/php/traits/Admin/LinksPage.php:180
+msgid "Unpublish"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:182
+msgid "Edit"
+msgstr ""
+
+#: src/php/traits/Admin/LinksPage.php:184
+msgid "Delete"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:20
+#: src/php/traits/Admin/Menu.php:21
+msgid "Dashboard"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:29
+msgid "Show Links"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:30
+#: src/php/traits/PostType.php:16
+msgid "All Links"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:63
+#: src/php/traits/Admin/Menu.php:64
+msgid "Settings"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:72
+#: src/php/traits/Admin/Menu.php:73
+#: src/php/traits/Admin/Menu.php:338
+msgid "Setting X"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:81
+#: src/php/traits/Admin/Menu.php:82
+msgid "Schedule"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:140
+msgid "New API key generated successfully!"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:147
+msgid "LynxJournal Settings"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:150
+msgid "Chrome Extension Access Data"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:151
+msgid "Use these credentials to connect the LynxJournal Chrome extension to your WordPress site."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:155
+msgid "API Endpoint:"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:159
+msgid "Use this URL in the Chrome extension settings."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:161
+msgid "View REST API"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:169
+msgid "API Key:"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:173
+msgid "Click to select and copy this key. Keep it secure!"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:181
+msgid "Generate New API Key"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:181
+msgid "Generate API Key"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:185
+msgid "Warning: Generating a new key will invalidate the old one."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:192
+msgid "Chrome Extension Setup"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:194
+msgid "Download and install the LynxJournal Chrome extension"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:195
+msgid "Click the extension icon and go to Settings"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:196
+msgid "Paste your API Endpoint and API Key from above"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:197
+msgid "Click Save"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:198
+msgid "Now you can save links directly from any webpage!"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:234
+msgid "Schedule Configuration"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:333
+msgid "Enabled"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:333
+msgid "Disabled"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:339
+msgid "Experimental"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:343
+msgid "Quick View:"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:344
+msgid "Expand All"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:345
+msgid "Collapse All"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:357
+msgid "Chrome Extension"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:362
+msgid "Extension enabled"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:368
+msgid "Enable the Chrome extension integration"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:374
+msgid "Default category"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:375
+msgid "Not set"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:385
+msgid "Save as draft"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:391
+msgid "Save links as drafts by default"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:397
+msgid "Auto-fill title"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:403
+msgid "Pre-fill title from page title"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:409
+msgid "Show tag input"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:415
+msgid "Show tag input field in the extension popup"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:424
+msgid "Post Settings"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:429
+msgid "Default post status"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:443
+msgid "Add source URL to content"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:449
+msgid "Append source URL to post content"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:455
+msgid "Auto-generate excerpt"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:461
+msgid "Generate excerpt from link description"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:467
+msgid "Archive posts after roundup"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:473
+msgid "Move source posts to trash after roundup is published"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:479
+msgid "Override post author ID"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:480
+msgid "Default"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:485
+msgid "0 = use current user"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:494
+msgid "UI / Appearance"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:499
+msgid "Accent color"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:510
+msgid "Compact dashboard"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:516
+msgid "Use compact spacing on the dashboard"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:522
+msgid "Links per page"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:533
+msgid "Show category badges"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:539
+msgid "Display category badges on link items"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:545
+msgid "Date format"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:551
+msgid "Relative (e.g. 2 hours ago)"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:552
+msgid "Absolute (e.g. 2026-04-20)"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:562
+msgid "Advanced / API"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:567
+msgid "Enable public API"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:573
+msgid "Allow unauthenticated read access to the REST API"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:579
+msgid "Allow CORS"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:585
+msgid "Send CORS headers for cross-origin requests"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:591
+msgid "Cache duration (min)"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:602
+msgid "Debug mode"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:608
+msgid "Log API requests and errors"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:614
+msgid "Auto-trash after publishing"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:620
+msgid "Automatically trash links after they are published"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:629
+msgid "20 total options available."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:630
+msgid "Save All Changes"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:664
+msgid "LynxJournal Summary"
+msgstr ""
+
+#: src/php/traits/Batch.php:16
+#: src/php/traits/Batch.php:74
+msgid "No links to publish."
+msgstr ""
+
+#. translators: 1: link title, 2: error message
+#: src/php/traits/Batch.php:30
+#, php-format
+msgid "Failed to publish \"%1$s\": %2$s"
+msgstr ""
+
+#: src/php/traits/Batch.php:63
+msgid "No valid links to publish."
+msgstr ""
+
+#: src/php/traits/Batch.php:71
+#: src/php/traits/Publishing.php:9
+msgid "You do not have permission to publish posts."
+msgstr ""
+
+#: src/php/traits/Batch.php:89
+msgid "Failed to create roundup post."
+msgstr ""
+
+#. translators: %d: number of links
+#: src/php/traits/Batch.php:101
+#, php-format
+msgid "Roundup post created successfully with %d link(s)."
+msgstr ""
+
+#: src/php/traits/Batch.php:158
+msgid "Other"
+msgstr ""
+
+#: src/php/traits/MetaBoxes.php:10
+msgid "Link URL"
+msgstr ""
+
+#: src/php/traits/MetaBoxes.php:23
+msgid "URL:"
+msgstr ""
+
+#: src/php/traits/PostType.php:9
+msgctxt "Post Type General Name"
+msgid "Links"
+msgstr ""
+
+#: src/php/traits/PostType.php:10
+msgctxt "Post Type Singular Name"
+msgid "Link"
+msgstr ""
+
+#: src/php/traits/PostType.php:12
+#: src/php/traits/PostType.php:39
+msgid "Link"
+msgstr ""
+
+#: src/php/traits/PostType.php:13
+msgid "Link Archives"
+msgstr ""
+
+#: src/php/traits/PostType.php:14
+msgid "Link Attributes"
+msgstr ""
+
+#: src/php/traits/PostType.php:15
+msgid "Parent Link:"
+msgstr ""
+
+#: src/php/traits/PostType.php:19
+msgid "New Link"
+msgstr ""
+
+#: src/php/traits/PostType.php:20
+msgid "Edit Link"
+msgstr ""
+
+#: src/php/traits/PostType.php:21
+msgid "Update Link"
+msgstr ""
+
+#: src/php/traits/PostType.php:22
+msgid "View Link"
+msgstr ""
+
+#: src/php/traits/PostType.php:23
+msgid "View Links"
+msgstr ""
+
+#: src/php/traits/PostType.php:24
+msgid "Search Link"
+msgstr ""
+
+#: src/php/traits/PostType.php:25
+msgid "Not found"
+msgstr ""
+
+#: src/php/traits/PostType.php:26
+msgid "Not found in Trash"
+msgstr ""
+
+#: src/php/traits/PostType.php:27
+msgid "Featured Image"
+msgstr ""
+
+#: src/php/traits/PostType.php:28
+msgid "Set featured image"
+msgstr ""
+
+#: src/php/traits/PostType.php:29
+msgid "Remove featured image"
+msgstr ""
+
+#: src/php/traits/PostType.php:30
+msgid "Use as featured image"
+msgstr ""
+
+#: src/php/traits/PostType.php:31
+msgid "Insert into link"
+msgstr ""
+
+#: src/php/traits/PostType.php:32
+msgid "Uploaded to this link"
+msgstr ""
+
+#: src/php/traits/PostType.php:33
+msgid "Links list"
+msgstr ""
+
+#: src/php/traits/PostType.php:34
+msgid "Links list navigation"
+msgstr ""
+
+#: src/php/traits/PostType.php:35
+msgid "Filter links list"
+msgstr ""
+
+#: src/php/traits/PostType.php:40
+msgid "Links to publish on blog"
+msgstr ""
+
+#: src/php/traits/PostType.php:75
+msgctxt "Taxonomy General Name"
+msgid "Link Categories"
+msgstr ""
+
+#: src/php/traits/PostType.php:76
+msgctxt "Taxonomy Singular Name"
+msgid "Link Category"
+msgstr ""
+
+#: src/php/traits/PostType.php:78
+msgid "All Categories"
+msgstr ""
+
+#: src/php/traits/PostType.php:79
+msgid "Parent Category"
+msgstr ""
+
+#: src/php/traits/PostType.php:80
+msgid "Parent Category:"
+msgstr ""
+
+#: src/php/traits/PostType.php:81
+msgid "New Category Name"
+msgstr ""
+
+#: src/php/traits/PostType.php:82
+msgid "Add New Category"
+msgstr ""
+
+#: src/php/traits/PostType.php:83
+msgid "Edit Category"
+msgstr ""
+
+#: src/php/traits/PostType.php:84
+msgid "Update Category"
+msgstr ""
+
+#: src/php/traits/PostType.php:85
+msgid "View Category"
+msgstr ""
+
+#: src/php/traits/PostType.php:86
+msgid "Separate categories with commas"
+msgstr ""
+
+#: src/php/traits/PostType.php:87
+msgid "Add or remove categories"
+msgstr ""
+
+#: src/php/traits/PostType.php:88
+#: src/php/traits/PostType.php:125
+msgid "Choose from the most used"
+msgstr ""
+
+#: src/php/traits/PostType.php:89
+msgid "Popular Categories"
+msgstr ""
+
+#: src/php/traits/PostType.php:90
+msgid "Search Categories"
+msgstr ""
+
+#: src/php/traits/PostType.php:91
+#: src/php/traits/PostType.php:128
+msgid "Not Found"
+msgstr ""
+
+#: src/php/traits/PostType.php:92
+msgid "No categories"
+msgstr ""
+
+#: src/php/traits/PostType.php:93
+msgid "Categories list"
+msgstr ""
+
+#: src/php/traits/PostType.php:94
+msgid "Categories list navigation"
+msgstr ""
+
+#: src/php/traits/PostType.php:112
+msgctxt "Taxonomy General Name"
+msgid "Link Tags"
+msgstr ""
+
+#: src/php/traits/PostType.php:113
+msgctxt "Taxonomy Singular Name"
+msgid "Link Tag"
+msgstr ""
+
+#: src/php/traits/PostType.php:115
+msgid "All Tags"
+msgstr ""
+
+#: src/php/traits/PostType.php:116
+msgid "Parent Tag"
+msgstr ""
+
+#: src/php/traits/PostType.php:117
+msgid "Parent Tag:"
+msgstr ""
+
+#: src/php/traits/PostType.php:118
+msgid "New Tag Name"
+msgstr ""
+
+#: src/php/traits/PostType.php:119
+msgid "Add New Tag"
+msgstr ""
+
+#: src/php/traits/PostType.php:120
+msgid "Edit Tag"
+msgstr ""
+
+#: src/php/traits/PostType.php:121
+msgid "Update Tag"
+msgstr ""
+
+#: src/php/traits/PostType.php:122
+msgid "View Tag"
+msgstr ""
+
+#: src/php/traits/PostType.php:124
+msgid "Add or remove tags"
+msgstr ""
+
+#: src/php/traits/PostType.php:126
+msgid "Popular Tags"
+msgstr ""
+
+#: src/php/traits/PostType.php:127
+msgid "Search Tags"
+msgstr ""
+
+#: src/php/traits/PostType.php:129
+msgid "No tags"
+msgstr ""
+
+#: src/php/traits/PostType.php:130
+msgid "Tags list"
+msgstr ""
+
+#: src/php/traits/PostType.php:131
+msgid "Tags list navigation"
+msgstr ""
+
+#: src/php/traits/Publishing.php:13
+msgid "Invalid link ID."
+msgstr ""
+
+#: src/php/traits/Publishing.php:20
+msgid "Link must have a title to publish."
+msgstr ""
+
+#: src/php/traits/Publishing.php:25
+msgid "This link has already been published."
+msgstr ""
+
+#: src/php/traits/Publishing.php:94
+msgid "Failed to create blog post."
+msgstr ""
+
+#: src/php/traits/Publishing.php:111
+msgid "Link saved as draft successfully."
+msgstr ""
+
+#: src/php/traits/Publishing.php:112
+msgid "Link published successfully."
+msgstr ""
+
+#: src/php/traits/Queries.php:85
+msgid "Uncategorized"
+msgstr ""
+
+#: src/php/traits/Queries.php:101
+msgid "This link has not been published."
+msgstr ""
+
+#: src/php/traits/Queries.php:111
+msgid "Failed to unpublish link."
+msgstr ""
+
+#: src/php/traits/Queries.php:123
+msgid "Link unpublished successfully."
+msgstr ""
+
+#: src/php/traits/RestApi.php:80
+msgid "No API key configured."
+msgstr ""
+
+#: src/php/traits/RestApi.php:127
+msgid "Invalid schedule data"
+msgstr ""
+
+#: src/php/traits/RestApi.php:173
+msgid "Failed to create link."
+msgstr ""
+
+#: src/php/traits/RestApi.php:204
+msgid "This URL has already been saved."
+msgstr ""
+
+#: src/php/traits/RestApi.php:251
+msgid "Failed to fetch categories."
+msgstr ""
+
+#. translators: %s is the formatted date (e.g. "April 15, 2026")
+#: src/php/traits/Scheduler.php:49
+#, php-format
+msgid "Links: %s"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:10
+msgid "Daily"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:11
+msgid "Weekly"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:12
+msgid "Monthly"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:16
+msgid "By Count"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:17
+msgid "By Age"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:62
+msgid "Manual"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:22
+msgid "first"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:23
+msgid "second"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:24
+msgid "third"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:25
+msgid "fourth"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:53
+#: src/schedule/components/RecurrenceConfig.jsx:69
+#: src/schedule/components/RecurrenceConfig.jsx:130
+msgid "Every"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:60
+#: src/schedule/components/TriggerCondition.jsx:46
+msgid "day"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:60
+#: src/schedule/components/TriggerCondition.jsx:46
+msgid "days"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:76
+msgid "week"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:76
+msgid "weeks"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:137
+msgid "month, on"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:137
+msgid "months, on"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:164
+msgid "or"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:192
+msgid "Remove"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/RecurrenceConfig.jsx:201
+msgid "Add day"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/TriggerCondition.jsx:22
+msgid "Post when there are at least"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/TriggerCondition.jsx:29
+msgid "link"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/TriggerCondition.jsx:29
+msgid "links"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/TriggerCondition.jsx:37
+msgid "Post when oldest link is older than"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/TimePicker.jsx:56
+msgid "Remove time"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/TimePicker.jsx:64
+msgid "Add time"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/NextSchedules.jsx:67
+msgid "Next 10 Schedules"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/NextSchedules.jsx:81
+msgid "No occurrences — check recurrence settings."
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/App.jsx:107
+msgid "Recurrence"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/App.jsx:107
+msgid "Condition"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/App.jsx:146
+msgid "Mode"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/App.jsx:124
+msgid "No automatic trigger — posts must be triggered manually."
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/App.jsx:155
+msgid "Execution Times"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/App.jsx:59
+msgid "Execution times must be unique."
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/App.jsx:65
+msgid "Schedule saved."
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/App.jsx:67
+msgid "Failed to save schedule."
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/App.jsx:166
+msgid "Save Schedule"
+msgstr ""

@@ -1,9 +1,9 @@
 {
-  "appName":              { "message": "LinkDigest Chrome Extension" },
-  "appDescription":       { "message": "Save links to your LinkDigest WordPress plugin" },
+  "appName":              { "message": "LynxJournal Chrome Extension" },
+  "appDescription":       { "message": "Save links to your LynxJournal WordPress plugin" },
 
-  "pageTitle":            { "message": "LinkDigest" },
-  "settingsTitle":        { "message": "LinkDigest Settings" },
+  "pageTitle":            { "message": "LynxJournal" },
+  "settingsTitle":        { "message": "LynxJournal Settings" },
   "settingsSubtitle":     { "message": "Connect to your WordPress site" },
 
   "labelTitle":           { "message": "Title *" },
@@ -25,14 +25,14 @@
   "descWpAddress":        { "message": "Your WordPress site URL. Used to auto-fill the endpoint below." },
   "btnCreateEndpoint":    { "message": "Create API endpoint" },
   "labelApiEndpoint":     { "message": "API Endpoint *" },
-  "descApiEndpoint":      { "message": "The API endpoint URL from your WordPress LinkDigest settings page." },
+  "descApiEndpoint":      { "message": "The API endpoint URL from your WordPress LynxJournal settings page." },
   "labelApiKey":          { "message": "API Key *" },
   "placeholderApiKey":    { "message": "Your API key from WordPress" },
-  "descApiKey":           { "message": "The API key generated in your WordPress LinkDigest settings." },
+  "descApiKey":           { "message": "The API key generated in your WordPress LynxJournal settings." },
   "btnSaveSettings":      { "message": "Save Settings" },
   "infoBoxTitle":         { "message": "How to get your API credentials:" },
   "infoStep1":            { "message": "Go to your WordPress admin panel" },
-  "infoStep2":            { "message": "Navigate to LinkDigest → Settings" },
+  "infoStep2":            { "message": "Navigate to LynxJournal → Settings" },
   "infoStep3":            { "message": "Generate an API Key if you haven't already" },
   "infoStep4":            { "message": "Copy the API Endpoint and API Key" },
   "infoStep5":            { "message": "Paste them into the fields above" },
@@ -62,6 +62,6 @@
     "placeholders": { "error": { "content": "$1", "example": "network error" } }
   },
 
-  "menuOpenAdmin":        { "message": "Open LinkDigest Admin" },
+  "menuOpenAdmin":        { "message": "Open LynxJournal Admin" },
   "menuUpdateCategories": { "message": "Update categories" }
 }

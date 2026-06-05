@@ -1,5 +1,5 @@
 /**
- * Playwright — E2E tests for the LinkDigest scheduler.
+ * Playwright — E2E tests for the LynxJournal scheduler.
  *
  * Covers:
  *  - POST /schedule/run (structured payload, daily mode)
@@ -19,7 +19,7 @@ const { REST_NAMESPACE, ROUTES } = constants;
 const api   = (route) => `/?rest_route=/${REST_NAMESPACE}${route}`;
 const wpApi = (route) => `/?rest_route=/wp/v2${route}`;
 
-/** Creates a linkdigest link via REST and returns its post_id. */
+/** Creates a lynxjournal link via REST and returns its post_id. */
 async function createLink(request, suffix = Date.now()) {
     const res = await request.post(api(ROUTES.ADD_LINK), {
         data: { title: `Scheduler E2E Link ${suffix}`, url: `https://example.com/e2e-${suffix}` },
@@ -71,10 +71,10 @@ test.describe('Scheduler — daily mode', () => {
         expect(posts.length).toBeGreaterThan(0);
 
         // Link was marked as published via meta (still written alongside the custom status)
-        const linkRes = await request.get(wpApi(`/linkdigest/${linkId}?context=edit`));
+        const linkRes = await request.get(wpApi(`/lynxjournal/${linkId}?context=edit`));
         expect(linkRes.status()).toBe(200);
         const link = await linkRes.json();
-        expect(link.meta._linkdigest_publish_status).toBe('published');
+        expect(link.meta._lynxjournal_publish_status).toBe('published');
     });
 });
 

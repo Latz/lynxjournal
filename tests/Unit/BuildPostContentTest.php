@@ -9,10 +9,10 @@ if (!defined("ABSPATH")) {
 use Brain\Monkey\Functions;
 
 /**
- * Tests for LinkDigest::buildPostContent()
+ * Tests for LynxJournal::buildPostContent()
  *
  * The function signature:
- *   LinkDigest::buildPostContent(string $title, int $link_id, string $url, string $description): string
+ *   LynxJournal::buildPostContent(string $title, int $link_id, string $url, string $description): string
  */
 
 beforeEach(function (): void {
@@ -22,10 +22,10 @@ beforeEach(function (): void {
     Functions\when('wp_kses_post')->returnArg();
     // apply_filters returns the value (second arg) unchanged
     Functions\when('apply_filters')->returnArg(2);
-    $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
-describe('LinkDigest::buildPostContent()', function (): void {
+describe('LynxJournal::buildPostContent()', function (): void {
 
     it('wraps title in an <h2> tag', function (): void {
         $result = $this->plugin->buildPostContent('My Title', 1, '', '');
@@ -41,7 +41,7 @@ describe('LinkDigest::buildPostContent()', function (): void {
     });
 
     it('appends a read-more link when url is provided', function (): void {
-        $result = $this->plugin->buildPostContent('Title', 1, LINKDIGEST_URL_EXAMPLE, '');
+        $result = $this->plugin->buildPostContent('Title', 1, LYNXJOURNAL_URL_EXAMPLE, '');
 
         expect($result)
             ->toContain('<a href="https://example.com">')
@@ -62,11 +62,11 @@ describe('LinkDigest::buildPostContent()', function (): void {
     });
 
     it('includes both description and read-more link when both are provided', function (): void {
-        $result = $this->plugin->buildPostContent('Title', 1, LINKDIGEST_URL_EXAMPLE, 'Desc.');
+        $result = $this->plugin->buildPostContent('Title', 1, LYNXJOURNAL_URL_EXAMPLE, 'Desc.');
 
         expect($result)
             ->toContain('Desc.')
-            ->toContain(LINKDIGEST_URL_EXAMPLE);
+            ->toContain(LYNXJOURNAL_URL_EXAMPLE);
     });
 
     it('passes content through apply_filters with the correct hook name', function (): void {
@@ -81,7 +81,7 @@ describe('LinkDigest::buildPostContent()', function (): void {
 
         $this->plugin->buildPostContent('Title', 42, 'https://x.com', 'Desc');
 
-        expect($capturedHook)->toBe('linkdigest_blog_post_content');
+        expect($capturedHook)->toBe('lynxjournal_blog_post_content');
     });
 
     it('escapes the title via esc_html', function (): void {

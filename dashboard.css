@@ -1,72 +1,72 @@
 /**
- * LinkDigest Dashboard Styles — WordPress native integration
+ * LynxJournal Dashboard Styles — WordPress native integration
  */
 
 /* ── Dashboard Widget ────────────────────────────────────── */
-.linkdigest-widget-stats {
+.lynxjournal-widget-stats {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 12px;
 	margin-bottom: 16px;
 }
 
-.linkdigest-widget-stat-cell {
+.lynxjournal-widget-stat-cell {
 	text-align: center;
 	padding: 12px;
 	background: #f0f0f1;
 	border-radius: 4px;
 }
 
-.linkdigest-widget-stat-value {
+.lynxjournal-widget-stat-value {
 	font-size: 24px;
 	font-weight: 600;
 	color: var(--wp-admin-theme-color, #2271b1);
 }
 
-.linkdigest-widget-stat-value--published {
+.lynxjournal-widget-stat-value--published {
 	color: #00a32a;
 }
 
-.linkdigest-widget-stat-value--unpublished {
+.lynxjournal-widget-stat-value--unpublished {
 	color: #dba617;
 }
 
-.linkdigest-widget-stat-label {
+.lynxjournal-widget-stat-label {
 	font-size: 11px;
 	color: #646970;
 	text-transform: uppercase;
 	margin-top: 4px;
 }
 
-.linkdigest-widget-recent {
+.lynxjournal-widget-recent {
 	margin-bottom: 12px;
 }
 
-.linkdigest-widget-heading {
+.lynxjournal-widget-heading {
 	margin: 0 0 8px 0;
 	font-size: 13px;
 	color: #1d2327;
 }
 
-.linkdigest-widget-list {
+.lynxjournal-widget-list {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
 
-.linkdigest-widget-item {
+.lynxjournal-widget-item {
 	margin-bottom: 8px;
 	padding-bottom: 8px;
 	border-bottom: 1px solid #f0f0f1;
 }
 
-.linkdigest-widget-link-title {
+.lynxjournal-widget-link-title {
 	font-weight: 500;
 	font-size: 13px;
 	margin-bottom: 2px;
 }
 
-.linkdigest-widget-link-url {
+.lynxjournal-widget-link-url {
 	font-size: 12px;
 	color: #646970;
 	overflow: hidden;
@@ -74,21 +74,21 @@
 	white-space: nowrap;
 }
 
-.linkdigest-widget-footer {
+.lynxjournal-widget-footer {
 	text-align: center;
 	padding-top: 8px;
 	border-top: 1px solid #f0f0f1;
 }
 
 /* ── Stats Grid ──────────────────────────────────────────── */
-.linkdigest-stats-grid {
+.lynxjournal-stats-grid {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
 	margin: 0 0 16px;
 }
 
-.linkdigest-stat-card {
+.lynxjournal-stat-card {
 	background: #fff;
 	border: 1px solid #c3c4c7;
 	border-inline-start: 4px solid var(--wp-admin-theme-color, #2271b1);
@@ -101,7 +101,7 @@
 	box-shadow: 0 1px 1px rgba(0,0,0,.04);
 }
 
-.linkdigest-stat-icon {
+.lynxjournal-stat-icon {
 	color: var(--wp-admin-theme-color, #2271b1);
 	font-size: 20px;
 	width: 20px;
@@ -109,7 +109,7 @@
 	flex-shrink: 0;
 }
 
-.linkdigest-stat-value {
+.lynxjournal-stat-value {
 	display: block;
 	font-size: 22px;
 	font-weight: 600;
@@ -117,7 +117,7 @@
 	line-height: 1.1;
 }
 
-.linkdigest-stat-label {
+.lynxjournal-stat-label {
 	display: block;
 	font-size: 11px;
 	color: #646970;
@@ -125,23 +125,23 @@
 }
 
 /* ── Stat card as link ───────────────────────────────────── */
-a.linkdigest-stat-card--link {
+a.lynxjournal-stat-card--link {
 	text-decoration: none;
 	color: inherit;
 	transition: border-inline-start-color .15s, box-shadow .15s;
 }
 
-a.linkdigest-stat-card--link:hover {
+a.lynxjournal-stat-card--link:hover {
 	border-inline-start-color: var(--wp-admin-theme-color-darker-10, #135e96);
 	box-shadow: 0 2px 6px rgba(0,0,0,.1);
 }
 
-a.linkdigest-stat-card--link .linkdigest-stat-value {
+a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	color: #1d2327;
 }
 
 /* ── Onboarding card ─────────────────────────────────────── */
-.linkdigest-onboarding {
+.lynxjournal-onboarding {
 	display: flex;
 	align-items: center;
 	gap: 12px;
@@ -154,7 +154,7 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 	flex-wrap: wrap;
 }
 
-.linkdigest-onboarding-icon {
+.lynxjournal-onboarding-icon {
 	font-size: 28px;
 	width: 28px;
 	height: 28px;
@@ -162,14 +162,14 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 	flex-shrink: 0;
 }
 
-.linkdigest-onboarding p {
+.lynxjournal-onboarding p {
 	margin: 0;
 	flex: 1;
 	min-width: 160px;
 }
 
 /* ── Schedule status bar ─────────────────────────────────── */
-.linkdigest-schedule-status {
+.lynxjournal-schedule-status {
 	display: flex;
 	align-items: center;
 	gap: 8px;
@@ -181,7 +181,7 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 	font-size: 13px;
 }
 
-.linkdigest-schedule-status-icon {
+.lynxjournal-schedule-status-icon {
 	color: var(--wp-admin-theme-color, #2271b1);
 	font-size: 16px;
 	width: 16px;
@@ -189,25 +189,25 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 	flex-shrink: 0;
 }
 
-.linkdigest-schedule-status-icon--muted {
+.lynxjournal-schedule-status-icon--muted {
 	color: #787c82;
 }
 
-.linkdigest-schedule-status-text {
+.lynxjournal-schedule-status-text {
 	flex: 1;
 }
 
-.linkdigest-schedule-status-text--muted {
+.lynxjournal-schedule-status-text--muted {
 	color: #646970;
 }
 
-.linkdigest-schedule-status-link {
+.lynxjournal-schedule-status-link {
 	font-size: 12px;
 	white-space: nowrap;
 }
 
 /* ── Quick Add: optional label ───────────────────────────── */
-.linkdigest-optional {
+.lynxjournal-optional {
 	font-weight: normal;
 	color: #646970;
 	font-size: 12px;
@@ -215,34 +215,34 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 }
 
 /* ── Two-column layout ───────────────────────────────────── */
-#linkdigest-postbox-container-1 {
+#lynxjournal-postbox-container-1 {
 	width: 65%;
 	float: inline-start;
 	padding-inline-end: 8px;
 	box-sizing: border-box;
 }
 
-#linkdigest-postbox-container-2 {
+#lynxjournal-postbox-container-2 {
 	width: 35%;
 	float: inline-start;
 	padding-inline-start: 8px;
 	box-sizing: border-box;
 }
 
-.linkdigest-dashboard::after {
+.lynxjournal-dashboard::after {
 	content: '';
 	display: table;
 	clear: both;
 }
 
 /* ── Recent links list ───────────────────────────────────── */
-.linkdigest-recent-links {
+.lynxjournal-recent-links {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-.linkdigest-link-item {
+.lynxjournal-link-item {
 	display: grid;
 	grid-template-columns: 1fr auto;
 	grid-template-rows: auto auto auto; /* header · url · meta */
@@ -252,18 +252,18 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 	border-bottom: 1px solid #f0f0f1;
 }
 
-.linkdigest-link-item:last-child {
+.lynxjournal-link-item:last-child {
 	border-bottom: none;
 }
 
-.linkdigest-link-item-header,
-.linkdigest-link-url,
-.linkdigest-link-meta {
+.lynxjournal-link-item-header,
+.lynxjournal-link-url,
+.lynxjournal-link-meta {
 	grid-column: 1;
 }
 
 
-.linkdigest-link-title {
+.lynxjournal-link-title {
 	display: block;
 	font-size: 13px;
 	color: #1d2327;
@@ -271,7 +271,7 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 	line-height: 1.4;
 }
 
-.linkdigest-link-url {
+.lynxjournal-link-url {
 	font-size: 12px;
 	color: var(--wp-admin-theme-color, #2271b1);
 	text-decoration: none;
@@ -279,12 +279,12 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 	margin: 1px 0 0;
 }
 
-.linkdigest-link-url:hover {
+.lynxjournal-link-url:hover {
 	text-decoration: underline;
 	color: var(--wp-admin-theme-color-darker-10, #135e96);
 }
 
-.linkdigest-link-meta {
+.lynxjournal-link-meta {
 	display: flex;
 	gap: 10px;
 	font-size: 11px;
@@ -294,7 +294,7 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 }
 
 /* ── Delete button ───────────────────────────────────────── */
-.linkdigest-delete-btn {
+.lynxjournal-delete-btn {
 	grid-column: 2;
 	grid-row: 1 / -1;
 	align-self: center;
@@ -311,34 +311,34 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 	line-height: 1;
 }
 
-.linkdigest-delete-btn .dashicons {
+.lynxjournal-delete-btn .dashicons {
 	font-size: 36px;
 	width: 36px;
 	height: 36px;
 }
 
-.linkdigest-link-item:hover .linkdigest-delete-btn {
+.lynxjournal-link-item:hover .lynxjournal-delete-btn {
 	opacity: 1;
 }
 
-.linkdigest-delete-btn:hover {
+.lynxjournal-delete-btn:hover {
 	background: #fce8e8;
 }
 
 /* ── Inline confirm ──────────────────────────────────────── */
-.linkdigest-delete-confirm-row {
+.lynxjournal-delete-confirm-row {
 	display: flex;
 	align-items: center;
 	gap: 6px;
 	margin: 2px 0 0;
 }
 
-.linkdigest-delete-confirm-label {
+.lynxjournal-delete-confirm-label {
 	font-size: 12px;
 	color: #646970;
 }
 
-.linkdigest-delete-confirm-yes {
+.lynxjournal-delete-confirm-yes {
 	font-size: 11px;
 	font-weight: 600;
 	padding: 2px 8px;
@@ -347,13 +347,13 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 	cursor: pointer;
 }
 
-.linkdigest-delete-confirm-yes {
+.lynxjournal-delete-confirm-yes {
 	background: #b32d2e;
 	border-color: #b32d2e;
 	color: #fff;
 }
 
-.linkdigest-delete-cancel {
+.lynxjournal-delete-cancel {
 	font-size: 11px;
 	font-weight: 600;
 	padding: 2px 8px;
@@ -365,12 +365,12 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 	color: #1d2327;
 }
 
-.linkdigest-delete-cancel:hover {
+.lynxjournal-delete-cancel:hover {
 	background: #f0f0f1;
 }
 
 /* ── Status badges ───────────────────────────────────────── */
-.linkdigest-status-badge {
+.lynxjournal-status-badge {
 	display: inline-block;
 	padding-block: 1px;
 	padding-inline: 0 6px;
@@ -379,48 +379,48 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 	flex-shrink: 0;
 }
 
-.linkdigest-status-draft {
+.lynxjournal-status-draft {
 	background: #646970;
 	color: #fff;
 }
 
 /* ── Category distribution bar ───────────────────────────── */
-.linkdigest-category-item {
+.lynxjournal-category-item {
 	padding: 8px 0;
 	border-bottom: 1px solid #f0f0f1;
 }
 
-.linkdigest-category-item:last-child {
+.lynxjournal-category-item:last-child {
 	border-bottom: none;
 }
 
 
-.linkdigest-category-name {
+.lynxjournal-category-name {
 	font-size: 13px;
 	color: #1d2327;
 }
 
-.linkdigest-category-count {
+.lynxjournal-category-count {
 	font-size: 13px;
 	font-weight: 600;
 	color: var(--wp-admin-theme-color, #2271b1);
 }
 
-.linkdigest-category-bar-container {
+.lynxjournal-category-bar-container {
 	height: 4px;
 	background: #f0f0f1;
 	border-radius: 2px;
 	overflow: hidden;
 }
 
-.linkdigest-category-bar {
+.lynxjournal-category-bar {
 	height: 100%;
 	background: var(--wp-admin-theme-color, #2271b1);
 	border-radius: 2px;
 }
 
 /* ── Category heading (roundup post preview) ─────────────── */
-.linkdigest-category-heading {
+.lynxjournal-category-heading {
 	font-size: 16px;
 	font-weight: 600;
 	color: #1d2327;
@@ -430,21 +430,21 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 900px) {
-	#linkdigest-postbox-container-1,
-	#linkdigest-postbox-container-2 {
+	#lynxjournal-postbox-container-1,
+	#lynxjournal-postbox-container-2 {
 		width: 100%;
 		padding: 0;
 	}
 }
 
 @media (max-width: 600px) {
-	.linkdigest-stats-grid {
+	.lynxjournal-stats-grid {
 		flex-direction: column;
 	}
 }
 
 /* ── Filter + search bar alignment ──────────────────────── */
-.linkdigest-links-tablenav {
+.lynxjournal-links-tablenav {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
@@ -453,21 +453,21 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 	flex-wrap: wrap;
 }
 
-.linkdigest-links-tablenav .alignleft {
+.lynxjournal-links-tablenav .alignleft {
 	float: none;
 }
 
-.linkdigest-links-tablenav p.search-box {
+.lynxjournal-links-tablenav p.search-box {
 	float: none;
 	margin: 0;
 	margin-inline-start: auto;
 }
 
-.linkdigest-links-tablenav .tablenav-pages {
+.lynxjournal-links-tablenav .tablenav-pages {
 	flex-shrink: 0;
 }
 
-.linkdigest-links-tablenav .tablenav-pages .displaying-num {
+.lynxjournal-links-tablenav .tablenav-pages .displaying-num {
 	margin-inline-end: 0.5rem;
 }
 
@@ -486,23 +486,23 @@ a.linkdigest-stat-card--link .linkdigest-stat-value {
 }
 
 /* ── Categories table ────────────────────────────────────── */
-.linkdigest-cat-table {
+.lynxjournal-cat-table {
 	margin-top: 0;
 }
 
-.linkdigest-cat-count-col,
-td.linkdigest-cat-count-col {
+.lynxjournal-cat-count-col,
+td.lynxjournal-cat-count-col {
 	width: 80px;
 	text-align: center;
 }
 
-.linkdigest-cat-desc {
+.lynxjournal-cat-desc {
 	color: #646970;
 	font-size: 12px;
 	max-width: 220px;
 }
 
-.linkdigest-cat-delete-btn {
+.lynxjournal-cat-delete-btn {
 	color: #b32d2e;
 	cursor: pointer;
 	background: none;
@@ -512,12 +512,12 @@ td.linkdigest-cat-count-col {
 	text-decoration: underline;
 }
 
-.linkdigest-cat-delete-btn:hover {
+.lynxjournal-cat-delete-btn:hover {
 	color: #8a1f1f;
 }
 
 /* ── Category inline edit ────────────────────────────────── */
-.linkdigest-cat-inline-input {
+.lynxjournal-cat-inline-input {
 	width: 100%;
 	box-sizing: border-box;
 	font-size: 13px;
@@ -526,36 +526,36 @@ td.linkdigest-cat-count-col {
 	border-radius: 3px;
 }
 
-textarea.linkdigest-cat-inline-input {
+textarea.lynxjournal-cat-inline-input {
 	resize: vertical;
 	min-height: 42px;
 }
 
-.linkdigest-cat-inline-slug {
+.lynxjournal-cat-inline-slug {
 	font-family: monospace;
 	font-size: 12px;
 }
 
-.linkdigest-cat-inline-error {
+.lynxjournal-cat-inline-error {
 	display: block;
 	color: #b32d2e;
 	font-size: 12px;
 	margin-top: 4px;
 }
 
-.linkdigest-cat-editing td {
+.lynxjournal-cat-editing td {
 	vertical-align: top;
 	padding-top: 6px;
 	padding-bottom: 6px;
 }
 
-.linkdigest-cat-actions {
+.lynxjournal-cat-actions {
 	white-space: nowrap;
 	min-width: 120px;
 }
 
 /* === Setting X: Expansion Layout === */
-.linkdigest-x-badge {
+.lynxjournal-x-badge {
 	font-size: 11px;
 	font-weight: 400;
 	background: #dba617;
@@ -566,18 +566,18 @@ textarea.linkdigest-cat-inline-input {
 	margin-inline-start: 8px;
 }
 
-.linkdigest-x-controls {
+.lynxjournal-x-controls {
 	display: flex;
 	align-items: center;
 	gap: 8px;
 	margin: 16px 0;
 }
 
-.linkdigest-expansion-list {
+.lynxjournal-expansion-list {
 	padding-bottom: 80px;
 }
 
-.linkdigest-category-block {
+.lynxjournal-category-block {
 	background: #fff;
 	border: 1px solid #ccd0d4;
 	border-radius: 8px;
@@ -585,7 +585,7 @@ textarea.linkdigest-cat-inline-input {
 	overflow: hidden;
 }
 
-.linkdigest-category-header {
+.lynxjournal-category-header {
 	background: #f6f7f7;
 	padding: 12px 20px;
 	border-bottom: 1px solid #ccd0d4;
@@ -594,30 +594,30 @@ textarea.linkdigest-cat-inline-input {
 	gap: 10px;
 }
 
-.linkdigest-category-header h2 {
+.lynxjournal-category-header h2 {
 	margin: 0;
 	font-size: 1rem;
 }
 
-.linkdigest-category-header .dashicons {
+.lynxjournal-category-header .dashicons {
 	color: var(--wp-admin-theme-color, #2271b1);
 }
 
-.linkdigest-expansion-row {
+.lynxjournal-expansion-row {
 	border-bottom: 1px solid #f0f0f1;
 	border-inline-start: 0 solid var(--wp-admin-theme-color, #2271b1);
 	transition: border-inline-start-width .2s;
 }
 
-.linkdigest-expansion-row:last-child {
+.lynxjournal-expansion-row:last-child {
 	border-bottom: 0;
 }
 
-.linkdigest-expansion-row.is-open {
+.lynxjournal-expansion-row.is-open {
 	border-inline-start: 4px solid var(--wp-admin-theme-color, #2271b1);
 }
 
-.linkdigest-expansion-trigger {
+.lynxjournal-expansion-trigger {
 	width: 100%;
 	padding: 16px 20px;
 	background: none;
@@ -629,44 +629,44 @@ textarea.linkdigest-cat-inline-input {
 	font-size: 13px;
 }
 
-.linkdigest-expansion-trigger:hover {
+.lynxjournal-expansion-trigger:hover {
 	background: #f9f9f9;
 }
 
-.linkdigest-setting-title {
+.lynxjournal-setting-title {
 	flex: 1;
 	font-weight: 600;
 	text-align: start;
 }
 
-.linkdigest-setting-summary {
+.lynxjournal-setting-summary {
 	color: #646970;
 	font-size: 12px;
 }
 
-.linkdigest-expansion-trigger .dashicons {
+.lynxjournal-expansion-trigger .dashicons {
 	transition: transform .2s;
 	color: #646970;
 }
 
-.linkdigest-expansion-row.is-open .linkdigest-expansion-trigger .dashicons {
+.lynxjournal-expansion-row.is-open .lynxjournal-expansion-trigger .dashicons {
 	transform: rotate(180deg);
 }
 
-.linkdigest-expansion-content {
+.lynxjournal-expansion-content {
 	max-height: 0;
 	overflow: hidden;
 	transition: max-height .3s ease-out;
 	background: #fafafa;
 }
 
-.linkdigest-expansion-row.is-open .linkdigest-expansion-content {
+.lynxjournal-expansion-row.is-open .lynxjournal-expansion-content {
 	max-height: 500px;
 	padding: 20px;
 	border-top: 1px solid #f0f0f1;
 }
 
-.linkdigest-x-sticky-bar {
+.lynxjournal-x-sticky-bar {
 	position: fixed;
 	bottom: 0;
 	inset-inline-start: 160px; /* WordPress admin sidebar width */
@@ -679,7 +679,7 @@ textarea.linkdigest-cat-inline-input {
 	box-shadow: 0 -4px 14px rgba(0,0,0,.06);
 }
 
-.linkdigest-x-sticky-bar .bar-inner {
+.lynxjournal-x-sticky-bar .bar-inner {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -687,19 +687,19 @@ textarea.linkdigest-cat-inline-input {
 }
 
 @media (max-width: 782px) {
-	.linkdigest-x-sticky-bar {
+	.lynxjournal-x-sticky-bar {
 		inset-inline-start: 0;
 	}
 }
 
-.linkdigest-box-subtitle {
+.lynxjournal-box-subtitle {
 	font-size: 12px;
 	font-weight: 400;
 	color: #787c82;
 	margin-inline-start: 6px;
 }
 
-.linkdigest-box-subtitle .dashicons {
+.lynxjournal-box-subtitle .dashicons {
 	font-size: 14px;
 	width: 14px;
 	height: 14px;
@@ -708,25 +708,25 @@ textarea.linkdigest-cat-inline-input {
 }
 
 /* ── Settings page: input + button rows ─────────────────────── */
-.linkdigest-row {
+.lynxjournal-row {
 	display: flex;
 	align-items: center;
 	gap: 4px;
 }
 
-.linkdigest-row .large-text {
+.lynxjournal-row .large-text {
 	flex: 1;
 	min-width: 0;
 }
 
-.linkdigest-row .button {
+.lynxjournal-row .button {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 }
 
 /* ── Settings page: full width cards ────────────────────────── */
-.linkdigest-settings-card,
-.linkdigest-setup-card {
+.lynxjournal-settings-card,
+.lynxjournal-setup-card {
 	max-width: none;
 }

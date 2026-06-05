@@ -22,9 +22,9 @@ const DEFAULT_FORM = {
 
 function Section({ title, children }) {
   return (
-    <div className="linkdigest-section">
-      <h3 className="linkdigest-section-heading">{title}</h3>
-      <div className="linkdigest-section-body">{children}</div>
+    <div className="lynxjournal-section">
+      <h3 className="lynxjournal-section-heading">{title}</h3>
+      <div className="lynxjournal-section-body">{children}</div>
     </div>
   );
 }
@@ -43,7 +43,7 @@ export default function App() {
 
   const refreshDiag = useCallback(() => {
     setDiagLoading(true);
-    apiFetch({ path: '/linkdigest/v1/schedule/diagnostics' })
+    apiFetch({ path: '/lynxjournal/v1/schedule/diagnostics' })
       .then(d => {
         setDiag(d);
         setCronNoticeDismissed(!!d.cron_notice_dismissed);
@@ -53,7 +53,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    apiFetch({ path: '/linkdigest/v1/schedule' })
+    apiFetch({ path: '/lynxjournal/v1/schedule' })
       .then(data => {
         const loaded = { ...DEFAULT_FORM, ...data };
         setForm(loaded);
@@ -77,17 +77,17 @@ export default function App() {
     setSaving(true);
     setNotice(null);
     if (new Set(form.times).size !== form.times.length) {
-      setNotice({ status: 'error', message: __('Execution times must be unique.', 'linkdigest') });
+      setNotice({ status: 'error', message: __('Execution times must be unique.', 'lynxjournal') });
       setSaving(false);
       return;
     }
     try {
-      await apiFetch({ path: '/linkdigest/v1/schedule', method: 'POST', data: form });
+      await apiFetch({ path: '/lynxjournal/v1/schedule', method: 'POST', data: form });
       setSavedForm(form);
-      setNotice({ status: 'success', message: __('Schedule saved.', 'linkdigest') });
+      setNotice({ status: 'success', message: __('Schedule saved.', 'lynxjournal') });
       refreshDiag();
     } catch {
-      setNotice({ status: 'error', message: __('Failed to save schedule.', 'linkdigest') });
+      setNotice({ status: 'error', message: __('Failed to save schedule.', 'lynxjournal') });
     } finally {
       setSaving(false);
     }
@@ -116,7 +116,7 @@ export default function App() {
     return { rrule: null, times: form.times, trigger: { type: form.mode, ...form.trigger } };
   }, [form, isSchedule, isManual]);
 
-  const section02Label = isSchedule ? __('Recurrence', 'linkdigest') : __('Condition', 'linkdigest');
+  const section02Label = isSchedule ? __('Recurrence', 'lynxjournal') : __('Condition', 'lynxjournal');
 
   function renderConditionSection() {
     if (isSchedule) return (
@@ -128,7 +128,7 @@ export default function App() {
     );
     if (isManual) return (
       <p className="description">
-        {__('No automatic trigger — posts must be triggered manually.', 'linkdigest')}
+        {__('No automatic trigger — posts must be triggered manually.', 'lynxjournal')}
       </p>
     );
     return (
@@ -141,23 +141,23 @@ export default function App() {
   }
 
   return (
-    <div className="linkdigest-schedule-wrap">
-      <div className="linkdigest-schedule-main">
+    <div className="lynxjournal-schedule-wrap">
+      <div className="lynxjournal-schedule-main">
         {diag?.wp_cron_disabled && !cronNoticeDismissed && (
           <Notice
             status="warning"
             isDismissible
             onRemove={() => {
               setCronNoticeDismissed(true);
-              apiFetch({ path: '/linkdigest/v1/schedule/dismiss-cron-notice', method: 'POST' });
+              apiFetch({ path: '/lynxjournal/v1/schedule/dismiss-cron-notice', method: 'POST' });
             }}
-            className="linkdigest-wpcron-notice"
+            className="lynxjournal-wpcron-notice"
           >
-            <strong>{__('WP-Cron is disabled.', 'linkdigest')}</strong>
+            <strong>{__('WP-Cron is disabled.', 'lynxjournal')}</strong>
             {' '}
-            {__('Scheduled runs will not fire automatically. Add a real server cron job or remove', 'linkdigest')}
+            {__('Scheduled runs will not fire automatically. Add a real server cron job or remove', 'lynxjournal')}
             {' '}<code>DISABLE_WP_CRON</code>{' '}
-            {__('from', 'linkdigest')}
+            {__('from', 'lynxjournal')}
             {' '}<code>wp-config.php</code>.
           </Notice>
         )}
@@ -168,7 +168,7 @@ export default function App() {
           </Notice>
         )}
 
-        <Section title={__('Mode', 'linkdigest')}>
+        <Section title={__('Mode', 'lynxjournal')}>
           <ScheduleTypePicker value={form.mode} onChange={handleModeChange} />
         </Section>
 
@@ -177,7 +177,7 @@ export default function App() {
         </Section>
 
         {!isManual && (
-          <Section title={__('Execution Times', 'linkdigest')}>
+          <Section title={__('Execution Times', 'lynxjournal')}>
             <TimePicker
               times={form.times}
               onChange={v => setForm(f => ({ ...f, times: v }))}
@@ -185,44 +185,44 @@ export default function App() {
           </Section>
         )}
 
-        <Section title={__('Post Status', 'linkdigest')}>
+        <Section title={__('Post Status', 'lynxjournal')}>
           <SelectControl
             value={form.post_status ?? 'publish'}
             options={[
-              { label: __('Publish', 'linkdigest'), value: 'publish' },
-              { label: __('Draft', 'linkdigest'), value: 'draft' },
+              { label: __('Publish', 'lynxjournal'), value: 'publish' },
+              { label: __('Draft', 'lynxjournal'), value: 'draft' },
             ]}
             onChange={post_status => setForm(f => ({ ...f, post_status }))}
             __nextHasNoMarginBottom
           />
         </Section>
 
-        <Section title={__('Notifications', 'linkdigest')}>
+        <Section title={__('Notifications', 'lynxjournal')}>
           <CheckboxControl
-            label={__('Email me after each run', 'linkdigest')}
+            label={__('Email me after each run', 'lynxjournal')}
             checked={form.notify?.enabled ?? false}
             onChange={enabled => setForm(f => ({ ...f, notify: { ...f.notify, enabled } }))}
           />
           {form.notify?.enabled && (
             <TextControl
-              label={__('Email address', 'linkdigest')}
+              label={__('Email address', 'lynxjournal')}
               type="email"
               value={form.notify?.email ?? ''}
-              placeholder={__('Leave blank to use admin email', 'linkdigest')}
+              placeholder={__('Leave blank to use admin email', 'lynxjournal')}
               onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
               __nextHasNoMarginBottom
             />
           )}
         </Section>
 
-        <div className="linkdigest-schedule-actions">
+        <div className="lynxjournal-schedule-actions">
           <Button variant="primary" onClick={handleSave} isBusy={saving} disabled={saving}>
-            {__('Save Schedule', 'linkdigest')}
+            {__('Save Schedule', 'lynxjournal')}
           </Button>
         </div>
       </div>
 
-      <div className="linkdigest-schedule-sidebar">
+      <div className="lynxjournal-schedule-sidebar">
         <NextSchedules config={config} form={form} />
         <DiagnosticsPanel data={diag} loading={diagLoading} onRefresh={refreshDiag} mode={form.mode} />
       </div>

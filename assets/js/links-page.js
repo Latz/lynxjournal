@@ -1,5 +1,5 @@
 /**
- * LinkDigest All-Links page — client-side table sorting.
+ * LynxJournal All-Links page — client-side table sorting.
  *
  * Makes table headers clickable to sort columns by text or custom data-sortVal attribute.
  *

@@ -98,7 +98,7 @@ export async function loadCategories() {
             cache: 'no-store',
             headers: {
                 'Content-Type': 'application/json',
-                'X-LinkDigest-API-Key': settings.apiKey
+                'X-LynxJournal-API-Key': settings.apiKey
             }
         });
         if (response.status === 401 || response.status === 403 || response.status === 404) {
@@ -170,7 +170,7 @@ export async function handleSubmit(e) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-LinkDigest-API-Key': settings.apiKey
+                'X-LynxJournal-API-Key': settings.apiKey
             },
             body: JSON.stringify(formData)
         });

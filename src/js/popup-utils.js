@@ -50,7 +50,7 @@ export function renderCategories(categories, container, doc = document) {
     for (const category of categories) {
         const radio = doc.createElement('input');
         radio.type = 'radio';
-        radio.name = 'linkdigest_category';
+        radio.name = 'lynxjournal_category';
         radio.id = `cat-${category.id}`;
         radio.value = category.name;
         radio.className = 'category-checkbox';
@@ -83,7 +83,7 @@ export function isCacheFresh(timestamp, ttlMs, now = Date.now()) {
 /**
  * Construct the full REST API URL for a given route.
  *
- * @param {string} endpoint - Base URL (e.g. "https://example.com/wp-json/linkdigest/v1"), no trailing slash.
+ * @param {string} endpoint - Base URL (e.g. "https://example.com/wp-json/lynxjournal/v1"), no trailing slash.
  * @param {string} route    - Route path (e.g. "/categories").
  * @returns {string}
  */

@@ -1,8 +1,8 @@
 <?php
 /**
- * LinkDigest schedule mode enum.
+ * LynxJournal schedule mode enum.
  *
- * @package LinkDigest
+ * @package LynxJournal
  * @since   1.0.0
  */
 
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-enum LinkDigest_ScheduleMode: string {
+enum LynxJournal_ScheduleMode: string {
 	case Daily   = 'daily';
 	case Weekly  = 'weekly';
 	case Monthly = 'monthly';

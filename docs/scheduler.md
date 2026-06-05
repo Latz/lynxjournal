@@ -1,6 +1,6 @@
-# LinkDigest Scheduler — User Manual
+# LynxJournal Scheduler — User Manual
 
-The scheduler automatically publishes your saved links as roundup posts at times or under conditions you define. This manual covers every setting on the **LinkDigest › Schedule** admin page.
+The scheduler automatically publishes your saved links as roundup posts at times or under conditions you define. This manual covers every setting on the **LynxJournal › Schedule** admin page.
 
 ---
 
@@ -47,19 +47,19 @@ _Reference_
 
 ## Quick start
 
-1. Open **LinkDigest › Schedule**.
+1. Open **LynxJournal › Schedule**.
 2. Pick a mode (Daily is a good default).
 3. Set at least one **Execution Time** (e.g. `09:00`).
 4. Click **Save Schedule**.
-5. Add some links. The next time the scheduled moment arrives, LinkDigest will publish a roundup post.
+5. Add some links. The next time the scheduled moment arrives, LynxJournal will publish a roundup post.
 
-To trigger a run on demand, use the **Run Now** button on the LinkDigest dashboard. To stop all automation, switch to [Manual mode](#manual-mode).
+To trigger a run on demand, use the **Run Now** button on the LynxJournal dashboard. To stop all automation, switch to [Manual mode](#manual-mode).
 
 ---
 
 ## How the scheduler works
 
-When you save a schedule, LinkDigest registers a WordPress cron event. At each scheduled moment the plugin:
+When you save a schedule, LynxJournal registers a WordPress cron event. At each scheduled moment the plugin:
 
 1. Collects all unpublished links.
 2. Caps the working set at **200 links per run** to avoid PHP timeouts (see [Large queues](#large-queues)).
@@ -91,7 +91,7 @@ flowchart TD
 
 ## Getting to the Schedule page
 
-In the WordPress admin sidebar, go to **LinkDigest › Schedule**.
+In the WordPress admin sidebar, go to **LynxJournal › Schedule**.
 
 You need the `manage_options` capability (administrator role by default) to view or save the schedule. See [Capabilities](#capabilities) for details.
 
@@ -239,7 +239,7 @@ The check inspects the creation date of the oldest unpublished link. The conditi
 
 Disables all automatic publishing. No cron event is scheduled.
 
-Use the **Run Now** button on the LinkDigest dashboard to trigger a roundup post on demand. (The dashboard's _Publish Links_ form, with its **Publish** / **Save as Draft** buttons, achieves the same result and lets you customise the post title.)
+Use the **Run Now** button on the LynxJournal dashboard to trigger a roundup post on demand. (The dashboard's _Publish Links_ form, with its **Publish** / **Save as Draft** buttons, achieves the same result and lets you customise the post title.)
 
 Choose this mode if you want full control over timing, or if you are still building up your link queue and are not ready for automated publishing.
 
@@ -293,7 +293,7 @@ On save:
 
 ## Running the schedule immediately
 
-The **Run Now** button on the **LinkDigest dashboard** triggers an immediate publish run. It respects the same publish condition as the automatic schedule:
+The **Run Now** button on the **LynxJournal dashboard** triggers an immediate publish run. It respects the same publish condition as the automatic schedule:
 
 - In By Count or By Age modes: only publishes if the threshold is currently met.
 - In time-based modes: publishes if any unpublished links exist.
@@ -307,17 +307,17 @@ The automatic schedule is unaffected — the next cron event remains scheduled a
 
 ## What a roundup post looks like
 
-**Title.** Each run creates one WordPress post titled `Links: [Full Date]` — for example `Links: April 28, 2026`. The format is the translatable string `__('Links: %s', 'linkdigest')` with the current date formatted via `wp_date('F j, Y')`, so it follows the WordPress site timezone and locale.
+**Title.** Each run creates one WordPress post titled `Links: [Full Date]` — for example `Links: April 28, 2026`. The format is the translatable string `__('Links: %s', 'lynxjournal')` with the current date formatted via `wp_date('F j, Y')`, so it follows the WordPress site timezone and locale.
 
-**Post type and status.** The roundup is created as a regular WordPress `post` (not a `linkdigest` custom-post-type entry), with `post_status = 'publish'`.
+**Post type and status.** The roundup is created as a regular WordPress `post` (not a `lynxjournal` custom-post-type entry), with `post_status = 'publish'`.
 
-**Author.** When the cron event runs unauthenticated (the usual case), LinkDigest temporarily switches the current user to the first administrator returned by `get_users(['role' => 'administrator'])` so the post insert passes its `current_user_can('publish_posts')` guard. The roundup is therefore attributed to that administrator. When **Run Now** is invoked from the admin UI, the post is attributed to the current user.
+**Author.** When the cron event runs unauthenticated (the usual case), LynxJournal temporarily switches the current user to the first administrator returned by `get_users(['role' => 'administrator'])` so the post insert passes its `current_user_can('publish_posts')` guard. The roundup is therefore attributed to that administrator. When **Run Now** is invoked from the admin UI, the post is attributed to the current user.
 
 **Body.** The body contains one section per category, each with a `<ul>` list of links. Each `<li>` contains a link title (anchored to the saved URL when present, with `target="_blank" rel="noopener"`) and, optionally, a description below it (sanitised through `wp_kses_post`). Uncategorised links appear in their own section at the end.
 
 **Taxonomies.** No categories or tags are applied to the roundup post itself — it inherits the site's default category as configured in **Settings › Writing**.
 
-**Side effects.** Every included link is marked as published (post meta `_linkdigest_publish_status = 'published'`) and is excluded from future roundups.
+**Side effects.** Every included link is marked as published (post meta `_lynxjournal_publish_status = 'published'`) and is excluded from future roundups.
 
 ---
 
@@ -348,7 +348,7 @@ Execution times use your WordPress site's configured timezone (Settings › Gene
 
 ### Backfill after long downtime
 
-If your site is offline (or WP-Cron isn't firing) when one or more scheduled moments pass, those events are missed silently — LinkDigest does **not** backfill multiple roundups. As soon as WordPress runs again, a single catch-up run executes (if a previously scheduled event is still pending) and the next slot is computed forward from the current time. To force a catch-up immediately, use **Run Now**.
+If your site is offline (or WP-Cron isn't firing) when one or more scheduled moments pass, those events are missed silently — LynxJournal does **not** backfill multiple roundups. As soon as WordPress runs again, a single catch-up run executes (if a previously scheduled event is still pending) and the next slot is computed forward from the current time. To force a catch-up immediately, use **Run Now**.
 
 ### Run failures
 
@@ -360,11 +360,11 @@ Each scheduled event is registered with `wp_schedule_single_event`, and a new ev
 
 ### Deactivating the plugin
 
-Deactivating LinkDigest automatically cancels any pending cron event (`wp_clear_scheduled_hook('linkdigest_execute_schedule')`). No stale jobs are left in WordPress's cron queue.
+Deactivating LynxJournal automatically cancels any pending cron event (`wp_clear_scheduled_hook('lynxjournal_execute_schedule')`). No stale jobs are left in WordPress's cron queue.
 
 ### Uninstalling the plugin
 
-Uninstall does **not** delete the `linkdigest_schedule` option or any saved links. If you want a clean slate, manually remove the option (e.g. via `wp option delete linkdigest_schedule`) before reinstalling.
+Uninstall does **not** delete the `lynxjournal_schedule` option or any saved links. If you want a clean slate, manually remove the option (e.g. via `wp option delete lynxjournal_schedule`) before reinstalling.
 
 ---
 
@@ -372,7 +372,7 @@ Uninstall does **not** delete the `linkdigest_schedule` option or any saved link
 
 The schedule configuration is stored as a single WordPress option:
 
-- **Option name:** `linkdigest_schedule`
+- **Option name:** `lynxjournal_schedule`
 - **Shape:**
   - `mode` — one of `daily`, `weekly`, `monthly`, `count`, `age`, `manual`
   - `times` — array of `HH:MM` strings (24-hour)
@@ -380,7 +380,7 @@ The schedule configuration is stored as a single WordPress option:
   - `trigger` — `{ type, count?, days? }` for trigger-based modes; `null` otherwise
   - `rrule` — RFC 5545 recurrence rule string (time-based modes only)
 
-The cron event itself is registered under the hook `linkdigest_execute_schedule`. You can inspect it with [WP-CLI](#wp-cli-usage) or with the [WP Crontrol](https://wordpress.org/plugins/wp-crontrol/) plugin.
+The cron event itself is registered under the hook `lynxjournal_execute_schedule`. You can inspect it with [WP-CLI](#wp-cli-usage) or with the [WP Crontrol](https://wordpress.org/plugins/wp-crontrol/) plugin.
 
 ---
 
@@ -388,7 +388,7 @@ The cron event itself is registered under the hook `linkdigest_execute_schedule`
 
 | Action                                          | Capability       |
 | ----------------------------------------------- | ---------------- |
-| View **LinkDigest › Schedule** page             | `manage_options` |
+| View **LynxJournal › Schedule** page             | `manage_options` |
 | Save the schedule (REST `POST /schedule`)       | `manage_options` |
 | Trigger **Run Now** (REST `POST /schedule/run`) | `manage_options` |
 
@@ -418,24 +418,24 @@ WP-Cron only fires when a visitor hits the site. For reliable scheduling, replac
    * * * * * cd /path/to/wordpress && /usr/local/bin/wp cron event run --due-now > /dev/null 2>&1
    ```
 
-The minute granularity is what gives the LinkDigest scheduler its precision. Without this, runs may be delayed by minutes or hours on low-traffic sites.
+The minute granularity is what gives the LynxJournal scheduler its precision. Without this, runs may be delayed by minutes or hours on low-traffic sites.
 
 ---
 
 ## WP-CLI usage
 
-LinkDigest does not register custom WP-CLI commands, but the standard cron commands work because the plugin registers a normal WordPress cron hook:
+LynxJournal does not register custom WP-CLI commands, but the standard cron commands work because the plugin registers a normal WordPress cron hook:
 
 ```bash
-# List all cron events (filter for LinkDigest)
-wp cron event list | grep linkdigest
+# List all cron events (filter for LynxJournal)
+wp cron event list | grep lynxjournal
 
 # Force an immediate run (equivalent to Run Now)
-wp cron event run linkdigest_execute_schedule
+wp cron event run lynxjournal_execute_schedule
 
 # Inspect or modify the saved schedule
-wp option get linkdigest_schedule --format=json
-wp option delete linkdigest_schedule
+wp option get lynxjournal_schedule --format=json
+wp option delete lynxjournal_schedule
 ```
 
 ---
@@ -445,7 +445,7 @@ wp option delete linkdigest_schedule
 The scheduler does not write to a custom log. To verify a run happened, check:
 
 1. **Posts › All Posts** — a new "Links: …" post appears on each successful run.
-2. **WP Crontrol** plugin — shows the next-scheduled time for `linkdigest_execute_schedule`.
+2. **WP Crontrol** plugin — shows the next-scheduled time for `lynxjournal_execute_schedule`.
 3. **WP-CLI** — `wp cron event list` shows pending events and their next-run timestamps.
 4. The **Next 10 Schedules** panel on the Schedule admin page (time-based modes only).
 
@@ -457,7 +457,7 @@ If you need detailed tracing, enable `WP_DEBUG_LOG` in `wp-config.php` and add c
 
 The plugin currently exposes the following hook for the scheduler:
 
-- **Action `linkdigest_execute_schedule`** — fires when the cron event runs. Bound to `LinkDigest::executeSchedule()`. You can `add_action` your own callback to log runs, send notifications, or perform housekeeping. The action receives no arguments.
+- **Action `lynxjournal_execute_schedule`** — fires when the cron event runs. Bound to `LynxJournal::executeSchedule()`. You can `add_action` your own callback to log runs, send notifications, or perform housekeeping. The action receives no arguments.
 
 There are no scheduler- or roundup-specific filters at present (post title, post body, post arguments are not filterable). If you need such hooks, file an issue describing the use case.
 
@@ -465,7 +465,7 @@ There are no scheduler- or roundup-specific filters at present (post title, post
 
 ## Internationalisation
 
-All user-facing strings in the schedule UI and the roundup post title are wrapped in `__()` / `_e()` against the **`linkdigest`** text domain. Translations live under `/languages/`; the canonical template is `languages/linkdigest.pot`.
+All user-facing strings in the schedule UI and the roundup post title are wrapped in `__()` / `_e()` against the **`lynxjournal`** text domain. Translations live under `/languages/`; the canonical template is `languages/lynxjournal.pot`.
 
 To add or update a language:
 
@@ -473,7 +473,7 @@ To add or update a language:
 # Regenerate the POT file
 composer run i18n:pot
 # Or, directly:
-wp i18n make-pot . languages/linkdigest.pot --domain=linkdigest --exclude=vendor,node_modules,tests
+wp i18n make-pot . languages/lynxjournal.pot --domain=lynxjournal --exclude=vendor,node_modules,tests
 ```
 
 Date formatting in roundup post titles uses `wp_date()`, which respects both the site timezone and the active translation, so a German install will produce _Links: 28. April 2026_ automatically.
@@ -484,13 +484,13 @@ Date formatting in roundup post titles uses `wp_date()`, which respects both the
 
 **I saved a schedule but nothing was published.** Check, in order:
 
-1. Are there any unpublished links? (Check **LinkDigest › All Links**.)
+1. Are there any unpublished links? (Check **LynxJournal › All Links**.)
 2. Is your WordPress timezone set correctly? (**Settings › General › Timezone**.)
 3. Is WP-Cron firing? Visit the front-end of your site, then check **Posts › All Posts** for a new roundup. If the site is low-traffic, set up [server-side cron](#server-side-cron-setup).
 4. In By Count / By Age modes: is the threshold actually met right now?
 5. In Weekly mode: is at least one weekday selected?
 
-**How do I test my schedule without waiting for tomorrow?** Use **Run Now** on the dashboard, or `wp cron event run linkdigest_execute_schedule` from the command line. Both respect the current publish condition.
+**How do I test my schedule without waiting for tomorrow?** Use **Run Now** on the dashboard, or `wp cron event run lynxjournal_execute_schedule` from the command line. Both respect the current publish condition.
 
 **Can I have different schedules for different categories?** No. There is one global schedule that publishes all unpublished links, grouped by category in a single post.
 

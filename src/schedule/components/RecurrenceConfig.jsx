@@ -19,10 +19,10 @@ const WEEKDAY_SHORT = { MO: 'Mon', TU: 'Tue', WE: 'Wed', TH: 'Thu', FR: 'Fri', S
 const WEEKDAY_FULL  = { MO: 'Monday', TU: 'Tuesday', WE: 'Wednesday', TH: 'Thursday', FR: 'Friday', SA: 'Saturday', SU: 'Sunday' };
 
 const NTH_OPTIONS = [
-  { label: __('first',  'linkdigest'), value: '1' },
-  { label: __('second', 'linkdigest'), value: '2' },
-  { label: __('third',  'linkdigest'), value: '3' },
-  { label: __('fourth', 'linkdigest'), value: '4' },
+  { label: __('first',  'lynxjournal'), value: '1' },
+  { label: __('second', 'lynxjournal'), value: '2' },
+  { label: __('third',  'lynxjournal'), value: '3' },
+  { label: __('fourth', 'lynxjournal'), value: '4' },
 ];
 
 const WEEKDAY_OPTIONS = WEEKDAYS.map(d => ({ label: WEEKDAY_SHORT[d.value], value: d.value }));
@@ -49,33 +49,33 @@ function toggleDay(weekdays, day) {
 export default function RecurrenceConfig({ type, value, onChange }) {
   if (type === 'daily') {
     return (
-      <div className="linkdigest-rc-row">
-        <span>{__('Every', 'linkdigest')}</span>
+      <div className="lynxjournal-rc-row">
+        <span>{__('Every', 'lynxjournal')}</span>
         <NumberControl
           value={String(value.interval)}
           min={1} max={365}
           onChange={v => onChange({ ...value, interval: Number.parseInt(v) || 1 })}
           style={{ width: '72px' }}
         />
-        <span>{value.interval === 1 ? __('day', 'linkdigest') : __('days', 'linkdigest')}</span>
+        <span>{value.interval === 1 ? __('day', 'lynxjournal') : __('days', 'lynxjournal')}</span>
       </div>
     );
   }
 
   if (type === 'weekly') {
     return (
-      <div className="linkdigest-rc">
-        <div className="linkdigest-rc-row">
-          <span>{__('Every', 'linkdigest')}</span>
+      <div className="lynxjournal-rc">
+        <div className="lynxjournal-rc-row">
+          <span>{__('Every', 'lynxjournal')}</span>
           <NumberControl
             value={String(value.interval)}
             min={1} max={52}
             onChange={v => onChange({ ...value, interval: Number.parseInt(v) || 1 })}
             style={{ width: '72px' }}
           />
-          <span>{value.interval === 1 ? __('week', 'linkdigest') : __('weeks', 'linkdigest')}</span>
+          <span>{value.interval === 1 ? __('week', 'lynxjournal') : __('weeks', 'lynxjournal')}</span>
         </div>
-        <div className="linkdigest-weekdays">
+        <div className="lynxjournal-weekdays">
           {WEEKDAYS.map(d => (
             <Button
               key={d.value}
@@ -125,30 +125,30 @@ export default function RecurrenceConfig({ type, value, onChange }) {
     }
 
     return (
-      <div className="linkdigest-rc">
-        <div className="linkdigest-rc-row">
-          <span>{__('Every', 'linkdigest')}</span>
+      <div className="lynxjournal-rc">
+        <div className="lynxjournal-rc-row">
+          <span>{__('Every', 'lynxjournal')}</span>
           <NumberControl
             value={String(value.interval)}
             min={1} max={12}
             onChange={v => onChange({ ...value, interval: Number.parseInt(v) || 1 })}
             style={{ width: '72px' }}
           />
-          <span>{value.interval === 1 ? __('month, on', 'linkdigest') : __('months, on', 'linkdigest')}</span>
+          <span>{value.interval === 1 ? __('month, on', 'lynxjournal') : __('months, on', 'lynxjournal')}</span>
         </div>
 
-        <div className="linkdigest-month-days">
+        <div className="lynxjournal-month-days">
           {monthDays.map((entry, i) => (
             // entry.id is assigned when a row is added dynamically (Date.now());
             // fall back to index for the initial row loaded from the API.
-            <div key={entry.id ?? i} className="linkdigest-month-day-row">
-              <span className="linkdigest-day-index">{String(i + 1).padStart(2, '0')}</span>
+            <div key={entry.id ?? i} className="lynxjournal-month-day-row">
+              <span className="lynxjournal-day-index">{String(i + 1).padStart(2, '0')}</span>
 
               {/* Outer <button> acts as a clickable selection zone that also
                   activates the 'day' mode. Clicking when already active is a
                   no-op so the inner NumberControl stays interactive. */}
               <button
-                className={`linkdigest-opt ${entry.type === 'day' ? 'linkdigest-opt--on' : 'linkdigest-opt--off'}`}
+                className={`lynxjournal-opt ${entry.type === 'day' ? 'lynxjournal-opt--on' : 'lynxjournal-opt--off'}`}
                 onClick={() => entry.type !== 'day' && updateEntry(i, { type: 'day' })}
                 aria-pressed={entry.type === 'day'}
               >
@@ -161,12 +161,12 @@ export default function RecurrenceConfig({ type, value, onChange }) {
                 />
               </button>
 
-              <span className="linkdigest-opt-sep">{__('or', 'linkdigest')}</span>
+              <span className="lynxjournal-opt-sep">{__('or', 'lynxjournal')}</span>
 
               {/* Same pattern for 'nth' mode — clicking activates it; the inner
                   SelectControls remain interactive once the mode is active. */}
               <button
-                className={`linkdigest-opt ${entry.type === 'nth' ? 'linkdigest-opt--on' : 'linkdigest-opt--off'}`}
+                className={`lynxjournal-opt ${entry.type === 'nth' ? 'lynxjournal-opt--on' : 'lynxjournal-opt--off'}`}
                 onClick={() => entry.type !== 'nth' && updateEntry(i, { type: 'nth' })}
                 aria-pressed={entry.type === 'nth'}
               >
@@ -189,7 +189,7 @@ export default function RecurrenceConfig({ type, value, onChange }) {
                   variant="destructive"
                   size="compact"
                   onClick={() => removeDay(i)}
-                  aria-label={__('Remove', 'linkdigest')}
+                  aria-label={__('Remove', 'lynxjournal')}
                 >
                   ✕
                 </Button>
@@ -198,7 +198,7 @@ export default function RecurrenceConfig({ type, value, onChange }) {
           ))}
 
           <Button variant="secondary" size="compact" onClick={addDay}>
-            + {__('Add day', 'linkdigest')}
+            + {__('Add day', 'lynxjournal')}
           </Button>
         </div>
       </div>

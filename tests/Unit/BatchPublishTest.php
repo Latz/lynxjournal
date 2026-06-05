@@ -9,7 +9,7 @@ if (!defined("ABSPATH")) {
 use Brain\Monkey\Functions;
 
 /**
- * Tests for linkdigestBatchPublishLinks()
+ * Tests for lynxjournalBatchPublishLinks()
  */
 
 beforeEach(function (): void {
@@ -20,10 +20,10 @@ beforeEach(function (): void {
     Functions\when('__')->returnArg();
     Functions\when('get_the_terms')->justReturn(false);
     Functions\when('current_time')->justReturn('2026-04-13 10:00:00');
-    $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
-describe('LinkDigest::batchPublishLinks()', function (): void {
+describe('LynxJournal::batchPublishLinks()', function (): void {
 
     it('returns zeros and a message when called with an empty array', function (): void {
         $result = $this->plugin->batchPublishLinks([]);
@@ -43,7 +43,7 @@ describe('LinkDigest::batchPublishLinks()', function (): void {
     it('counts successes correctly when all links publish', function (): void {
         Functions\when('current_user_can')->justReturn(true);
         Functions\when('get_post')
-            ->alias(fn($id) => linkdigest_make_post($id, "Link $id"));
+            ->alias(fn($id) => lynxjournal_make_post($id, "Link $id"));
         Functions\when('get_post_meta')->justReturn('');
         Functions\when('wp_insert_post')->justReturn(99);
         Functions\when('update_post_meta')->justReturn(true);
@@ -56,7 +56,7 @@ describe('LinkDigest::batchPublishLinks()', function (): void {
 
     it('counts failures when links have no permission', function (): void {
         Functions\when('current_user_can')->justReturn(false);
-        Functions\when('get_post')->alias(fn($id) => linkdigest_make_post($id, "Link $id"));
+        Functions\when('get_post')->alias(fn($id) => lynxjournal_make_post($id, "Link $id"));
 
         $result = $this->plugin->batchPublishLinks([1, 2]);
 
@@ -69,7 +69,7 @@ describe('LinkDigest::batchPublishLinks()', function (): void {
         $calls = 0;
         Functions\when('current_user_can')->justReturn(true);
         Functions\when('get_post')
-            ->alias(fn($id) => linkdigest_make_post($id, "Link $id"));
+            ->alias(fn($id) => lynxjournal_make_post($id, "Link $id"));
         Functions\when('get_post_meta')->justReturn('');
         Functions\when('wp_insert_post')
             ->alias(function () use (&$calls): int {

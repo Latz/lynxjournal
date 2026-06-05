@@ -9,26 +9,26 @@ if (!defined("ABSPATH")) {
 use Brain\Monkey\Functions;
 
 /**
- * Tests for linkdigest_rest_permission_check()
+ * Tests for lynxjournal_rest_permission_check()
  *
  * Two auth paths:
- *  1. API key in X-LinkDigest-API-Key header — compared with stored key via hash_equals
+ *  1. API key in X-LynxJournal-API-Key header — compared with stored key via hash_equals
  *  2. Fallback: current_user_can('edit_posts')
  */
 
 beforeEach(function (): void {
-    $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
-describe('LinkDigest::restPermissionCheck()', function (): void {
+describe('LynxJournal::restPermissionCheck()', function (): void {
 
     it('grants access when a valid API key matches the stored key', function (): void {
         $key = 'super-secret-key-abc123';
 
         Functions\when('get_option')
-            ->alias(fn($opt) => $opt === 'linkdigest_api_key' ? $key : false);
+            ->alias(fn($opt) => $opt === 'lynxjournal_api_key' ? $key : false);
 
-        $request = linkdigest_make_request([], ['X-LinkDigest-API-Key' => $key]);
+        $request = lynxjournal_make_request([], ['X-LynxJournal-API-Key' => $key]);
 
         $result = $this->plugin->restPermissionCheck($request);
 
@@ -37,10 +37,10 @@ describe('LinkDigest::restPermissionCheck()', function (): void {
 
     it('denies access when the API key does not match the stored key', function (): void {
         Functions\when('get_option')
-            ->alias(fn($opt) => $opt === 'linkdigest_api_key' ? 'correct-key' : false);
+            ->alias(fn($opt) => $opt === 'lynxjournal_api_key' ? 'correct-key' : false);
         Functions\when('current_user_can')->justReturn(false);
 
-        $request = linkdigest_make_request([], ['X-LinkDigest-API-Key' => 'wrong-key']);
+        $request = lynxjournal_make_request([], ['X-LynxJournal-API-Key' => 'wrong-key']);
 
         $result = $this->plugin->restPermissionCheck($request);
 
@@ -51,7 +51,7 @@ describe('LinkDigest::restPermissionCheck()', function (): void {
         Functions\when('get_option')->justReturn('some-stored-key');
         Functions\when('current_user_can')->justReturn(true);
 
-        $request = linkdigest_make_request(); // no API key header
+        $request = lynxjournal_make_request(); // no API key header
 
         $result = $this->plugin->restPermissionCheck($request);
 
@@ -62,7 +62,7 @@ describe('LinkDigest::restPermissionCheck()', function (): void {
         Functions\when('get_option')->justReturn(''); // empty stored key
         Functions\when('current_user_can')->justReturn(true);
 
-        $request = linkdigest_make_request([], ['X-LinkDigest-API-Key' => 'any-key']);
+        $request = lynxjournal_make_request([], ['X-LynxJournal-API-Key' => 'any-key']);
 
         $result = $this->plugin->restPermissionCheck($request);
 
@@ -73,7 +73,7 @@ describe('LinkDigest::restPermissionCheck()', function (): void {
         Functions\when('get_option')->justReturn('');
         Functions\when('current_user_can')->justReturn(false);
 
-        $request = linkdigest_make_request();
+        $request = lynxjournal_make_request();
 
         $result = $this->plugin->restPermissionCheck($request);
 

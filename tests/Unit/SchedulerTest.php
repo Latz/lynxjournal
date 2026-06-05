@@ -12,7 +12,7 @@ use Brain\Monkey\Functions;
 // executeSchedule()
 // ---------------------------------------------------------------------------
 
-describe('LinkDigest::executeSchedule()', function (): void {
+describe('LynxJournal::executeSchedule()', function (): void {
 
     beforeEach(function (): void {
         Functions\when('__')->returnArg();
@@ -23,7 +23,7 @@ describe('LinkDigest::executeSchedule()', function (): void {
         Functions\when('wp_clear_scheduled_hook')->justReturn(0);
         Functions\when('wp_schedule_single_event')->justReturn(true);
 
-        $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+        $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
         $this->plugin->shouldReceive('scheduleNextEvent')->andReturnNull();
     });
 
@@ -42,7 +42,7 @@ describe('LinkDigest::executeSchedule()', function (): void {
         Functions\when('get_transient')->justReturn(false);
         Functions\when('update_option')->justReturn(true);
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule' ? ['mode' => 'daily', 'publishAs' => 1] : $d
+            $k === 'lynxjournal_schedule' ? ['mode' => 'daily', 'publishAs' => 1] : $d
         );
         $this->plugin->shouldReceive('getUnpublishedLinkIds')->andReturn([10, 20, 30]);
         $this->plugin->shouldReceive('createRoundupPost')->andReturn(
@@ -60,7 +60,7 @@ describe('LinkDigest::executeSchedule()', function (): void {
         Functions\when('get_transient')->justReturn(false);
         Functions\when('update_option')->justReturn(true);
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule' ? ['mode' => 'daily', 'publishAs' => 1] : $d
+            $k === 'lynxjournal_schedule' ? ['mode' => 'daily', 'publishAs' => 1] : $d
         );
         $this->plugin->shouldReceive('getUnpublishedLinkIds')->andReturn([]);
 
@@ -70,16 +70,16 @@ describe('LinkDigest::executeSchedule()', function (): void {
         expect($result['reason'])->toBe('condition_not_met');
     });
 
-    it('writes linkdigest_last_run option on every execution', function (): void {
+    it('writes lynxjournal_last_run option on every execution', function (): void {
         Functions\when('get_transient')->justReturn(false);
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule' ? ['mode' => 'daily', 'publishAs' => 1] : $d
+            $k === 'lynxjournal_schedule' ? ['mode' => 'daily', 'publishAs' => 1] : $d
         );
         $this->plugin->shouldReceive('getUnpublishedLinkIds')->andReturn([]);
 
         $lastRun = null;
         Functions\when('update_option')->alias(function ($k, $v) use (&$lastRun) {
-            if ($k === 'linkdigest_last_run') {
+            if ($k === 'lynxjournal_last_run') {
                 $lastRun = $v;
             }
             return true;
@@ -98,7 +98,7 @@ describe('LinkDigest::executeSchedule()', function (): void {
         Functions\when('get_transient')->justReturn(false);
         Functions\when('update_option')->justReturn(true);
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule'
+            $k === 'lynxjournal_schedule'
                 ? ['mode' => 'count', 'trigger' => ['count' => 3], 'publishAs' => 1]
                 : $d
         );
@@ -117,7 +117,7 @@ describe('LinkDigest::executeSchedule()', function (): void {
         Functions\when('get_transient')->justReturn(false);
         Functions\when('update_option')->justReturn(true);
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule'
+            $k === 'lynxjournal_schedule'
                 ? ['mode' => 'count', 'trigger' => ['count' => 10], 'publishAs' => 1]
                 : $d
         );
@@ -133,7 +133,7 @@ describe('LinkDigest::executeSchedule()', function (): void {
         Functions\when('get_transient')->justReturn(false);
         Functions\when('update_option')->justReturn(true);
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule'
+            $k === 'lynxjournal_schedule'
                 ? ['mode' => 'age', 'trigger' => ['days' => 7], 'publishAs' => 1]
                 : $d
         );
@@ -156,7 +156,7 @@ describe('LinkDigest::executeSchedule()', function (): void {
         Functions\when('get_transient')->justReturn(false);
         Functions\when('update_option')->justReturn(true);
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule'
+            $k === 'lynxjournal_schedule'
                 ? ['mode' => 'age', 'trigger' => ['days' => 7], 'publishAs' => 1]
                 : $d
         );
@@ -177,7 +177,7 @@ describe('LinkDigest::executeSchedule()', function (): void {
         Functions\when('get_transient')->justReturn(false);
         Functions\when('update_option')->justReturn(true);
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule' ? ['mode' => 'daily', 'publishAs' => 1] : $d
+            $k === 'lynxjournal_schedule' ? ['mode' => 'daily', 'publishAs' => 1] : $d
         );
 
         // 201 links → triggers has_more (MAX_PER_RUN = 200)
@@ -200,15 +200,15 @@ describe('LinkDigest::executeSchedule()', function (): void {
 // getNextScheduleTimestamp()
 // ---------------------------------------------------------------------------
 
-describe('LinkDigest::getNextScheduleTimestamp()', function (): void {
+describe('LynxJournal::getNextScheduleTimestamp()', function (): void {
 
     beforeEach(function (): void {
-        $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+        $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
     });
 
     it('returns null for manual mode', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule' ? ['mode' => 'manual', 'times' => ['09:00']] : $d
+            $k === 'lynxjournal_schedule' ? ['mode' => 'manual', 'times' => ['09:00']] : $d
         );
 
         expect($this->plugin->getNextScheduleTimestamp())->toBeNull();
@@ -216,7 +216,7 @@ describe('LinkDigest::getNextScheduleTimestamp()', function (): void {
 
     it('returns a future timestamp for daily mode', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule' ? ['mode' => 'daily', 'times' => ['23:59']] : $d
+            $k === 'lynxjournal_schedule' ? ['mode' => 'daily', 'times' => ['23:59']] : $d
         );
 
         $ts = $this->plugin->getNextScheduleTimestamp();
@@ -227,7 +227,7 @@ describe('LinkDigest::getNextScheduleTimestamp()', function (): void {
 
     it('falls back to DEFAULT_TIME when times array is empty', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule' ? ['mode' => 'daily', 'times' => []] : $d
+            $k === 'lynxjournal_schedule' ? ['mode' => 'daily', 'times' => []] : $d
         );
 
         $ts = $this->plugin->getNextScheduleTimestamp();
@@ -238,7 +238,7 @@ describe('LinkDigest::getNextScheduleTimestamp()', function (): void {
 
     it('returns null for weekly mode when no weekdays are configured', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule'
+            $k === 'lynxjournal_schedule'
                 ? ['mode' => 'weekly', 'times' => ['09:00'], 'recurrence' => ['weekdays' => []]]
                 : $d
         );
@@ -251,7 +251,7 @@ describe('LinkDigest::getNextScheduleTimestamp()', function (): void {
         // Use all weekdays so today always matches
         $allDays = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule'
+            $k === 'lynxjournal_schedule'
                 ? ['mode' => 'weekly', 'times' => ['23:59'], 'recurrence' => ['weekdays' => $allDays, 'interval' => 1]]
                 : $d
         );
@@ -266,7 +266,7 @@ describe('LinkDigest::getNextScheduleTimestamp()', function (): void {
         // Use every day of the month so one always matches within the horizon
         $monthDays = array_map(fn($d) => ['type' => 'day', 'value' => $d, 'nth' => 1, 'weekday' => 'MO'], range(1, 31));
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule'
+            $k === 'lynxjournal_schedule'
                 ? ['mode' => 'monthly', 'times' => ['23:59'], 'recurrence' => ['monthDays' => $monthDays, 'interval' => 1]]
                 : $d
         );
@@ -282,11 +282,11 @@ describe('LinkDigest::getNextScheduleTimestamp()', function (): void {
 // matchesWeeklySchedule() — via reflection (private method)
 // ---------------------------------------------------------------------------
 
-describe('LinkDigest::matchesWeeklySchedule()', function (): void {
+describe('LynxJournal::matchesWeeklySchedule()', function (): void {
 
     beforeEach(function (): void {
-        $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
-        $this->method = new \ReflectionMethod(LinkDigest::class, 'matchesWeeklySchedule');
+        $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
+        $this->method = new \ReflectionMethod(LynxJournal::class, 'matchesWeeklySchedule');
         $this->method->setAccessible(true);
     });
 
@@ -331,11 +331,11 @@ describe('LinkDigest::matchesWeeklySchedule()', function (): void {
 // matchesMonthlySchedule() — via reflection (private method)
 // ---------------------------------------------------------------------------
 
-describe('LinkDigest::matchesMonthlySchedule()', function (): void {
+describe('LynxJournal::matchesMonthlySchedule()', function (): void {
 
     beforeEach(function (): void {
-        $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
-        $this->method = new \ReflectionMethod(LinkDigest::class, 'matchesMonthlySchedule');
+        $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
+        $this->method = new \ReflectionMethod(LynxJournal::class, 'matchesMonthlySchedule');
         $this->method->setAccessible(true);
     });
 
@@ -395,11 +395,11 @@ describe('LinkDigest::matchesMonthlySchedule()', function (): void {
 // isLinkOlderThan() — via reflection (private method)
 // ---------------------------------------------------------------------------
 
-describe('LinkDigest::isLinkOlderThan()', function (): void {
+describe('LynxJournal::isLinkOlderThan()', function (): void {
 
     beforeEach(function (): void {
-        $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
-        $this->method = new \ReflectionMethod(LinkDigest::class, 'isLinkOlderThan');
+        $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
+        $this->method = new \ReflectionMethod(LynxJournal::class, 'isLinkOlderThan');
         $this->method->setAccessible(true);
     });
 
@@ -443,16 +443,16 @@ describe('LinkDigest::isLinkOlderThan()', function (): void {
 // previewSchedule()
 // ---------------------------------------------------------------------------
 
-describe('LinkDigest::previewSchedule()', function (): void {
+describe('LynxJournal::previewSchedule()', function (): void {
 
     beforeEach(function (): void {
         Functions\when('__')->returnArg();
-        $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+        $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
     });
 
     it('returns would_publish=true for daily mode when links exist', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule' ? ['mode' => 'daily'] : $d
+            $k === 'lynxjournal_schedule' ? ['mode' => 'daily'] : $d
         );
         Functions\when('wp_get_object_terms')->justReturn([]);
         $this->plugin->shouldReceive('getUnpublishedLinkIds')->andReturn([1, 2, 3]);
@@ -467,7 +467,7 @@ describe('LinkDigest::previewSchedule()', function (): void {
 
     it('returns would_publish=false for daily mode when no links exist', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule' ? ['mode' => 'daily'] : $d
+            $k === 'lynxjournal_schedule' ? ['mode' => 'daily'] : $d
         );
         $this->plugin->shouldReceive('getUnpublishedLinkIds')->andReturn([]);
 
@@ -479,7 +479,7 @@ describe('LinkDigest::previewSchedule()', function (): void {
 
     it('returns would_publish=false for count mode when threshold is not met', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule'
+            $k === 'lynxjournal_schedule'
                 ? ['mode' => 'count', 'trigger' => ['count' => 10]]
                 : $d
         );
@@ -492,7 +492,7 @@ describe('LinkDigest::previewSchedule()', function (): void {
 
     it('returns would_publish=true for count mode when threshold is met', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule'
+            $k === 'lynxjournal_schedule'
                 ? ['mode' => 'count', 'trigger' => ['count' => 2]]
                 : $d
         );
@@ -507,7 +507,7 @@ describe('LinkDigest::previewSchedule()', function (): void {
 
     it('returns would_publish=false for manual mode regardless of link count', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule' ? ['mode' => 'manual'] : $d
+            $k === 'lynxjournal_schedule' ? ['mode' => 'manual'] : $d
         );
         $this->plugin->shouldReceive('getUnpublishedLinkIds')->andReturn([1, 2, 3]);
 
@@ -518,7 +518,7 @@ describe('LinkDigest::previewSchedule()', function (): void {
 
     it('groups links by category in by_category when would_publish is true', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule' ? ['mode' => 'daily'] : $d
+            $k === 'lynxjournal_schedule' ? ['mode' => 'daily'] : $d
         );
         Functions\when('wp_get_object_terms')->alias(function ($id) {
             // Link 1 → Tech, Link 2 → Tech, Link 3 → News
@@ -540,7 +540,7 @@ describe('LinkDigest::previewSchedule()', function (): void {
 
     it('labels uncategorized links correctly when no category terms exist', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
-            $k === 'linkdigest_schedule' ? ['mode' => 'daily'] : $d
+            $k === 'lynxjournal_schedule' ? ['mode' => 'daily'] : $d
         );
         Functions\when('wp_get_object_terms')->justReturn([]); // no terms
         $this->plugin->shouldReceive('getUnpublishedLinkIds')->andReturn([1]);

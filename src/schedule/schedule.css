@@ -1,30 +1,30 @@
 /* Status colors from WordPress admin palette */
 :root {
-	--linkdigest-color-success-bg: #edfaef;
-	--linkdigest-color-success-text: #005a12;
-	--linkdigest-color-error-bg: #fce8e8;
-	--linkdigest-color-error-text: #b32d2e;
-	--linkdigest-color-warning-bg: #fcf9e8;
-	--linkdigest-color-warning-text: #674200;
-	--linkdigest-color-neutral-bg: #f0f0f1;
-	--linkdigest-color-neutral-text: #646970;
-	--linkdigest-color-info-bg: #f0f6fc;
-	--linkdigest-color-info-border: #72aee6;
+	--lynxjournal-color-success-bg: #edfaef;
+	--lynxjournal-color-success-text: #005a12;
+	--lynxjournal-color-error-bg: #fce8e8;
+	--lynxjournal-color-error-text: #b32d2e;
+	--lynxjournal-color-warning-bg: #fcf9e8;
+	--lynxjournal-color-warning-text: #674200;
+	--lynxjournal-color-neutral-bg: #f0f0f1;
+	--lynxjournal-color-neutral-text: #646970;
+	--lynxjournal-color-info-bg: #f0f6fc;
+	--lynxjournal-color-info-border: #72aee6;
 }
 
-.linkdigest-schedule-wrap {
+.lynxjournal-schedule-wrap {
   display: flex;
   gap: 24px;
   align-items: flex-start;
   margin-top: 16px;
 }
 
-.linkdigest-schedule-main {
+.lynxjournal-schedule-main {
   flex: 1;
   min-width: 0;
 }
 
-.linkdigest-schedule-sidebar {
+.lynxjournal-schedule-sidebar {
   width: 280px;
   flex-shrink: 0;
   display: flex;
@@ -32,19 +32,19 @@
   gap: 16px;
 }
 
-.linkdigest-schedule-actions {
+.lynxjournal-schedule-actions {
   margin-top: 16px;
 }
 
 /* Flat sections (replaces PanelBody accordion) */
-.linkdigest-section {
+.lynxjournal-section {
   border: 1px solid #c3c4c7;
   border-radius: 2px;
   margin-bottom: 12px;
   background: #fff;
 }
 
-.linkdigest-section-heading {
+.lynxjournal-section-heading {
   margin: 0;
   padding: 10px 16px;
   font-size: 13px;
@@ -54,25 +54,25 @@
   background: #f6f7f7;
 }
 
-.linkdigest-section-body {
+.lynxjournal-section-body {
   padding: 16px;
 }
 
 /* Mode picker */
-.linkdigest-mode-picker {
+.lynxjournal-mode-picker {
   display: flex;
   align-items: flex-end;
   gap: 4px;
   flex-wrap: wrap;
 }
 
-.linkdigest-mode-group {
+.lynxjournal-mode-group {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.linkdigest-mode-group-label {
+.lynxjournal-mode-group-label {
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
@@ -81,29 +81,29 @@
   padding-inline-start: 2px;
 }
 
-.linkdigest-btn-group {
+.lynxjournal-btn-group {
   display: flex;
   gap: 0;
 }
 
-.linkdigest-btn-group .components-button {
+.lynxjournal-btn-group .components-button {
   border-radius: 0;
   margin: 0;
   border-inline-end-width: 0;
 }
 
-.linkdigest-btn-group .components-button:first-child {
+.lynxjournal-btn-group .components-button:first-child {
 	border-start-start-radius: 2px;
 	border-end-start-radius: 2px;
 }
 
-.linkdigest-btn-group .components-button:last-child {
+.lynxjournal-btn-group .components-button:last-child {
 	border-start-end-radius: 2px;
 	border-end-end-radius: 2px;
 	border-inline-end-width: 1px;
 }
 
-.linkdigest-btn-group-sep {
+.lynxjournal-btn-group-sep {
   width: 1px;
   background: #dcdcde;
   margin: 0 6px;
@@ -111,39 +111,39 @@
 }
 
 /* Recurrence rows */
-.linkdigest-rc-row {
+.lynxjournal-rc-row {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.linkdigest-rc {
+.lynxjournal-rc {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.linkdigest-weekdays {
+.lynxjournal-weekdays {
   display: flex;
   gap: 2px;
 }
 
 /* Monthly day rows */
-.linkdigest-month-days {
+.lynxjournal-month-days {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.linkdigest-month-day-row {
+.lynxjournal-month-day-row {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.linkdigest-day-index {
+.lynxjournal-day-index {
   font-size: 11px;
   color: #787c82;
   width: 18px;
@@ -151,7 +151,7 @@
   flex-shrink: 0;
 }
 
-.linkdigest-opt {
+.lynxjournal-opt {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -163,22 +163,22 @@
   outline: none;
 }
 
-.linkdigest-opt--off {
+.lynxjournal-opt--off {
   opacity: 0.3;
   cursor: pointer;
 }
 
-.linkdigest-opt--off * {
+.lynxjournal-opt--off * {
   pointer-events: none;
 }
 
-.linkdigest-opt-sep {
+.lynxjournal-opt-sep {
   font-size: 12px;
   color: #787c82;
 }
 
 /* TimePicker */
-.linkdigest-timepicker {
+.lynxjournal-timepicker {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -186,17 +186,17 @@
   gap: 6px;
 }
 
-.linkdigest-time-row {
+.lynxjournal-time-row {
   display: flex;
   align-items: center;
   gap: 2px;
 }
 
-.linkdigest-time-row .components-button.is-compact {
+.lynxjournal-time-row .components-button.is-compact {
   padding-inline-start: 2px;
 }
 
-.linkdigest-time-input {
+.lynxjournal-time-input {
   padding: 4px 8px;
   border: 1px solid #8c8f94;
   border-radius: 3px;
@@ -204,7 +204,7 @@
 }
 
 /* Next schedules */
-.linkdigest-next-heading {
+.lynxjournal-next-heading {
   padding: 10px 12px;
   border-bottom: 1px solid #c3c4c7;
   background: #f6f7f7;
@@ -214,18 +214,18 @@
   line-height: 1.4;
 }
 
-.linkdigest-next-schedules-inside {
+.lynxjournal-next-schedules-inside {
   background: #f6f7f7;
   padding: 12px 16px;
 }
 
-.linkdigest-next-schedules {
+.lynxjournal-next-schedules {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.linkdigest-next-schedule-row {
+.lynxjournal-next-schedule-row {
   display: flex;
   justify-content: space-between;
   padding: 4px 0;
@@ -233,25 +233,25 @@
   font-size: 13px;
 }
 
-.linkdigest-next-schedule-row:last-child {
+.lynxjournal-next-schedule-row:last-child {
   border-bottom: none;
 }
 
-.linkdigest-next-schedule-row:first-child {
+.lynxjournal-next-schedule-row:first-child {
   font-weight: 600;
 }
 
-.linkdigest-next-time {
+.lynxjournal-next-time {
   color: var(--wp-admin-theme-color, #2271b1);
   font-size: 12px;
 }
 
-.linkdigest-diag-list {
+.lynxjournal-diag-list {
   margin: 0;
   padding: 0;
 }
 
-.linkdigest-diag-row {
+.lynxjournal-diag-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -261,22 +261,22 @@
   font-size: 12px;
 }
 
-.linkdigest-diag-row:last-of-type {
+.lynxjournal-diag-row:last-of-type {
   border-bottom: none;
 }
 
-.linkdigest-diag-row dt {
+.lynxjournal-diag-row dt {
   color: #787c82;
   flex-shrink: 0;
 }
 
-.linkdigest-diag-row dd {
+.lynxjournal-diag-row dd {
   margin: 0;
   text-align: end;
   word-break: break-word;
 }
 
-.linkdigest-diag-badge {
+.lynxjournal-diag-badge {
   display: inline-block;
   padding: 1px 6px;
   border-radius: 10px;
@@ -286,82 +286,82 @@
   letter-spacing: 0.02em;
 }
 
-.linkdigest-diag-badge--success {
-	background: var(--linkdigest-color-success-bg);
-	color: var(--linkdigest-color-success-text);
+.lynxjournal-diag-badge--success {
+	background: var(--lynxjournal-color-success-bg);
+	color: var(--lynxjournal-color-success-text);
 }
 
-.linkdigest-diag-badge--neutral {
-	background: var(--linkdigest-color-neutral-bg);
-	color: var(--linkdigest-color-neutral-text);
+.lynxjournal-diag-badge--neutral {
+	background: var(--lynxjournal-color-neutral-bg);
+	color: var(--lynxjournal-color-neutral-text);
 }
 
-.linkdigest-diag-badge--warn {
-	background: var(--linkdigest-color-warning-bg);
-	color: var(--linkdigest-color-warning-text);
+.lynxjournal-diag-badge--warn {
+	background: var(--lynxjournal-color-warning-bg);
+	color: var(--lynxjournal-color-warning-text);
 }
 
-.linkdigest-diag-meta {
+.lynxjournal-diag-meta {
   font-size: 11px;
   color: #787c82;
 }
 
-.linkdigest-diag-refresh {
+.lynxjournal-diag-refresh {
   margin-top: 8px;
   font-size: 12px;
 }
 
 /* Run now / preview results */
-.linkdigest-run-result {
+.lynxjournal-run-result {
   margin: 8px 0 0;
   font-size: 13px;
   padding: 6px 10px;
   border-radius: 3px;
 }
 
-.linkdigest-run-result--ok {
-	background: var(--linkdigest-color-success-bg);
-	color: var(--linkdigest-color-success-text);
+.lynxjournal-run-result--ok {
+	background: var(--lynxjournal-color-success-bg);
+	color: var(--lynxjournal-color-success-text);
 }
 
-.linkdigest-run-result--skip {
-	background: var(--linkdigest-color-neutral-bg);
-	color: var(--linkdigest-color-neutral-text);
+.lynxjournal-run-result--skip {
+	background: var(--lynxjournal-color-neutral-bg);
+	color: var(--lynxjournal-color-neutral-text);
 }
 
-.linkdigest-run-result--error {
-	background: var(--linkdigest-color-error-bg);
-	color: var(--linkdigest-color-error-text);
+.lynxjournal-run-result--error {
+	background: var(--lynxjournal-color-error-bg);
+	color: var(--lynxjournal-color-error-text);
 }
 
-.linkdigest-preview-result {
+.lynxjournal-preview-result {
   margin-top: 8px;
   font-size: 13px;
-  background: var(--linkdigest-color-info-bg);
-  border: 1px solid var(--linkdigest-color-info-border);
+  background: var(--lynxjournal-color-info-bg);
+  border: 1px solid var(--lynxjournal-color-info-border);
   border-radius: 3px;
   padding: 8px 12px;
 }
 
-.linkdigest-preview-result__summary {
+.lynxjournal-preview-result__summary {
   margin: 0 0 4px;
   font-weight: 600;
   color: var(--wp-admin-theme-color-darker-10, #135e96);
 }
 
-.linkdigest-preview-result__cats {
+.lynxjournal-preview-result__cats {
   margin: 0;
   padding-inline-start: 16px;
   color: var(--wp-admin-theme-color-darker-10, #135e96);
 }
 
 /* WP-Cron warning banner */
-.linkdigest-wpcron-notice {
+.lynxjournal-wpcron-notice {
   margin-bottom: 12px;
 }
 
 /* Next schedules timezone label */
-.linkdigest-next-tz {
+.lynxjournal-next-tz {
   margin: 8px 0 0;
   font-size: 11px;
   color: #787c82;
@@ -369,26 +369,26 @@
 }
 
 /* Diagnostics: reason note next to Not scheduled */
-.linkdigest-diag-reason {
+.lynxjournal-diag-reason {
   font-size: 11px;
   color: #787c82;
 }
 
 /* Radio card picker */
-.linkdigest-mode-picker-v2 {
+.lynxjournal-mode-picker-v2 {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
   align-items: flex-start;
 }
 
-.linkdigest-mode-card-group {
+.lynxjournal-mode-card-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.linkdigest-mode-card-group-label {
+.lynxjournal-mode-card-group-label {
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
@@ -398,14 +398,14 @@
 }
 
 /* Run history */
-.linkdigest-run-reason {
+.lynxjournal-run-reason {
   display: block;
   font-size: 11px;
   color: #787c82;
   margin-top: 2px;
 }
 
-.linkdigest-history-toggle {
+.lynxjournal-history-toggle {
   display: block;
   margin-top: 8px;
   font-size: 11px;
@@ -418,36 +418,36 @@
   text-underline-offset: 2px;
 }
 
-.linkdigest-history-list {
+.lynxjournal-history-list {
   margin: 8px 0 0;
   padding: 0;
   list-style: none;
 }
 
-.linkdigest-history-row {
+.lynxjournal-history-row {
   padding: 5px 0;
   border-top: 1px solid #dcdcde;
   font-size: 11px;
 }
 
-.linkdigest-history-row-main {
+.lynxjournal-history-row-main {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.linkdigest-history-date {
+.lynxjournal-history-date {
   font-size: 11px;
   color: #646970;
   margin-top: 1px;
 }
 
-.linkdigest-mode-cards {
+.lynxjournal-mode-cards {
   display: flex;
   gap: 6px;
 }
 
-.linkdigest-mode-card {
+.lynxjournal-mode-card {
   position: relative;
   width: 96px;
   padding: 10px 12px;
@@ -459,25 +459,25 @@
   text-align: start;
 }
 
-.linkdigest-mode-card:hover {
+.lynxjournal-mode-card:hover {
   border-color: var(--wp-admin-theme-color, #2271b1);
   box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #2271b1);
 }
 
-.linkdigest-mode-card--active {
+.lynxjournal-mode-card--active {
   border-color: var(--wp-admin-theme-color, #2271b1);
   box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #2271b1);
   background: #f0f6fc;
 }
 
-.linkdigest-mode-card__title {
+.lynxjournal-mode-card__title {
   font-size: 13px;
   font-weight: 600;
   color: #1e1e1e;
   margin-bottom: 3px;
 }
 
-.linkdigest-mode-card__desc {
+.lynxjournal-mode-card__desc {
   font-size: 11px;
   color: #787c82;
   line-height: 1.4;

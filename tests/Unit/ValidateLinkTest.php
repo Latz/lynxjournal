@@ -9,20 +9,20 @@ if (!defined("ABSPATH")) {
 use Brain\Monkey\Functions;
 
 /**
- * Tests for linkdigestValidateLinkForPublish()
+ * Tests for lynxjournalValidateLinkForPublish()
  *
  * Returns null on success, or an error array with 'error_code' on failure.
  */
 
 beforeEach(function (): void {
-    $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
-describe('LinkDigest::validateLinkForPublish()', function (): void {
+describe('LynxJournal::validateLinkForPublish()', function (): void {
 
     it('returns null when every validation condition passes', function (): void {
         Functions\when('current_user_can')->justReturn(true);
-        Functions\when('get_post')->justReturn(linkdigest_make_post(1, LINKDIGEST_TITLE_MY_LINK));
+        Functions\when('get_post')->justReturn(lynxjournal_make_post(1, LYNXJOURNAL_TITLE_MY_LINK));
         Functions\when('get_post_meta')->justReturn(''); // no published_post_id
 
         $result = $this->plugin->validateLinkForPublish(1);
@@ -49,9 +49,9 @@ describe('LinkDigest::validateLinkForPublish()', function (): void {
         expect($result['error_code'])->toBe('invalid_link');
     });
 
-    it('returns invalid_link error when post type is not linkdigest', function (): void {
+    it('returns invalid_link error when post type is not lynxjournal', function (): void {
         Functions\when('current_user_can')->justReturn(true);
-        Functions\when('get_post')->justReturn(linkdigest_make_post(1, 'Title', 'post'));
+        Functions\when('get_post')->justReturn(lynxjournal_make_post(1, 'Title', 'post'));
 
         $result = $this->plugin->validateLinkForPublish(1);
 
@@ -60,7 +60,7 @@ describe('LinkDigest::validateLinkForPublish()', function (): void {
 
     it('returns missing_title error when post title is empty', function (): void {
         Functions\when('current_user_can')->justReturn(true);
-        Functions\when('get_post')->justReturn(linkdigest_make_post(1, ''));
+        Functions\when('get_post')->justReturn(lynxjournal_make_post(1, ''));
 
         $result = $this->plugin->validateLinkForPublish(1);
 
@@ -68,18 +68,18 @@ describe('LinkDigest::validateLinkForPublish()', function (): void {
     });
 
     it('returns already_published error when link already has a live published post', function (): void {
-        $publishedPost = linkdigest_make_post(50, 'Blog Post', 'post');
+        $publishedPost = lynxjournal_make_post(50, 'Blog Post', 'post');
 
         Functions\when('current_user_can')->justReturn(true);
         Functions\when('get_post')
             ->alias(function (int $id) use ($publishedPost): ?WP_Post {
                 return match ($id) {
-                    1  => linkdigest_make_post(1, LINKDIGEST_TITLE_MY_LINK),  // the link
+                    1  => lynxjournal_make_post(1, LYNXJOURNAL_TITLE_MY_LINK),  // the link
                     50 => $publishedPost,           // the published blog post
                     default => null,
                 };
             });
-        Functions\when('get_post_meta')->justReturn(50); // _linkdigest_published_post_id
+        Functions\when('get_post_meta')->justReturn(50); // _lynxjournal_published_post_id
 
         $result = $this->plugin->validateLinkForPublish(1);
 
@@ -90,7 +90,7 @@ describe('LinkDigest::validateLinkForPublish()', function (): void {
         Functions\when('current_user_can')->justReturn(true);
         Functions\when('get_post')
             ->alias(function (int $id): ?WP_Post {
-                return $id === 1 ? linkdigest_make_post(1, LINKDIGEST_TITLE_MY_LINK) : null; // published post 50 is gone
+                return $id === 1 ? lynxjournal_make_post(1, LYNXJOURNAL_TITLE_MY_LINK) : null; // published post 50 is gone
             });
         Functions\when('get_post_meta')->justReturn(50);
 

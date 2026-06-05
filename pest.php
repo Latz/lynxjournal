@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Pest configuration for LinkDigest plugin.
+ * Pest configuration for LynxJournal plugin.
  *
  * Unit suite  — Brain Monkey mocks WP functions; no real WordPress.
  * Integration — loads a real WordPress + test DB.

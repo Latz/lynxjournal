@@ -1,14 +1,14 @@
 /**
- * LinkDigest Categories inline editor — edit, delete, and manage categories.
+ * LynxJournal Categories inline editor — edit, delete, and manage categories.
  *
  * @since 1.0.0
  */
-/* global linkdigestCats */
+/* global lynxjournalCats */
 (function() {
-    var cfg = window.linkdigestCats || {};
+    var cfg = window.lynxjournalCats || {};
 
     // ── Delete confirmation ───────────────────────────────────────────
-    document.querySelectorAll('.linkdigest-cat-delete-form').forEach(function(form) {
+    document.querySelectorAll('.lynxjournal-cat-delete-form').forEach(function(form) {
         form.addEventListener('submit', function(e) {
             var name  = form.dataset.name;
             var count = parseInt(form.dataset.count, 10);
@@ -21,9 +21,9 @@
 
     // ── Inline edit ───────────────────────────────────────────────────
     document.addEventListener('click', function(e) {
-        var editBtn   = e.target.closest('.linkdigest-cat-edit-btn');
-        var cancelBtn = e.target.closest('.linkdigest-cat-cancel-btn');
-        var saveBtn   = e.target.closest('.linkdigest-cat-save-btn');
+        var editBtn   = e.target.closest('.lynxjournal-cat-edit-btn');
+        var cancelBtn = e.target.closest('.lynxjournal-cat-cancel-btn');
+        var saveBtn   = e.target.closest('.lynxjournal-cat-save-btn');
         if (editBtn)   { enterEdit(editBtn.closest('tr'));   return; }
         if (cancelBtn) { exitEdit(cancelBtn.closest('tr'), null); return; }
         if (saveBtn)   { saveEdit(saveBtn.closest('tr')); }
@@ -36,26 +36,26 @@
      * @param {HTMLTableRowElement} tr - The category table row.
      */
     function enterEdit(tr) {
-        if (tr.classList.contains('linkdigest-cat-editing')) { return; }
-        tr.classList.add('linkdigest-cat-editing');
+        if (tr.classList.contains('lynxjournal-cat-editing')) { return; }
+        tr.classList.add('lynxjournal-cat-editing');
 
         var nameInput = mkInput('text',     tr.dataset.name,        '');
         var descInput = mkTextarea(          tr.dataset.description, cfg.labels.descPlaceholder);
         var slugInput = mkInput('text',     tr.dataset.slug,        cfg.labels.slugPlaceholder);
-        slugInput.classList.add('linkdigest-cat-inline-slug');
+        slugInput.classList.add('lynxjournal-cat-inline-slug');
 
         cell(tr, 'name').innerHTML        = '';  cell(tr, 'name').appendChild(nameInput);
         cell(tr, 'description').innerHTML = '';  cell(tr, 'description').appendChild(descInput);
         cell(tr, 'slug').innerHTML        = '';  cell(tr, 'slug').appendChild(slugInput);
 
-        var actionsCell = tr.querySelector('.linkdigest-cat-actions');
-        var deleteForm  = actionsCell.querySelector('.linkdigest-cat-delete-form');
+        var actionsCell = tr.querySelector('.lynxjournal-cat-actions');
+        var deleteForm  = actionsCell.querySelector('.lynxjournal-cat-delete-form');
         actionsCell.innerHTML = '';
 
-        var saveBtn   = mkBtn(cfg.labels.save,   'button button-primary linkdigest-cat-save-btn');
-        var cancelBtn = mkBtn(cfg.labels.cancel, 'button-link linkdigest-cat-cancel-btn');
+        var saveBtn   = mkBtn(cfg.labels.save,   'button button-primary lynxjournal-cat-save-btn');
+        var cancelBtn = mkBtn(cfg.labels.cancel, 'button-link lynxjournal-cat-cancel-btn');
         var errSpan   = document.createElement('span');
-        errSpan.className = 'linkdigest-cat-inline-error';
+        errSpan.className = 'lynxjournal-cat-inline-error';
 
         actionsCell.appendChild(saveBtn);
         actionsCell.appendChild(document.createTextNode(' '));
@@ -77,7 +77,7 @@
      * @param {?{name: string, description: string, slug: string}} updated - Updated values, or null to discard.
      */
     function exitEdit(tr, updated) {
-        tr.classList.remove('linkdigest-cat-editing');
+        tr.classList.remove('lynxjournal-cat-editing');
 
         var name = updated ? updated.name        : tr.dataset.name;
         var desc = updated ? updated.description : tr.dataset.description;
@@ -93,12 +93,12 @@
         cell(tr, 'description').innerHTML = esc(desc);
         cell(tr, 'slug').innerHTML        = '<code>' + esc(slug) + '</code>';
 
-        var actionsCell = tr.querySelector('.linkdigest-cat-actions');
-        var deleteForm  = actionsCell.querySelector('.linkdigest-cat-delete-form');
+        var actionsCell = tr.querySelector('.lynxjournal-cat-actions');
+        var deleteForm  = actionsCell.querySelector('.lynxjournal-cat-delete-form');
         if (updated && deleteForm) { deleteForm.dataset.name = updated.name; }
         actionsCell.innerHTML = '';
 
-        var editBtn = mkBtn(cfg.labels.edit, 'button-link linkdigest-cat-edit-btn');
+        var editBtn = mkBtn(cfg.labels.edit, 'button-link lynxjournal-cat-edit-btn');
         actionsCell.appendChild(editBtn);
         actionsCell.appendChild(document.createTextNode(' | '));
         if (deleteForm) {
@@ -115,8 +115,8 @@
      * @param {HTMLTableRowElement} tr - The category table row being edited.
      */
     async function saveEdit(tr) {
-        var saveBtn = tr.querySelector('.linkdigest-cat-save-btn');
-        var errSpan = tr.querySelector('.linkdigest-cat-inline-error');
+        var saveBtn = tr.querySelector('.lynxjournal-cat-save-btn');
+        var errSpan = tr.querySelector('.lynxjournal-cat-inline-error');
         saveBtn.disabled    = true;
         saveBtn.textContent = cfg.labels.saving;
         errSpan.textContent = '';
@@ -164,7 +164,7 @@
      * @param {string} name - Cell name (e.g., 'name', 'description', 'slug').
      * @returns {HTMLElement}
      */
-    function cell(tr, name) { return tr.querySelector('.linkdigest-cat-cell-' + name); }
+    function cell(tr, name) { return tr.querySelector('.lynxjournal-cat-cell-' + name); }
 
     /**
      * Create an input element with the given type, value, and placeholder.
@@ -178,7 +178,7 @@
     function mkInput(type, value, placeholder) {
         var el = document.createElement('input');
         el.type = type; el.value = value || ''; el.placeholder = placeholder;
-        el.className = 'linkdigest-cat-inline-input';
+        el.className = 'lynxjournal-cat-inline-input';
         return el;
     }
 
@@ -193,7 +193,7 @@
     function mkTextarea(value, placeholder) {
         var el = document.createElement('textarea');
         el.value = value || ''; el.placeholder = placeholder; el.rows = 2;
-        el.className = 'linkdigest-cat-inline-input';
+        el.className = 'lynxjournal-cat-inline-input';
         return el;
     }
 

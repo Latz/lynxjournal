@@ -1,4 +1,4 @@
-# LinkDigest — Test Suite
+# LynxJournal — Test Suite
 
 ## Overview
 
@@ -47,13 +47,13 @@ The bootstrap (`tests/bootstrap-unit.php`) loads in this fixed order:
 2. **Composer autoload** — Brain Monkey, Mockery, Pest internals
 3. **WP stubs** (`tests/stubs/wp-stubs.php`) — thin PHP classes (`WP_Post`, `WP_Error`, `WP_REST_Request`) so tests can reference WP types without loading WP
 4. **Test helpers** (`tests/helpers.php`) — `makePost()` and `makeRequest()` factory functions used across test files
-5. **Plugin bootstrap** (`linkdigest.php`) — `add_action`/`add_filter` calls are absorbed by a one-shot Brain Monkey setUp/tearDown
+5. **Plugin bootstrap** (`lynxjournal.php`) — `add_action`/`add_filter` calls are absorbed by a one-shot Brain Monkey setUp/tearDown
 
 `pest.php` wraps every test in `Brain\Monkey\setUp()` / `Brain\Monkey\tearDown()` + `Mockery::close()` so each test starts clean.
 
 ### Helpers
 
-`makePost(int $id, string $title, string $type = 'linkdigest', string $content = ''): WP_Post`
+`makePost(int $id, string $title, string $type = 'lynxjournal', string $content = ''): WP_Post`
 — builds a minimal `WP_Post` object for use in assertions.
 
 `makeRequest(array $params = [], array $headers = []): WP_REST_Request`
@@ -63,12 +63,12 @@ The bootstrap (`tests/bootstrap-unit.php`) loads in this fixed order:
 
 | File | Function under test |
 |---|---|
-| `ValidateLinkTest.php` | `linkdigestValidateLinkForPublish()` |
-| `RestAddLinkTest.php` | `linkdigest_rest_add_link()` |
-| `RestPermissionTest.php` | `linkdigest_rest_permission_check()` |
-| `BuildPostContentTest.php` | `linkdigestBuildPostContent()` |
-| `BatchPublishTest.php` | `linkdigestBatchPublishLinks()` |
-| `ScheduleTest.php` | `linkdigest_get_schedule()`, `linkdigest_save_schedule()` |
+| `ValidateLinkTest.php` | `lynxjournalValidateLinkForPublish()` |
+| `RestAddLinkTest.php` | `lynxjournal_rest_add_link()` |
+| `RestPermissionTest.php` | `lynxjournal_rest_permission_check()` |
+| `BuildPostContentTest.php` | `lynxjournalBuildPostContent()` |
+| `BatchPublishTest.php` | `lynxjournalBatchPublishLinks()` |
+| `ScheduleTest.php` | `lynxjournal_get_schedule()`, `lynxjournal_save_schedule()` |
 | `CategoriesTest.php` | Category-related functions |
 | `UnpublishLinkTest.php` | Link unpublish flow |
 | `CreateBlogPostTest.php` | Blog post creation |
@@ -207,7 +207,7 @@ npm run test:e2e:debug
 ### Test files
 
 **`tests/e2e/api/links.spec.js`** — REST API contract tests:
-- `GET /wp-json/linkdigest/v1/categories` returns 200 + array
+- `GET /wp-json/lynxjournal/v1/categories` returns 200 + array
 - `POST /add-link` creates a link and returns its ID
 - `DELETE /links/{id}` removes the created link
 - Unauthenticated `POST /add-link` returns 401 or 403

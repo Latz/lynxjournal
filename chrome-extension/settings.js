@@ -33,7 +33,7 @@ export async function testConnection(apiEndpoint, apiKey) {
             cache: 'no-store',
             headers: {
                 'Content-Type': 'application/json',
-                'X-LinkDigest-API-Key': apiKey
+                'X-LynxJournal-API-Key': apiKey
             }
         });
 
@@ -89,7 +89,7 @@ export async function checkWpLogin(url) {
 
     // Verify this is a WordPress installation.
     // Try the entered URL first, then fall back to the site origin so that
-    // entering any page URL (e.g. https://example.com/linkdigest) still works.
+    // entering any page URL (e.g. https://example.com/lynxjournal) still works.
     const candidates = [url.replace(/\/$/, '')];
     try {
         const origin = new URL(url).origin;
@@ -119,7 +119,7 @@ export async function checkWpLogin(url) {
     // If WordPress was found at a different base (fallback to origin),
     // fill the API Endpoint directly instead of overwriting the address field.
     if (wpBase !== url.replace(/\/$/, '')) {
-        document.getElementById('apiEndpoint').value = `${wpBase}/wp-json/linkdigest/v1`;
+        document.getElementById('apiEndpoint').value = `${wpBase}/wp-json/lynxjournal/v1`;
         status.textContent = chrome.i18n.getMessage('msgUrlCorrected');
         status.className = 'wp-login-status logged-in';
     }
@@ -127,15 +127,15 @@ export async function checkWpLogin(url) {
     try {
         // Use the resolved origin so Secure cookies are included
         const cookieUrl = resolvedOrigin;
-        console.log('[linkdigest] input url:', url);
-        console.log('[linkdigest] resolved origin:', resolvedOrigin);
+        console.log('[lynxjournal] input url:', url);
+        console.log('[lynxjournal] resolved origin:', resolvedOrigin);
         const cookies = await chrome.cookies.getAll({ url: cookieUrl });
-        console.log('[linkdigest] cookies for origin:', cookies.map(c => c.name));
+        console.log('[lynxjournal] cookies for origin:', cookies.map(c => c.name));
         const loggedIn = cookies.some(c =>
             c.name.startsWith('wordpress_logged_in_') ||
             c.name.startsWith('wordpress_sec_')
         );
-        console.log('[linkdigest] loggedIn:', loggedIn);
+        console.log('[lynxjournal] loggedIn:', loggedIn);
 
         if (!loggedIn) {
             status.textContent = chrome.i18n.getMessage('msgNotLoggedIn');
@@ -151,7 +151,7 @@ export async function checkWpLogin(url) {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'action=linkdigest_get_rest_nonce',
+            body: 'action=lynxjournal_get_rest_nonce',
         });
         const nonceText = await nonceRes.text();
         let nonceData;
@@ -162,7 +162,7 @@ export async function checkWpLogin(url) {
         // Fetch the API key using the nonce
         status.textContent = chrome.i18n.getMessage('msgFetchingKey');
         const endpoint = document.getElementById('apiEndpoint').value.trim()
-            || `${wpBase}/wp-json/linkdigest/v1`;
+            || `${wpBase}/wp-json/lynxjournal/v1`;
         const keyRes = await fetch(`${endpoint}/api-key`, {
             credentials: 'include',
             headers: { 'X-WP-Nonce': nonceData.data.nonce },
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('createEndpointBtn').addEventListener('click', () => {
         const wp = wpInput.value.trim().replace(/\/$/, '');
         if (wp) {
-            document.getElementById('apiEndpoint').value = `${wp}/wp-json/linkdigest/v1`;
+            document.getElementById('apiEndpoint').value = `${wp}/wp-json/lynxjournal/v1`;
         }
     });
 });

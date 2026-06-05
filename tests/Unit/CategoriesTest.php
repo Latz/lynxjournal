@@ -9,16 +9,16 @@ if (!defined("ABSPATH")) {
 use Brain\Monkey\Functions;
 
 /**
- * Tests for LinkDigest::restGetCategories() and LinkDigest::invalidateCategoriesCache()
+ * Tests for LynxJournal::restGetCategories() and LynxJournal::invalidateCategoriesCache()
  */
 
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
     Functions\when('rest_ensure_response')->returnArg();
-    $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
-describe('LinkDigest::restGetCategories()', function (): void {
+describe('LynxJournal::restGetCategories()', function (): void {
 
     it('returns cached data and skips get_terms on a cache hit', function (): void {
         $cached = [['id' => 1, 'name' => 'Tech', 'slug' => 'tech']];
@@ -27,7 +27,7 @@ describe('LinkDigest::restGetCategories()', function (): void {
         // get_terms must NOT be called — stub it to return an unexpected value to catch misuse
         Functions\when('get_terms')->justReturn([new WP_Error('unexpected', 'Should not be called')]);
 
-        $result = $this->plugin->restGetCategories(linkdigest_make_request());
+        $result = $this->plugin->restGetCategories(lynxjournal_make_request());
 
         expect($result)->toBe($cached);
     });
@@ -47,9 +47,9 @@ describe('LinkDigest::restGetCategories()', function (): void {
             }
         );
 
-        $result = $this->plugin->restGetCategories(linkdigest_make_request());
+        $result = $this->plugin->restGetCategories(lynxjournal_make_request());
 
-        expect($transientKey)->toBe('linkdigest_api_categories_list');
+        expect($transientKey)->toBe('lynxjournal_api_categories_list');
         expect($transientVal)->toBeArray();
 
         expect($result)->toBeArray()->toHaveCount(1);
@@ -66,7 +66,7 @@ describe('LinkDigest::restGetCategories()', function (): void {
         Functions\when('get_terms')->justReturn($terms);
         Functions\when('set_transient')->justReturn(true);
 
-        $result = $this->plugin->restGetCategories(linkdigest_make_request());
+        $result = $this->plugin->restGetCategories(lynxjournal_make_request());
 
         expect($result)->toHaveCount(2);
         expect(array_keys($result[0]))->toBe(['id', 'name', 'slug']);
@@ -77,7 +77,7 @@ describe('LinkDigest::restGetCategories()', function (): void {
         Functions\when('get_terms')->justReturn([]);
         Functions\when('set_transient')->justReturn(true);
 
-        $result = $this->plugin->restGetCategories(linkdigest_make_request());
+        $result = $this->plugin->restGetCategories(lynxjournal_make_request());
 
         expect($result)->toBe([]);
     });
@@ -86,14 +86,14 @@ describe('LinkDigest::restGetCategories()', function (): void {
         Functions\when('get_transient')->justReturn(false);
         Functions\when('get_terms')->justReturn(new WP_Error('db_error', 'DB fail'));
 
-        $result = $this->plugin->restGetCategories(linkdigest_make_request());
+        $result = $this->plugin->restGetCategories(lynxjournal_make_request());
 
         expect($result)->toBeInstanceOf(WP_Error::class);
         expect($result->get_error_code())->toBe('fetch_failed');
     });
 });
 
-describe('LinkDigest::invalidateCategoriesCache()', function (): void {
+describe('LynxJournal::invalidateCategoriesCache()', function (): void {
 
     it('deletes the correct transient keys', function (): void {
         $deletedKeys = [];
@@ -106,7 +106,7 @@ describe('LinkDigest::invalidateCategoriesCache()', function (): void {
 
         $this->plugin->invalidateCategoriesCache();
 
-        expect($deletedKeys)->toContain('linkdigest_api_categories_list');
-        expect($deletedKeys)->toContain('linkdigest_categories_terms');
+        expect($deletedKeys)->toContain('lynxjournal_api_categories_list');
+        expect($deletedKeys)->toContain('lynxjournal_categories_terms');
     });
 });

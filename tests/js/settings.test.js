@@ -7,7 +7,7 @@ import {
     checkWpLogin,
 } from '../../chrome-extension/settings.js';
 
-const ENDPOINT = 'https://example.com/wp-json/linkdigest/v1';
+const ENDPOINT = 'https://example.com/wp-json/lynxjournal/v1';
 const API_KEY  = 'test-key';
 
 function buildSettingsDOM() {
@@ -151,7 +151,7 @@ describe('checkWpLogin', () => {
             .mockResolvedValueOnce({
                 ok:   true,
                 url:  'https://example.com/wp-json/',
-                json: async () => ({ namespaces: ['linkdigest/v1'] }),
+                json: async () => ({ namespaces: ['lynxjournal/v1'] }),
             })
             .mockRejectedValue(new Error('nonce fetch not mocked'));
         chrome.cookies.getAll.mockResolvedValueOnce([{ name: 'wordpress_sec_abc123' }]);
@@ -166,7 +166,7 @@ describe('checkWpLogin', () => {
         global.fetch = vi.fn().mockResolvedValue({
             ok:   true,
             url:  'https://example.com/wp-json/',
-            json: async () => ({ namespaces: ['linkdigest/v1'] }),
+            json: async () => ({ namespaces: ['lynxjournal/v1'] }),
         });
         chrome.cookies.getAll.mockResolvedValueOnce([]);
 

@@ -6,7 +6,7 @@ import { SCHEDULE_MODES } from '../lib/modes';
 const DAYS   = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const loc = globalThis.linkdigestSchedule || {};
+const loc = globalThis.lynxjournalSchedule || {};
 const SITE_TIMEZONE = loc.timezone || null;
 
 /**
@@ -60,25 +60,25 @@ export default function NextSchedules({ config, form }) {
   if (!isSchedule) return null;
 
   return (
-    <div className="postbox linkdigest-next-postbox">
-      <div className="linkdigest-next-heading">{__('Next 10 Schedules', 'linkdigest')}</div>
-      <div className="inside linkdigest-next-schedules-inside">
+    <div className="postbox lynxjournal-next-postbox">
+      <div className="lynxjournal-next-heading">{__('Next 10 Schedules', 'lynxjournal')}</div>
+      <div className="inside lynxjournal-next-schedules-inside">
         {nextDates.length > 0 ? (
-          <ol className="linkdigest-next-schedules">
+          <ol className="lynxjournal-next-schedules">
             {nextDates.map(d => (
-              <li key={d.toISOString()} className="linkdigest-next-schedule-row">
-                <span className="linkdigest-next-date">{formatDate(d)}</span>
-                <span className="linkdigest-next-time">{displayTimes.join(', ')}</span>
+              <li key={d.toISOString()} className="lynxjournal-next-schedule-row">
+                <span className="lynxjournal-next-date">{formatDate(d)}</span>
+                <span className="lynxjournal-next-time">{displayTimes.join(', ')}</span>
               </li>
             ))}
           </ol>
         ) : (
-          <p className="description">{__('No occurrences — check recurrence settings.', 'linkdigest')}</p>
+          <p className="description">{__('No occurrences — check recurrence settings.', 'lynxjournal')}</p>
         )}
         {SITE_TIMEZONE && (
-          <p className="linkdigest-next-tz">
+          <p className="lynxjournal-next-tz">
             {/* translators: %s: timezone name, e.g. Europe/Berlin */}
-            {sprintf(__('Times in %s', 'linkdigest'), SITE_TIMEZONE)}
+            {sprintf(__('Times in %s', 'lynxjournal'), SITE_TIMEZONE)}
           </p>
         )}
       </div>

@@ -1,8 +1,8 @@
 jQuery(document).ready(function($) {
-    var labels = (window.linkdigestSettings && window.linkdigestSettings.labels) || {};
+    var labels = (window.lynxjournalSettings && window.lynxjournalSettings.labels) || {};
 
     // Copy to clipboard
-    $('.linkdigest-copy-btn').on('click', function() {
+    $('.lynxjournal-copy-btn').on('click', function() {
         var targetId = $(this).data('clipboard-target');
         var input = document.getElementById(targetId);
         if (!input) { return; }
@@ -32,8 +32,8 @@ jQuery(document).ready(function($) {
     });
 
     // Show / hide API key toggle
-    $('.linkdigest-toggle-key').on('click', function() {
-        var input = document.getElementById('linkdigest-api-key');
+    $('.lynxjournal-toggle-key').on('click', function() {
+        var input = document.getElementById('lynxjournal-api-key');
         if (!input) { return; }
         var $icon = $(this).find('.dashicons');
         if (input.type === 'password') {
@@ -46,17 +46,17 @@ jQuery(document).ready(function($) {
     });
 
     // Confirm before regenerating API key
-    $('#linkdigest-generate-form').on('submit', function(e) {
+    $('#lynxjournal-generate-form').on('submit', function(e) {
         if ($(this).data('has-key')) {
             if (!window.confirm(labels.confirmRegenerate || '')) { e.preventDefault(); }
         }
     });
 
     // Test Connection
-    $('#linkdigest-test-connection').on('click', function() {
-        var endpoint = (document.getElementById('linkdigest-api-endpoint') || {}).value || '';
-        var apiKey   = (document.getElementById('linkdigest-api-key') || {}).value || '';
-        var $status  = $('#linkdigest-connection-status');
+    $('#lynxjournal-test-connection').on('click', function() {
+        var endpoint = (document.getElementById('lynxjournal-api-endpoint') || {}).value || '';
+        var apiKey   = (document.getElementById('lynxjournal-api-key') || {}).value || '';
+        var $status  = $('#lynxjournal-connection-status');
 
         if (!endpoint || !apiKey) {
             $status.css('color', '#d63638').text(labels.missingFields || '');
@@ -68,7 +68,7 @@ jQuery(document).ready(function($) {
         $status.css('color', '#666').text(labels.statusTesting || '');
 
         fetch(endpoint.replace(/\/$/, '') + '/categories', {
-            headers: { 'X-Api-Key': apiKey }
+            headers: { 'X-LynxJournal-API-Key': apiKey }
         })
         .then(function(res) {
             if (res.ok) {
@@ -84,12 +84,12 @@ jQuery(document).ready(function($) {
     });
 
     // Rotate setup section arrow on toggle
-    var $details = $('details.linkdigest-setup-details');
+    var $details = $('details.lynxjournal-setup-details');
     $details.on('toggle', function() {
-        var $arrow = $('#linkdigest-setup-arrow');
+        var $arrow = $('#lynxjournal-setup-arrow');
         $arrow.css('transform', this.open ? 'rotate(90deg)' : 'rotate(0deg)');
     });
     if ($details[0] && $details[0].open) {
-        $('#linkdigest-setup-arrow').css('transform', 'rotate(90deg)');
+        $('#lynxjournal-setup-arrow').css('transform', 'rotate(90deg)');
     }
 });

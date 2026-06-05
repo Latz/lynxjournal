@@ -1,5 +1,5 @@
 /**
- * Playwright — REST API tests for the LinkDigest plugin.
+ * Playwright — REST API tests for the LynxJournal plugin.
  *
  * Prerequisites:
  *   npm run env:start          (first time: pulls Docker images, ~2 min)

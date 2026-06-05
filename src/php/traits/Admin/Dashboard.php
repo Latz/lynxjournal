@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-trait LinkDigest_Admin_Dashboard {
+trait LynxJournal_Admin_Dashboard {
 
     /**
-     * Render the LinkDigest summary dashboard widget.
+     * Render the LynxJournal summary dashboard widget.
      *
      * @since 1.0.0
      * @return void
@@ -16,42 +16,42 @@ trait LinkDigest_Admin_Dashboard {
 
         // Get recent unpublished links
         $recent_unpublished = get_posts(array(
-            'post_type'      => 'linkdigest',
-            'post_status'    => 'linkdigest_pending',
+            'post_type'      => 'lynxjournal',
+            'post_status'    => 'lynxjournal_pending',
             'posts_per_page' => 3,
             'orderby'        => 'date',
             'order'          => 'DESC',
         ));
 
         ?>
-        <div class="linkdigest-widget-stats">
-            <div class="linkdigest-widget-stat-cell">
-                <div class="linkdigest-widget-stat-value linkdigest-widget-stat-value--total"><?php echo esc_html(number_format_i18n($stats['total_links'])); ?></div>
-                <div class="linkdigest-widget-stat-label"><?php esc_html_e('Total', 'linkdigest'); ?></div>
+        <div class="lynxjournal-widget-stats">
+            <div class="lynxjournal-widget-stat-cell">
+                <div class="lynxjournal-widget-stat-value lynxjournal-widget-stat-value--total"><?php echo esc_html(number_format_i18n($stats['total_links'])); ?></div>
+                <div class="lynxjournal-widget-stat-label"><?php esc_html_e('Total', 'lynxjournal'); ?></div>
             </div>
-            <div class="linkdigest-widget-stat-cell">
-                <div class="linkdigest-widget-stat-value linkdigest-widget-stat-value--published"><?php echo esc_html(number_format_i18n($stats['published_links'])); ?></div>
-                <div class="linkdigest-widget-stat-label"><?php esc_html_e('Published', 'linkdigest'); ?></div>
+            <div class="lynxjournal-widget-stat-cell">
+                <div class="lynxjournal-widget-stat-value lynxjournal-widget-stat-value--published"><?php echo esc_html(number_format_i18n($stats['published_links'])); ?></div>
+                <div class="lynxjournal-widget-stat-label"><?php esc_html_e('Published', 'lynxjournal'); ?></div>
             </div>
-            <div class="linkdigest-widget-stat-cell">
-                <div class="linkdigest-widget-stat-value linkdigest-widget-stat-value--unpublished"><?php echo esc_html(number_format_i18n($stats['unpublished_links'])); ?></div>
-                <div class="linkdigest-widget-stat-label"><?php esc_html_e('Unpublished', 'linkdigest'); ?></div>
+            <div class="lynxjournal-widget-stat-cell">
+                <div class="lynxjournal-widget-stat-value lynxjournal-widget-stat-value--unpublished"><?php echo esc_html(number_format_i18n($stats['unpublished_links'])); ?></div>
+                <div class="lynxjournal-widget-stat-label"><?php esc_html_e('Unpublished', 'lynxjournal'); ?></div>
             </div>
         </div>
 
         <?php if (!empty($recent_unpublished)) : ?>
-            <div class="linkdigest-widget-recent">
-                <h4 class="linkdigest-widget-heading"><?php esc_html_e('Recent Unpublished', 'linkdigest'); ?></h4>
-                <ul class="linkdigest-widget-list">
+            <div class="lynxjournal-widget-recent">
+                <h4 class="lynxjournal-widget-heading"><?php esc_html_e('Recent Unpublished', 'lynxjournal'); ?></h4>
+                <ul class="lynxjournal-widget-list">
                     <?php foreach ($recent_unpublished as $link) :
-                        $url = get_post_meta($link->ID, '_linkdigest_url', true);
+                        $url = get_post_meta($link->ID, '_lynxjournal_url', true);
                     ?>
-                        <li class="linkdigest-widget-item">
-                            <div class="linkdigest-widget-link-title">
+                        <li class="lynxjournal-widget-item">
+                            <div class="lynxjournal-widget-link-title">
                                 <?php echo esc_html($link->post_title); ?>
                             </div>
                             <?php if ($url) : ?>
-                                <div class="linkdigest-widget-link-url">
+                                <div class="lynxjournal-widget-link-url">
                                     <?php echo esc_html($url); ?>
                                 </div>
                             <?php endif; ?>
@@ -61,9 +61,9 @@ trait LinkDigest_Admin_Dashboard {
             </div>
         <?php endif; ?>
 
-        <div class="linkdigest-widget-footer">
-            <a href="<?php echo esc_url(admin_url('admin.php?page=linkdigest-dashboard')); ?>" class="button button-primary">
-                <?php esc_html_e('Go to LinkDigest', 'linkdigest'); ?>
+        <div class="lynxjournal-widget-footer">
+            <a href="<?php echo esc_url(admin_url('admin.php?page=lynxjournal-dashboard')); ?>" class="button button-primary">
+                <?php esc_html_e('Go to LynxJournal', 'lynxjournal'); ?>
             </a>
         </div>
         <?php
@@ -77,8 +77,8 @@ trait LinkDigest_Admin_Dashboard {
      */
     public function getUnpublishedLinkIds(): array {
         return get_posts( array(
-            'post_type'      => 'linkdigest',
-            'post_status'    => 'linkdigest_pending',
+            'post_type'      => 'lynxjournal',
+            'post_status'    => 'lynxjournal_pending',
             'posts_per_page' => self::UNPUBLISHED_PAGE_SIZE,
             'fields'         => 'ids',
             'orderby'        => 'date',
@@ -93,11 +93,11 @@ trait LinkDigest_Admin_Dashboard {
      * @return array|null Batch result or null if no request was made.
      */
     public function handleBatchPublishRequest(): ?array {
-        if ( ! isset( $_POST['linkdigest_batch_publish'] ) ) {
+        if ( ! isset( $_POST['lynxjournal_batch_publish'] ) ) {
             return null;
         }
-        $nonce = isset( $_POST['linkdigest_batch_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['linkdigest_batch_nonce'] ) ) : '';
-        if ( ! wp_verify_nonce( $nonce, 'linkdigest_batch_publish' ) ) {
+        $nonce = isset( $_POST['lynxjournal_batch_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_batch_nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_batch_publish' ) ) {
             return null;
         }
         if ( ! current_user_can( 'publish_posts' ) ) {
@@ -114,11 +114,11 @@ trait LinkDigest_Admin_Dashboard {
      * @return array|null Roundup result or null if no request was made.
      */
     public function handleRoundupRequest(): ?array {
-        if ( ! isset( $_POST['linkdigest_create_roundup'] ) ) {
+        if ( ! isset( $_POST['lynxjournal_create_roundup'] ) ) {
             return null;
         }
-        $nonce = isset( $_POST['linkdigest_roundup_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['linkdigest_roundup_nonce'] ) ) : '';
-        if ( ! wp_verify_nonce( $nonce, 'linkdigest_create_roundup' ) ) {
+        $nonce = isset( $_POST['lynxjournal_roundup_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_roundup_nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_create_roundup' ) ) {
             return null;
         }
         if ( ! current_user_can( 'publish_posts' ) ) {
@@ -136,14 +136,14 @@ trait LinkDigest_Admin_Dashboard {
      * @return bool True if link was added successfully.
      */
     public function handleQuickAddRequest(): bool {
-        if ( ! isset( $_POST['linkdigest_quick_add'] ) ) {
+        if ( ! isset( $_POST['lynxjournal_quick_add'] ) ) {
             return false;
         }
-        $nonce    = isset( $_POST['linkdigest_quick_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['linkdigest_quick_nonce'] ) ) : '';
+        $nonce    = isset( $_POST['lynxjournal_quick_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_quick_nonce'] ) ) : '';
         $title    = isset( $_POST['quick_title'] )    ? sanitize_text_field( wp_unslash( $_POST['quick_title'] ) )    : '';
         $url      = isset( $_POST['quick_url'] )      ? esc_url_raw( wp_unslash( $_POST['quick_url'] ) )              : '';
         $category = isset( $_POST['quick_category'] ) ? (int) $_POST['quick_category']                                : 0;
-        if ( ! wp_verify_nonce( $nonce, 'linkdigest_quick_add_link' ) || empty( $title ) ) {
+        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_quick_add_link' ) || empty( $title ) ) {
             return false;
         }
         if ( ! current_user_can( 'edit_posts' ) ) {
@@ -151,15 +151,15 @@ trait LinkDigest_Admin_Dashboard {
         }
         $post_id = wp_insert_post( array(
             'post_title'  => $title,
-            'post_type'   => 'linkdigest',
-            'post_status' => 'linkdigest_pending',
+            'post_type'   => 'lynxjournal',
+            'post_status' => 'lynxjournal_pending',
         ) );
         if ( $post_id ) {
             if ( ! empty( $url ) ) {
-                update_post_meta( $post_id, '_linkdigest_url', $url );
+                update_post_meta( $post_id, '_lynxjournal_url', $url );
             }
             if ( $category > 0 ) {
-                wp_set_post_terms( $post_id, array( $category ), 'linkdigest_category' );
+                wp_set_post_terms( $post_id, array( $category ), 'lynxjournal_category' );
             }
         }
         return (bool) $post_id;
@@ -177,10 +177,10 @@ trait LinkDigest_Admin_Dashboard {
         if ( $batch_result !== null ) {
             if ( $batch_result['success'] > 0 ) {
                 /* translators: 1: number of successfully processed links, 2: optional failure message */
-                $failed_msg = $batch_result['failed'] > 0 ? sprintf( __( '%d failed.', 'linkdigest' ), $batch_result['failed'] ) : '';
+                $failed_msg = $batch_result['failed'] > 0 ? sprintf( __( '%d failed.', 'lynxjournal' ), $batch_result['failed'] ) : '';
                 echo '<div class="notice notice-success"><p>';
                 /* translators: 1: number of successfully processed links, 2: optional failure message */
-                printf( esc_html__( 'Successfully processed %1$d link(s). %2$s', 'linkdigest' ), (int) $batch_result['success'], esc_html( $failed_msg ) );
+                printf( esc_html__( 'Successfully processed %1$d link(s). %2$s', 'lynxjournal' ), (int) $batch_result['success'], esc_html( $failed_msg ) );
                 echo '</p></div>';
             }
             if ( ! empty( $batch_result['messages'] ) ) {
@@ -190,7 +190,7 @@ trait LinkDigest_Admin_Dashboard {
         if ( $roundup_result !== null ) {
             if ( $roundup_result['success'] ) {
                 echo '<div class="notice notice-success"><p>' . esc_html( $roundup_result['message'] );
-                echo ' <a href="' . esc_url( get_permalink( $roundup_result['post_id'] ) ) . '" target="_blank">' . esc_html__( 'View Post', 'linkdigest' ) . ' →</a></p></div>';
+                echo ' <a href="' . esc_url( get_permalink( $roundup_result['post_id'] ) ) . '" target="_blank">' . esc_html__( 'View Post', 'lynxjournal' ) . ' →</a></p></div>';
             } else {
                 echo '<div class="notice notice-error"><p>' . esc_html( $roundup_result['message'] ) . '</p></div>';
             }
@@ -205,7 +205,7 @@ trait LinkDigest_Admin_Dashboard {
      */
     private function unpublishedLinksSubtitle(): array {
         $empty    = [ 'text' => '', 'icon' => '' ];
-        $schedule = get_option( 'linkdigest_schedule', null );
+        $schedule = get_option( 'lynxjournal_schedule', null );
         if ( ! $schedule || ! isset( $schedule['mode'] ) ) {
             return $empty;
         }
@@ -223,7 +223,7 @@ trait LinkDigest_Admin_Dashboard {
      * @return array Array with text and icon keys.
      */
     private function getScheduledModeSubtitle(): array {
-        $next_ts = wp_next_scheduled( 'linkdigest_execute_schedule' );
+        $next_ts = wp_next_scheduled( 'lynxjournal_execute_schedule' );
         if ( ! $next_ts ) {
             return [ 'text' => '', 'icon' => '' ];
         }
@@ -233,7 +233,7 @@ trait LinkDigest_Admin_Dashboard {
         );
         return [
             /* translators: %s: formatted next publish datetime */
-            'text' => sprintf( __( 'next: %s', 'linkdigest' ), $formatted ),
+            'text' => sprintf( __( 'next: %s', 'lynxjournal' ), $formatted ),
             'icon' => 'dashicons-calendar-alt',
         ];
     }
@@ -253,7 +253,7 @@ trait LinkDigest_Admin_Dashboard {
         return [
             'text' => sprintf(
                 /* translators: 1: remaining links needed, 2: threshold */
-                _n( '%1$d out of %2$d left until publish', '%1$d out of %2$d left until publish', $remaining, 'linkdigest' ),
+                _n( '%1$d out of %2$d left until publish', '%1$d out of %2$d left until publish', $remaining, 'lynxjournal' ),
                 $remaining,
                 $threshold
             ),
@@ -274,9 +274,9 @@ trait LinkDigest_Admin_Dashboard {
         <div class="postbox">
             <div class="postbox-header">
                 <h2 class="hndle">
-                    <?php esc_html_e( 'Recent Unpublished Links', 'linkdigest' ); ?>
+                    <?php esc_html_e( 'Recent Unpublished Links', 'lynxjournal' ); ?>
                     <?php if ( $subtitle['text'] ) : ?>
-                        <span class="linkdigest-box-subtitle">
+                        <span class="lynxjournal-box-subtitle">
                             <?php if ( $subtitle['icon'] ) : ?>
                                 <span class="dashicons <?php echo esc_attr( $subtitle['icon'] ); ?>"></span>
                             <?php endif; ?>
@@ -286,14 +286,14 @@ trait LinkDigest_Admin_Dashboard {
                 </h2>
                 <button type="button" class="handlediv" aria-expanded="true"><span class="toggle-indicator" aria-hidden="true"></span></button>
             </div>
-            <div class="inside linkdigest-box-flush">
+            <div class="inside lynxjournal-box-flush">
                 <?php if ( empty( $recent_links ) ) : ?>
-                    <p class="linkdigest-box-empty"><?php esc_html_e( 'No unpublished links at the moment.', 'linkdigest' ); ?></p>
+                    <p class="lynxjournal-box-empty"><?php esc_html_e( 'No unpublished links at the moment.', 'lynxjournal' ); ?></p>
                 <?php else : ?>
                     <?php $this->renderUnpublishedLinksList( $recent_links ); ?>
-                    <div class="linkdigest-box-footer">
+                    <div class="lynxjournal-box-footer">
                         <a href="<?php echo esc_url( admin_url( self::ADMIN_LINKS_PAGE ) ); ?>" class="button">
-                            <?php esc_html_e( 'View All Links', 'linkdigest' ); ?>
+                            <?php esc_html_e( 'View All Links', 'lynxjournal' ); ?>
                         </a>
                     </div>
                 <?php endif; ?>
@@ -311,27 +311,27 @@ trait LinkDigest_Admin_Dashboard {
      */
     private function renderUnpublishedLinksList( array $recent_links ): void {
         ?>
-        <ul class="linkdigest-recent-links">
+        <ul class="lynxjournal-recent-links">
             <?php foreach ( $recent_links as $link ) :
-                $url             = get_post_meta( $link->ID, '_linkdigest_url', true );
-                $categories_list = get_the_terms( $link->ID, 'linkdigest_category' );
+                $url             = get_post_meta( $link->ID, '_lynxjournal_url', true );
+                $categories_list = get_the_terms( $link->ID, 'lynxjournal_category' );
                 $category_name   = $categories_list && ! is_wp_error( $categories_list ) ? $categories_list[0]->name : '';
             ?>
-                <li class="linkdigest-link-item" data-link-id="<?php echo esc_attr( $link->ID ); ?>">
-                    <div class="linkdigest-link-item-header">
-                        <strong class="linkdigest-link-title"><?php echo esc_html( $link->post_title ); ?></strong>
+                <li class="lynxjournal-link-item" data-link-id="<?php echo esc_attr( $link->ID ); ?>">
+                    <div class="lynxjournal-link-item-header">
+                        <strong class="lynxjournal-link-title"><?php echo esc_html( $link->post_title ); ?></strong>
                     </div>
-                    <button class="linkdigest-delete-btn" title="<?php esc_attr_e( 'Delete link', 'linkdigest' ); ?>" data-link-id="<?php echo (int) $link->ID; ?>"><span class="dashicons dashicons-trash"></span></button>
+                    <button class="lynxjournal-delete-btn" title="<?php esc_attr_e( 'Delete link', 'lynxjournal' ); ?>" data-link-id="<?php echo (int) $link->ID; ?>"><span class="dashicons dashicons-trash"></span></button>
                     <?php if ( $url ) : ?>
-                        <a href="<?php echo esc_url( $url ); ?>" class="linkdigest-link-url" target="_blank" rel="noopener">
+                        <a href="<?php echo esc_url( $url ); ?>" class="lynxjournal-link-url" target="_blank" rel="noopener">
                             <?php echo esc_html( wp_parse_url( $url, PHP_URL_HOST ) ); ?> ↗
                         </a>
                     <?php endif; ?>
-                    <div class="linkdigest-link-meta">
+                    <div class="lynxjournal-link-meta">
                         <?php if ( $category_name ) : ?>
                             <span><?php echo esc_html( $category_name ); ?></span>
                         <?php endif; ?>
-                        <span class="linkdigest-date-time" data-timestamp="<?php echo esc_attr( get_the_time( 'U', $link->ID ) ); ?>">
+                        <span class="lynxjournal-date-time" data-timestamp="<?php echo esc_attr( get_the_time( 'U', $link->ID ) ); ?>">
                             <?php echo esc_html( get_the_date( 'M j, Y', $link->ID ) ); ?> <?php echo esc_html( get_the_time( 'g:i a', $link->ID ) ); ?>
                         </span>
                     </div>
@@ -352,17 +352,17 @@ trait LinkDigest_Admin_Dashboard {
         ?>
         <div class="postbox">
             <div class="postbox-header">
-                <h2 class="hndle"><?php esc_html_e( 'Recently Published', 'linkdigest' ); ?></h2>
+                <h2 class="hndle"><?php esc_html_e( 'Recently Published', 'lynxjournal' ); ?></h2>
                 <button type="button" class="handlediv" aria-expanded="true"><span class="toggle-indicator" aria-hidden="true"></span></button>
             </div>
-            <div class="inside linkdigest-box-flush">
+            <div class="inside lynxjournal-box-flush">
                 <?php if ( empty( $recently_published ) ) : ?>
-                    <p class="linkdigest-box-empty"><?php esc_html_e( 'No published links yet.', 'linkdigest' ); ?></p>
+                    <p class="lynxjournal-box-empty"><?php esc_html_e( 'No published links yet.', 'lynxjournal' ); ?></p>
                 <?php else : ?>
                     <?php $this->renderRecentlyPublishedList( $recently_published ); ?>
-                    <div class="linkdigest-box-footer">
+                    <div class="lynxjournal-box-footer">
                         <a href="<?php echo esc_url( admin_url( self::ADMIN_LINKS_PAGE ) ); ?>">
-                            <?php esc_html_e( 'View all links →', 'linkdigest' ); ?>
+                            <?php esc_html_e( 'View all links →', 'lynxjournal' ); ?>
                         </a>
                     </div>
                 <?php endif; ?>
@@ -382,7 +382,7 @@ trait LinkDigest_Admin_Dashboard {
         ?>
         <div class="postbox">
             <div class="postbox-header">
-                <h2 class="hndle"><?php esc_html_e( 'Publish Now', 'linkdigest' ); ?></h2>
+                <h2 class="hndle"><?php esc_html_e( 'Publish Now', 'lynxjournal' ); ?></h2>
                 <button type="button" class="handlediv" aria-expanded="true"><span class="toggle-indicator" aria-hidden="true"></span></button>
             </div>
             <div class="inside">
@@ -391,31 +391,31 @@ trait LinkDigest_Admin_Dashboard {
                     printf(
                         '<p>' . wp_kses(
                             /* translators: %d: number of unpublished links */
-                            _n( 'You have <strong>%d</strong> unpublished link ready to publish.', 'You have <strong>%d</strong> unpublished links ready to publish.', (int) $unpublished_count, 'linkdigest' ),
+                            _n( 'You have <strong>%d</strong> unpublished link ready to publish.', 'You have <strong>%d</strong> unpublished links ready to publish.', (int) $unpublished_count, 'lynxjournal' ),
                             array( 'strong' => array() )
                         ) . '</p>',
                         (int) $unpublished_count
                     );
                     ?>
                     <form method="post" action="">
-                        <?php wp_nonce_field( 'linkdigest_create_roundup', 'linkdigest_roundup_nonce' ); ?>
+                        <?php wp_nonce_field( 'lynxjournal_create_roundup', 'lynxjournal_roundup_nonce' ); ?>
                         <p>
-                            <label for="roundup_title"><strong><?php esc_html_e( 'Post Title', 'linkdigest' ); ?></strong></label><br>
+                            <label for="roundup_title"><strong><?php esc_html_e( 'Post Title', 'lynxjournal' ); ?></strong></label><br>
                             <input type="text" id="roundup_title" name="roundup_title" class="regular-text"
                                 value="<?php
                                 /* translators: %s is the current date (e.g. "April 15, 2026") */
-                                echo esc_attr( sprintf( __( 'Links Roundup - %s', 'linkdigest' ), gmdate( 'F j, Y' ) ) );
+                                echo esc_attr( sprintf( __( 'Links Roundup - %s', 'lynxjournal' ), gmdate( 'F j, Y' ) ) );
                                 ?>">
                         </p>
                         <input type="hidden" name="roundup_as_draft" value="0">
                         <p>
-                            <button type="submit" name="linkdigest_create_roundup" class="button button-primary"><?php esc_html_e( 'Publish', 'linkdigest' ); ?></button>
+                            <button type="submit" name="lynxjournal_create_roundup" class="button button-primary"><?php esc_html_e( 'Publish', 'lynxjournal' ); ?></button>
                             &nbsp;
-                            <button type="submit" name="linkdigest_create_roundup" value="1" onclick="this.form.elements['roundup_as_draft'].value='1';" class="button"><?php esc_html_e( 'Save as Draft', 'linkdigest' ); ?></button>
+                            <button type="submit" name="lynxjournal_create_roundup" value="1" onclick="this.form.elements['roundup_as_draft'].value='1';" class="button"><?php esc_html_e( 'Save as Draft', 'lynxjournal' ); ?></button>
                         </p>
                     </form>
                 <?php else : ?>
-                    <p class="linkdigest-muted"><?php esc_html_e( 'No pending links to publish. Add links first, then come back here to publish a roundup.', 'linkdigest' ); ?></p>
+                    <p class="lynxjournal-muted"><?php esc_html_e( 'No pending links to publish. Add links first, then come back here to publish a roundup.', 'lynxjournal' ); ?></p>
                 <?php endif; ?>
             </div>
         </div>
@@ -431,21 +431,21 @@ trait LinkDigest_Admin_Dashboard {
      */
     private function renderRecentlyPublishedList( array $recently_published ): void {
         ?>
-        <ul class="linkdigest-recent-links">
+        <ul class="lynxjournal-recent-links">
             <?php foreach ( $recently_published as $link ) :
                 $meta = $this->getRecentlyPublishedLinkMetadata( $link );
             ?>
-                <li class="linkdigest-link-item">
-                    <div class="linkdigest-link-item-header">
-                        <strong class="linkdigest-link-title"><?php echo esc_html( $link->post_title ); ?></strong>
+                <li class="lynxjournal-link-item">
+                    <div class="lynxjournal-link-item-header">
+                        <strong class="lynxjournal-link-title"><?php echo esc_html( $link->post_title ); ?></strong>
                         <?php $this->renderPublishedLinkBadge( $meta['is_draft'] ); ?>
                     </div>
                     <?php if ( $meta['published_post_id'] ) : ?>
-                        <a href="<?php echo esc_url( $meta['is_draft'] ? get_edit_post_link( $meta['published_post_id'] ) : get_permalink( $meta['published_post_id'] ) ); ?>" class="linkdigest-link-url" target="_blank" rel="noopener">
-                            <?php echo $meta['is_draft'] ? esc_html__( 'View Draft', 'linkdigest' ) : esc_html__( 'View Post', 'linkdigest' ); ?> ↗
+                        <a href="<?php echo esc_url( $meta['is_draft'] ? get_edit_post_link( $meta['published_post_id'] ) : get_permalink( $meta['published_post_id'] ) ); ?>" class="lynxjournal-link-url" target="_blank" rel="noopener">
+                            <?php echo $meta['is_draft'] ? esc_html__( 'View Draft', 'lynxjournal' ) : esc_html__( 'View Post', 'lynxjournal' ); ?> ↗
                         </a>
                     <?php endif; ?>
-                    <div class="linkdigest-link-meta">
+                    <div class="lynxjournal-link-meta">
                         <?php if ( $meta['category_name'] ) : ?>
                             <span><?php echo esc_html( $meta['category_name'] ); ?></span>
                         <?php endif; ?>
@@ -468,7 +468,7 @@ trait LinkDigest_Admin_Dashboard {
      */
     private function renderPublishedLinkBadge( bool $is_draft ): void {
         if ( $is_draft ) {
-            echo '<span class="linkdigest-status-badge linkdigest-status-draft">' . esc_html__( 'Draft', 'linkdigest' ) . '</span>';
+            echo '<span class="lynxjournal-status-badge lynxjournal-status-draft">' . esc_html__( 'Draft', 'lynxjournal' ) . '</span>';
         }
     }
 
@@ -480,12 +480,12 @@ trait LinkDigest_Admin_Dashboard {
      * @return array Metadata array with published post ID, status, date, category, and draft status.
      */
     private function getRecentlyPublishedLinkMetadata( \WP_Post $link ): array {
-        $publish_status = get_post_meta( $link->ID, '_linkdigest_publish_status', true );
-        $categories_list = get_the_terms( $link->ID, 'linkdigest_category' );
+        $publish_status = get_post_meta( $link->ID, '_lynxjournal_publish_status', true );
+        $categories_list = get_the_terms( $link->ID, 'lynxjournal_category' );
         return [
-            'published_post_id' => get_post_meta( $link->ID, '_linkdigest_published_post_id', true ),
+            'published_post_id' => get_post_meta( $link->ID, '_lynxjournal_published_post_id', true ),
             'publish_status' => $publish_status,
-            'published_date' => get_post_meta( $link->ID, '_linkdigest_published_date', true ),
+            'published_date' => get_post_meta( $link->ID, '_lynxjournal_published_date', true ),
             'category_name' => $categories_list && ! is_wp_error( $categories_list ) ? $categories_list[0]->name : '',
             'is_draft' => $publish_status === 'draft',
         ];
@@ -504,24 +504,24 @@ trait LinkDigest_Admin_Dashboard {
         ?>
         <div class="postbox">
             <div class="postbox-header">
-                <h2 class="hndle"><?php esc_html_e( 'Quick Add', 'linkdigest' ); ?></h2>
+                <h2 class="hndle"><?php esc_html_e( 'Quick Add', 'lynxjournal' ); ?></h2>
                 <button type="button" class="handlediv" aria-expanded="true"><span class="toggle-indicator" aria-hidden="true"></span></button>
             </div>
             <div class="inside">
                 <?php if ( $quick_add_success ) : ?>
-                    <div class="notice notice-success inline"><p><?php esc_html_e( 'Link added successfully!', 'linkdigest' ); ?></p></div>
+                    <div class="notice notice-success inline"><p><?php esc_html_e( 'Link added successfully!', 'lynxjournal' ); ?></p></div>
                 <?php endif; ?>
                 <form method="post" action="">
-                    <?php wp_nonce_field( 'linkdigest_quick_add_link', 'linkdigest_quick_nonce' ); ?>
+                    <?php wp_nonce_field( 'lynxjournal_quick_add_link', 'lynxjournal_quick_nonce' ); ?>
                     <p>
-                        <label for="quick_title"><strong><?php esc_html_e( 'Title', 'linkdigest' ); ?> *</strong></label><br>
+                        <label for="quick_title"><strong><?php esc_html_e( 'Title', 'lynxjournal' ); ?> *</strong></label><br>
                         <input type="text" id="quick_title" name="quick_title" class="regular-text"
-                            placeholder="<?php esc_attr_e( 'Enter link title', 'linkdigest' ); ?>" required>
+                            placeholder="<?php esc_attr_e( 'Enter link title', 'lynxjournal' ); ?>" required>
                     </p>
                     <p>
                         <label for="quick_url">
-                            <strong><?php esc_html_e( 'URL', 'linkdigest' ); ?></strong>
-                            <span class="linkdigest-optional"><?php esc_html_e( '(optional)', 'linkdigest' ); ?></span>
+                            <strong><?php esc_html_e( 'URL', 'lynxjournal' ); ?></strong>
+                            <span class="lynxjournal-optional"><?php esc_html_e( '(optional)', 'lynxjournal' ); ?></span>
                         </label><br>
                         <input type="url" id="quick_url" name="quick_url" class="regular-text"
                             placeholder="https://example.com">
@@ -529,11 +529,11 @@ trait LinkDigest_Admin_Dashboard {
                     <?php if ( $has_categories ) : ?>
                     <p>
                         <label for="quick_category">
-                            <strong><?php esc_html_e( 'Category', 'linkdigest' ); ?></strong>
-                            <span class="linkdigest-optional"><?php esc_html_e( '(optional)', 'linkdigest' ); ?></span>
+                            <strong><?php esc_html_e( 'Category', 'lynxjournal' ); ?></strong>
+                            <span class="lynxjournal-optional"><?php esc_html_e( '(optional)', 'lynxjournal' ); ?></span>
                         </label><br>
                         <select id="quick_category" name="quick_category" class="regular-text">
-                            <option value=""><?php esc_html_e( '— No category —', 'linkdigest' ); ?></option>
+                            <option value=""><?php esc_html_e( '— No category —', 'lynxjournal' ); ?></option>
                             <?php foreach ( $categories as $term ) : ?>
                                 <option value="<?php echo (int) $term->term_id; ?>">
                                     <?php echo esc_html( $term->name ); ?>
@@ -543,7 +543,7 @@ trait LinkDigest_Admin_Dashboard {
                     </p>
                     <?php endif; ?>
                     <p>
-                        <button type="submit" name="linkdigest_quick_add" class="button button-primary"><?php esc_html_e( 'Add Link', 'linkdigest' ); ?></button>
+                        <button type="submit" name="lynxjournal_quick_add" class="button button-primary"><?php esc_html_e( 'Add Link', 'lynxjournal' ); ?></button>
                     </p>
                 </form>
             </div>
@@ -558,33 +558,33 @@ trait LinkDigest_Admin_Dashboard {
      * @return void
      */
     private function renderScheduleStatusBar(): void {
-        $schedule = get_option( 'linkdigest_schedule', null );
+        $schedule = get_option( 'lynxjournal_schedule', null );
         if ( $schedule === null ) {
             return;
         }
-        $next_ts = wp_next_scheduled( 'linkdigest_execute_schedule' );
-        $schedule_url = esc_url( admin_url( 'admin.php?page=linkdigest-schedule' ) );
+        $next_ts = wp_next_scheduled( 'lynxjournal_execute_schedule' );
+        $schedule_url = esc_url( admin_url( 'admin.php?page=lynxjournal-schedule' ) );
         ?>
-        <div class="linkdigest-schedule-status">
+        <div class="lynxjournal-schedule-status">
             <?php if ( $next_ts ) : ?>
-                <span class="dashicons dashicons-calendar-alt linkdigest-schedule-status-icon"></span>
-                <span class="linkdigest-schedule-status-text">
+                <span class="dashicons dashicons-calendar-alt lynxjournal-schedule-status-icon"></span>
+                <span class="lynxjournal-schedule-status-text">
                     <?php
                     printf(
                         /* translators: %s: formatted next run datetime */
-                        esc_html__( 'Next run: %s', 'linkdigest' ),
+                        esc_html__( 'Next run: %s', 'lynxjournal' ),
                         esc_html( wp_date( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), $next_ts ) )
                     );
                     ?>
                 </span>
             <?php else : ?>
-                <span class="dashicons dashicons-info linkdigest-schedule-status-icon linkdigest-schedule-status-icon--muted"></span>
-                <span class="linkdigest-schedule-status-text linkdigest-schedule-status-text--muted">
-                    <?php esc_html_e( 'No automatic schedule active.', 'linkdigest' ); ?>
+                <span class="dashicons dashicons-info lynxjournal-schedule-status-icon lynxjournal-schedule-status-icon--muted"></span>
+                <span class="lynxjournal-schedule-status-text lynxjournal-schedule-status-text--muted">
+                    <?php esc_html_e( 'No automatic schedule active.', 'lynxjournal' ); ?>
                 </span>
             <?php endif; ?>
-            <a href="<?php echo esc_url( $schedule_url ); ?>" class="linkdigest-schedule-status-link">
-                <?php esc_html_e( 'Schedule settings →', 'linkdigest' ); ?>
+            <a href="<?php echo esc_url( $schedule_url ); ?>" class="lynxjournal-schedule-status-link">
+                <?php esc_html_e( 'Schedule settings →', 'lynxjournal' ); ?>
             </a>
         </div>
         <?php
@@ -599,7 +599,7 @@ trait LinkDigest_Admin_Dashboard {
     public function renderDashboardJs(): void {}
 
     /**
-     * Render the main LinkDigest dashboard page.
+     * Render the main LynxJournal dashboard page.
      *
      * @since 1.0.0
      * @return void
@@ -616,81 +616,81 @@ trait LinkDigest_Admin_Dashboard {
         $total_categories  = count( $this->getCachedCategories() );
 
         $recent_links = get_posts( array(
-            'post_type'      => 'linkdigest',
-            'post_status'    => 'linkdigest_pending',
+            'post_type'      => 'lynxjournal',
+            'post_status'    => 'lynxjournal_pending',
             'posts_per_page' => 5,
             'orderby'        => 'date',
             'order'          => 'DESC',
         ) );
 
         $recently_published = get_posts( array(
-            'post_type'      => 'linkdigest',
-            'post_status'    => array( 'linkdigest_published', 'linkdigest_draft' ),
+            'post_type'      => 'lynxjournal',
+            'post_status'    => array( 'lynxjournal_published', 'lynxjournal_draft' ),
             'posts_per_page' => 5,
             'orderby'        => 'modified',
             'order'          => 'DESC',
         ) );
 
         $all_links_url  = esc_url( admin_url( self::ADMIN_LINKS_PAGE ) );
-        $categories_url = esc_url( admin_url( 'edit-tags.php?taxonomy=linkdigest_category&post_type=linkdigest' ) );
+        $categories_url = esc_url( admin_url( 'edit-tags.php?taxonomy=lynxjournal_category&post_type=lynxjournal' ) );
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e( 'Overview', 'linkdigest' ); ?></h1>
+            <h1><?php esc_html_e( 'Overview', 'lynxjournal' ); ?></h1>
 
             <?php $this->renderDashboardNotices( $batch_result, $roundup_result ); ?>
 
             <?php if ( $total_links === 0 ) : ?>
             <!-- Onboarding -->
-            <div class="linkdigest-onboarding">
-                <span class="dashicons dashicons-admin-links linkdigest-onboarding-icon"></span>
-                <p><strong><?php esc_html_e( 'No links yet.', 'linkdigest' ); ?></strong>
-                   <?php esc_html_e( 'Start by adding your first link.', 'linkdigest' ); ?></p>
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=linkdigest-add' ) ); ?>" class="button button-primary">
-                    <?php esc_html_e( 'Add your first link →', 'linkdigest' ); ?>
+            <div class="lynxjournal-onboarding">
+                <span class="dashicons dashicons-admin-links lynxjournal-onboarding-icon"></span>
+                <p><strong><?php esc_html_e( 'No links yet.', 'lynxjournal' ); ?></strong>
+                   <?php esc_html_e( 'Start by adding your first link.', 'lynxjournal' ); ?></p>
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=lynxjournal-add' ) ); ?>" class="button button-primary">
+                    <?php esc_html_e( 'Add your first link →', 'lynxjournal' ); ?>
                 </a>
             </div>
             <?php else : ?>
             <!-- Statistics -->
-            <div class="linkdigest-stats-grid">
-                <a href="<?php echo esc_url( $all_links_url ); ?>" class="linkdigest-stat-card linkdigest-stat-card--link">
-                    <span class="dashicons dashicons-admin-links linkdigest-stat-icon"></span>
-                    <div><span class="linkdigest-stat-value" id="linkdigest-stat-total"><?php echo esc_html( number_format_i18n( $total_links ) ); ?></span>
-                    <span class="linkdigest-stat-label"><?php esc_html_e( 'Total Links', 'linkdigest' ); ?></span></div>
+            <div class="lynxjournal-stats-grid">
+                <a href="<?php echo esc_url( $all_links_url ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
+                    <span class="dashicons dashicons-admin-links lynxjournal-stat-icon"></span>
+                    <div><span class="lynxjournal-stat-value" id="lynxjournal-stat-total"><?php echo esc_html( number_format_i18n( $total_links ) ); ?></span>
+                    <span class="lynxjournal-stat-label"><?php esc_html_e( 'Total Links', 'lynxjournal' ); ?></span></div>
                 </a>
-                <a href="<?php echo esc_url( $categories_url ); ?>" class="linkdigest-stat-card linkdigest-stat-card--link">
-                    <span class="dashicons dashicons-category linkdigest-stat-icon"></span>
-                    <div><span class="linkdigest-stat-value"><?php echo esc_html( number_format_i18n( $total_categories ) ); ?></span>
-                    <span class="linkdigest-stat-label"><?php esc_html_e( 'Categories', 'linkdigest' ); ?></span></div>
+                <a href="<?php echo esc_url( $categories_url ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
+                    <span class="dashicons dashicons-category lynxjournal-stat-icon"></span>
+                    <div><span class="lynxjournal-stat-value"><?php echo esc_html( number_format_i18n( $total_categories ) ); ?></span>
+                    <span class="lynxjournal-stat-label"><?php esc_html_e( 'Categories', 'lynxjournal' ); ?></span></div>
                 </a>
-                <a href="<?php echo esc_url( $all_links_url ); ?>" class="linkdigest-stat-card linkdigest-stat-card--link">
-                    <span class="dashicons dashicons-yes-alt linkdigest-stat-icon"></span>
-                    <div><span class="linkdigest-stat-value"><?php echo esc_html( number_format_i18n( $published_links ) ); ?></span>
-                    <span class="linkdigest-stat-label"><?php esc_html_e( 'Published', 'linkdigest' ); ?></span></div>
+                <a href="<?php echo esc_url( $all_links_url ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
+                    <span class="dashicons dashicons-yes-alt lynxjournal-stat-icon"></span>
+                    <div><span class="lynxjournal-stat-value"><?php echo esc_html( number_format_i18n( $published_links ) ); ?></span>
+                    <span class="lynxjournal-stat-label"><?php esc_html_e( 'Published', 'lynxjournal' ); ?></span></div>
                 </a>
-                <a href="<?php echo esc_url( $all_links_url ); ?>" class="linkdigest-stat-card linkdigest-stat-card--link">
-                    <span class="dashicons dashicons-clock linkdigest-stat-icon"></span>
-                    <div><span class="linkdigest-stat-value" id="linkdigest-stat-unpublished"><?php echo esc_html( number_format_i18n( $unpublished_links ) ); ?></span>
-                    <span class="linkdigest-stat-label"><?php esc_html_e( 'Unpublished', 'linkdigest' ); ?></span></div>
+                <a href="<?php echo esc_url( $all_links_url ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
+                    <span class="dashicons dashicons-clock lynxjournal-stat-icon"></span>
+                    <div><span class="lynxjournal-stat-value" id="lynxjournal-stat-unpublished"><?php echo esc_html( number_format_i18n( $unpublished_links ) ); ?></span>
+                    <span class="lynxjournal-stat-label"><?php esc_html_e( 'Unpublished', 'lynxjournal' ); ?></span></div>
                 </a>
             </div>
             <?php endif; ?>
 
             <!-- Main Content -->
-            <div class="metabox-holder linkdigest-dashboard">
-                <div id="linkdigest-postbox-container-1" class="postbox-container meta-box-sortables">
+            <div class="metabox-holder lynxjournal-dashboard">
+                <div id="lynxjournal-postbox-container-1" class="postbox-container meta-box-sortables">
                     <?php
                     $this->renderUnpublishedLinksBox( $recent_links );
                     $this->renderRecentlyPublishedBox( $recently_published );
                     ?>
-                </div><!-- #linkdigest-postbox-container-1 -->
+                </div><!-- #lynxjournal-postbox-container-1 -->
 
-                <div id="linkdigest-postbox-container-2" class="postbox-container meta-box-sortables">
+                <div id="lynxjournal-postbox-container-2" class="postbox-container meta-box-sortables">
                     <?php
                     $this->renderQuickAddBox( $quick_add_success );
                     $this->renderPublishBox( $unpublished_links );
                     ?>
-                </div><!-- #linkdigest-postbox-container-2 -->
-            </div><!-- .linkdigest-dashboard -->
+                </div><!-- #lynxjournal-postbox-container-2 -->
+            </div><!-- .lynxjournal-dashboard -->
         </div>
 
         <?php $this->renderDashboardJs(); ?>

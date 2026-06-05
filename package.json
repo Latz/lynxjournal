@@ -1,5 +1,5 @@
 {
-  "name": "linkdigest",
+  "name": "lynxjournal",
   "version": "1.0.0",
   "scripts": {
     "build": "wp-scripts build",

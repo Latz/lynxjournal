@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-trait LinkDigest_Scheduler {
+trait LynxJournal_Scheduler {
 
     /**
      * Register scheduler hooks and callbacks.
@@ -17,8 +17,8 @@ trait LinkDigest_Scheduler {
      * @return void
      */
     public function registerSchedulerHooks(): void {
-        add_action('linkdigest_execute_schedule', [$this, 'executeSchedule']);
-        add_action('linkdigest_after_run', [$this, 'maybeSendRunNotification'], 10, 3);
+        add_action('lynxjournal_execute_schedule', [$this, 'executeSchedule']);
+        add_action('lynxjournal_after_run', [$this, 'maybeSendRunNotification'], 10, 3);
     }
 
     /**
@@ -28,10 +28,10 @@ trait LinkDigest_Scheduler {
      * @return void
      */
     public function scheduleNextEvent(): void {
-        wp_clear_scheduled_hook('linkdigest_execute_schedule');
+        wp_clear_scheduled_hook('lynxjournal_execute_schedule');
         $ts = $this->getNextScheduleTimestamp();
         if ($ts !== null) {
-            wp_schedule_single_event($ts, 'linkdigest_execute_schedule');
+            wp_schedule_single_event($ts, 'lynxjournal_execute_schedule');
         }
     }
 
@@ -45,14 +45,14 @@ trait LinkDigest_Scheduler {
      * @return array Result array with published status, post_id, link_count, and reason.
      */
     public function executeSchedule(bool $reschedule = true): array {
-        if (get_transient('linkdigest_run_lock')) {
+        if (get_transient('lynxjournal_run_lock')) {
             return ['published' => false, 'post_id' => null, 'link_count' => 0, 'reason' => 'locked'];
         }
-        set_transient('linkdigest_run_lock', 1, 5 * MINUTE_IN_SECONDS);
+        set_transient('lynxjournal_run_lock', 1, 5 * MINUTE_IN_SECONDS);
         try {
             return $this->doExecuteSchedule($reschedule);
         } finally {
-            delete_transient('linkdigest_run_lock');
+            delete_transient('lynxjournal_run_lock');
         }
     }
 
@@ -64,7 +64,7 @@ trait LinkDigest_Scheduler {
      * @return array Result array with execution details.
      */
     private function doExecuteSchedule(bool $reschedule): array {
-        $config  = get_option('linkdigest_schedule', []);
+        $config  = get_option('lynxjournal_schedule', []);
         $mode    = $config['mode']    ?? 'daily';
         $trigger = $config['trigger'] ?? [];
 
@@ -74,7 +74,7 @@ trait LinkDigest_Scheduler {
 
         // Cap per-run to prevent max_execution_time / OOM on large queues.
         // Remaining links are handled by an immediate reschedule below.
-        $max_per_run = (int) apply_filters('linkdigest_max_per_run', self::MAX_PER_RUN);
+        $max_per_run = (int) apply_filters('lynxjournal_max_per_run', self::MAX_PER_RUN);
         $has_more    = $total_count > $max_per_run;
         if ($has_more) {
             $link_ids = array_slice($link_ids, 0, $max_per_run);
@@ -87,7 +87,7 @@ trait LinkDigest_Scheduler {
             'age'   => $oldest_link_id !== null && $this->isLinkOlderThan($oldest_link_id, (int) ($trigger['days'] ?? 7)),
             default => !empty($link_ids), // daily/weekly/monthly: publish if any links exist
         };
-        $should_publish = (bool) apply_filters('linkdigest_should_publish', $should_publish, $link_ids, $mode, $trigger);
+        $should_publish = (bool) apply_filters('lynxjournal_should_publish', $should_publish, $link_ids, $mode, $trigger);
 
         if ($should_publish && !empty($link_ids)) {
             $result = $this->attemptPublish($link_ids, $config, $mode, $reschedule, $has_more);
@@ -106,10 +106,10 @@ trait LinkDigest_Scheduler {
             'status'     => $result['published'] ? 'success' : 'skipped',
             'reason'     => $result['reason'],
         ];
-        update_option('linkdigest_last_run', $run_record);
-        $history = get_option('linkdigest_run_history', []);
+        update_option('lynxjournal_last_run', $run_record);
+        $history = get_option('lynxjournal_run_history', []);
         array_unshift($history, $run_record);
-        update_option('linkdigest_run_history', array_slice($history, 0, 25));
+        update_option('lynxjournal_run_history', array_slice($history, 0, 25));
 
         return $result;
     }
@@ -127,37 +127,28 @@ trait LinkDigest_Scheduler {
      */
     private function attemptPublish(array $link_ids, array $config, string $mode, bool $reschedule, bool $has_more): array {
         /* translators: %s is the formatted date (e.g. "April 15, 2026") */
-        $title = sprintf(__('Links: %s', 'linkdigest'), wp_date('F j, Y'));
-        $title = (string) apply_filters('linkdigest_roundup_title', $title, $link_ids, $mode);
+        $title = sprintf(__('Links: %s', 'lynxjournal'), wp_date('F j, Y'));
+        $title = (string) apply_filters('lynxjournal_roundup_title', $title, $link_ids, $mode);
 
-        // Use the stored publishAs user; fall back to first administrator.
-        // WP-Cron runs unauthenticated, so we must elevate before calling
-        // createRoundupPost() which guards on current_user_can('publish_posts').
-        $publish_as   = (int) ($config['publishAs'] ?? 0);
-        $prev_user_id = get_current_user_id();
-        if ($publish_as === 0) {
+        // Resolve the author for the roundup post. WP-Cron runs unauthenticated
+        // (user 0), so we pass the stored publishAs user ID directly to
+        // createRoundupPost() as post_author instead of using wp_set_current_user().
+        $publish_as = (int) ($config['publishAs'] ?? 0);
+        if ($publish_as === 0 || !user_can($publish_as, 'publish_posts')) {
             $admin_ids  = get_users(['role' => 'administrator', 'number' => 1, 'fields' => 'ids']);
             $publish_as = !empty($admin_ids) ? (int) $admin_ids[0] : 0;
         }
-        if ($publish_as > 0 && get_current_user_id() !== $publish_as) {
-            wp_set_current_user($publish_as);
-        }
 
-        do_action('linkdigest_before_run', $link_ids, $mode);
+        do_action('lynxjournal_before_run', $link_ids, $mode);
         $as_draft = ($config['post_status'] ?? 'publish') === 'draft';
-        $roundup  = $this->createRoundupPost($link_ids, $title, $as_draft, $mode);
-
-        // Restore previous user context.
-        if (get_current_user_id() !== $prev_user_id) {
-            wp_set_current_user($prev_user_id);
-        }
+        $roundup  = $this->createRoundupPost($link_ids, $title, $as_draft, $mode, $publish_as);
 
         $post_id = ($roundup['post_id'] ?? 0) ?: null;
-        do_action('linkdigest_after_run', $post_id, $link_ids, $mode);
+        do_action('lynxjournal_after_run', $post_id, $link_ids, $mode);
 
         $scheduled_catchup = false;
         if ($has_more) {
-            wp_schedule_single_event(time() + self::RESCHEDULE_DELAY, 'linkdigest_execute_schedule');
+            wp_schedule_single_event(time() + self::RESCHEDULE_DELAY, 'lynxjournal_execute_schedule');
             $scheduled_catchup = true;
         }
         if (!$scheduled_catchup && $reschedule) {
@@ -181,7 +172,7 @@ trait LinkDigest_Scheduler {
      * @return int|null Next schedule timestamp or null if manual mode.
      */
     public function getNextScheduleTimestamp(): ?int {
-        $config     = get_option('linkdigest_schedule', []);
+        $config     = get_option('lynxjournal_schedule', []);
         $mode       = $config['mode']       ?? 'daily';
         $times      = $config['times']      ?? [];
         if (empty($times)) {
@@ -297,14 +288,14 @@ trait LinkDigest_Scheduler {
      * @return array Preview data with would_publish status and link information.
      */
     public function previewSchedule(): array {
-        $config  = get_option('linkdigest_schedule', []);
+        $config  = get_option('lynxjournal_schedule', []);
         $mode    = $config['mode']    ?? 'daily';
         $trigger = $config['trigger'] ?? [];
 
         $link_ids       = $this->getUnpublishedLinkIds();
         $total_count    = count($link_ids);
         $oldest_link_id = $link_ids[0] ?? null;
-        $max_per_run    = (int) apply_filters('linkdigest_max_per_run', self::MAX_PER_RUN);
+        $max_per_run    = (int) apply_filters('lynxjournal_max_per_run', self::MAX_PER_RUN);
         $batch_ids      = array_slice($link_ids, 0, $max_per_run);
 
         $would_publish = match ($mode) {
@@ -317,10 +308,10 @@ trait LinkDigest_Scheduler {
         $by_category = [];
         if ($would_publish && !empty($batch_ids)) {
             foreach ($batch_ids as $id) {
-                $terms    = wp_get_object_terms($id, 'linkdigest_category', ['fields' => 'names']);
+                $terms    = wp_get_object_terms($id, 'lynxjournal_category', ['fields' => 'names']);
                 $cat_name = (!is_wp_error($terms) && !empty($terms))
                     ? $terms[0]
-                    : __('Uncategorized', 'linkdigest');
+                    : __('Uncategorized', 'lynxjournal');
                 $by_category[$cat_name] = ($by_category[$cat_name] ?? 0) + 1;
             }
             arsort($by_category);
@@ -349,25 +340,25 @@ trait LinkDigest_Scheduler {
      * @return void
      */
     public function maybeSendRunNotification(int|null $post_id, array $link_ids, string $mode): void {
-        $config = get_option('linkdigest_schedule', []);
+        $config = get_option('lynxjournal_schedule', []);
         $notify = $config['notify'] ?? [];
         if (empty($notify['enabled'])) {
             return;
         }
         $to = !empty($notify['email']) ? $notify['email'] : get_option('admin_email');
         /* translators: %d: number of links published */
-        $subject = sprintf(__('[LinkDigest] Roundup published: %d links', 'linkdigest'), count($link_ids));
+        $subject = sprintf(__('[LynxJournal] Roundup published: %d links', 'lynxjournal'), count($link_ids));
         if ($post_id) {
             $message = sprintf(
                 /* translators: 1: link count, 2: post URL */
-                __("A new roundup was published.\n\nLinks: %1\$d\nView: %2\$s", 'linkdigest'),
+                __("A new roundup was published.\n\nLinks: %1\$d\nView: %2\$s", 'lynxjournal'),
                 count($link_ids),
                 get_permalink($post_id)
             );
         } else {
             $message = sprintf(
                 /* translators: %s: schedule mode */
-                __('Schedule ran in %s mode but no post was published.', 'linkdigest'),
+                __('Schedule ran in %s mode but no post was published.', 'lynxjournal'),
                 $mode
             );
         }
