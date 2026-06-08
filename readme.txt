@@ -148,7 +148,7 @@ Viewing the Schedule page, saving the schedule, and triggering Run Now all requi
 == Source Code & Build Tools ==
 The production JavaScript assets in `schedule/schedule.js` are compiled from React components. 
 The unminified source code, build scripts, and configuration files are publicly maintained at:
-https://github.com/Latz/lynxjournal/tree/master/
+https://github.com/Latz/lynxjournal
 
 == Changelog ==
 
