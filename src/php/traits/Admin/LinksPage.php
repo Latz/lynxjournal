@@ -264,25 +264,36 @@ trait LynxJournal_Admin_LinksPage {
         $action  = sanitize_key(wp_unslash($_GET['action']));
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $link_id = absint($_GET['link_id']);
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $nonce   = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
 
-        if ($action === 'publish_link' && wp_verify_nonce($nonce, 'publish_link_' . $link_id)) {
+        $nonce_actions = [
+            'publish_link'   => 'publish_link_' . $link_id,
+            'draft_link'     => 'draft_link_' . $link_id,
+            'unpublish_link' => 'unpublish_link_' . $link_id,
+            'delete'         => 'delete_link_' . $link_id,
+        ];
+
+        if (!array_key_exists($action, $nonce_actions)
+            || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), $nonce_actions[$action])
+        ) {
+            return [$message, $error];
+        }
+
+        if ($action === 'publish_link') {
             if (!current_user_can('publish_post', $link_id)) {
                 return [$message, $error];
             }
             [$message, $error] = $this->executePublishAction($link_id, false);
-        } elseif ($action === 'draft_link' && wp_verify_nonce($nonce, 'draft_link_' . $link_id)) {
+        } elseif ($action === 'draft_link') {
             if (!current_user_can('edit_post', $link_id)) {
                 return [$message, $error];
             }
             [$message, $error] = $this->executePublishAction($link_id, true);
-        } elseif ($action === 'unpublish_link' && wp_verify_nonce($nonce, 'unpublish_link_' . $link_id)) {
+        } elseif ($action === 'unpublish_link') {
             if (!current_user_can('edit_post', $link_id)) {
                 return [$message, $error];
             }
             [$message, $error] = $this->executeUnpublishAction($link_id);
-        } elseif ($action === 'delete' && wp_verify_nonce($nonce, 'delete_link_' . $link_id)) {
+        } elseif ($action === 'delete') {
             if (!current_user_can('delete_post', $link_id)) {
                 return [$message, $error];
             }
