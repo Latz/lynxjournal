@@ -13,11 +13,11 @@ trait LynxJournal_Publishing {
      */
     public function validateLinkForPublish(int $link_id): ?array {
         if (!current_user_can('publish_posts')) {
-            return array('success' => false, 'post_id' => 0, 'message' => __('You do not have permission to publish posts.', 'lynxjournal'), 'error_code' => 'no_permission');
+            return array('success' => false, 'post_id' => 0, 'message' => __('You do not have permission to publish posts.', 'lynx-journal'), 'error_code' => 'no_permission');
         }
         $link = get_post($link_id);
-        if (!$link || $link->post_type !== 'lynxjournal') {
-            return array('success' => false, 'post_id' => 0, 'message' => __('Invalid link ID.', 'lynxjournal'), 'error_code' => 'invalid_link');
+        if (!$link || $link->post_type !== 'lynx-journal') {
+            return array('success' => false, 'post_id' => 0, 'message' => __('Invalid link ID.', 'lynx-journal'), 'error_code' => 'invalid_link');
         }
         return $this->validateLinkState($link, $link_id);
     }
@@ -32,12 +32,12 @@ trait LynxJournal_Publishing {
      */
     private function validateLinkState(\WP_Post $link, int $link_id): ?array {
         if (empty($link->post_title)) {
-            return array('success' => false, 'post_id' => 0, 'message' => __('Link must have a title to publish.', 'lynxjournal'), 'error_code' => 'missing_title');
+            return array('success' => false, 'post_id' => 0, 'message' => __('Link must have a title to publish.', 'lynx-journal'), 'error_code' => 'missing_title');
         }
         $published_post_id = get_post_meta($link_id, '_lynxjournal_published_post_id', true);
         // get_post() check: re-publish is allowed when the blog post was manually deleted.
         if ($published_post_id && get_post($published_post_id)) {
-            return array('success' => false, 'post_id' => 0, 'message' => __('This link has already been published.', 'lynxjournal'), 'error_code' => 'already_published');
+            return array('success' => false, 'post_id' => 0, 'message' => __('This link has already been published.', 'lynx-journal'), 'error_code' => 'already_published');
         }
         return null;
     }
@@ -139,7 +139,7 @@ trait LynxJournal_Publishing {
             return array(
                 'success' => false,
                 'post_id' => 0,
-                'message' => __('Failed to create blog post.', 'lynxjournal'),
+                'message' => __('Failed to create blog post.', 'lynx-journal'),
                 'error_code' => 'insert_failed'
             );
         }
@@ -157,8 +157,8 @@ trait LynxJournal_Publishing {
             'success' => true,
             'post_id' => $post_id,
             'message' => $as_draft
-                ? __('Link saved as draft successfully.', 'lynxjournal')
-                : __('Link published successfully.', 'lynxjournal')
+                ? __('Link saved as draft successfully.', 'lynx-journal')
+                : __('Link published successfully.', 'lynx-journal')
         );
     }
 }

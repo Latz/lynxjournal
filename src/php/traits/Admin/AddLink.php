@@ -19,7 +19,7 @@ trait LynxJournal_Admin_AddLink {
         $all_categories = $this->getCachedCategories();
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('Add New Link', 'lynxjournal'); ?></h1>
+            <h1><?php esc_html_e('Add New Link', 'lynx-journal'); ?></h1>
 
             <?php if ($message) : ?>
                 <div class="notice notice-success is-dismissible">
@@ -39,7 +39,7 @@ trait LynxJournal_Admin_AddLink {
                 <table class="form-table">
                     <tr>
                         <th scope="row">
-                            <label for="lynxjournal_title"><?php esc_html_e('Title', 'lynxjournal'); ?> <span class="required">*</span></label>
+                            <label for="lynxjournal_title"><?php esc_html_e('Title', 'lynx-journal'); ?> <span class="required">*</span></label>
                         </th>
                         <td>
                             <input type="text" name="lynxjournal_title" id="lynxjournal_title" class="regular-text" value="<?php echo esc_attr($current_title); ?>" required>
@@ -48,7 +48,7 @@ trait LynxJournal_Admin_AddLink {
 
                     <tr>
                         <th scope="row">
-                            <label for="lynxjournal_url"><?php esc_html_e('URL', 'lynxjournal'); ?></label>
+                            <label for="lynxjournal_url"><?php esc_html_e('URL', 'lynx-journal'); ?></label>
                         </th>
                         <td>
                             <input type="url" name="lynxjournal_url" id="lynxjournal_url" class="regular-text" value="<?php echo esc_attr($current_url); ?>" placeholder="https://example.com">
@@ -57,7 +57,7 @@ trait LynxJournal_Admin_AddLink {
 
                     <tr>
                         <th scope="row">
-                            <label for="lynxjournal_content"><?php esc_html_e('Text/Description', 'lynxjournal'); ?></label>
+                            <label for="lynxjournal_content"><?php esc_html_e('Text/Description', 'lynx-journal'); ?></label>
                         </th>
                         <td>
                             <?php
@@ -72,11 +72,11 @@ trait LynxJournal_Admin_AddLink {
 
                     <tr>
                         <th scope="row">
-                            <span><?php esc_html_e('Categories', 'lynxjournal'); ?></span>
+                            <span><?php esc_html_e('Categories', 'lynx-journal'); ?></span>
                         </th>
                         <td>
                             <fieldset>
-                                <legend class="screen-reader-text"><?php esc_html_e('Categories', 'lynxjournal'); ?></legend>
+                                <legend class="screen-reader-text"><?php esc_html_e('Categories', 'lynx-journal'); ?></legend>
                                 <?php if (!empty($all_categories)) : ?>
                                     <div class="lynxjournal-cat-scroll-list">
                                         <?php foreach ($all_categories as $category) : ?>
@@ -87,7 +87,7 @@ trait LynxJournal_Admin_AddLink {
                                         <?php endforeach; ?>
                                     </div>
                                 <?php else : ?>
-                                    <p><?php esc_html_e('No categories available. Create categories first in LynxJournal > Categories.', 'lynxjournal'); ?></p>
+                                    <p><?php esc_html_e('No categories available. Create categories first in LynxJournal > Categories.', 'lynx-journal'); ?></p>
                                 <?php endif; ?>
                             </fieldset>
                         </td>
@@ -95,18 +95,18 @@ trait LynxJournal_Admin_AddLink {
 
                     <tr>
                         <th scope="row">
-                            <label for="lynxjournal_tags"><?php esc_html_e('Tags', 'lynxjournal'); ?></label>
+                            <label for="lynxjournal_tags"><?php esc_html_e('Tags', 'lynx-journal'); ?></label>
                         </th>
                         <td>
-                            <input type="text" name="lynxjournal_tags" id="lynxjournal_tags" class="regular-text" value="<?php echo esc_attr($current_tags); ?>" placeholder="<?php esc_attr_e('Separate tags with commas', 'lynxjournal'); ?>">
-                            <p class="description"><?php esc_html_e('Separate multiple tags with commas (e.g., tag1, tag2, tag3)', 'lynxjournal'); ?></p>
+                            <input type="text" name="lynxjournal_tags" id="lynxjournal_tags" class="regular-text" value="<?php echo esc_attr($current_tags); ?>" placeholder="<?php esc_attr_e('Separate tags with commas', 'lynx-journal'); ?>">
+                            <p class="description"><?php esc_html_e('Separate multiple tags with commas (e.g., tag1, tag2, tag3)', 'lynx-journal'); ?></p>
                         </td>
                     </tr>
                 </table>
 
                 <p class="submit">
-                    <input type="submit" name="lynxjournal_add_submit" id="submit" class="button button-primary" value="<?php esc_attr_e('Add Link', 'lynxjournal'); ?>">
-                    <a href="<?php echo esc_url(admin_url(self::ADMIN_LINKS_PAGE)); ?>" class="button"><?php esc_html_e('Cancel', 'lynxjournal'); ?></a>
+                    <input type="submit" name="lynxjournal_add_submit" id="submit" class="button button-primary" value="<?php esc_attr_e('Add Link', 'lynx-journal'); ?>">
+                    <a href="<?php echo esc_url(admin_url(self::ADMIN_LINKS_PAGE)); ?>" class="button"><?php esc_html_e('Cancel', 'lynx-journal'); ?></a>
                 </p>
             </form>
         </div>
@@ -120,11 +120,11 @@ trait LynxJournal_Admin_AddLink {
 
         $nonce = isset($_POST['lynxjournal_add_nonce']) ? sanitize_text_field(wp_unslash($_POST['lynxjournal_add_nonce'])) : '';
         if (!wp_verify_nonce($nonce, 'lynxjournal_add_link')) {
-            return ['', __('Security check failed.', 'lynxjournal')];
+            return ['', __('Security check failed.', 'lynx-journal')];
         }
 
         if (!current_user_can('edit_posts')) {
-            return ['', __('Insufficient permissions.', 'lynxjournal')];
+            return ['', __('Insufficient permissions.', 'lynx-journal')];
         }
 
         $input = $this->validateAddLinkInput();
@@ -143,7 +143,7 @@ trait LynxJournal_Admin_AddLink {
         $categories = isset($_POST['lynxjournal_categories']) ? array_map('intval', $_POST['lynxjournal_categories']) : array();
         $tags       = isset($_POST['lynxjournal_tags'])    ? sanitize_text_field(wp_unslash($_POST['lynxjournal_tags']))    : '';
 
-        $error = empty($title) ? __('Title is required.', 'lynxjournal') : '';
+        $error = empty($title) ? __('Title is required.', 'lynx-journal') : '';
         return compact('title', 'url', 'content', 'categories', 'tags', 'error');
     }
 
@@ -151,12 +151,12 @@ trait LynxJournal_Admin_AddLink {
         $post_id = wp_insert_post(array(
             'post_title'   => $input['title'],
             'post_content' => $input['content'],
-            'post_type'    => 'lynxjournal',
+            'post_type'    => 'lynx-journal',
             'post_status'  => 'lynxjournal_pending',
         ));
 
         if (!$post_id) {
-            return ['', __('Failed to add link.', 'lynxjournal')];
+            return ['', __('Failed to add link.', 'lynx-journal')];
         }
 
         if (!empty($input['url'])) {
@@ -171,6 +171,6 @@ trait LynxJournal_Admin_AddLink {
 
         delete_transient('lynxjournal_publish_stats');
         $_POST = array();
-        return [__('Link added successfully!', 'lynxjournal'), ''];
+        return [__('Link added successfully!', 'lynx-journal'), ''];
     }
 }

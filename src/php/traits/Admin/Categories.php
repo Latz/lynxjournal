@@ -25,7 +25,7 @@ trait LynxJournal_Admin_Categories {
 
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e( 'Link Categories', 'lynxjournal' ); ?></h1>
+            <h1><?php esc_html_e( 'Link Categories', 'lynx-journal' ); ?></h1>
 
             <?php if ( $notice ) : ?>
                 <div class="notice notice-<?php echo esc_attr( $notice['type'] === 'success' ? 'success' : 'error' ); ?> is-dismissible">
@@ -55,7 +55,7 @@ trait LynxJournal_Admin_Categories {
         if ( $error ) {
             return array( 'type' => 'error', 'msg' => $error );
         }
-        return array( 'type' => 'success', 'msg' => __( 'Category added.', 'lynxjournal' ) );
+        return array( 'type' => 'success', 'msg' => __( 'Category added.', 'lynx-journal' ) );
     }
 
     private function buildDeleteCategoryNotice(): array {
@@ -63,22 +63,22 @@ trait LynxJournal_Admin_Categories {
         return array(
             'type' => $deleted ? 'success' : 'error',
             'msg'  => $deleted
-                ? __( 'Category deleted.', 'lynxjournal' )
-                : __( 'Could not delete category.', 'lynxjournal' ),
+                ? __( 'Category deleted.', 'lynx-journal' )
+                : __( 'Could not delete category.', 'lynx-journal' ),
         );
     }
 
     private function handleAddCategory(): ?string {
         $nonce = isset( $_POST['lynxjournal_cat_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_cat_nonce'] ) ) : '';
         if ( ! wp_verify_nonce( $nonce, 'lynxjournal_add_category' ) ) {
-            return __( 'Security check failed.', 'lynxjournal' );
+            return __( 'Security check failed.', 'lynx-journal' );
         }
         if ( ! current_user_can( 'edit_posts' ) ) {
-            return __( 'Insufficient permissions.', 'lynxjournal' );
+            return __( 'Insufficient permissions.', 'lynx-journal' );
         }
         $name = sanitize_text_field( wp_unslash( $_POST['cat_name'] ?? '' ) );
         if ( empty( $name ) ) {
-            return __( 'Category name is required.', 'lynxjournal' );
+            return __( 'Category name is required.', 'lynx-journal' );
         }
         $desc   = sanitize_textarea_field( wp_unslash( $_POST['cat_description'] ?? '' ) );
         $result = wp_insert_term( $name, 'lynxjournal_category', array( 'description' => $desc ) );
@@ -140,18 +140,18 @@ trait LynxJournal_Admin_Categories {
 
     private function renderCategoriesTable( array $terms, array $counts ): void {
         if ( empty( $terms ) ) {
-            echo '<p>' . esc_html__( 'No categories yet. Use the form to add your first category.', 'lynxjournal' ) . '</p>';
+            echo '<p>' . esc_html__( 'No categories yet. Use the form to add your first category.', 'lynx-journal' ) . '</p>';
             return;
         }
         ?>
         <table class="wp-list-table widefat striped lynxjournal-cat-table">
             <thead>
                 <tr>
-                    <th><?php esc_html_e( 'Name', 'lynxjournal' ); ?></th>
-                    <th><?php esc_html_e( 'Description', 'lynxjournal' ); ?></th>
-                    <th><?php esc_html_e( 'Slug', 'lynxjournal' ); ?></th>
-                    <th class="lynxjournal-cat-count-col"><?php esc_html_e( 'Links', 'lynxjournal' ); ?></th>
-                    <th><?php esc_html_e( 'Actions', 'lynxjournal' ); ?></th>
+                    <th><?php esc_html_e( 'Name', 'lynx-journal' ); ?></th>
+                    <th><?php esc_html_e( 'Description', 'lynx-journal' ); ?></th>
+                    <th><?php esc_html_e( 'Slug', 'lynx-journal' ); ?></th>
+                    <th class="lynxjournal-cat-count-col"><?php esc_html_e( 'Links', 'lynx-journal' ); ?></th>
+                    <th><?php esc_html_e( 'Actions', 'lynx-journal' ); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -169,7 +169,7 @@ trait LynxJournal_Admin_Categories {
                     <td class="lynxjournal-cat-cell-slug"><code><?php echo esc_html( $term->slug ); ?></code></td>
                     <td class="lynxjournal-cat-count-col"><?php echo (int) $count; ?></td>
                     <td class="lynxjournal-cat-actions">
-                        <button type="button" class="button-link lynxjournal-cat-edit-btn"><?php esc_html_e( 'Edit', 'lynxjournal' ); ?></button>
+                        <button type="button" class="button-link lynxjournal-cat-edit-btn"><?php esc_html_e( 'Edit', 'lynx-journal' ); ?></button>
                         &nbsp;|&nbsp;
                         <form method="post" action="" class="lynxjournal-cat-delete-form"
                               data-name="<?php echo esc_attr( $term->name ); ?>"
@@ -177,7 +177,7 @@ trait LynxJournal_Admin_Categories {
                             <?php wp_nonce_field( 'lynxjournal_delete_category', 'lynxjournal_cat_nonce' ); ?>
                             <input type="hidden" name="cat_term_id" value="<?php echo (int) $term->term_id; ?>">
                             <button type="submit" name="lynxjournal_delete_category" class="button-link lynxjournal-cat-delete-btn">
-                                <?php esc_html_e( 'Delete', 'lynxjournal' ); ?>
+                                <?php esc_html_e( 'Delete', 'lynx-journal' ); ?>
                             </button>
                         </form>
                     </td>
@@ -192,25 +192,25 @@ trait LynxJournal_Admin_Categories {
         ?>
         <div class="postbox">
             <div class="postbox-header">
-                <h2 class="hndle"><?php esc_html_e( 'Add New Category', 'lynxjournal' ); ?></h2>
+                <h2 class="hndle"><?php esc_html_e( 'Add New Category', 'lynx-journal' ); ?></h2>
             </div>
             <div class="inside">
                 <form method="post" action="">
                     <?php wp_nonce_field( 'lynxjournal_add_category', 'lynxjournal_cat_nonce' ); ?>
                     <p>
-                        <label for="cat_name"><strong><?php esc_html_e( 'Name', 'lynxjournal' ); ?> *</strong></label><br>
+                        <label for="cat_name"><strong><?php esc_html_e( 'Name', 'lynx-journal' ); ?> *</strong></label><br>
                         <input type="text" id="cat_name" name="cat_name" class="regular-text" required>
                     </p>
                     <p>
                         <label for="cat_description">
-                            <strong><?php esc_html_e( 'Description', 'lynxjournal' ); ?></strong>
-                            <span class="lynxjournal-optional"><?php esc_html_e( '(optional)', 'lynxjournal' ); ?></span>
+                            <strong><?php esc_html_e( 'Description', 'lynx-journal' ); ?></strong>
+                            <span class="lynxjournal-optional"><?php esc_html_e( '(optional)', 'lynx-journal' ); ?></span>
                         </label><br>
                         <textarea id="cat_description" name="cat_description" class="regular-text" rows="3"></textarea>
                     </p>
                     <p>
                         <button type="submit" name="lynxjournal_add_category" class="button button-primary">
-                            <?php esc_html_e( 'Add Category', 'lynxjournal' ); ?>
+                            <?php esc_html_e( 'Add Category', 'lynx-journal' ); ?>
                         </button>
                     </p>
                 </form>

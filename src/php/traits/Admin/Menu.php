@@ -12,8 +12,8 @@ trait LynxJournal_Admin_Menu {
      */
     public function adminMenu(): void {
         add_menu_page(
-            __('LynxJournal', 'lynxjournal'),
-            __('LynxJournal', 'lynxjournal'),
+            __('LynxJournal', 'lynx-journal'),
+            __('LynxJournal', 'lynx-journal'),
             'read',
             'lynxjournal-dashboard',
             [$this, 'dashboardPage'],
@@ -21,14 +21,14 @@ trait LynxJournal_Admin_Menu {
             null
         );
 
-        $this->addSubmenu(__('Dashboard',        'lynxjournal'), __('Dashboard',        'lynxjournal'), 'read',              'lynxjournal-dashboard',                                    'dashboardPage');
-        $this->addSubmenu(__('Show Links',       'lynxjournal'), __('All Links',        'lynxjournal'), 'read',              'lynxjournal-admin',                                        'showLinksPage');
-        $this->addSubmenu(__('Add Link',         'lynxjournal'), __('Add Link',         'lynxjournal'), 'read',              'lynxjournal-add',                                          'addLinkPage');
-        $this->addSubmenu(__('Categories',       'lynxjournal'), __('Categories',       'lynxjournal'), 'edit_posts', 'lynxjournal-categories',                                   'categoriesPage');
-        $this->addSubmenu(__('Tags',             'lynxjournal'), __('Tags',             'lynxjournal'), 'edit_posts', 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynxjournal');
-        $this->addSubmenu(__('Chrome Extension', 'lynxjournal'), __('Chrome Extension', 'lynxjournal'), 'edit_posts', 'lynxjournal-settings',                                     'settingsPage');
-        $this->addSubmenu(__('Settings',         'lynxjournal'), __('Settings',         'lynxjournal'), 'edit_posts', 'lynxjournal-setting-x',                                    'settingXPage');
-        $this->addSubmenu(__('Schedule',         'lynxjournal'), __('Schedule',         'lynxjournal'), 'edit_posts', 'lynxjournal-schedule',                                     'schedulePage');
+        $this->addSubmenu(__('Dashboard',        'lynx-journal'), __('Dashboard',        'lynx-journal'), 'read',              'lynxjournal-dashboard',                                    'dashboardPage');
+        $this->addSubmenu(__('Show Links',       'lynx-journal'), __('All Links',        'lynx-journal'), 'read',              'lynxjournal-admin',                                        'showLinksPage');
+        $this->addSubmenu(__('Add Link',         'lynx-journal'), __('Add Link',         'lynx-journal'), 'read',              'lynxjournal-add',                                          'addLinkPage');
+        $this->addSubmenu(__('Categories',       'lynx-journal'), __('Categories',       'lynx-journal'), 'edit_posts', 'lynxjournal-categories',                                   'categoriesPage');
+        $this->addSubmenu(__('Tags',             'lynx-journal'), __('Tags',             'lynx-journal'), 'edit_posts', 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynxjournal');
+        $this->addSubmenu(__('Chrome Extension', 'lynx-journal'), __('Chrome Extension', 'lynx-journal'), 'edit_posts', 'lynxjournal-settings',                                     'settingsPage');
+        $this->addSubmenu(__('Settings',         'lynx-journal'), __('Settings',         'lynx-journal'), 'edit_posts', 'lynxjournal-setting-x',                                    'settingXPage');
+        $this->addSubmenu(__('Schedule',         'lynx-journal'), __('Schedule',         'lynx-journal'), 'edit_posts', 'lynxjournal-schedule',                                     'schedulePage');
     }
 
     /**
@@ -93,23 +93,23 @@ trait LynxJournal_Admin_Menu {
         if (isset($_POST['lynxjournal_generate_api_key']) && wp_verify_nonce($nonce, 'lynxjournal_settings') && current_user_can('edit_posts')) {
             $api_key = wp_generate_password(32, false);
             update_option('lynxjournal_api_key', $api_key);
-            echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('New API key generated successfully!', 'lynxjournal') . '</p></div>';
+            echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('New API key generated successfully!', 'lynx-journal') . '</p></div>';
         }
 
         $api_key     = get_option('lynxjournal_api_key');
         $endpoint    = rest_url(LYNXJOURNAL_REST_NAMESPACE);
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('LynxJournal Chrome Extension', 'lynxjournal'); ?></h1>
+            <h1><?php esc_html_e('LynxJournal Chrome Extension', 'lynx-journal'); ?></h1>
 
             <div class="card lynxjournal-settings-card">
-                <h2><?php esc_html_e('Chrome Extension Access Data', 'lynxjournal'); ?></h2>
-                <p><?php esc_html_e('Use these credentials to connect the LynxJournal Chrome extension to your WordPress site.', 'lynxjournal'); ?></p>
+                <h2><?php esc_html_e('Chrome Extension Access Data', 'lynx-journal'); ?></h2>
+                <p><?php esc_html_e('Use these credentials to connect the LynxJournal Chrome extension to your WordPress site.', 'lynx-journal'); ?></p>
 
                 <div class="lynxjournal-settings-field">
                     <label class="lynxjournal-settings-label" for="lynxjournal-api-endpoint">
-                        <?php esc_html_e('API Endpoint', 'lynxjournal'); ?>
-                        <span class="lynxjournal-settings-note">(<?php esc_html_e('read-only', 'lynxjournal'); ?>)</span>
+                        <?php esc_html_e('API Endpoint', 'lynx-journal'); ?>
+                        <span class="lynxjournal-settings-note">(<?php esc_html_e('read-only', 'lynx-journal'); ?>)</span>
                     </label>
                     <div class="lynxjournal-row">
                         <input
@@ -124,9 +124,9 @@ trait LynxJournal_Admin_Menu {
                         </button>
                     </div>
                     <p class="description">
-                        <?php esc_html_e('Use this URL in the Chrome extension settings.', 'lynxjournal'); ?>
+                        <?php esc_html_e('Use this URL in the Chrome extension settings.', 'lynx-journal'); ?>
                         <a href="<?php echo esc_url($endpoint); ?>" target="_blank" class="lynxjournal-rest-link">
-                            <?php esc_html_e('View REST API', 'lynxjournal'); ?> ↗
+                            <?php esc_html_e('View REST API', 'lynx-journal'); ?> ↗
                         </a>
                     </p>
                 </div>
@@ -134,7 +134,7 @@ trait LynxJournal_Admin_Menu {
                 <?php if ($api_key) : ?>
                     <div class="lynxjournal-settings-field">
                         <label for="lynxjournal-api-key" class="lynxjournal-settings-label">
-                            <?php esc_html_e('API Key:', 'lynxjournal'); ?>
+                            <?php esc_html_e('API Key:', 'lynx-journal'); ?>
                         </label>
                         <div class="lynxjournal-row">
                             <input
@@ -144,7 +144,7 @@ trait LynxJournal_Admin_Menu {
                                 readonly
                                 class="large-text code"
                             >
-                            <button type="button" class="button lynxjournal-toggle-key" title="<?php esc_attr_e('Show / hide API key', 'lynxjournal'); ?>">
+                            <button type="button" class="button lynxjournal-toggle-key" title="<?php esc_attr_e('Show / hide API key', 'lynx-journal'); ?>">
                                 <span class="dashicons dashicons-visibility lynxjournal-btn-icon"></span>
                             </button>
                             <button type="button" class="button lynxjournal-copy-btn" data-clipboard-target="lynxjournal-api-key">
@@ -152,11 +152,11 @@ trait LynxJournal_Admin_Menu {
                             </button>
                         </div>
                         <p class="description lynxjournal-settings-desc">
-                            <?php esc_html_e('Keep this key secure. Use the copy button to transfer it without revealing it.', 'lynxjournal'); ?>
+                            <?php esc_html_e('Keep this key secure. Use the copy button to transfer it without revealing it.', 'lynx-journal'); ?>
                         </p>
                         <div class="lynxjournal-settings-test-row">
                             <button type="button" id="lynxjournal-test-connection" class="button">
-                                <?php esc_html_e('Test Connection', 'lynxjournal'); ?>
+                                <?php esc_html_e('Test Connection', 'lynx-journal'); ?>
                             </button>
                             <span id="lynxjournal-connection-status"></span>
                         </div>
@@ -167,23 +167,23 @@ trait LynxJournal_Admin_Menu {
                     <?php wp_nonce_field('lynxjournal_settings', 'lynxjournal_settings_nonce'); ?>
                     <?php if ($api_key) : ?>
                         <div class="notice notice-warning inline">
-                            <p><?php esc_html_e('Warning: Generating a new key will permanently invalidate the current one. You will need to update the Chrome extension with the new key.', 'lynxjournal'); ?></p>
+                            <p><?php esc_html_e('Warning: Generating a new key will permanently invalidate the current one. You will need to update the Chrome extension with the new key.', 'lynx-journal'); ?></p>
                         </div>
                     <?php endif; ?>
                     <button type="submit" name="lynxjournal_generate_api_key" class="button button-primary">
-                        <?php echo $api_key ? esc_html__('Generate New API Key', 'lynxjournal') : esc_html__('Generate API Key', 'lynxjournal'); ?>
+                        <?php echo $api_key ? esc_html__('Generate New API Key', 'lynx-journal') : esc_html__('Generate API Key', 'lynx-journal'); ?>
                     </button>
                 </form>
             </div>
 
             <div class="card lynxjournal-setup-card">
-                <h2><?php esc_html_e('Chrome Extension Setup', 'lynxjournal'); ?></h2>
+                <h2><?php esc_html_e('Chrome Extension Setup', 'lynx-journal'); ?></h2>
                 <ol>
-                    <li><?php esc_html_e('Download and install the LynxJournal Chrome extension', 'lynxjournal'); ?></li>
-                    <li><?php esc_html_e('Click the extension icon and go to Settings', 'lynxjournal'); ?></li>
-                    <li><?php esc_html_e('Paste your API Endpoint and API Key from above', 'lynxjournal'); ?></li>
-                    <li><?php esc_html_e('Click Save', 'lynxjournal'); ?></li>
-                    <li><?php esc_html_e('Now you can save links directly from any webpage!', 'lynxjournal'); ?></li>
+                    <li><?php esc_html_e('Download and install the LynxJournal Chrome extension', 'lynx-journal'); ?></li>
+                    <li><?php esc_html_e('Click the extension icon and go to Settings', 'lynx-journal'); ?></li>
+                    <li><?php esc_html_e('Paste your API Endpoint and API Key from above', 'lynx-journal'); ?></li>
+                    <li><?php esc_html_e('Click Save', 'lynx-journal'); ?></li>
+                    <li><?php esc_html_e('Now you can save links directly from any webpage!', 'lynx-journal'); ?></li>
                 </ol>
             </div>
         </div>
@@ -200,7 +200,7 @@ trait LynxJournal_Admin_Menu {
     public function schedulePage(): void {
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('Schedule Configuration', 'lynxjournal'); ?></h1>
+            <h1><?php esc_html_e('Schedule Configuration', 'lynx-journal'); ?></h1>
             <div id="lynxjournal-schedule-root"></div>
         </div>
         <?php
@@ -214,7 +214,7 @@ trait LynxJournal_Admin_Menu {
      * @return void
      */
     public function enqueueAdminAssets(string $hook): void {
-        $is_lynxjournal = strpos($hook, 'lynxjournal') !== false;
+        $is_lynxjournal = strpos($hook, 'lynx-journal') !== false;
 
         // CSS must also load on the WP core dashboard (index.php) for the lynxjournal widget
         if ($is_lynxjournal || $hook === 'index.php') {
@@ -238,9 +238,9 @@ trait LynxJournal_Admin_Menu {
                 'restUrl' => rest_url(LYNXJOURNAL_REST_NAMESPACE . '/links/'),
                 'nonce'   => wp_create_nonce('wp_rest'),
                 'labels'  => array(
-                    'delete' => __('Delete?', 'lynxjournal'),
-                    'yes'    => __('Yes', 'lynxjournal'),
-                    'cancel' => __('Cancel', 'lynxjournal'),
+                    'delete' => __('Delete?', 'lynx-journal'),
+                    'yes'    => __('Yes', 'lynx-journal'),
+                    'cancel' => __('Cancel', 'lynx-journal'),
                 ),
             ));
         }
@@ -249,12 +249,12 @@ trait LynxJournal_Admin_Menu {
             $this->enqueuePageScript('lynxjournal-settings-page', 'settings-page.js', array('jquery'));
             wp_localize_script('lynxjournal-settings-page', 'lynxjournalSettings', array(
                 'labels' => array(
-                    'confirmRegenerate' => __('This will permanently invalidate your current API key. You will need to update the Chrome extension with the new key. Continue?', 'lynxjournal'),
-                    'missingFields'     => __('Missing endpoint or API key.', 'lynxjournal'),
-                    'statusTesting'     => __('Testing…', 'lynxjournal'),
-                    'statusOk'          => __('Connected successfully.', 'lynxjournal'),
-                    'statusFail'        => __('Connection failed', 'lynxjournal'),
-                    'statusUnreachable' => __('Could not reach endpoint.', 'lynxjournal'),
+                    'confirmRegenerate' => __('This will permanently invalidate your current API key. You will need to update the Chrome extension with the new key. Continue?', 'lynx-journal'),
+                    'missingFields'     => __('Missing endpoint or API key.', 'lynx-journal'),
+                    'statusTesting'     => __('Testing…', 'lynx-journal'),
+                    'statusOk'          => __('Connected successfully.', 'lynx-journal'),
+                    'statusFail'        => __('Connection failed', 'lynx-journal'),
+                    'statusUnreachable' => __('Could not reach endpoint.', 'lynx-journal'),
                 ),
             ));
         }
@@ -269,16 +269,16 @@ trait LynxJournal_Admin_Menu {
                 'restUrl' => rest_url(LYNXJOURNAL_REST_NAMESPACE . '/categories/'),
                 'nonce'   => wp_create_nonce('wp_rest'),
                 'labels'  => array(
-                    'edit'            => __('Edit', 'lynxjournal'),
-                    'save'            => __('Save', 'lynxjournal'),
-                    'cancel'          => __('Cancel', 'lynxjournal'),
-                    'saving'          => __('Saving…', 'lynxjournal'),
-                    'saveError'       => __('Save failed.', 'lynxjournal'),
-                    'nameRequired'    => __('Name is required.', 'lynxjournal'),
-                    'descPlaceholder' => __('Description (optional)', 'lynxjournal'),
-                    'slugPlaceholder' => __('Leave blank to keep current', 'lynxjournal'),
-                    'deleteOne'       => __('link will become uncategorized.', 'lynxjournal'),
-                    'deleteMany'      => __('links will become uncategorized.', 'lynxjournal'),
+                    'edit'            => __('Edit', 'lynx-journal'),
+                    'save'            => __('Save', 'lynx-journal'),
+                    'cancel'          => __('Cancel', 'lynx-journal'),
+                    'saving'          => __('Saving…', 'lynx-journal'),
+                    'saveError'       => __('Save failed.', 'lynx-journal'),
+                    'nameRequired'    => __('Name is required.', 'lynx-journal'),
+                    'descPlaceholder' => __('Description (optional)', 'lynx-journal'),
+                    'slugPlaceholder' => __('Leave blank to keep current', 'lynx-journal'),
+                    'deleteOne'       => __('link will become uncategorized.', 'lynx-journal'),
+                    'deleteMany'      => __('links will become uncategorized.', 'lynx-journal'),
                 ),
             ));
         }
@@ -326,7 +326,7 @@ trait LynxJournal_Admin_Menu {
     public function settingXPage(): void {
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('Settings', 'lynxjournal'); ?></h1>
+            <h1><?php esc_html_e('Settings', 'lynx-journal'); ?></h1>
         </div>
         <?php
     }
@@ -386,7 +386,7 @@ trait LynxJournal_Admin_Menu {
     public function addDashboardWidget(): void {
         wp_add_dashboard_widget(
             'lynxjournal_dashboard_widget',
-            __('LynxJournal Summary', 'lynxjournal'),
+            __('LynxJournal Summary', 'lynx-journal'),
             [$this, 'dashboardWidgetContent']
         );
     }

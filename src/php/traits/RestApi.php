@@ -130,7 +130,7 @@ trait LynxJournal_RestApi {
     public function restGetApiKey(): mixed {
         $key = get_option('lynxjournal_api_key', '');
         if (empty($key)) {
-            return new \WP_Error('no_key', __('No API key configured.', 'lynxjournal'), ['status' => 404]);
+            return new \WP_Error('no_key', __('No API key configured.', 'lynx-journal'), ['status' => 404]);
         }
         return rest_ensure_response(['key' => $key]);
     }
@@ -171,7 +171,7 @@ trait LynxJournal_RestApi {
      */
     public function restDeleteLink(\WP_REST_Request $request): \WP_REST_Response|\WP_Error {
         $link_id = (int) $request['id'];
-        if (get_post_type($link_id) !== 'lynxjournal') {
+        if (get_post_type($link_id) !== 'lynx-journal') {
             return new \WP_Error('invalid_link', 'Link not found', array('status' => 404));
         }
         $result = wp_delete_post($link_id, true);
@@ -214,7 +214,7 @@ trait LynxJournal_RestApi {
     public function saveSchedule(\WP_REST_Request $request): mixed {
         $data = $request->get_json_params();
         if (empty($data)) {
-            return new \WP_Error('invalid_data', __('Invalid schedule data', 'lynxjournal'), array('status' => 400));
+            return new \WP_Error('invalid_data', __('Invalid schedule data', 'lynx-journal'), array('status' => 400));
         }
         $validated = $this->validateScheduleConfig($data);
         if (is_wp_error($validated)) {
@@ -267,7 +267,7 @@ trait LynxJournal_RestApi {
      */
     public function runScheduleNow(): \WP_REST_Response|\WP_Error {
         if (get_transient('lynxjournal_run_lock')) {
-            return new \WP_Error('run_in_progress', __('A schedule run is already in progress', 'lynxjournal'), array('status' => 429));
+            return new \WP_Error('run_in_progress', __('A schedule run is already in progress', 'lynx-journal'), array('status' => 429));
         }
         $result = $this->executeSchedule(false);
         return rest_ensure_response($result);
@@ -317,13 +317,13 @@ trait LynxJournal_RestApi {
         $post_data = array(
             'post_title'   => $title,
             'post_content' => $content,
-            'post_type'    => 'lynxjournal',
+            'post_type'    => 'lynx-journal',
             'post_status'  => 'lynxjournal_pending',
         );
 
         $post_id = wp_insert_post($post_data);
         if (is_wp_error($post_id)) {
-            return new \WP_Error('insert_failed', __('Failed to create link.', 'lynxjournal'), array('status' => 500));
+            return new \WP_Error('insert_failed', __('Failed to create link.', 'lynx-journal'), array('status' => 500));
         }
 
         delete_transient('lynxjournal_publish_stats');
@@ -337,7 +337,7 @@ trait LynxJournal_RestApi {
         return rest_ensure_response(array(
             'success' => true,
             'post_id' => $post_id,
-            'message' => __('Link added successfully!', 'lynxjournal'),
+            'message' => __('Link added successfully!', 'lynx-journal'),
         ));
     }
 
@@ -351,12 +351,12 @@ trait LynxJournal_RestApi {
      */
     private function validateRestLink(string $title, ?string $url): bool|\WP_Error {
         if (empty($title)) {
-            return new \WP_Error('missing_title', __('Title is required.', 'lynxjournal'), array('status' => 400));
+            return new \WP_Error('missing_title', __('Title is required.', 'lynx-journal'), array('status' => 400));
         }
 
         if (!empty($url)) {
             $existing = get_posts(array(
-                'post_type'   => 'lynxjournal',
+                'post_type'   => 'lynx-journal',
                 'post_status' => 'any',
                 // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
                 'meta_query'  => array(
@@ -369,7 +369,7 @@ trait LynxJournal_RestApi {
                 'fields'      => 'ids',
             ));
             if (!empty($existing)) {
-                return new \WP_Error('duplicate_url', __('This URL has already been saved.', 'lynxjournal'), array('status' => 409));
+                return new \WP_Error('duplicate_url', __('This URL has already been saved.', 'lynx-journal'), array('status' => 409));
             }
         }
 
@@ -438,7 +438,7 @@ trait LynxJournal_RestApi {
             ));
 
             if (is_wp_error($categories)) {
-                return new \WP_Error('fetch_failed', __('Failed to fetch categories.', 'lynxjournal'), array('status' => 500));
+                return new \WP_Error('fetch_failed', __('Failed to fetch categories.', 'lynx-journal'), array('status' => 500));
             }
 
             $category_list = array();

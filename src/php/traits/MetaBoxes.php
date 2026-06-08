@@ -13,9 +13,9 @@ trait LynxJournal_MetaBoxes {
     public function addMetaBoxes(): void {
         add_meta_box(
             'lynxjournal_url',
-            __('Link URL', 'lynxjournal'),
+            __('Link URL', 'lynx-journal'),
             [$this, 'urlMetaBoxCallback'],
-            'lynxjournal',
+            'lynx-journal',
             'normal',
             'high'
         );
@@ -33,7 +33,7 @@ trait LynxJournal_MetaBoxes {
         $url = get_post_meta($post->ID, '_lynxjournal_url', true);
         ?>
         <p>
-            <label for="lynxjournal_url_meta"><?php esc_html_e('URL:', 'lynxjournal'); ?></label><br>
+            <label for="lynxjournal_url_meta"><?php esc_html_e('URL:', 'lynx-journal'); ?></label><br>
             <input type="url" id="lynxjournal_url_meta" name="lynxjournal_url" value="<?php echo esc_attr($url); ?>" size="50" placeholder="https://example.com" class="large-text">
         </p>
         <?php

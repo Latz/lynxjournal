@@ -30,7 +30,7 @@ trait LynxJournal_Admin_LinksPage {
         $date_options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
             "SELECT DISTINCT YEAR(post_date) AS year, MONTH(post_date) AS month
              FROM {$wpdb->posts}
-             WHERE post_type = 'lynxjournal'
+             WHERE post_type = 'lynx-journal'
                AND post_status IN ('lynxjournal_pending','lynxjournal_published','lynxjournal_draft')
              ORDER BY post_date DESC"
         );
@@ -59,8 +59,8 @@ trait LynxJournal_Admin_LinksPage {
         ]) : '';
         ?>
         <div class="wrap">
-            <h1 class="wp-heading-inline"><?php esc_html_e('LynxJournal - All Links', 'lynxjournal'); ?></h1>
-            <a href="<?php echo esc_url(admin_url('admin.php?page=lynxjournal-add')); ?>" class="page-title-action"><?php esc_html_e('Add New', 'lynxjournal'); ?></a>
+            <h1 class="wp-heading-inline"><?php esc_html_e('LynxJournal - All Links', 'lynx-journal'); ?></h1>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=lynxjournal-add')); ?>" class="page-title-action"><?php esc_html_e('Add New', 'lynx-journal'); ?></a>
             <hr class="wp-header-end">
 
             <?php if ($action_message) : ?>
@@ -98,14 +98,14 @@ trait LynxJournal_Admin_LinksPage {
 
             <div class="tablenav top lynxjournal-links-tablenav">
                 <div class="alignleft actions">
-                    <label class="screen-reader-text" for="filter-by-date"><?php esc_html_e('Filter by date', 'lynxjournal'); ?></label>
+                    <label class="screen-reader-text" for="filter-by-date"><?php esc_html_e('Filter by date', 'lynx-journal'); ?></label>
                     <select name="m" id="filter-by-date">
-                        <option value="0"<?php selected($month, 0); ?>><?php esc_html_e('All dates', 'lynxjournal'); ?></option>
+                        <option value="0"<?php selected($month, 0); ?>><?php esc_html_e('All dates', 'lynx-journal'); ?></option>
                         <?php foreach ($date_options as $row) :
                             $val = (int) $row->year * 100 + (int) $row->month;
                             $label = sprintf(
                                 /* translators: 1: month name, 2: year */
-                                _x('%1$s %2$d', 'month year', 'lynxjournal'),
+                                _x('%1$s %2$d', 'month year', 'lynx-journal'),
                                 $wp_locale->get_month($row->month),
                                 $row->year
                             );
@@ -114,21 +114,21 @@ trait LynxJournal_Admin_LinksPage {
                         <?php endforeach; ?>
                     </select>
 
-                    <label class="screen-reader-text" for="lynxjournal-filter-cat"><?php esc_html_e('Filter by category', 'lynxjournal'); ?></label>
+                    <label class="screen-reader-text" for="lynxjournal-filter-cat"><?php esc_html_e('Filter by category', 'lynx-journal'); ?></label>
                     <select name="lynxjournal_cat" id="lynxjournal-filter-cat">
-                        <option value="0"<?php selected($cat, 0); ?>><?php esc_html_e('All categories', 'lynxjournal'); ?></option>
+                        <option value="0"<?php selected($cat, 0); ?>><?php esc_html_e('All categories', 'lynx-journal'); ?></option>
                         <?php foreach ($categories as $term) : ?>
                             <option value="<?php echo esc_attr((string) $term->term_id); ?>"<?php selected($cat, $term->term_id); ?>><?php echo esc_html($term->name); ?></option>
                         <?php endforeach; ?>
                     </select>
 
-                    <input type="submit" name="filter_action" id="post-query-submit" class="button" value="<?php esc_attr_e('Filter', 'lynxjournal'); ?>">
+                    <input type="submit" name="filter_action" id="post-query-submit" class="button" value="<?php esc_attr_e('Filter', 'lynx-journal'); ?>">
                 </div>
 
                 <p class="search-box">
-                    <label class="screen-reader-text" for="link-search-input"><?php esc_html_e('Search Links', 'lynxjournal'); ?></label>
+                    <label class="screen-reader-text" for="link-search-input"><?php esc_html_e('Search Links', 'lynx-journal'); ?></label>
                     <input type="search" id="link-search-input" name="s" value="<?php echo esc_attr($search); ?>">
-                    <input type="submit" class="button" value="<?php esc_attr_e('Search Links', 'lynxjournal'); ?>">
+                    <input type="submit" class="button" value="<?php esc_attr_e('Search Links', 'lynx-journal'); ?>">
                 </p>
 
                 <?php if ($max_num_pages > 1) : ?>
@@ -136,7 +136,7 @@ trait LynxJournal_Admin_LinksPage {
                     <span class="displaying-num">
                         <?php echo esc_html(sprintf(
                             /* translators: %s: number of items in the list table */
-                            _n('%s item', '%s items', $total_items, 'lynxjournal'),
+                            _n('%s item', '%s items', $total_items, 'lynx-journal'),
                             number_format_i18n($total_items)
                         )); ?>
                     </span>
@@ -152,23 +152,23 @@ trait LynxJournal_Admin_LinksPage {
 
     private function renderLinksTableSection(bool $has_links, bool $is_filtered, array $grouped_links): void {
         if (!$has_links && !$is_filtered) {
-            echo '<p>' . esc_html__('No links found. Add your first link!', 'lynxjournal') . '</p>';
+            echo '<p>' . esc_html__('No links found. Add your first link!', 'lynx-journal') . '</p>';
             return;
         }
         if (!$has_links) {
             ?>
             <table class="wp-list-table widefat fixed striped">
                 <thead><tr>
-                    <th class="manage-column column-title"><?php esc_html_e('Title', 'lynxjournal'); ?></th>
-                    <th class="manage-column column-url"><?php esc_html_e('URL', 'lynxjournal'); ?></th>
-                    <th class="manage-column column-status"><?php esc_html_e('Status', 'lynxjournal'); ?></th>
-                    <th class="manage-column column-published"><?php esc_html_e('Published', 'lynxjournal'); ?></th>
-                    <th class="manage-column column-date"><?php esc_html_e('Date', 'lynxjournal'); ?></th>
-                    <th class="manage-column column-actions"><?php esc_html_e('Actions', 'lynxjournal'); ?></th>
+                    <th class="manage-column column-title"><?php esc_html_e('Title', 'lynx-journal'); ?></th>
+                    <th class="manage-column column-url"><?php esc_html_e('URL', 'lynx-journal'); ?></th>
+                    <th class="manage-column column-status"><?php esc_html_e('Status', 'lynx-journal'); ?></th>
+                    <th class="manage-column column-published"><?php esc_html_e('Published', 'lynx-journal'); ?></th>
+                    <th class="manage-column column-date"><?php esc_html_e('Date', 'lynx-journal'); ?></th>
+                    <th class="manage-column column-actions"><?php esc_html_e('Actions', 'lynx-journal'); ?></th>
                 </tr></thead>
                 <tbody>
                     <tr class="no-items">
-                        <td class="colspanchange" colspan="6"><?php esc_html_e('No links found.', 'lynxjournal'); ?></td>
+                        <td class="colspanchange" colspan="6"><?php esc_html_e('No links found.', 'lynx-journal'); ?></td>
                     </tr>
                 </tbody>
             </table>
@@ -195,12 +195,12 @@ trait LynxJournal_Admin_LinksPage {
                 <table class="wp-list-table widefat fixed striped">
                     <thead>
                         <tr>
-                            <th class="manage-column column-title sortable desc" data-col="0"><a href="#"><span><?php esc_html_e('Title', 'lynxjournal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
-                            <th class="manage-column column-url sortable desc" data-col="1"><a href="#"><span><?php esc_html_e('URL', 'lynxjournal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
-                            <th class="manage-column column-status sortable desc" data-col="2"><a href="#"><span><?php esc_html_e('Status', 'lynxjournal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
-                            <th class="manage-column column-published sortable desc" data-col="3"><a href="#"><span><?php esc_html_e('Published', 'lynxjournal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
-                            <th class="manage-column column-date sortable desc" data-col="4"><a href="#"><span><?php esc_html_e('Date', 'lynxjournal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
-                            <th class="manage-column column-actions"><?php esc_html_e('Actions', 'lynxjournal'); ?></th>
+                            <th class="manage-column column-title sortable desc" data-col="0"><a href="#"><span><?php esc_html_e('Title', 'lynx-journal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
+                            <th class="manage-column column-url sortable desc" data-col="1"><a href="#"><span><?php esc_html_e('URL', 'lynx-journal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
+                            <th class="manage-column column-status sortable desc" data-col="2"><a href="#"><span><?php esc_html_e('Status', 'lynx-journal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
+                            <th class="manage-column column-published sortable desc" data-col="3"><a href="#"><span><?php esc_html_e('Published', 'lynx-journal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
+                            <th class="manage-column column-date sortable desc" data-col="4"><a href="#"><span><?php esc_html_e('Date', 'lynx-journal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
+                            <th class="manage-column column-actions"><?php esc_html_e('Actions', 'lynx-journal'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -298,7 +298,7 @@ trait LynxJournal_Admin_LinksPage {
                 return [$message, $error];
             }
             wp_delete_post($link_id, true);
-            $message = __('Link deleted successfully.', 'lynxjournal');
+            $message = __('Link deleted successfully.', 'lynx-journal');
         }
 
         return [$message, $error];
@@ -310,9 +310,9 @@ trait LynxJournal_Admin_LinksPage {
             return ['', $result['message']];
         }
         if ($as_draft) {
-            return [esc_html($result['message']) . ' <a href="' . esc_url(get_edit_post_link($result['post_id'])) . '" target="_blank">' . esc_html__('Edit Draft', 'lynxjournal') . '</a>', ''];
+            return [esc_html($result['message']) . ' <a href="' . esc_url(get_edit_post_link($result['post_id'])) . '" target="_blank">' . esc_html__('Edit Draft', 'lynx-journal') . '</a>', ''];
         }
-        return [esc_html($result['message']) . ' <a href="' . esc_url(get_permalink($result['post_id'])) . '" target="_blank">' . esc_html__('View Post', 'lynxjournal') . '</a>', ''];
+        return [esc_html($result['message']) . ' <a href="' . esc_url(get_permalink($result['post_id'])) . '" target="_blank">' . esc_html__('View Post', 'lynx-journal') . '</a>', ''];
     }
 
     private function executeUnpublishAction(int $link_id): array {
@@ -325,11 +325,11 @@ trait LynxJournal_Admin_LinksPage {
 
     private function renderLinkStatusBadge(string $publish_status): void {
         if ($publish_status === 'published') {
-            echo esc_html__('Published', 'lynxjournal');
+            echo esc_html__('Published', 'lynx-journal');
         } elseif ($publish_status === 'draft') {
-            echo '<span class="lynxjournal-status-badge lynxjournal-status-draft">📝 ' . esc_html__('Draft', 'lynxjournal') . '</span>';
+            echo '<span class="lynxjournal-status-badge lynxjournal-status-draft">📝 ' . esc_html__('Draft', 'lynx-journal') . '</span>';
         } elseif ($publish_status === 'unpublished') {
-            echo '<span class="lynxjournal-status-badge lynxjournal-status-unpublished">' . esc_html__('Unpublished', 'lynxjournal') . '</span>';
+            echo '<span class="lynxjournal-status-badge lynxjournal-status-unpublished">' . esc_html__('Unpublished', 'lynx-journal') . '</span>';
         }
     }
 
@@ -338,13 +338,13 @@ trait LynxJournal_Admin_LinksPage {
         $delete_url    = esc_url( wp_nonce_url( admin_url( self::ADMIN_LINKS_PAGE . '&action=delete&link_id=' . $link->ID ), 'delete_link_' . $link->ID ) );
 
         if ( $publish_status === 'published' ) {
-            echo '<a href="' . esc_url( get_permalink( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Post', 'lynxjournal' ) . '</a> | ';
-            echo '<a href="' . esc_url( $unpublish_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'lynxjournal' ) ) . '\');">' . esc_html__( 'Unpublish', 'lynxjournal' ) . '</a> | ';
+            echo '<a href="' . esc_url( get_permalink( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Post', 'lynx-journal' ) . '</a> | ';
+            echo '<a href="' . esc_url( $unpublish_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'lynx-journal' ) ) . '\');">' . esc_html__( 'Unpublish', 'lynx-journal' ) . '</a> | ';
         } elseif ( $publish_status === 'draft' ) {
-            echo '<a href="' . esc_url( get_edit_post_link( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Draft', 'lynxjournal' ) . '</a> | ';
-            echo '<a href="' . esc_url( $unpublish_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'lynxjournal' ) ) . '\');">' . esc_html__( 'Unpublish', 'lynxjournal' ) . '</a> | ';
+            echo '<a href="' . esc_url( get_edit_post_link( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Draft', 'lynx-journal' ) . '</a> | ';
+            echo '<a href="' . esc_url( $unpublish_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'lynx-journal' ) ) . '\');">' . esc_html__( 'Unpublish', 'lynx-journal' ) . '</a> | ';
         }
-        echo '<a href="' . esc_url( get_edit_post_link( $link->ID ) ) . '">' . esc_html__( 'Edit', 'lynxjournal' ) . '</a> | ';
-        echo '<a href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete this link?', 'lynxjournal' ) ) . '\');">' . esc_html__( 'Delete', 'lynxjournal' ) . '</a>';
+        echo '<a href="' . esc_url( get_edit_post_link( $link->ID ) ) . '">' . esc_html__( 'Edit', 'lynx-journal' ) . '</a> | ';
+        echo '<a href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete this link?', 'lynx-journal' ) ) . '\');">' . esc_html__( 'Delete', 'lynx-journal' ) . '</a>';
     }
 }

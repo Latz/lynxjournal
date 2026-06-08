@@ -26,7 +26,7 @@ trait LynxJournal_Queries {
         }
 
         // wp_count_posts reads the indexed post_status column — no meta joins needed.
-        $counts          = wp_count_posts('lynxjournal');
+        $counts          = wp_count_posts('lynx-journal');
         $published_links = (int) ($counts->lynxjournal_published ?? 0);
         $draft_links     = (int) ($counts->lynxjournal_draft     ?? 0);
         $pending_links   = (int) ($counts->lynxjournal_pending   ?? 0);
@@ -55,7 +55,7 @@ trait LynxJournal_Queries {
      */
     public function getLinksGroupedByCategory(string $search = '', int $month = 0, int $cat = 0, int $paged = 1, int $per_page = 20): array {
         $args = [
-            'post_type'              => 'lynxjournal',
+            'post_type'              => 'lynx-journal',
             'post_status'            => ['lynxjournal_pending', 'lynxjournal_published', 'lynxjournal_draft'],
             'posts_per_page'         => $per_page,
             'paged'                  => $paged,
@@ -88,10 +88,10 @@ trait LynxJournal_Queries {
         $link_ids = wp_list_pluck($all_links, 'ID');
         // Batch queries prime caches; all subsequent get_the_terms() and get_post_meta() calls become cache hits.
         update_meta_cache('post', $link_ids);
-        update_object_term_cache($link_ids, 'lynxjournal');
+        update_object_term_cache($link_ids, 'lynx-journal');
 
         $grouped = [];
-        $uncategorized_key = __('Uncategorized', 'lynxjournal');
+        $uncategorized_key = __('Uncategorized', 'lynx-journal');
         foreach ($all_links as $link) {
             $cats = get_the_terms($link->ID, 'lynxjournal_category');
             $group_name = ($cats && !is_wp_error($cats)) ? $cats[0]->name : $uncategorized_key;
@@ -158,7 +158,7 @@ trait LynxJournal_Queries {
                AND pm.meta_value = 'published'
              SET p.post_status = 'lynxjournal_published'
              WHERE p.post_type = %s AND p.post_status = 'publish'",
-            'lynxjournal'
+            'lynx-journal'
         ));
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -170,7 +170,7 @@ trait LynxJournal_Queries {
                AND pm.meta_value = 'draft'
              SET p.post_status = 'lynxjournal_draft'
              WHERE p.post_type = %s AND p.post_status = 'publish'",
-            'lynxjournal'
+            'lynx-journal'
         ));
 
         // All remaining 'publish' lynxjournal posts have no status meta → they are pending.
@@ -179,7 +179,7 @@ trait LynxJournal_Queries {
             "UPDATE {$wpdb->posts}
              SET post_status = 'lynxjournal_pending'
              WHERE post_type = %s AND post_status = 'publish'",
-            'lynxjournal'
+            'lynx-journal'
         ));
 
         delete_transient('lynxjournal_publish_stats');
@@ -200,7 +200,7 @@ trait LynxJournal_Queries {
         if (!$published_post_id) {
             return array(
                 'success' => false,
-                'message' => __('This link has not been published.', 'lynxjournal')
+                'message' => __('This link has not been published.', 'lynx-journal')
             );
         }
 
@@ -210,7 +210,7 @@ trait LynxJournal_Queries {
         if (!$trashed) {
             return array(
                 'success' => false,
-                'message' => __('Failed to unpublish link.', 'lynxjournal')
+                'message' => __('Failed to unpublish link.', 'lynx-journal')
             );
         }
 
@@ -223,7 +223,7 @@ trait LynxJournal_Queries {
 
         return array(
             'success' => true,
-            'message' => __('Link unpublished successfully.', 'lynxjournal')
+            'message' => __('Link unpublished successfully.', 'lynx-journal')
         );
     }
 }

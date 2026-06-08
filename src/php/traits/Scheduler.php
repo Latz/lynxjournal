@@ -127,7 +127,7 @@ trait LynxJournal_Scheduler {
      */
     private function attemptPublish(array $link_ids, array $config, string $mode, bool $reschedule, bool $has_more): array {
         /* translators: %s is the formatted date (e.g. "April 15, 2026") */
-        $title = sprintf(__('Links: %s', 'lynxjournal'), wp_date('F j, Y'));
+        $title = sprintf(__('Links: %s', 'lynx-journal'), wp_date('F j, Y'));
         $title = (string) apply_filters('lynxjournal_roundup_title', $title, $link_ids, $mode);
 
         // Resolve the author for the roundup post. WP-Cron runs unauthenticated
@@ -311,7 +311,7 @@ trait LynxJournal_Scheduler {
                 $terms    = wp_get_object_terms($id, 'lynxjournal_category', ['fields' => 'names']);
                 $cat_name = (!is_wp_error($terms) && !empty($terms))
                     ? $terms[0]
-                    : __('Uncategorized', 'lynxjournal');
+                    : __('Uncategorized', 'lynx-journal');
                 $by_category[$cat_name] = ($by_category[$cat_name] ?? 0) + 1;
             }
             arsort($by_category);
@@ -347,18 +347,18 @@ trait LynxJournal_Scheduler {
         }
         $to = !empty($notify['email']) ? $notify['email'] : get_option('admin_email');
         /* translators: %d: number of links published */
-        $subject = sprintf(__('[LynxJournal] Roundup published: %d links', 'lynxjournal'), count($link_ids));
+        $subject = sprintf(__('[LynxJournal] Roundup published: %d links', 'lynx-journal'), count($link_ids));
         if ($post_id) {
             $message = sprintf(
                 /* translators: 1: link count, 2: post URL */
-                __("A new roundup was published.\n\nLinks: %1\$d\nView: %2\$s", 'lynxjournal'),
+                __("A new roundup was published.\n\nLinks: %1\$d\nView: %2\$s", 'lynx-journal'),
                 count($link_ids),
                 get_permalink($post_id)
             );
         } else {
             $message = sprintf(
                 /* translators: %s: schedule mode */
-                __('Schedule ran in %s mode but no post was published.', 'lynxjournal'),
+                __('Schedule ran in %s mode but no post was published.', 'lynx-journal'),
                 $mode
             );
         }
