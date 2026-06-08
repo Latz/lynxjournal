@@ -81,6 +81,36 @@ describe('LynxJournal CORS helpers', function (): void { // NOSONAR
         });
     });
 
+    describe('restGetNonce()', function (): void {
+
+        it('returns WP_Error when user lacks edit_posts capability', function (): void {
+            Functions\when('current_user_can')->justReturn(false);
+
+            // permission_callback returning false causes WP REST to return 403; the method itself
+            // is only called when permission passes, so we verify the callback directly.
+            $route = null;
+            Functions\when('register_rest_route')->alias(function (string $ns, string $path, array $args) use (&$route): void {
+                if ($path === '/nonce') {
+                    $route = $args;
+                }
+            });
+            $this->plugin->registerRestRoutes();
+
+            expect($route)->not->toBeNull();
+            expect(($route['permission_callback'])())->toBeFalse();
+        });
+
+        it('returns nonce in REST response when user has edit_posts', function (): void {
+            Functions\when('current_user_can')->justReturn(true);
+            Functions\when('wp_create_nonce')->justReturn('rest-nonce-value');
+            Functions\when('rest_ensure_response')->alias(fn(mixed $data) => $data);
+
+            $result = $this->plugin->restGetNonce();
+
+            expect($result['nonce'])->toBe('rest-nonce-value');
+        });
+    });
+
     describe('handleGetRestNonce()', function (): void {
 
         it('sends JSON error when user cannot manage options', function (): void {

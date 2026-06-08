@@ -113,6 +113,12 @@ trait LynxJournal_RestApi {
             'callback'            => [$this, 'restGetApiKey'],
             'permission_callback' => function() { return current_user_can('manage_options'); },
         ));
+
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/nonce', array(
+            'methods'             => 'GET',
+            'callback'            => [$this, 'restGetNonce'],
+            'permission_callback' => function() { return current_user_can('edit_posts'); },
+        ));
     }
 
     /**
@@ -130,7 +136,17 @@ trait LynxJournal_RestApi {
     }
 
     /**
-     * Handle nonce requests from the Chrome extension.
+     * Return a wp_rest nonce via REST for the Chrome extension.
+     *
+     * @since 1.0.0
+     * @return mixed REST response with nonce.
+     */
+    public function restGetNonce(): mixed {
+        return rest_ensure_response(['nonce' => wp_create_nonce('wp_rest')]);
+    }
+
+    /**
+     * Handle nonce requests from the Chrome extension via admin-ajax (legacy).
      *
      * @since 1.0.0
      * @return void

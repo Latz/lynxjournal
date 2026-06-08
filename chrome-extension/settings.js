@@ -145,19 +145,17 @@ export async function checkWpLogin(url) {
 
         // wpBase is already resolved above
 
-        // Get a WP REST nonce via admin-ajax
+        // Get a WP REST nonce via the plugin's REST endpoint
         status.textContent = chrome.i18n.getMessage('msgFetchingNonce');
-        const nonceRes = await fetch(`${wpBase}/wp-admin/admin-ajax.php`, {
-            method: 'POST',
+        const nonceRes = await fetch(`${wpBase}/wp-json/lynxjournal/v1/nonce`, {
+            method: 'GET',
             credentials: 'include',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'action=lynxjournal_get_rest_nonce',
         });
         const nonceText = await nonceRes.text();
         let nonceData;
         try { nonceData = JSON.parse(nonceText); }
         catch { throw new Error(`nonce: HTTP ${nonceRes.status} — non-JSON response`); }
-        if (!nonceData.success) throw new Error(`nonce: HTTP ${nonceRes.status}`);
+        if (!nonceRes.ok) throw new Error(`nonce: HTTP ${nonceRes.status}`);
 
         // Fetch the API key using the nonce
         status.textContent = chrome.i18n.getMessage('msgFetchingKey');
@@ -165,7 +163,7 @@ export async function checkWpLogin(url) {
             || `${wpBase}/wp-json/lynxjournal/v1`;
         const keyRes = await fetch(`${endpoint}/api-key`, {
             credentials: 'include',
-            headers: { 'X-WP-Nonce': nonceData.data.nonce },
+            headers: { 'X-WP-Nonce': nonceData.nonce },
         });
         const keyText = await keyRes.text();
         let keyData;
