@@ -260,10 +260,6 @@ trait LynxJournal_Admin_LinksPage {
             return [$message, $error];
         }
 
-        if (!current_user_can('edit_posts')) {
-            return [$message, $error];
-        }
-
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $action  = sanitize_key(wp_unslash($_GET['action']));
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -272,12 +268,24 @@ trait LynxJournal_Admin_LinksPage {
         $nonce   = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
 
         if ($action === 'publish_link' && wp_verify_nonce($nonce, 'publish_link_' . $link_id)) {
+            if (!current_user_can('publish_post', $link_id)) {
+                return [$message, $error];
+            }
             [$message, $error] = $this->executePublishAction($link_id, false);
         } elseif ($action === 'draft_link' && wp_verify_nonce($nonce, 'draft_link_' . $link_id)) {
+            if (!current_user_can('edit_post', $link_id)) {
+                return [$message, $error];
+            }
             [$message, $error] = $this->executePublishAction($link_id, true);
         } elseif ($action === 'unpublish_link' && wp_verify_nonce($nonce, 'unpublish_link_' . $link_id)) {
+            if (!current_user_can('edit_post', $link_id)) {
+                return [$message, $error];
+            }
             [$message, $error] = $this->executeUnpublishAction($link_id);
         } elseif ($action === 'delete' && wp_verify_nonce($nonce, 'delete_link_' . $link_id)) {
+            if (!current_user_can('delete_post', $link_id)) {
+                return [$message, $error];
+            }
             wp_delete_post($link_id, true);
             $message = __('Link deleted successfully.', 'lynxjournal');
         }
