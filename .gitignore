@@ -50,6 +50,7 @@ bin/*.bak
 
 # Personal notes / context
 /docs/resume.txt
+/fixed.md
 
 # Planning & design notes (archived, not tracked)
 /docs/plans/
