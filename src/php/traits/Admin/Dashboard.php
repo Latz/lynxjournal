@@ -143,7 +143,7 @@ trait LynxJournal_Admin_Dashboard {
         $title    = isset( $_POST['quick_title'] )    ? sanitize_text_field( wp_unslash( $_POST['quick_title'] ) )    : '';
         $url      = isset( $_POST['quick_url'] )      ? esc_url_raw( wp_unslash( $_POST['quick_url'] ) )              : '';
         $category = isset( $_POST['quick_category'] ) ? (int) $_POST['quick_category']                                : 0;
-        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_quick_add_link' ) || empty( $title ) || empty( $url ) ) {
+        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_quick_add_link' ) || empty( $title ) || empty( $url ) || $category <= 0 ) {
             return false;
         }
         if ( ! current_user_can( 'edit_posts' ) ) {
@@ -525,12 +525,9 @@ trait LynxJournal_Admin_Dashboard {
                     </p>
                     <?php if ( $has_categories ) : ?>
                     <p>
-                        <label for="quick_category">
-                            <strong><?php esc_html_e( 'Category', 'lynx-journal' ); ?></strong>
-                            <span class="lynxjournal-optional"><?php esc_html_e( '(optional)', 'lynx-journal' ); ?></span>
-                        </label><br>
-                        <select id="quick_category" name="quick_category" class="regular-text">
-                            <option value=""><?php esc_html_e( '— No category —', 'lynx-journal' ); ?></option>
+                        <label for="quick_category"><strong><?php esc_html_e( 'Category', 'lynx-journal' ); ?> *</strong></label><br>
+                        <select id="quick_category" name="quick_category" class="regular-text" required>
+                            <option value=""><?php esc_html_e( '— Select category —', 'lynx-journal' ); ?></option>
                             <?php foreach ( $categories as $term ) : ?>
                                 <option value="<?php echo (int) $term->term_id; ?>">
                                     <?php echo esc_html( $term->name ); ?>
