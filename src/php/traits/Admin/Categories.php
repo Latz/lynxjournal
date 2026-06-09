@@ -123,7 +123,7 @@ trait LynxJournal_Admin_Categories {
              FROM {$wpdb->term_taxonomy} tt
              LEFT JOIN {$wpdb->term_relationships} tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
              LEFT JOIN {$wpdb->posts} p ON tr.object_id = p.ID
-                AND p.post_status IN ('lynxjournal_pending','lynxjournal_published','lynxjournal_draft')
+                AND p.post_status IN ('lynxjournal_pending','lynxjournal_pub','lynxjournal_draft')
              WHERE tt.taxonomy = 'lynxjournal_category'
              GROUP BY tt.term_id",
             ARRAY_A

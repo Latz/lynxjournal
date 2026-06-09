@@ -27,7 +27,7 @@ trait LynxJournal_Queries {
 
         // wp_count_posts reads the indexed post_status column — no meta joins needed.
         $counts          = wp_count_posts('lynx-journal');
-        $published_links = (int) ($counts->lynxjournal_published ?? 0);
+        $published_links = (int) ($counts->lynxjournal_pub ?? 0);
         $draft_links     = (int) ($counts->lynxjournal_draft     ?? 0);
         $pending_links   = (int) ($counts->lynxjournal_pending   ?? 0);
         $total_links     = $published_links + $draft_links + $pending_links;
