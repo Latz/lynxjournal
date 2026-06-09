@@ -27,7 +27,6 @@ trait LynxJournal_Admin_Menu {
         $this->addSubmenu(__('Categories',       'lynx-journal'), __('Categories',       'lynx-journal'), 'edit_posts', 'lynxjournal-categories',                                   'categoriesPage');
         $this->addSubmenu(__('Tags',             'lynx-journal'), __('Tags',             'lynx-journal'), 'edit_posts', 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal');
         $this->addSubmenu(__('Chrome Extension', 'lynx-journal'), __('Chrome Extension', 'lynx-journal'), 'edit_posts', 'lynxjournal-settings',                                     'settingsPage');
-        $this->addSubmenu(__('Settings',         'lynx-journal'), __('Settings',         'lynx-journal'), 'edit_posts', 'lynxjournal-setting-x',                                    'settingXPage');
         $this->addSubmenu(__('Schedule',         'lynx-journal'), __('Schedule',         'lynx-journal'), 'edit_posts', 'lynxjournal-schedule',                                     'schedulePage');
     }
 

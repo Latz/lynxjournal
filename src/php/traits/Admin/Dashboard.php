@@ -633,6 +633,20 @@ trait LynxJournal_Admin_Dashboard {
 
             <?php $this->renderDashboardNotices( $batch_result, $roundup_result ); ?>
 
+            <?php if ( $total_categories === 0 ) : ?>
+            <div class="notice notice-warning">
+                <p>
+                    <?php
+                    printf(
+                        /* translators: %s: link to the category admin page */
+                        esc_html__( 'No categories defined yet. %s', 'lynx-journal' ),
+                        '<a href="' . esc_url( admin_url( 'admin.php?page=lynxjournal-categories' ) ) . '">' . esc_html__( 'Add a category', 'lynx-journal' ) . '</a>'
+                    );
+                    ?>
+                </p>
+            </div>
+            <?php endif; ?>
+
             <?php if ( $total_links === 0 ) : ?>
             <!-- Onboarding -->
             <div class="lynxjournal-onboarding">
