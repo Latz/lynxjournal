@@ -229,6 +229,11 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	box-sizing: border-box;
 }
 
+#lynxjournal-postbox-container-2 .regular-text {
+	width: 100%;
+	box-sizing: border-box;
+}
+
 .lynxjournal-dashboard::after {
 	content: '';
 	display: table;

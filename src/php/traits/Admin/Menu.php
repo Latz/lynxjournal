@@ -25,7 +25,7 @@ trait LynxJournal_Admin_Menu {
         $this->addSubmenu(__('Show Links',       'lynx-journal'), __('All Links',        'lynx-journal'), 'read',              'lynxjournal-admin',                                        'showLinksPage');
         $this->addSubmenu(__('Add Link',         'lynx-journal'), __('Add Link',         'lynx-journal'), 'read',              'lynxjournal-add',                                          'addLinkPage');
         $this->addSubmenu(__('Categories',       'lynx-journal'), __('Categories',       'lynx-journal'), 'edit_posts', 'lynxjournal-categories',                                   'categoriesPage');
-        $this->addSubmenu(__('Tags',             'lynx-journal'), __('Tags',             'lynx-journal'), 'edit_posts', 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynxjournal');
+        $this->addSubmenu(__('Tags',             'lynx-journal'), __('Tags',             'lynx-journal'), 'edit_posts', 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal');
         $this->addSubmenu(__('Chrome Extension', 'lynx-journal'), __('Chrome Extension', 'lynx-journal'), 'edit_posts', 'lynxjournal-settings',                                     'settingsPage');
         $this->addSubmenu(__('Settings',         'lynx-journal'), __('Settings',         'lynx-journal'), 'edit_posts', 'lynxjournal-setting-x',                                    'settingXPage');
         $this->addSubmenu(__('Schedule',         'lynx-journal'), __('Schedule',         'lynx-journal'), 'edit_posts', 'lynxjournal-schedule',                                     'schedulePage');
@@ -51,7 +51,7 @@ trait LynxJournal_Admin_Menu {
      */
     public function submenuFileFilter(?string $submenu_file): string {
         return $this->isLynxJournalTag()
-            ? 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynxjournal'
+            ? 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal'
             : ($submenu_file ?? '');
     }
 
@@ -214,7 +214,7 @@ trait LynxJournal_Admin_Menu {
      * @return void
      */
     public function enqueueAdminAssets(string $hook): void {
-        $is_lynxjournal = strpos($hook, 'lynx-journal') !== false;
+        $is_lynxjournal = strpos($hook, 'lynxjournal') !== false;
 
         // CSS must also load on the WP core dashboard (index.php) for the lynxjournal widget
         if ($is_lynxjournal || $hook === 'index.php') {

@@ -117,7 +117,7 @@ trait LynxJournal_RestApi {
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/nonce', array(
             'methods'             => 'GET',
             'callback'            => [$this, 'restGetNonce'],
-            'permission_callback' => function() { return current_user_can('edit_posts'); },
+            'permission_callback' => '__return_true',
         ));
     }
 
@@ -142,6 +142,15 @@ trait LynxJournal_RestApi {
      * @return mixed REST response with nonce.
      */
     public function restGetNonce(): mixed {
+        // REST cookie auth requires an existing nonce (circular). Fall back to
+        // validating the WordPress auth cookie directly so the returned nonce
+        // belongs to the actual logged-in user.
+        if ( ! is_user_logged_in() ) {
+            $user_id = wp_validate_auth_cookie( '', 'logged_in' );
+            if ( $user_id ) {
+                wp_set_current_user( $user_id );
+            }
+        }
         return rest_ensure_response(['nonce' => wp_create_nonce('wp_rest')]);
     }
 

@@ -632,7 +632,7 @@ trait LynxJournal_Admin_Dashboard {
         ) );
 
         $all_links_url  = esc_url( admin_url( self::ADMIN_LINKS_PAGE ) );
-        $categories_url = esc_url( admin_url( 'edit-tags.php?taxonomy=lynxjournal_category&post_type=lynxjournal' ) );
+        $categories_url = esc_url( admin_url( 'edit-tags.php?taxonomy=lynxjournal_category&post_type=lynx-journal' ) );
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Overview', 'lynx-journal' ); ?></h1>
