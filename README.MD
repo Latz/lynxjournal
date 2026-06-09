@@ -2,7 +2,7 @@
 
 Save and publish curated link digests to your blog.
 
-== Description ==
+## Description
 
 LynxJournal is a WordPress plugin for managing and publishing curated link digests. Save interesting links, organise them by category, and publish them as blog post digests.
 
@@ -14,15 +14,15 @@ LynxJournal is a WordPress plugin for managing and publishing curated link diges
 * Schedule automatic roundup publishing (daily, weekly, monthly, or by count/age)
 * Chrome extension support
 
-== Installation ==
+## Installation
 
 1. Upload the plugin files to the `/wp-content/plugins/lynxjournal` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 3. Use the LynxJournal menu in the admin dashboard to start adding links.
 
-== Usage ==
+## Usage
 
-=== Dashboard ===
+### Dashboard
 
 The LynxJournal dashboard (LynxJournal › Dashboard) gives you an at-a-glance overview:
 
@@ -31,7 +31,7 @@ The LynxJournal dashboard (LynxJournal › Dashboard) gives you an at-a-glance o
 * **Recent Unpublished** — the last five unsaved links; delete any of them directly from this list
 * **Recently Published** — the last five published roundup posts with their status
 
-=== Adding Links ===
+### Adding Links
 
 **Manually (full form):** Go to LynxJournal › Add Link. Fill in:
 
@@ -45,7 +45,7 @@ The LynxJournal dashboard (LynxJournal › Dashboard) gives you an at-a-glance o
 
 **Via Chrome extension:** Browse to any page and click the extension icon. The title and URL are pre-filled; add a description, pick a category, and click Save Link.
 
-=== Managing Links ===
+### Managing Links
 
 LynxJournal › All Links shows every saved link in a table:
 
@@ -53,7 +53,7 @@ LynxJournal › All Links shows every saved link in a table:
 * **Publish** — creates a WordPress post immediately for that single link
 * **Delete** — removes the link permanently (shows an inline confirmation first)
 
-=== Publishing ===
+### Publishing
 
 **Individual post:** Click Publish on any link in All Links. A new WordPress post is created with the link's title, description, and a "Read more" link to the source URL.
 
@@ -61,7 +61,7 @@ LynxJournal › All Links shows every saved link in a table:
 
 Both flows support draft mode — use the Draft toggle before confirming.
 
-=== Scheduling ===
+### Scheduling
 
 LynxJournal › Schedule lets automatic roundup publishing run without manual action. Open **LynxJournal › Schedule**, choose a mode, set at least one Execution Time, and click **Save Schedule**. The next time that moment arrives, LynxJournal publishes a roundup post from all unpublished links. To trigger a run immediately, use the **Run Now** button on the dashboard. To stop all automation, switch to Manual mode.
 
@@ -130,19 +130,19 @@ The scheduler does not write to a custom log. To verify a run happened, check: P
 
 Viewing the Schedule page, saving the schedule, and triggering Run Now all require the `manage_options` capability (administrator role by default). To delegate to other roles, grant the capability using a tool such as the User Role Editor plugin or `add_cap()` in your own code.
 
-=== Chrome Extension ===
+### Chrome Extension
 
 1. install the Chrome Extension "LynxJournal" from https://chromewebstore.google.com/detail/link-digest/majjnembpebmpoaeoildijhhgbjfgjmn
 4. In WordPress, go to LynxJournal › Settings, generate an API key, and copy the API Endpoint URL and key
 5. Click the extension icon › **Settings**, paste both values, and save
 6. From now on, click the extension icon on any page to save the current URL directly to your WordPress site
 
-== Source Code & Build Tools ==
+## Source Code & Build Tools
 The production JavaScript assets in `schedule/schedule.js` are compiled from React components. 
 The unminified source code, build scripts, and configuration files are publicly maintained at:
 https://github.com/Latz/lynxjournal
 
-== Changelog ==
+## Changelog
 
-= 1.0.2 =
+#### 1.0.2
 * Initial release.
