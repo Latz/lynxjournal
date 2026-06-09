@@ -7,5 +7,10 @@
     "NONCE":      "/nonce",
     "API_KEY":    "/api-key",
     "SCHEDULE":   "/schedule"
+  },
+  "WP_ENV": {
+    "BASE_URL":       "http://localhost:8888",
+    "ADMIN_USER":     "admin",
+    "ADMIN_PASSWORD": "password"
   }
 }
