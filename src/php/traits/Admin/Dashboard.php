@@ -625,7 +625,7 @@ trait LynxJournal_Admin_Dashboard {
 
         $recently_published = get_posts( array(
             'post_type'      => 'lynx-journal',
-            'post_status'    => array( 'lynxjournal_published', 'lynxjournal_draft' ),
+            'post_status'    => array( 'lynxjournal_pub', 'lynxjournal_draft' ),
             'posts_per_page' => 5,
             'orderby'        => 'modified',
             'order'          => 'DESC',

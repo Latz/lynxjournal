@@ -31,7 +31,7 @@ trait LynxJournal_Admin_LinksPage {
             "SELECT DISTINCT YEAR(post_date) AS year, MONTH(post_date) AS month
              FROM {$wpdb->posts}
              WHERE post_type = 'lynx-journal'
-               AND post_status IN ('lynxjournal_pending','lynxjournal_published','lynxjournal_draft')
+               AND post_status IN ('lynxjournal_pending','lynxjournal_pub','lynxjournal_draft')
              ORDER BY post_date DESC"
         );
 

@@ -120,7 +120,7 @@ trait LynxJournal_PostType {
             )
         );
         register_post_status(
-            'lynxjournal_published',
+            'lynxjournal_pub',
             array(
                 'label'                     => _x( 'In Roundup', 'lynxjournal post status', 'lynx-journal' ),
                 'public'                    => true,

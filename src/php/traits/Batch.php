@@ -296,7 +296,7 @@ trait LynxJournal_Batch {
      */
     private function markLinksAsPublished(array $link_ids, int $post_id, bool $as_draft): void {
         $meta_status = $as_draft ? 'draft' : 'published';
-        $wp_status   = $as_draft ? 'lynxjournal_draft' : 'lynxjournal_published';
+        $wp_status   = $as_draft ? 'lynxjournal_draft' : 'lynxjournal_pub';
         $date        = current_time('mysql');
         foreach ($link_ids as $link_id) {
             $link = get_post($link_id);

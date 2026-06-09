@@ -56,7 +56,7 @@ trait LynxJournal_Queries {
     public function getLinksGroupedByCategory(string $search = '', int $month = 0, int $cat = 0, int $paged = 1, int $per_page = 20): array {
         $args = [
             'post_type'              => 'lynx-journal',
-            'post_status'            => ['lynxjournal_pending', 'lynxjournal_published', 'lynxjournal_draft'],
+            'post_status'            => ['lynxjournal_pending', 'lynxjournal_pub', 'lynxjournal_draft'],
             'posts_per_page'         => $per_page,
             'paged'                  => $paged,
             'orderby'                => 'date',
@@ -142,13 +142,37 @@ trait LynxJournal_Queries {
      * @return void
      */
     public function maybeRunMigration(): void {
-        if (get_option('lynxjournal_schema_version') === '2') {
+        $version = get_option('lynxjournal_schema_version');
+        if ($version === '3') {
             return;
         }
         global $wpdb;
 
-        // Bulk-migrate existing 'publish'-status lynxjournal posts to custom statuses.
-        // Three SQL UPDATEs are far faster than iterating with wp_update_post() for large sites.
+        if ($version !== '2') {
+            // v2: migrate old 'publish'-status posts to custom statuses.
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $wpdb->query($wpdb->prepare(
+                "UPDATE {$wpdb->posts} p
+                 INNER JOIN {$wpdb->postmeta} pm
+                    ON pm.post_id = p.ID
+                   AND pm.meta_key = '_lynxjournal_publish_status'
+                   AND pm.meta_value = 'draft'
+                 SET p.post_status = 'lynxjournal_draft'
+                 WHERE p.post_type = %s AND p.post_status = 'publish'",
+                'lynx-journal'
+            ));
+
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $wpdb->query($wpdb->prepare(
+                "UPDATE {$wpdb->posts}
+                 SET post_status = 'lynxjournal_pending'
+                 WHERE post_type = %s AND post_status = 'publish'",
+                'lynx-journal'
+            ));
+        }
+
+        // v3: fix posts stuck in lynxjournal_pending because the old status name
+        // 'lynxjournal_published' (22 chars) exceeded the varchar(20) column limit.
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query($wpdb->prepare(
             "UPDATE {$wpdb->posts} p
@@ -156,34 +180,13 @@ trait LynxJournal_Queries {
                 ON pm.post_id = p.ID
                AND pm.meta_key = '_lynxjournal_publish_status'
                AND pm.meta_value = 'published'
-             SET p.post_status = 'lynxjournal_published'
-             WHERE p.post_type = %s AND p.post_status = 'publish'",
-            'lynx-journal'
-        ));
-
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $wpdb->query($wpdb->prepare(
-            "UPDATE {$wpdb->posts} p
-             INNER JOIN {$wpdb->postmeta} pm
-                ON pm.post_id = p.ID
-               AND pm.meta_key = '_lynxjournal_publish_status'
-               AND pm.meta_value = 'draft'
-             SET p.post_status = 'lynxjournal_draft'
-             WHERE p.post_type = %s AND p.post_status = 'publish'",
-            'lynx-journal'
-        ));
-
-        // All remaining 'publish' lynxjournal posts have no status meta → they are pending.
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $wpdb->query($wpdb->prepare(
-            "UPDATE {$wpdb->posts}
-             SET post_status = 'lynxjournal_pending'
-             WHERE post_type = %s AND post_status = 'publish'",
+             SET p.post_status = 'lynxjournal_pub'
+             WHERE p.post_type = %s AND p.post_status = 'lynxjournal_pending'",
             'lynx-journal'
         ));
 
         delete_transient('lynxjournal_publish_stats');
-        update_option('lynxjournal_schema_version', '2');
+        update_option('lynxjournal_schema_version', '3');
     }
 
     /**
