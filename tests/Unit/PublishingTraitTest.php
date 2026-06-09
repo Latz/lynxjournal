@@ -42,7 +42,7 @@ describe('LynxJournal_Publishing Trait', function () {
         it('returns error if link has no title', function () {
             Functions\when('current_user_can')->justReturn(true);
 
-            $post = lynxjournal_make_post(123, '', 'lynxjournal');
+            $post = lynxjournal_make_post(123, '', 'lynx-journal');
             Functions\when('get_post')->justReturn($post);
 
             $result = $this->plugin->validateLinkForPublish(123);
@@ -57,7 +57,7 @@ describe('LynxJournal_Publishing Trait', function () {
 
             Functions\when('get_post')->alias(function ($id) {
                 return match ($id) {
-                    123 => lynxjournal_make_post(123, 'Title', 'lynxjournal'),
+                    123 => lynxjournal_make_post(123, 'Title', 'lynx-journal'),
                     456 => lynxjournal_make_post(456, 'Published', 'post'),
                     default => null,
                 };
@@ -69,7 +69,7 @@ describe('LynxJournal_Publishing Trait', function () {
 
         it('returns null when validation passes', function () {
             Functions\when('current_user_can')->justReturn(true);
-            Functions\when('get_post')->justReturn(lynxjournal_make_post(123, 'Title', 'lynxjournal'));
+            Functions\when('get_post')->justReturn(lynxjournal_make_post(123, 'Title', 'lynx-journal'));
             Functions\when('get_post_meta')->justReturn(null);
 
             $result = $this->plugin->validateLinkForPublish(123);
@@ -111,7 +111,7 @@ describe('LynxJournal_Publishing Trait', function () {
             $this->plugin->shouldReceive('mapTaxonomies')->once();
 
             // 2. Mock WordPress functions
-            Functions\when('get_post')->justReturn(lynxjournal_make_post($link_id, 'Original Title', 'lynxjournal'));
+            Functions\when('get_post')->justReturn(lynxjournal_make_post($link_id, 'Original Title', 'lynx-journal'));
             Functions\when('get_post_meta')->justReturn('https://test.com');
             Functions\when('wp_insert_post')->justReturn($new_post_id);
             Functions\when('update_post_meta')->justReturn(true);

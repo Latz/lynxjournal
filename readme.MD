@@ -1,13 +1,3 @@
-=== LynxJournal ===
-Contributors: latz
-Tags: links, blogging, roundup, curation
-Requires at least: 6.0
-Tested up to: 7.0
-Requires PHP: 8.0
-Stable tag: 1.0.2
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
-
 Save and publish curated link digests to your blog.
 
 == Description ==
@@ -148,7 +138,7 @@ Viewing the Schedule page, saving the schedule, and triggering Run Now all requi
 == Source Code & Build Tools ==
 The production JavaScript assets in `schedule/schedule.js` are compiled from React components. 
 The unminified source code, build scripts, and configuration files are publicly maintained at:
-https://github.com/Latz/lynxjournal
+https://github.com/Latz/lynxjournal/tree/master/
 
 == Changelog ==
 
