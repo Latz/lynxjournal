@@ -660,7 +660,7 @@ trait LynxJournal_Admin_Dashboard {
                 <a href="<?php echo esc_url( $categories_url ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
                     <span class="dashicons dashicons-category lynxjournal-stat-icon"></span>
                     <div><span class="lynxjournal-stat-value"><?php echo esc_html( number_format_i18n( $total_categories ) ); ?></span>
-                    <span class="lynxjournal-stat-label"><?php esc_html_e( 'Categories', 'lynx-journal' ); ?></span></div>
+                    <span class="lynxjournal-stat-label"><?php echo esc_html( _n( 'Category', 'Categories', $total_categories, 'lynx-journal' ) ); ?></span></div>
                 </a>
                 <a href="<?php echo esc_url( $all_links_url ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
                     <span class="dashicons dashicons-yes-alt lynxjournal-stat-icon"></span>
