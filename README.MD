@@ -1,3 +1,5 @@
+<img src="assets/banner3.png" alt="LynxJournal banner" width="100%" style="aspect-ratio:1848/600">
+
 Save and publish curated link digests to your blog.
 
 == Description ==
