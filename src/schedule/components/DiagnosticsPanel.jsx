@@ -10,8 +10,8 @@ function fmtTs(ts) {
 }
 
 const REASON_LABELS = {
-  condition_not_met: __('Condition not met', 'lynxjournal'),
-  locked:            __('Run was locked', 'lynxjournal'),
+  condition_not_met: __('Condition not met', 'lynx-journal'),
+  locked:            __('Run was locked', 'lynx-journal'),
 };
 
 function formatReason(reason) {
@@ -28,7 +28,7 @@ function RunBadge({ status }) {
 function PostLink({ postId, linkCount }) {
   if (!linkCount) return null;
   /* translators: %d: number of links in the published roundup */
-  const label = sprintf(__('%d links', 'lynxjournal'), linkCount);
+  const label = sprintf(__('%d links', 'lynx-journal'), linkCount);
   return (
     <span className="lynxjournal-diag-meta">
       {' · '}
@@ -48,26 +48,26 @@ export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
   return (
     <div className="postbox lynxjournal-diagnostics">
       <div className="lynxjournal-next-heading">
-        {__('Diagnostics', 'lynxjournal')}
+        {__('Diagnostics', 'lynx-journal')}
       </div>
       <div className="inside lynxjournal-next-schedules-inside">
-        {loading && <p className="description">{__('Loading…', 'lynxjournal')}</p>}
+        {loading && <p className="description">{__('Loading…', 'lynx-journal')}</p>}
 
         {!loading && data && (
           <>
             <dl className="lynxjournal-diag-list">
               {mode !== 'count' && (
                 <div className="lynxjournal-diag-row">
-                  <dt>{__('Next run', 'lynxjournal')}</dt>
+                  <dt>{__('Next run', 'lynx-journal')}</dt>
                   <dd>
                     {data.next_scheduled
                       ? fmtTs(data.next_scheduled)
                       : (
                         <>
-                          <em>{__('Not scheduled', 'lynxjournal')}</em>
+                          <em>{__('Not scheduled', 'lynx-journal')}</em>
                           {data.wp_cron_disabled && (
                             <span className="lynxjournal-diag-reason">
-                              {' — '}{__('WP-Cron disabled', 'lynxjournal')}
+                              {' — '}{__('WP-Cron disabled', 'lynx-journal')}
                             </span>
                           )}
                         </>
@@ -78,18 +78,18 @@ export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
 
               {mode === 'count' && data.links_until_post !== undefined && (
                 <div className="lynxjournal-diag-row">
-                  <dt>{__('Next run', 'lynxjournal')}</dt>
+                  <dt>{__('Next run', 'lynx-journal')}</dt>
                   <dd>
                     {data.links_until_post > 0
                       /* translators: %d: number of links still needed before the next post */
-                      ? sprintf(__('%d links until post', 'lynxjournal'), data.links_until_post)
-                      : <em>{__('Ready to post', 'lynxjournal')}</em>}
+                      ? sprintf(__('%d links until post', 'lynx-journal'), data.links_until_post)
+                      : <em>{__('Ready to post', 'lynx-journal')}</em>}
                   </dd>
                 </div>
               )}
 
               <div className="lynxjournal-diag-row">
-                <dt>{__('Last run', 'lynxjournal')}</dt>
+                <dt>{__('Last run', 'lynx-journal')}</dt>
                 <dd>
                   {lastRun ? (
                     <>
@@ -102,17 +102,17 @@ export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
                       )}
                     </>
                   ) : (
-                    <em>{__('No runs yet', 'lynxjournal')}</em>
+                    <em>{__('No runs yet', 'lynx-journal')}</em>
                   )}
                 </dd>
               </div>
 
               <div className="lynxjournal-diag-row">
-                <dt>{__('WP-Cron', 'lynxjournal')}</dt>
+                <dt>{__('WP-Cron', 'lynx-journal')}</dt>
                 <dd>
                   {data.wp_cron_disabled
-                    ? <span className="lynxjournal-diag-badge lynxjournal-diag-badge--warn">{__('Disabled', 'lynxjournal')}</span>
-                    : <span className="lynxjournal-diag-badge lynxjournal-diag-badge--success">{__('Active', 'lynxjournal')}</span>}
+                    ? <span className="lynxjournal-diag-badge lynxjournal-diag-badge--warn">{__('Disabled', 'lynx-journal')}</span>
+                    : <span className="lynxjournal-diag-badge lynxjournal-diag-badge--success">{__('Active', 'lynx-journal')}</span>}
                 </dd>
               </div>
             </dl>
@@ -124,9 +124,9 @@ export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
                   onClick={() => setShowHistory(h => !h)}
                 >
                   {showHistory
-                    ? __('Hide history', 'lynxjournal')
+                    ? __('Hide history', 'lynx-journal')
                     /* translators: %d: number of stored run records */
-                    : sprintf(__('History (%d)', 'lynxjournal'), history.length)}
+                    : sprintf(__('History (%d)', 'lynx-journal'), history.length)}
                 </button>
                 {showHistory && (
                   <ol className="lynxjournal-history-list">
@@ -156,7 +156,7 @@ export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
             onClick={onRefresh}
             className="lynxjournal-diag-refresh"
           >
-            {__('Refresh', 'lynxjournal')}
+            {__('Refresh', 'lynx-journal')}
           </Button>
         )}
       </div>

@@ -77,17 +77,17 @@ export default function App() {
     setSaving(true);
     setNotice(null);
     if (new Set(form.times).size !== form.times.length) {
-      setNotice({ status: 'error', message: __('Execution times must be unique.', 'lynxjournal') });
+      setNotice({ status: 'error', message: __('Execution times must be unique.', 'lynx-journal') });
       setSaving(false);
       return;
     }
     try {
       await apiFetch({ path: '/lynxjournal/v1/schedule', method: 'POST', data: form });
       setSavedForm(form);
-      setNotice({ status: 'success', message: __('Schedule saved.', 'lynxjournal') });
+      setNotice({ status: 'success', message: __('Schedule saved.', 'lynx-journal') });
       refreshDiag();
     } catch {
-      setNotice({ status: 'error', message: __('Failed to save schedule.', 'lynxjournal') });
+      setNotice({ status: 'error', message: __('Failed to save schedule.', 'lynx-journal') });
     } finally {
       setSaving(false);
     }
@@ -116,7 +116,7 @@ export default function App() {
     return { rrule: null, times: form.times, trigger: { type: form.mode, ...form.trigger } };
   }, [form, isSchedule, isManual]);
 
-  const section02Label = isSchedule ? __('Recurrence', 'lynxjournal') : __('Condition', 'lynxjournal');
+  const section02Label = isSchedule ? __('Recurrence', 'lynx-journal') : __('Condition', 'lynx-journal');
 
   function renderConditionSection() {
     if (isSchedule) return (
@@ -128,7 +128,7 @@ export default function App() {
     );
     if (isManual) return (
       <p className="description">
-        {__('No automatic trigger — posts must be triggered manually.', 'lynxjournal')}
+        {__('No automatic trigger — posts must be triggered manually.', 'lynx-journal')}
       </p>
     );
     return (
@@ -153,11 +153,11 @@ export default function App() {
             }}
             className="lynxjournal-wpcron-notice"
           >
-            <strong>{__('WP-Cron is disabled.', 'lynxjournal')}</strong>
+            <strong>{__('WP-Cron is disabled.', 'lynx-journal')}</strong>
             {' '}
-            {__('Scheduled runs will not fire automatically. Add a real server cron job or remove', 'lynxjournal')}
+            {__('Scheduled runs will not fire automatically. Add a real server cron job or remove', 'lynx-journal')}
             {' '}<code>DISABLE_WP_CRON</code>{' '}
-            {__('from', 'lynxjournal')}
+            {__('from', 'lynx-journal')}
             {' '}<code>wp-config.php</code>.
           </Notice>
         )}
@@ -168,7 +168,7 @@ export default function App() {
           </Notice>
         )}
 
-        <Section title={__('Mode', 'lynxjournal')}>
+        <Section title={__('Mode', 'lynx-journal')}>
           <ScheduleTypePicker value={form.mode} onChange={handleModeChange} />
         </Section>
 
@@ -177,7 +177,7 @@ export default function App() {
         </Section>
 
         {!isManual && (
-          <Section title={__('Execution Times', 'lynxjournal')}>
+          <Section title={__('Execution Times', 'lynx-journal')}>
             <TimePicker
               times={form.times}
               onChange={v => setForm(f => ({ ...f, times: v }))}
@@ -185,30 +185,30 @@ export default function App() {
           </Section>
         )}
 
-        <Section title={__('Post Status', 'lynxjournal')}>
+        <Section title={__('Post Status', 'lynx-journal')}>
           <SelectControl
             value={form.post_status ?? 'publish'}
             options={[
-              { label: __('Publish', 'lynxjournal'), value: 'publish' },
-              { label: __('Draft', 'lynxjournal'), value: 'draft' },
+              { label: __('Publish', 'lynx-journal'), value: 'publish' },
+              { label: __('Draft', 'lynx-journal'), value: 'draft' },
             ]}
             onChange={post_status => setForm(f => ({ ...f, post_status }))}
             __nextHasNoMarginBottom
           />
         </Section>
 
-        <Section title={__('Notifications', 'lynxjournal')}>
+        <Section title={__('Notifications', 'lynx-journal')}>
           <CheckboxControl
-            label={__('Email me after each run', 'lynxjournal')}
+            label={__('Email me after each run', 'lynx-journal')}
             checked={form.notify?.enabled ?? false}
             onChange={enabled => setForm(f => ({ ...f, notify: { ...f.notify, enabled } }))}
           />
           {form.notify?.enabled && (
             <TextControl
-              label={__('Email address', 'lynxjournal')}
+              label={__('Email address', 'lynx-journal')}
               type="email"
               value={form.notify?.email ?? ''}
-              placeholder={__('Leave blank to use admin email', 'lynxjournal')}
+              placeholder={__('Leave blank to use admin email', 'lynx-journal')}
               onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
               __nextHasNoMarginBottom
             />
@@ -217,7 +217,7 @@ export default function App() {
 
         <div className="lynxjournal-schedule-actions">
           <Button variant="primary" onClick={handleSave} isBusy={saving} disabled={saving}>
-            {__('Save Schedule', 'lynxjournal')}
+            {__('Save Schedule', 'lynx-journal')}
           </Button>
         </div>
       </div>

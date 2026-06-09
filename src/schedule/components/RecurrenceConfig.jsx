@@ -19,10 +19,10 @@ const WEEKDAY_SHORT = { MO: 'Mon', TU: 'Tue', WE: 'Wed', TH: 'Thu', FR: 'Fri', S
 const WEEKDAY_FULL  = { MO: 'Monday', TU: 'Tuesday', WE: 'Wednesday', TH: 'Thursday', FR: 'Friday', SA: 'Saturday', SU: 'Sunday' };
 
 const NTH_OPTIONS = [
-  { label: __('first',  'lynxjournal'), value: '1' },
-  { label: __('second', 'lynxjournal'), value: '2' },
-  { label: __('third',  'lynxjournal'), value: '3' },
-  { label: __('fourth', 'lynxjournal'), value: '4' },
+  { label: __('first',  'lynx-journal'), value: '1' },
+  { label: __('second', 'lynx-journal'), value: '2' },
+  { label: __('third',  'lynx-journal'), value: '3' },
+  { label: __('fourth', 'lynx-journal'), value: '4' },
 ];
 
 const WEEKDAY_OPTIONS = WEEKDAYS.map(d => ({ label: WEEKDAY_SHORT[d.value], value: d.value }));
@@ -50,14 +50,14 @@ export default function RecurrenceConfig({ type, value, onChange }) {
   if (type === 'daily') {
     return (
       <div className="lynxjournal-rc-row">
-        <span>{__('Every', 'lynxjournal')}</span>
+        <span>{__('Every', 'lynx-journal')}</span>
         <NumberControl
           value={String(value.interval)}
           min={1} max={365}
           onChange={v => onChange({ ...value, interval: Number.parseInt(v) || 1 })}
           style={{ width: '72px' }}
         />
-        <span>{value.interval === 1 ? __('day', 'lynxjournal') : __('days', 'lynxjournal')}</span>
+        <span>{value.interval === 1 ? __('day', 'lynx-journal') : __('days', 'lynx-journal')}</span>
       </div>
     );
   }
@@ -66,14 +66,14 @@ export default function RecurrenceConfig({ type, value, onChange }) {
     return (
       <div className="lynxjournal-rc">
         <div className="lynxjournal-rc-row">
-          <span>{__('Every', 'lynxjournal')}</span>
+          <span>{__('Every', 'lynx-journal')}</span>
           <NumberControl
             value={String(value.interval)}
             min={1} max={52}
             onChange={v => onChange({ ...value, interval: Number.parseInt(v) || 1 })}
             style={{ width: '72px' }}
           />
-          <span>{value.interval === 1 ? __('week', 'lynxjournal') : __('weeks', 'lynxjournal')}</span>
+          <span>{value.interval === 1 ? __('week', 'lynx-journal') : __('weeks', 'lynx-journal')}</span>
         </div>
         <div className="lynxjournal-weekdays">
           {WEEKDAYS.map(d => (
@@ -127,14 +127,14 @@ export default function RecurrenceConfig({ type, value, onChange }) {
     return (
       <div className="lynxjournal-rc">
         <div className="lynxjournal-rc-row">
-          <span>{__('Every', 'lynxjournal')}</span>
+          <span>{__('Every', 'lynx-journal')}</span>
           <NumberControl
             value={String(value.interval)}
             min={1} max={12}
             onChange={v => onChange({ ...value, interval: Number.parseInt(v) || 1 })}
             style={{ width: '72px' }}
           />
-          <span>{value.interval === 1 ? __('month, on', 'lynxjournal') : __('months, on', 'lynxjournal')}</span>
+          <span>{value.interval === 1 ? __('month, on', 'lynx-journal') : __('months, on', 'lynx-journal')}</span>
         </div>
 
         <div className="lynxjournal-month-days">
@@ -161,7 +161,7 @@ export default function RecurrenceConfig({ type, value, onChange }) {
                 />
               </button>
 
-              <span className="lynxjournal-opt-sep">{__('or', 'lynxjournal')}</span>
+              <span className="lynxjournal-opt-sep">{__('or', 'lynx-journal')}</span>
 
               {/* Same pattern for 'nth' mode — clicking activates it; the inner
                   SelectControls remain interactive once the mode is active. */}
@@ -189,7 +189,7 @@ export default function RecurrenceConfig({ type, value, onChange }) {
                   variant="destructive"
                   size="compact"
                   onClick={() => removeDay(i)}
-                  aria-label={__('Remove', 'lynxjournal')}
+                  aria-label={__('Remove', 'lynx-journal')}
                 >
                   ✕
                 </Button>
@@ -198,7 +198,7 @@ export default function RecurrenceConfig({ type, value, onChange }) {
           ))}
 
           <Button variant="secondary" size="compact" onClick={addDay}>
-            + {__('Add day', 'lynxjournal')}
+            + {__('Add day', 'lynx-journal')}
           </Button>
         </div>
       </div>

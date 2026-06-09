@@ -19,14 +19,14 @@ export default function TriggerCondition({ mode, value, onChange }) {
   if (mode === 'count') {
     return (
       <div className="lynxjournal-rc-row">
-        <span>{__('Post when there are at least', 'lynxjournal')}</span>
+        <span>{__('Post when there are at least', 'lynx-journal')}</span>
         <NumberControl
           value={String(value.count)}
           min={1}
           onChange={v => onChange({ ...value, count: Number.parseInt(v) || 1 })}
           style={{ width: '72px' }}
         />
-        <span>{value.count === 1 ? __('link', 'lynxjournal') : __('links', 'lynxjournal')}</span>
+        <span>{value.count === 1 ? __('link', 'lynx-journal') : __('links', 'lynx-journal')}</span>
       </div>
     );
   }
@@ -34,7 +34,7 @@ export default function TriggerCondition({ mode, value, onChange }) {
   if (mode === 'age') {
     return (
       <div className="lynxjournal-rc-row">
-        <span>{__('Post when oldest link is older than', 'lynxjournal')}</span>
+        <span>{__('Post when oldest link is older than', 'lynx-journal')}</span>
         {/* value.days can be absent on a freshly-initialised trigger object;
             default to 1 day so the control never renders an empty string. */}
         <NumberControl
@@ -43,7 +43,7 @@ export default function TriggerCondition({ mode, value, onChange }) {
           onChange={v => onChange({ ...value, days: Number.parseInt(v) || 1 })}
           style={{ width: '72px' }}
         />
-        <span>{(value.days ?? 1) === 1 ? __('day', 'lynxjournal') : __('days', 'lynxjournal')}</span>
+        <span>{(value.days ?? 1) === 1 ? __('day', 'lynx-journal') : __('days', 'lynx-journal')}</span>
       </div>
     );
   }

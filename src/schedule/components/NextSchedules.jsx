@@ -61,7 +61,7 @@ export default function NextSchedules({ config, form }) {
 
   return (
     <div className="postbox lynxjournal-next-postbox">
-      <div className="lynxjournal-next-heading">{__('Next 10 Schedules', 'lynxjournal')}</div>
+      <div className="lynxjournal-next-heading">{__('Next 10 Schedules', 'lynx-journal')}</div>
       <div className="inside lynxjournal-next-schedules-inside">
         {nextDates.length > 0 ? (
           <ol className="lynxjournal-next-schedules">
@@ -73,12 +73,12 @@ export default function NextSchedules({ config, form }) {
             ))}
           </ol>
         ) : (
-          <p className="description">{__('No occurrences — check recurrence settings.', 'lynxjournal')}</p>
+          <p className="description">{__('No occurrences — check recurrence settings.', 'lynx-journal')}</p>
         )}
         {SITE_TIMEZONE && (
           <p className="lynxjournal-next-tz">
             {/* translators: %s: timezone name, e.g. Europe/Berlin */}
-            {sprintf(__('Times in %s', 'lynxjournal'), SITE_TIMEZONE)}
+            {sprintf(__('Times in %s', 'lynx-journal'), SITE_TIMEZONE)}
           </p>
         )}
       </div>

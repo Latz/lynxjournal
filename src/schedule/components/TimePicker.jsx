@@ -53,7 +53,7 @@ export default function TimePicker({ times, onChange }) {
               variant="destructive"
               size="compact"
               onClick={() => removeTime(i)}
-              aria-label={__('Remove time', 'lynxjournal')}
+              aria-label={__('Remove time', 'lynx-journal')}
             >
               ✕
             </Button>
@@ -61,7 +61,7 @@ export default function TimePicker({ times, onChange }) {
         </div>
       ))}
       <Button variant="secondary" size="compact" onClick={addTime}>
-        + {__('Add time', 'lynxjournal')}
+        + {__('Add time', 'lynx-journal')}
       </Button>
     </div>
   );

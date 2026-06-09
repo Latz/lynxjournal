@@ -1,10 +1,10 @@
 import { __ } from '@wordpress/i18n';
 
-const createMode = (value, label, desc) => ({ value, label: __(label, 'lynxjournal'), desc: __(desc, 'lynxjournal') });
+const createMode = (value, label, desc) => ({ value, label: __(label, 'lynx-journal'), desc: __(desc, 'lynx-journal') });
 
 const GROUPS = [
   {
-    label: __('Scheduled', 'lynxjournal'),
+    label: __('Scheduled', 'lynx-journal'),
     modes: [
       createMode('daily',   'Daily',   'Every N days'),
       createMode('weekly',  'Weekly',  'Specific weekdays'),
@@ -12,14 +12,14 @@ const GROUPS = [
     ],
   },
   {
-    label: __('Trigger-based', 'lynxjournal'),
+    label: __('Trigger-based', 'lynx-journal'),
     modes: [
       createMode('count', 'By Count', 'When N links queue'),
       createMode('age',   'By Age',   'When oldest link ages'),
     ],
   },
   {
-    label: __('Manual', 'lynxjournal'),
+    label: __('Manual', 'lynx-journal'),
     modes: [
       createMode('manual', 'Manual', 'No auto-publish'),
     ],

@@ -47,6 +47,8 @@ rsync -a \
     --exclude='assets/' \
     --exclude='chrome-extension/' \
     --exclude='languages/' \
+    --exclude='README.MD' \
+    --exclude='fixed.md' \
     --exclude='.*' \
     "$PROJECT_DIR/" "$STAGE_DIR/"
 
