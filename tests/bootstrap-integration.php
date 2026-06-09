@@ -1,10 +1,6 @@
 <?php
 declare(strict_types=1);
 
-if (!defined('ABSPATH')) {
-    exit;
-}
-
 // phpcs:disable WordPress.WP.GlobalVariablesOverride,WordPress.Security.EscapeOutput.OutputNotEscaped,WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- test bootstrap file
 
 /**
@@ -20,7 +16,7 @@ if (!defined('ABSPATH')) {
  * Quick start (adjust values):
  *   export WP_TESTS_DIR=/tmp/wordpress-tests-lib
  *   bash bin/install-wp-tests.sh wordpress_test root '' localhost latest
- *   vendor/bin/pest --testsuite=Integration
+ *   vendor/bin/pest --testsuite=Integration --bootstrap tests/bootstrap-integration.php
  */
 
 $lynxjournal_wp_tests_dir = getenv('WP_TESTS_DIR') ?: '/tmp/wordpress-tests-lib';
@@ -32,6 +28,10 @@ if (! is_dir($lynxjournal_wp_tests_dir)) {
 }
 
 define('LYNXJOURNAL_TESTS_DIR', dirname(__DIR__));
+
+// Must load autoload first so PHPUnit classes are available when the WP test
+// suite bootstrap checks the PHPUnit version.
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 // Point WP test bootstrap to the Composer-installed polyfills.
 if (!defined('WP_TESTS_PHPUNIT_POLYFILLS_PATH')) {
@@ -48,4 +48,3 @@ tests_add_filter('muplugins_loaded', static function (): void {
 });
 
 require_once $lynxjournal_wp_tests_dir . '/includes/bootstrap.php';
-require_once dirname(__DIR__) . '/vendor/autoload.php';

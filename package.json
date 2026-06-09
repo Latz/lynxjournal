@@ -8,6 +8,7 @@
     "env:stop": "wp-env stop",
     "env:clean": "wp-env clean all",
     "env:logs": "wp-env logs",
+    "test:all": "vendor/bin/pest --testsuite=Unit && vitest run",
     "test:js": "vitest run",
     "test:js:watch": "vitest",
     "test:js:coverage": "vitest run --coverage",
