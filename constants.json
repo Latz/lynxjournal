@@ -1,0 +1,11 @@
+{
+  "REST_NAMESPACE": "lynxjournal/v1",
+  "ROUTES": {
+    "ADD_LINK":   "/add-link",
+    "CATEGORIES": "/categories",
+    "LINKS":      "/links",
+    "NONCE":      "/nonce",
+    "API_KEY":    "/api-key",
+    "SCHEDULE":   "/schedule"
+  }
+}
