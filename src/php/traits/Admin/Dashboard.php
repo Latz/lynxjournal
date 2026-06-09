@@ -143,7 +143,7 @@ trait LynxJournal_Admin_Dashboard {
         $title    = isset( $_POST['quick_title'] )    ? sanitize_text_field( wp_unslash( $_POST['quick_title'] ) )    : '';
         $url      = isset( $_POST['quick_url'] )      ? esc_url_raw( wp_unslash( $_POST['quick_url'] ) )              : '';
         $category = isset( $_POST['quick_category'] ) ? (int) $_POST['quick_category']                                : 0;
-        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_quick_add_link' ) || empty( $title ) ) {
+        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_quick_add_link' ) || empty( $title ) || empty( $url ) ) {
             return false;
         }
         if ( ! current_user_can( 'edit_posts' ) ) {
@@ -519,12 +519,9 @@ trait LynxJournal_Admin_Dashboard {
                             placeholder="<?php esc_attr_e( 'Enter link title', 'lynx-journal' ); ?>" required>
                     </p>
                     <p>
-                        <label for="quick_url">
-                            <strong><?php esc_html_e( 'URL', 'lynx-journal' ); ?></strong>
-                            <span class="lynxjournal-optional"><?php esc_html_e( '(optional)', 'lynx-journal' ); ?></span>
-                        </label><br>
+                        <label for="quick_url"><strong><?php esc_html_e( 'URL', 'lynx-journal' ); ?> *</strong></label><br>
                         <input type="url" id="quick_url" name="quick_url" class="regular-text"
-                            placeholder="https://example.com">
+                            placeholder="https://example.com" required>
                     </p>
                     <?php if ( $has_categories ) : ?>
                     <p>
