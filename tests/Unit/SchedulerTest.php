@@ -22,6 +22,8 @@ describe('LynxJournal::executeSchedule()', function (): void {
         Functions\when('wp_date')->justReturn('April 29, 2026');
         Functions\when('wp_clear_scheduled_hook')->justReturn(0);
         Functions\when('wp_schedule_single_event')->justReturn(true);
+        Functions\when('user_can')->justReturn(true);
+        Functions\when('get_users')->justReturn([1]);
 
         $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
         $this->plugin->shouldReceive('scheduleNextEvent')->andReturnNull();
@@ -183,7 +185,7 @@ describe('LynxJournal::executeSchedule()', function (): void {
         // 201 links → triggers has_more (MAX_PER_RUN = 200)
         $this->plugin->shouldReceive('getUnpublishedLinkIds')->andReturn(range(1, 201));
         $this->plugin->shouldReceive('createRoundupPost')
-            ->with(range(1, 200), Mockery::any(), false, 'daily')
+            ->with(range(1, 200), Mockery::any(), false, 'daily', Mockery::any())
             ->andReturn(['success' => true, 'post_id' => 99, 'message' => 'ok']);
 
         // scheduleNextEvent must NOT be called; the code schedules a raw catchup instead.

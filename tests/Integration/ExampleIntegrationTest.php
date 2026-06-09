@@ -18,12 +18,12 @@ if (!defined('ABSPATH')) {
 
 it('registers the lynxjournal custom post type', function (): void {
     // WP is fully loaded here – post types are registered.
-    expect(post_type_exists('lynxjournal'))->toBeTrue();
+    expect(post_type_exists('lynx-journal'))->toBeTrue();
 });
 
 it('creates a link post and retrieves it', function (): void {
     $postId = wp_insert_post([
-        'post_type'   => 'lynxjournal',
+        'post_type'   => 'lynx-journal',
         'post_title'  => 'Test Link',
         'post_status' => 'publish',
         'meta_input'  => ['_lynxjournal_url' => 'https://example.com'],

@@ -10,6 +10,7 @@ use Brain\Monkey\Functions;
 
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
+    Functions\when('user_can')->justReturn(true);
     $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
