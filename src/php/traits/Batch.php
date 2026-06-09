@@ -133,7 +133,8 @@ trait LynxJournal_Batch {
             'post_id'    => $post_id,
             'link_count' => $count,
             /* translators: %d: number of links */
-            'message'    => sprintf(__('Roundup post created successfully with %d link(s).', 'lynx-journal'), $count),
+            /* translators: %d: number of links included in the roundup post */
+            'message'    => sprintf(_n('Roundup post created successfully with %d link.', 'Roundup post created successfully with %d links.', $count, 'lynx-journal'), $count),
         );
     }
 
