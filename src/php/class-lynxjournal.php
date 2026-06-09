@@ -72,7 +72,7 @@ class LynxJournal {
      */
     private function register_admin_hooks(): void {
         add_action('add_meta_boxes',                       [$this, 'addMetaBoxes']);
-        add_action('save_post_lynxjournal',                 [$this, 'saveUrl']);
+        add_action('save_post_lynx-journal',                [$this, 'saveUrl']);
         add_action('wp_ajax_lynxjournal_get_rest_nonce',    [$this, 'handleGetRestNonce']);
         add_action('admin_menu',                           [$this, 'adminMenu']);
         add_action('admin_enqueue_scripts',                [$this, 'enqueueAdminAssets']);

@@ -30,7 +30,7 @@ function lynxjournal_make_request(array $params = [], array $headers = []): WP_R
 /**
  * Build a minimal WP_Post object.
  */
-function lynxjournal_make_post(int $id, string $title, string $type = 'lynxjournal', string $content = ''): WP_Post
+function lynxjournal_make_post(int $id, string $title, string $type = 'lynx-journal', string $content = ''): WP_Post
 {
     $post               = new WP_Post();
     $post->ID           = $id;
