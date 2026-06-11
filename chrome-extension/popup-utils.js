@@ -39,11 +39,6 @@ export function extractPageDescription(doc) {
  * @param {Document} doc - The document used to create elements (injectable for tests).
  */
 export function renderCategories(categories, container, doc = document) {
-    if (!categories || categories.length === 0) {
-        container.innerHTML = '<div class="loading">No categories available</div>';
-        return;
-    }
-
     container.innerHTML = '';
     const fragment = doc.createDocumentFragment();
 
@@ -65,32 +60,4 @@ export function renderCategories(categories, container, doc = document) {
     }
 
     container.appendChild(fragment);
-}
-
-/**
- * Returns true when a cached value is still within its TTL.
- *
- * @param {number} timestamp - Unix ms timestamp when the cache was written (0 = never).
- * @param {number} ttlMs     - Time-to-live in milliseconds.
- * @param {number} [now]     - Current time in ms (injectable for tests; defaults to Date.now()).
- * @returns {boolean}
- */
-export function isCacheFresh(timestamp, ttlMs, now = Date.now()) {
-    if (!timestamp) return false;
-    return (now - timestamp) < ttlMs;
-}
-
-/**
- * Construct the full REST API URL for a given route.
- *
- * @param {string} endpoint - Base URL (e.g. "https://example.com/wp-json/lynxjournal/v1"), no trailing slash.
- * @param {string} route    - Route path (e.g. "/categories").
- * @returns {string}
- */
-export function buildApiUrl(endpoint, route) {
-    let clean = endpoint;
-    while (clean.endsWith('/')) {
-        clean = clean.slice(0, -1);
-    }
-    return `${clean}${route}`;
 }

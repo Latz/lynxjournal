@@ -127,15 +127,11 @@ export async function checkWpLogin(url) {
     try {
         // Use the resolved origin so Secure cookies are included
         const cookieUrl = resolvedOrigin;
-        console.log('[lynxjournal] input url:', url);
-        console.log('[lynxjournal] resolved origin:', resolvedOrigin);
         const cookies = await chrome.cookies.getAll({ url: cookieUrl });
-        console.log('[lynxjournal] cookies for origin:', cookies.map(c => c.name));
         const loggedIn = cookies.some(c =>
             c.name.startsWith('wordpress_logged_in_') ||
             c.name.startsWith('wordpress_sec_')
         );
-        console.log('[lynxjournal] loggedIn:', loggedIn);
 
         if (!loggedIn) {
             status.textContent = chrome.i18n.getMessage('msgNotLoggedIn');

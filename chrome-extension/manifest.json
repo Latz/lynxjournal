@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "LynxJournal",
 	"version": "1.0.3",
-	"description": "Save current üage to WordPress LynxJournal plugin",
+	"description": "Save current page to WordPress LynxJournal plugin",
 	"default_locale": "en",
 	"permissions": ["activeTab", "scripting", "storage", "notifications", "contextMenus", "cookies"],
 	"background": {

@@ -178,12 +178,13 @@ export async function handleSubmit(e) {
         const result = await response.json();
 
         if (response.status === 409) {
-            chrome.notifications.create({
+            await chrome.notifications.create({
                 type: 'basic',
                 iconUrl: 'icon48.png',
                 title: chrome.i18n.getMessage('notifAlreadySavedTitle'),
                 message: result.message || chrome.i18n.getMessage('notifAlreadySavedBody')
-            }, () => window.close());
+            });
+            window.close();
             return;
         }
 
@@ -191,12 +192,13 @@ export async function handleSubmit(e) {
             throw new Error(result.message || chrome.i18n.getMessage('msgSaveFailed'));
         }
 
-        chrome.notifications.create({
+        await chrome.notifications.create({
             type: 'basic',
             iconUrl: 'icon48.png',
             title: chrome.i18n.getMessage('notifLinkSavedTitle'),
             message: formData.title || chrome.i18n.getMessage('notifLinkSavedBody')
-        }, () => window.close());
+        });
+        window.close();
 
     } catch (error) {
         showMessage(error.message || chrome.i18n.getMessage('msgSaveFailed'), 'error');
