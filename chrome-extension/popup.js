@@ -180,7 +180,7 @@ export async function handleSubmit(e) {
         if (response.status === 409) {
             await chrome.notifications.create({
                 type: 'basic',
-                iconUrl: 'icon48.png',
+                iconUrl: 'icons/icon48.png',
                 title: chrome.i18n.getMessage('notifAlreadySavedTitle'),
                 message: result.message || chrome.i18n.getMessage('notifAlreadySavedBody')
             });
@@ -194,7 +194,7 @@ export async function handleSubmit(e) {
 
         await chrome.notifications.create({
             type: 'basic',
-            iconUrl: 'icon48.png',
+            iconUrl: 'icons/icon48.png',
             title: chrome.i18n.getMessage('notifLinkSavedTitle'),
             message: formData.title || chrome.i18n.getMessage('notifLinkSavedBody')
         });
