@@ -30,6 +30,15 @@ const test = base.extend({
                 `--load-extension=${EXT_PATH}`,
             ],
         });
+        // Block all http/https requests — extension tests must be self-contained.
+        await context.route('**', route => {
+            const url = route.request().url();
+            if (url.startsWith('http://') || url.startsWith('https://')) {
+                route.abort();
+            } else {
+                route.continue();
+            }
+        });
         await use(context);
         await context.close();
         fs.rmSync(userDataDir, { recursive: true, force: true });
