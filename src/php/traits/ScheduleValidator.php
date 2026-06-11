@@ -80,7 +80,7 @@ trait LynxJournal_ScheduleValidator {
         }
         if (isset($trigger['days'])) {
             $trigger['days'] = (int) $trigger['days'];
-            if ($trigger['days'] <= 0) {
+            if ($trigger['days'] < 0) {
                 return new \WP_Error('invalid_trigger', __('trigger.days must be a positive integer', 'lynx-journal'), ['status' => 400]);
             }
         }

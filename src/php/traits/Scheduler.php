@@ -374,6 +374,9 @@ trait LynxJournal_Scheduler {
      * @return bool True if link is older than specified days.
      */
     private function isLinkOlderThan(int $link_id, int $days): bool {
+        if ($days === 0) {
+            return true; // 0 = no age restriction, every link qualifies
+        }
         $post = get_post($link_id);
         if (!$post) {
             return false;

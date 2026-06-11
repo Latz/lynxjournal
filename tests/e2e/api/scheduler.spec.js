@@ -11,8 +11,17 @@
  * Run with: npm run test:e2e:api
  */
 
+import { execSync } from 'child_process';
 import { test, expect } from '@playwright/test';
 import constants from '../../../constants.json' assert { type: 'json' };
+
+// Run all scheduler tests serially — each test calls /schedule/run which sets a 5-min lock.
+test.describe.configure({ mode: 'serial' });
+
+// Clear the run-lock transient before every test so /schedule/run is never rate-limited.
+test.beforeEach(() => {
+    execSync('npx wp-env run cli wp transient delete lynxjournal_run_lock', { stdio: 'pipe' });
+});
 
 const { REST_NAMESPACE, ROUTES } = constants;
 
@@ -65,13 +74,13 @@ test.describe('Scheduler — daily mode', () => {
         expect(body.link_count).toBeGreaterThan(0);
 
         // Roundup post was created
-        const postsRes = await request.get(wpApi('/posts?search=Links%3A'));
+        const postsRes = await request.get(wpApi('/posts') + '&search=Links%3A');
         expect(postsRes.status()).toBe(200);
         const posts = await postsRes.json();
         expect(posts.length).toBeGreaterThan(0);
 
         // Link was marked as published via meta (still written alongside the custom status)
-        const linkRes = await request.get(wpApi(`/lynxjournal/${linkId}?context=edit`));
+        const linkRes = await request.get(wpApi(`/lynx-journal/${linkId}`) + '&context=edit');
         expect(linkRes.status()).toBe(200);
         const link = await linkRes.json();
         expect(link.meta._lynxjournal_publish_status).toBe('published');
