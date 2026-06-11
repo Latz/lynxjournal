@@ -9,6 +9,9 @@
 import { test, expect } from '@playwright/test';
 import constants from '../../../constants.json' assert { type: 'json' };
 
+// All UI tests share a login session — run serially to avoid concurrent login conflicts.
+test.describe.configure({ mode: 'serial' });
+
 const { WP_ENV, REST_NAMESPACE, ROUTES } = constants;
 
 const ADMIN_URL     = `${WP_ENV.BASE_URL}/wp-admin`;
@@ -28,8 +31,6 @@ async function wpLogin(page) {
 // Dashboard presence
 // ---------------------------------------------------------------------------
 test.describe('LynxJournal dashboard', () => {
-    test.describe.configure({ mode: 'serial' });
-
     test.beforeEach(async ({ page }) => {
         await wpLogin(page);
     });
