@@ -15,6 +15,7 @@
   "msgLoadingCategories": { "message": "Loading categories..." },
   "labelTags":            { "message": "Tags" },
   "placeholderTags":      { "message": "Separate with commas" },
+  "placeholderAddTags":   { "message": "Add tags..." },
   "btnSaveLink":          { "message": "Save Link" },
   "btnSaving":            { "message": "Saving..." },
   "btnSettings":          { "message": "Settings" },

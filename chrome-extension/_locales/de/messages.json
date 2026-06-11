@@ -14,6 +14,7 @@
   "labelCategories":      { "message": "Kategorien" },
   "msgLoadingCategories": { "message": "Kategorien werden geladen..." },
   "labelTags":            { "message": "Schlagwörter" },
+  "placeholderAddTags":   { "message": "Tags hinzufügen..." },
   "placeholderTags":      { "message": "Mit Kommas trennen" },
   "btnSaveLink":          { "message": "Link speichern" },
   "btnSaving":            { "message": "Wird gespeichert..." },

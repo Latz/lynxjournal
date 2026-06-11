@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 trim: true,
                 duplicates: false,
                 addTagOnBlur: true,
-                placeholder: 'Add tags...',
+                placeholder: chrome.i18n.getMessage('placeholderAddTags'),
                 dropdown: {
                     enabled: 0
                 }
