@@ -31,6 +31,13 @@ async function wpLogin(page) {
 // Dashboard presence
 // ---------------------------------------------------------------------------
 test.describe('LynxJournal dashboard', () => {
+    // Seed at least one link so stats grid and link list always render.
+    test.beforeAll(async ({ request }) => {
+        await request.post(api(ROUTES.ADD_LINK), {
+            data: { title: 'UI Test Seed Link', url: `https://example.com/ui-seed-${Date.now()}` },
+        });
+    });
+
     test.beforeEach(async ({ page }) => {
         await wpLogin(page);
     });
