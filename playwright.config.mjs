@@ -37,6 +37,11 @@ export default defineConfig({
             testMatch: 'tests/e2e/ui/**/*.spec.js',
             use: { ...devices['Desktop Chrome'] },
         },
+        {
+            name: 'extension',
+            testMatch: 'tests/e2e/extension/**/*.spec.js',
+            use: { ...devices['Desktop Chrome'] },
+        },
     ],
 
     // Automatically start wp-env before the suite runs.

@@ -15,6 +15,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:api": "playwright test tests/e2e/api",
+    "test:e2e:ext": "playwright test tests/e2e/extension",
     "test:e2e:debug": "playwright test --debug"
   },
   "devDependencies": {
