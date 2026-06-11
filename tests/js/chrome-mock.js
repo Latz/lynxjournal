@@ -1,4 +1,4 @@
-import { vi, afterEach } from 'vitest';
+import { vi, afterEach, beforeEach } from 'vitest';
 import enMessages from '../../chrome-extension/_locales/en/messages.json';
 
 function getMessage(key, substitutions) {
@@ -56,6 +56,11 @@ global.chrome = {
 };
 
 global.Tagify = vi.fn(() => ({ value: [] }));
+
+// Prevent window.close() from destroying the jsdom window between tests
+beforeEach(() => {
+    vi.spyOn(window, 'close').mockImplementation(() => {});
+});
 
 afterEach(() => {
     vi.clearAllMocks();
