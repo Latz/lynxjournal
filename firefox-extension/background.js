@@ -85,3 +85,14 @@ async function handleContextMenuClick(info) {
 }
 
 browser.menus.onClicked.addListener(handleContextMenuClick);
+
+browser.runtime.onMessage.addListener((msg) => {
+    if (msg.type === 'notify') {
+        browser.notifications.create({
+            type: 'basic',
+            iconUrl: 'icons/icon48.png',
+            title: msg.title,
+            message: msg.message
+        });
+    }
+});

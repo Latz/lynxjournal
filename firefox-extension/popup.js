@@ -178,9 +178,8 @@ export async function handleSubmit(e) {
         const result = await response.json();
 
         if (response.status === 409) {
-            await browser.notifications.create({
-                type: 'basic',
-                iconUrl: 'icons/icon48.png',
+            browser.runtime.sendMessage({
+                type: 'notify',
                 title: browser.i18n.getMessage('notifAlreadySavedTitle'),
                 message: result.message || browser.i18n.getMessage('notifAlreadySavedBody')
             });
@@ -192,9 +191,8 @@ export async function handleSubmit(e) {
             throw new Error(result.message || browser.i18n.getMessage('msgSaveFailed'));
         }
 
-        await browser.notifications.create({
-            type: 'basic',
-            iconUrl: 'icons/icon48.png',
+        browser.runtime.sendMessage({
+            type: 'notify',
             title: browser.i18n.getMessage('notifLinkSavedTitle'),
             message: formData.title || browser.i18n.getMessage('notifLinkSavedBody')
         });
