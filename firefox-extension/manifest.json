@@ -1,0 +1,33 @@
+{
+	"manifest_version": 3,
+	"name": "__MSG_appName__",
+	"version": "1.1.0",
+	"description": "__MSG_appDescription__",
+	"default_locale": "en",
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "lynxjournal@lynxjournal",
+			"strict_min_version": "109.0"
+		}
+	},
+	"permissions": ["activeTab", "scripting", "storage", "notifications", "menus", "cookies"],
+	"background": {
+		"scripts": ["background.js"]
+	},
+	"host_permissions": ["http://*/*", "https://*/*"],
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "icons/icon16.png",
+			"48": "icons/icon48.png",
+			"128": "icons/icon128.png",
+			"256": "icons/icon256.png"
+		}
+	},
+	"icons": {
+		"16": "icons/icon16.png",
+		"48": "icons/icon48.png",
+		"128": "icons/icon128.png"
+	},
+	"options_page": "settings.html"
+}

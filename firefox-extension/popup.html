@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="pageTitle">LynxJournal</title>
+    <link rel="stylesheet" href="tagify.css">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <div id="message" class="message"></div>
+
+        <div class="header">
+            <h1>LynxJournal</h1>
+        </div>
+
+        <div id="setupMessage" class="setup-message" style="display: none;">
+            <p data-i18n="msgConfigureFirst">⚙️ Please configure your API settings first.</p>
+            <button id="openSettings" class="btn btn-secondary" data-i18n="btnOpenSettings">Open Settings</button>
+        </div>
+
+        <div id="mainForm" style="display: none;">
+            <form id="linkForm">
+                <div class="form-group">
+                    <label for="title" data-i18n="labelTitle">Title *</label>
+                    <input type="text" id="title" name="title" required data-i18n-placeholder="placeholderTitle" placeholder="Link title">
+                </div>
+
+                <div class="form-group">
+                    <label for="url" data-i18n="labelUrl">URL</label>
+                    <input type="url" id="url" name="url" placeholder="https://example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="content" data-i18n="labelDescription">Description</label>
+                    <textarea id="content" name="content" rows="3" data-i18n-placeholder="placeholderDesc" placeholder="Optional description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <fieldset>
+                        <legend class="form-label" data-i18n="labelCategories">Categories</legend>
+                        <div id="categoriesList" class="categories-list">
+                            <div class="loading" data-i18n="msgLoadingCategories">Loading categories...</div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="form-group">
+                    <label for="tags" data-i18n="labelTags">Tags</label>
+                    <input type="text" id="tags" name="tags" data-i18n-placeholder="placeholderTags" placeholder="Separate with commas">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="saveBtn">
+                        <span class="btn-text" data-i18n="btnSaveLink">Save Link</span>
+                        <span class="btn-loading" style="display: none;" data-i18n="btnSaving">Saving...</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="settingsBtn" data-i18n="btnSettings">Settings</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="tagify.min.js"></script>
+    <script src="popup.js" type="module"></script>
+</body>
+</html>

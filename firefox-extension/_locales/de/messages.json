@@ -1,0 +1,68 @@
+{
+  "appName":              { "message": "LynxJournal Chrome Extension" },
+  "appDescription":       { "message": "Links für dein LynxJournal WordPress-Plugin speichern" },
+
+  "pageTitle":            { "message": "LynxJournal" },
+  "settingsTitle":        { "message": "LynxJournal-Einstellungen" },
+  "settingsSubtitle":     { "message": "Mit deiner WordPress-Website verbinden" },
+
+  "labelTitle":           { "message": "Titel *" },
+  "placeholderTitle":     { "message": "Linktitel" },
+  "labelUrl":             { "message": "URL" },
+  "labelDescription":     { "message": "Beschreibung" },
+  "placeholderDesc":      { "message": "Optionale Beschreibung" },
+  "labelCategories":      { "message": "Kategorien" },
+  "msgLoadingCategories": { "message": "Kategorien werden geladen..." },
+  "labelTags":            { "message": "Schlagwörter" },
+  "placeholderAddTags":   { "message": "Tags hinzufügen..." },
+  "placeholderTags":      { "message": "Mit Kommas trennen" },
+  "btnSaveLink":          { "message": "Link speichern" },
+  "btnSaving":            { "message": "Wird gespeichert..." },
+  "btnSettings":          { "message": "Einstellungen" },
+  "btnOpenSettings":      { "message": "Einstellungen öffnen" },
+  "msgConfigureFirst":    { "message": "⚙️ Bitte zuerst die API-Einstellungen konfigurieren." },
+
+  "labelWpAddress":       { "message": "WordPress-Adresse" },
+  "descWpAddress":        { "message": "Die URL deiner WordPress-Website. Wird verwendet, um den Endpunkt unten automatisch auszufüllen." },
+  "btnCreateEndpoint":    { "message": "API-Endpunkt erstellen" },
+  "labelApiEndpoint":     { "message": "API-Endpunkt *" },
+  "descApiEndpoint":      { "message": "Die API-Endpunkt-URL von der LynxJournal-Einstellungsseite in WordPress." },
+  "labelApiKey":          { "message": "API-Schlüssel *" },
+  "placeholderApiKey":    { "message": "Dein API-Schlüssel aus WordPress" },
+  "descApiKey":           { "message": "Der in den WordPress-LynxJournal-Einstellungen generierte API-Schlüssel." },
+  "btnSaveSettings":      { "message": "Einstellungen speichern" },
+  "infoBoxTitle":         { "message": "So erhältst du deine API-Zugangsdaten:" },
+  "infoStep1":            { "message": "Öffne dein WordPress-Administrationspanel" },
+  "infoStep2":            { "message": "Gehe zu LynxJournal → Einstellungen" },
+  "infoStep3":            { "message": "Generiere einen API-Schlüssel, falls noch nicht geschehen" },
+  "infoStep4":            { "message": "Kopiere API-Endpunkt und API-Schlüssel" },
+  "infoStep5":            { "message": "Füge sie in die obigen Felder ein" },
+
+  "msgNoCategories":      { "message": "Keine Kategorien verfügbar" },
+  "msgFailedCategories":  { "message": "Kategorien konnten nicht geladen werden" },
+  "msgSelectCategory":    { "message": "Bitte vor dem Speichern mindestens eine Kategorie auswählen." },
+  "msgSaveFailed":        { "message": "Link konnte nicht gespeichert werden. Bitte Einstellungen prüfen." },
+
+  "notifAlreadySavedTitle": { "message": "Bereits gespeichert" },
+  "notifAlreadySavedBody":  { "message": "Diese URL wurde bereits gespeichert." },
+  "notifLinkSavedTitle":    { "message": "Link gespeichert" },
+  "notifLinkSavedBody":     { "message": "Link erfolgreich gespeichert!" },
+
+  "msgConnectionFailed":  { "message": "Verbindung zu WordPress fehlgeschlagen. Bitte Zugangsdaten prüfen." },
+  "msgSettingsSaved":     { "message": "Einstellungen erfolgreich gespeichert! Verbindung bestätigt." },
+  "msgSettingsFailed":    { "message": "Einstellungen konnten nicht gespeichert werden. Bitte erneut versuchen." },
+  "msgChecking":          { "message": "Wird geprüft…" },
+  "msgNoWp":              { "message": "✗ Keine WordPress-Installation unter dieser URL gefunden" },
+  "msgUrlCorrected":      { "message": "✓ WordPress gefunden — URL auf Website-Wurzel aktualisiert" },
+  "msgNotLoggedIn":       { "message": "✗ Nicht bei WordPress angemeldet" },
+  "msgFetchingNonce":     { "message": "✓ Angemeldet — Nonce wird abgerufen…" },
+  "msgFetchingKey":       { "message": "✓ Angemeldet — API-Schlüssel wird abgerufen…" },
+  "msgKeyFilled":         { "message": "✓ Angemeldet — API-Schlüssel automatisch ausgefüllt" },
+  "msgAutoFetchFailed":   {
+    "message": "✓ Angemeldet — automatischer Abruf fehlgeschlagen ($ERROR$)",
+    "placeholders": { "error": { "content": "$1", "example": "Netzwerkfehler" } }
+  },
+
+  "menuOpenAdmin":        { "message": "LynxJournal-Admin öffnen" },
+  "menuUpdateCategories": { "message": "Kategorien aktualisieren" }
+}
