@@ -99,6 +99,7 @@ if (!class_exists('WP_REST_Request')) {
             $this->headers[strtolower($key)] = $value;
         }
 
+        public function has_param(string $key): bool            { return isset($this->params[$key]); }
         public function offsetGet(mixed $key): mixed           { return $this->params[$key] ?? null; }
         public function offsetExists(mixed $key): bool         { return isset($this->params[$key]); }
         public function offsetSet(mixed $key, mixed $value): void { $this->params[$key] = $value; }
@@ -177,6 +178,12 @@ if (!function_exists('get_post_meta')) {
 }
 if (!function_exists('update_post_meta')) {
     function update_post_meta(int $id, string $key, mixed $value, mixed $prev = ''): int|bool { return true; }
+}
+if (!function_exists('update_meta_cache')) {
+    function update_meta_cache(string $meta_type, array $object_ids): array|false { return []; }
+}
+if (!function_exists('update_object_term_cache')) {
+    function update_object_term_cache(array $object_ids, string|array $object_type): void {}
 }
 if (!function_exists('delete_post_meta')) {
     function delete_post_meta(int $id, string $key, mixed $value = ''): bool { return true; }
@@ -364,4 +371,35 @@ if (!function_exists('wp_mail')) {
 }
 if (!function_exists('get_permalink')) {
     function get_permalink(mixed $post = 0, bool $leavename = false): string|false { return ''; }
+}
+if (!function_exists('wp_verify_nonce')) {
+    function wp_verify_nonce(string $nonce, string|int $action = -1): int|false { return false; }
+}
+if (!function_exists('wp_unslash')) {
+    function wp_unslash(mixed $value): mixed {
+        return is_array($value) ? array_map('wp_unslash', $value) : stripslashes((string) $value);
+    }
+}
+if (!function_exists('wp_nonce_field')) {
+    function wp_nonce_field(string|int $action = -1, string $name = '_wpnonce', bool $referer = true, bool $display = true): string { return ''; }
+}
+if (!function_exists('is_user_logged_in')) {
+    function is_user_logged_in(): bool { return false; }
+}
+if (!function_exists('wp_validate_auth_cookie')) {
+    function wp_validate_auth_cookie(string $cookie = '', string $scheme = 'auth'): int|false { return false; }
+}
+if (!function_exists('wp_create_nonce')) {
+    function wp_create_nonce(string|int $action = -1): string { return ''; }
+}
+if (!function_exists('wp_update_term')) {
+    function wp_update_term(int $term_id, string $taxonomy, array $args = []): array|WP_Error {
+        return ['term_id' => $term_id, 'term_taxonomy_id' => $term_id];
+    }
+}
+if (!function_exists('get_term')) {
+    function get_term(mixed $term, string $taxonomy = '', string $output = 'OBJECT', string $filter = 'raw'): mixed { return null; }
+}
+if (!function_exists('register_rest_route')) {
+    function register_rest_route(string $namespace, string $route, array $args = [], bool $override = false): mixed { return true; }
 }
