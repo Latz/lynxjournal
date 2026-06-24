@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-trait LinkDigest_RestApi {
+trait LynxJournal_RestApi {
 
     /**
-     * Register REST API routes for LinkDigest.
+     * Register REST API routes for LynxJournal.
      *
      * @since 1.0.0
      * @return void
      */
     public function registerRestRoutes(): void {
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/add-link', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/add-link', array(
             'methods' => 'POST',
             'callback' => [$this, 'restAddLink'],
             'permission_callback' => [$this, 'restPermissionCheck'],
@@ -42,13 +42,13 @@ trait LinkDigest_RestApi {
             ),
         ));
 
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/categories', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/categories', array(
             'methods' => 'GET',
             'callback' => [$this, 'restGetCategories'],
             'permission_callback' => [$this, 'restPermissionCheck'],
         ));
 
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/categories/(?P<id>\d+)', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/categories/(?P<id>\d+)', array(
             'methods'             => 'POST',
             'callback'            => [$this, 'updateCategory'],
             'permission_callback' => fn() => current_user_can('manage_categories'),
@@ -60,13 +60,13 @@ trait LinkDigest_RestApi {
             ),
         ));
 
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/links/(?P<id>\d+)', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/links/(?P<id>\d+)', array(
             'methods'             => 'DELETE',
             'callback'            => [$this, 'restDeleteLink'],
             'permission_callback' => function() { return current_user_can('delete_posts'); },
         ));
 
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/schedule', array(
             array(
                 'methods'             => 'GET',
                 'callback'            => [$this, 'getSchedule'],
@@ -79,40 +79,46 @@ trait LinkDigest_RestApi {
             ),
         ));
 
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule/run', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/schedule/run', array(
             'methods'             => 'POST',
             'callback'            => [$this, 'runScheduleNow'],
             'permission_callback' => function() { return current_user_can('manage_options'); },
         ));
 
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule/preview', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/schedule/preview', array(
             'methods'             => 'POST',
             'callback'            => fn() => rest_ensure_response($this->previewSchedule()),
             'permission_callback' => fn() => current_user_can('manage_options'),
         ));
 
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule/diagnostics', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/schedule/diagnostics', array(
             'methods'             => 'GET',
             'callback'            => [$this, 'getScheduleDiagnostics'],
             'permission_callback' => fn() => current_user_can('manage_options'),
         ));
 
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/schedule/dismiss-cron-notice', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/schedule/dismiss-cron-notice', array(
             'methods'             => 'POST',
             'callback'            => function() {
-                update_option('linkdigest_cron_notice_dismissed', true);
+                update_option('lynxjournal_cron_notice_dismissed', true);
                 return rest_ensure_response(array('success' => true));
             },
             'permission_callback' => fn() => current_user_can('manage_options'),
         ));
 
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/api-key', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/nonce', array(
+            'methods'             => 'GET',
+            'callback'            => [$this, 'restGetNonce'],
+            'permission_callback' => '__return_true',
+        ));
+
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/api-key', array(
             'methods'             => 'GET',
             'callback'            => [$this, 'restGetApiKey'],
             'permission_callback' => function() { return current_user_can('manage_options'); },
         ));
 
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/notify', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/notify', array(
             array(
                 'methods'             => 'GET',
                 'callback'            => [$this, 'getNotify'],
@@ -125,13 +131,13 @@ trait LinkDigest_RestApi {
             ),
         ));
 
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/notify/test', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/notify/test', array(
             'methods'             => 'POST',
             'callback'            => [$this, 'testNotify'],
             'permission_callback' => fn() => current_user_can('manage_options'),
         ));
 
-        register_rest_route(LINKDIGEST_REST_NAMESPACE, '/notify/telegram-chat-id', array(
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/notify/telegram-chat-id', array(
             'methods'             => 'POST',
             'callback'            => [$this, 'getTelegramChatId'],
             'permission_callback' => fn() => current_user_can('manage_options'),
@@ -144,10 +150,26 @@ trait LinkDigest_RestApi {
      * @since 1.0.0
      * @return mixed REST response with API key or WP_Error if not configured.
      */
+    /**
+     * Return a wp_rest nonce via REST for the Chrome extension.
+     *
+     * @since 1.0.0
+     * @return mixed REST response with nonce.
+     */
+    public function restGetNonce(): mixed {
+        if ( ! is_user_logged_in() ) {
+            $user_id = wp_validate_auth_cookie( '', 'logged_in' );
+            if ( $user_id ) {
+                wp_set_current_user( $user_id );
+            }
+        }
+        return rest_ensure_response(['nonce' => wp_create_nonce('wp_rest')]);
+    }
+
     public function restGetApiKey(): mixed {
-        $key = get_option('linkdigest_api_key', '');
+        $key = get_option('lynxjournal_api_key', '');
         if (empty($key)) {
-            return new \WP_Error('no_key', __('No API key configured.', 'linkdigest'), ['status' => 404]);
+            return new \WP_Error('no_key', __('No API key configured.', 'lynx-journal'), ['status' => 404]);
         }
         return rest_ensure_response(['key' => $key]);
     }
@@ -178,14 +200,14 @@ trait LinkDigest_RestApi {
      */
     public function restDeleteLink(\WP_REST_Request $request): \WP_REST_Response|\WP_Error {
         $link_id = (int) $request['id'];
-        if (get_post_type($link_id) !== 'linkdigest') {
+        if (get_post_type($link_id) !== 'lynx-journal') {
             return new \WP_Error('invalid_link', 'Link not found', array('status' => 404));
         }
         $result = wp_delete_post($link_id, true);
         if (!$result) {
             return new \WP_Error('delete_failed', 'Could not delete link', array('status' => 500));
         }
-        delete_transient('linkdigest_publish_stats');
+        delete_transient('lynxjournal_publish_stats');
         return new \WP_REST_Response(null, 204);
     }
 
@@ -207,7 +229,7 @@ trait LinkDigest_RestApi {
             'trigger' => array('count' => 10, 'tag_id' => null, 'days' => 7),
             'times'   => array(),
         );
-        $config = get_option('linkdigest_schedule', $default);
+        $config = get_option('lynxjournal_schedule', $default);
         return rest_ensure_response($config);
     }
 
@@ -221,7 +243,7 @@ trait LinkDigest_RestApi {
     public function saveSchedule(\WP_REST_Request $request): mixed {
         $data = $request->get_json_params();
         if (empty($data)) {
-            return new \WP_Error('invalid_data', __('Invalid schedule data', 'linkdigest'), array('status' => 400));
+            return new \WP_Error('invalid_data', __('Invalid schedule data', 'lynx-journal'), array('status' => 400));
         }
         $validated = $this->validateScheduleConfig($data);
         if (is_wp_error($validated)) {
@@ -230,11 +252,11 @@ trait LinkDigest_RestApi {
         if (!array_key_exists('publishAs', $validated)) {
             $validated['publishAs'] = get_current_user_id() ?: null;
         }
-        $existing = get_option('linkdigest_schedule', array());
+        $existing = get_option('lynxjournal_schedule', array());
         if (isset($existing['notify'])) {
             $validated['notify'] = $existing['notify'];
         }
-        update_option('linkdigest_schedule', $validated);
+        update_option('lynxjournal_schedule', $validated);
         $this->scheduleNextEvent();
         return rest_ensure_response(array('success' => true));
     }
@@ -246,7 +268,7 @@ trait LinkDigest_RestApi {
      * @return mixed REST response with notification configuration.
      */
     public function getNotify(): mixed {
-        $config  = get_option('linkdigest_schedule', array());
+        $config  = get_option('lynxjournal_schedule', array());
         $default = array('enabled' => false, 'email' => '', 'discord_webhook' => '', 'slack_webhook' => '', 'telegram_bot_token' => '', 'telegram_chat_id' => '');
         return rest_ensure_response(array_merge($default, (array) ($config['notify'] ?? array())));
     }
@@ -264,9 +286,9 @@ trait LinkDigest_RestApi {
         if ($error) {
             return $error;
         }
-        $config           = get_option('linkdigest_schedule', array());
+        $config           = get_option('lynxjournal_schedule', array());
         $config['notify'] = $data['notify'];
-        update_option('linkdigest_schedule', $config);
+        update_option('lynxjournal_schedule', $config);
         return rest_ensure_response(array('success' => true));
     }
 
@@ -284,20 +306,20 @@ trait LinkDigest_RestApi {
         switch ($type) {
             case 'email':
                 $to      = !empty($value) && is_email($value) ? $value : get_option('admin_email');
-                $subject = __('[LinkDigest] Test notification', 'linkdigest');
-                $message = __('This is a test notification from LinkDigest.', 'linkdigest');
+                $subject = __('[LynxJournal] Test notification', 'lynx-journal');
+                $message = __('This is a test notification from LynxJournal.', 'lynx-journal');
                 $sent    = wp_mail($to, $subject, $message);
                 return $sent
                     ? rest_ensure_response(array('success' => true))
-                    : new \WP_Error('mail_failed', __('Failed to send test email. Check your server mail configuration.', 'linkdigest'), array('status' => 500));
+                    : new \WP_Error('mail_failed', __('Failed to send test email. Check your server mail configuration.', 'lynx-journal'), array('status' => 500));
 
             case 'discord':
                 if (empty($value) || !filter_var($value, FILTER_VALIDATE_URL)) {
-                    return new \WP_Error('invalid_url', __('Enter a valid Discord webhook URL first.', 'linkdigest'), array('status' => 400));
+                    return new \WP_Error('invalid_url', __('Enter a valid Discord webhook URL first.', 'lynx-journal'), array('status' => 400));
                 }
                 $payload  = array('embeds' => array(array(
-                    'title'       => __('LinkDigest: test notification', 'linkdigest'),
-                    'description' => __('This is a test message.', 'linkdigest'),
+                    'title'       => __('LynxJournal: test notification', 'lynx-journal'),
+                    'description' => __('This is a test message.', 'lynx-journal'),
                     'color'       => 0x2D9BF0,
                 )));
                 $response = wp_remote_post($value, array(
@@ -313,15 +335,15 @@ trait LinkDigest_RestApi {
                 return ($code >= 200 && $code < 300)
                     ? rest_ensure_response(array('success' => true))
                     /* translators: %d: HTTP status code returned by the webhook endpoint */
-                    : new \WP_Error('webhook_error', sprintf(__('Discord returned HTTP %d.', 'linkdigest'), $code), array('status' => 502));
+                    : new \WP_Error('webhook_error', sprintf(__('Discord returned HTTP %d.', 'lynx-journal'), $code), array('status' => 502));
 
             case 'slack':
                 if (empty($value) || !filter_var($value, FILTER_VALIDATE_URL)) {
-                    return new \WP_Error('invalid_url', __('Enter a valid Slack webhook URL first.', 'linkdigest'), array('status' => 400));
+                    return new \WP_Error('invalid_url', __('Enter a valid Slack webhook URL first.', 'lynx-journal'), array('status' => 400));
                 }
                 $response = wp_remote_post($value, array(
                     'headers'     => array('Content-Type' => 'application/json'),
-                    'body'        => wp_json_encode(array('text' => __('*LinkDigest:* This is a test message.', 'linkdigest'))),
+                    'body'        => wp_json_encode(array('text' => __('*LynxJournal:* This is a test message.', 'lynx-journal'))),
                     'blocking'    => true,
                     'data_format' => 'body',
                 ));
@@ -332,20 +354,20 @@ trait LinkDigest_RestApi {
                 return ($code >= 200 && $code < 300)
                     ? rest_ensure_response(array('success' => true))
                     /* translators: %d: HTTP status code returned by the webhook endpoint */
-                    : new \WP_Error('webhook_error', sprintf(__('Slack returned HTTP %d.', 'linkdigest'), $code), array('status' => 502));
+                    : new \WP_Error('webhook_error', sprintf(__('Slack returned HTTP %d.', 'lynx-journal'), $code), array('status' => 502));
 
             case 'telegram':
                 $token   = sanitize_text_field((string) $request->get_param('telegram_bot_token'));
                 $chat_id = sanitize_text_field((string) $request->get_param('telegram_chat_id'));
                 if (empty($token) || empty($chat_id)) {
-                    return new \WP_Error('missing_telegram', __('Enter a bot token and chat ID first.', 'linkdigest'), array('status' => 400));
+                    return new \WP_Error('missing_telegram', __('Enter a bot token and chat ID first.', 'lynx-journal'), array('status' => 400));
                 }
                 $tg_url   = 'https://api.telegram.org/bot' . $token . '/sendMessage';
                 $response = wp_remote_post($tg_url, array(
                     'headers'     => array('Content-Type' => 'application/json'),
                     'body'        => wp_json_encode(array(
                         'chat_id'    => $chat_id,
-                        'text'       => __('<b>LinkDigest:</b> This is a test message.', 'linkdigest'),
+                        'text'       => __('<b>LynxJournal:</b> This is a test message.', 'lynx-journal'),
                         'parse_mode' => 'HTML',
                     )),
                     'blocking'    => true,
@@ -358,10 +380,10 @@ trait LinkDigest_RestApi {
                 return ($code >= 200 && $code < 300)
                     ? rest_ensure_response(array('success' => true))
                     /* translators: %d: HTTP status code returned by the Telegram API */
-                    : new \WP_Error('telegram_error', sprintf(__('Telegram returned HTTP %d.', 'linkdigest'), $code), array('status' => 502));
+                    : new \WP_Error('telegram_error', sprintf(__('Telegram returned HTTP %d.', 'lynx-journal'), $code), array('status' => 502));
 
             default:
-                return new \WP_Error('invalid_type', __('Invalid notification type.', 'linkdigest'), array('status' => 400));
+                return new \WP_Error('invalid_type', __('Invalid notification type.', 'lynx-journal'), array('status' => 400));
         }
     }
 
@@ -375,7 +397,7 @@ trait LinkDigest_RestApi {
     public function getTelegramChatId(\WP_REST_Request $request): mixed {
         $token = sanitize_text_field((string) $request->get_param('token'));
         if (empty($token)) {
-            return new \WP_Error('missing_token', __('Bot token is required.', 'linkdigest'), array('status' => 400));
+            return new \WP_Error('missing_token', __('Bot token is required.', 'lynx-journal'), array('status' => 400));
         }
         $response = wp_remote_get('https://api.telegram.org/bot' . $token . '/getUpdates', array(
             'timeout'  => 10,
@@ -387,11 +409,11 @@ trait LinkDigest_RestApi {
         $code = wp_remote_retrieve_response_code($response);
         if ($code !== 200) {
             /* translators: %d: HTTP status code returned by the Telegram API */
-            return new \WP_Error('telegram_error', sprintf(__('Telegram returned HTTP %d. Check your bot token.', 'linkdigest'), $code), array('status' => 502));
+            return new \WP_Error('telegram_error', sprintf(__('Telegram returned HTTP %d. Check your bot token.', 'lynx-journal'), $code), array('status' => 502));
         }
         $body = json_decode(wp_remote_retrieve_body($response), true);
         if (empty($body['ok']) || empty($body['result'])) {
-            return new \WP_Error('no_messages', __('No messages found. Open Telegram and send any message to your bot first.', 'linkdigest'), array('status' => 404));
+            return new \WP_Error('no_messages', __('No messages found. Open Telegram and send any message to your bot first.', 'lynx-journal'), array('status' => 404));
         }
         $last    = end($body['result']);
         $chat_id = $last['message']['chat']['id']
@@ -399,7 +421,7 @@ trait LinkDigest_RestApi {
             ?? $last['my_chat_member']['chat']['id']
             ?? null;
         if ($chat_id === null) {
-            return new \WP_Error('no_chat_id', __('Could not determine a chat ID from the bot updates.', 'linkdigest'), array('status' => 404));
+            return new \WP_Error('no_chat_id', __('Could not determine a chat ID from the bot updates.', 'lynx-journal'), array('status' => 404));
         }
         return rest_ensure_response(array('chat_id' => (string) $chat_id));
     }
@@ -411,17 +433,17 @@ trait LinkDigest_RestApi {
      * @return mixed REST response with diagnostics data.
      */
     public function getScheduleDiagnostics(): mixed {
-        $next_ts  = wp_next_scheduled('linkdigest_execute_schedule');
-        $last_run = get_option('linkdigest_last_run', null);
-        $config   = get_option('linkdigest_schedule', []);
+        $next_ts  = wp_next_scheduled('lynxjournal_execute_schedule');
+        $last_run = get_option('lynxjournal_last_run', null);
+        $config   = get_option('lynxjournal_schedule', []);
         $mode     = $config['mode'] ?? 'daily';
 
         $response = [
             'next_scheduled'        => $next_ts ?: null,
             'last_run'              => $last_run ?: null,
             'wp_cron_disabled'      => defined('DISABLE_WP_CRON') && DISABLE_WP_CRON,
-            'cron_notice_dismissed' => (bool) get_option('linkdigest_cron_notice_dismissed', false),
-            'run_history'           => get_option('linkdigest_run_history', []),
+            'cron_notice_dismissed' => (bool) get_option('lynxjournal_cron_notice_dismissed', false),
+            'run_history'           => get_option('lynxjournal_run_history', []),
         ];
 
         if ($mode === 'count') {
@@ -442,8 +464,8 @@ trait LinkDigest_RestApi {
      * @return \WP_REST_Response|\WP_Error Response or error.
      */
     public function runScheduleNow(): \WP_REST_Response|\WP_Error {
-        if (get_transient('linkdigest_run_lock')) {
-            return new \WP_Error('run_in_progress', __('A schedule run is already in progress', 'linkdigest'), array('status' => 429));
+        if (get_transient('lynxjournal_run_lock')) {
+            return new \WP_Error('run_in_progress', __('A schedule run is already in progress', 'lynx-journal'), array('status' => 429));
         }
         $result = $this->executeSchedule(false);
         return rest_ensure_response($result);
@@ -461,8 +483,8 @@ trait LinkDigest_RestApi {
     public function restPermissionCheck(\WP_REST_Request $request): bool {
         // API key first: used by the Chrome extension and external callers that can't
         // hold a WP session cookie. Falls back to standard WP capability check.
-        $api_key = $request->get_header('X-LinkDigest-API-Key');
-        $stored_key = get_option('linkdigest_api_key');
+        $api_key = $request->get_header('X-LynxJournal-API-Key');
+        $stored_key = get_option('lynxjournal_api_key');
 
         if (!empty($api_key) && !empty($stored_key) && hash_equals($stored_key, $api_key)) {
             return true;
@@ -493,19 +515,19 @@ trait LinkDigest_RestApi {
         $post_data = array(
             'post_title'   => $title,
             'post_content' => $content,
-            'post_type'    => 'linkdigest',
-            'post_status'  => 'linkdigest_pending',
+            'post_type'    => 'lynx-journal',
+            'post_status'  => 'lynxjournal_pending',
         );
 
         $post_id = wp_insert_post($post_data);
         if (is_wp_error($post_id)) {
-            return new \WP_Error('insert_failed', __('Failed to create link.', 'linkdigest'), array('status' => 500));
+            return new \WP_Error('insert_failed', __('Failed to create link.', 'lynx-journal'), array('status' => 500));
         }
 
-        delete_transient('linkdigest_publish_stats');
+        delete_transient('lynxjournal_publish_stats');
 
         if (!empty($url)) {
-            update_post_meta($post_id, '_linkdigest_url', $url);
+            update_post_meta($post_id, '_lynxjournal_url', $url);
         }
 
         $this->applyLinkTaxonomies($post_id, $categories, $tags);
@@ -513,7 +535,7 @@ trait LinkDigest_RestApi {
         return rest_ensure_response(array(
             'success' => true,
             'post_id' => $post_id,
-            'message' => __('Link added successfully!', 'linkdigest'),
+            'message' => __('Link added successfully!', 'lynx-journal'),
         ));
     }
 
@@ -527,20 +549,20 @@ trait LinkDigest_RestApi {
      */
     private function validateRestLink(string $title, ?string $url): bool|\WP_Error {
         if (empty($title)) {
-            return new \WP_Error('missing_title', __('Title is required.', 'linkdigest'), array('status' => 400));
+            return new \WP_Error('missing_title', __('Title is required.', 'lynx-journal'), array('status' => 400));
         }
 
         if (!empty($url)) {
             $existing = get_posts(array(
-                'post_type'   => 'linkdigest',
+                'post_type'   => 'lynx-journal',
                 'post_status' => 'any',
-                'meta_key'    => '_linkdigest_url', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+                'meta_key'    => '_lynxjournal_url', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
                 'meta_value'  => $url, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
                 'numberposts' => 1,
                 'fields'      => 'ids',
             ));
             if (!empty($existing)) {
-                return new \WP_Error('duplicate_url', __('This URL has already been saved.', 'linkdigest'), array('status' => 409));
+                return new \WP_Error('duplicate_url', __('This URL has already been saved.', 'lynx-journal'), array('status' => 409));
             }
         }
 
@@ -557,9 +579,9 @@ trait LinkDigest_RestApi {
     private function resolveOrCreateCategories(array $categories): array {
         $ids = array();
         foreach ($categories as $cat_name) {
-            $term = get_term_by('name', $cat_name, 'linkdigest_category');
+            $term = get_term_by('name', $cat_name, 'lynxjournal_category');
             if (!$term) {
-                $result = wp_insert_term($cat_name, 'linkdigest_category');
+                $result = wp_insert_term($cat_name, 'lynxjournal_category');
                 if (!is_wp_error($result)) {
                     $ids[] = $result['term_id'];
                 }
@@ -583,12 +605,12 @@ trait LinkDigest_RestApi {
         if (!empty($categories) && is_array($categories)) {
             $ids = $this->resolveOrCreateCategories($categories);
             if (!empty($ids)) {
-                wp_set_object_terms($post_id, $ids, 'linkdigest_category');
+                wp_set_object_terms($post_id, $ids, 'lynxjournal_category');
             }
         }
         if (!empty($tags)) {
             $tag_names = array_map('trim', explode(',', $tags));
-            wp_set_object_terms($post_id, $tag_names, 'linkdigest_tag');
+            wp_set_object_terms($post_id, $tag_names, 'lynxjournal_tag');
         }
     }
 
@@ -599,17 +621,17 @@ trait LinkDigest_RestApi {
      * @return mixed REST response with categories list.
      */
     public function restGetCategories(): mixed {
-        $cache_key = 'linkdigest_api_categories_list';
+        $cache_key = 'lynxjournal_api_categories_list';
         $category_list = get_transient($cache_key);
 
         if (false === $category_list) {
             $categories = get_terms(array(
-                'taxonomy'   => 'linkdigest_category',
+                'taxonomy'   => 'lynxjournal_category',
                 'hide_empty' => false,
             ));
 
             if (is_wp_error($categories)) {
-                return new \WP_Error('fetch_failed', __('Failed to fetch categories.', 'linkdigest'), array('status' => 500));
+                return new \WP_Error('fetch_failed', __('Failed to fetch categories.', 'lynx-journal'), array('status' => 500));
             }
 
             $category_list = array();
@@ -626,7 +648,7 @@ trait LinkDigest_RestApi {
     }
 
     /**
-     * Update a linkdigest category via REST API.
+     * Update a lynxjournal category via REST API.
      *
      * @since 1.0.0
      * @param \WP_REST_Request $request The REST request with category data.
@@ -641,12 +663,12 @@ trait LinkDigest_RestApi {
         if ( $request->has_param('slug') && $request['slug'] !== '' ) {
             $args['slug'] = $request['slug'];
         }
-        $result = wp_update_term( $term_id, 'linkdigest_category', $args );
+        $result = wp_update_term( $term_id, 'lynxjournal_category', $args );
         if ( is_wp_error( $result ) ) {
             return $result;
         }
         $this->invalidateCategoriesCache();
-        $term = get_term( $result['term_id'], 'linkdigest_category' );
+        $term = get_term( $result['term_id'], 'lynxjournal_category' );
         return rest_ensure_response( array(
             'id'          => $term->term_id,
             'name'        => $term->name,
@@ -662,8 +684,8 @@ trait LinkDigest_RestApi {
      * @return void
      */
     public function invalidateCategoriesCache(): void {
-        delete_transient('linkdigest_api_categories_list');
-        delete_transient('linkdigest_categories_terms');
+        delete_transient('lynxjournal_api_categories_list');
+        delete_transient('lynxjournal_categories_terms');
     }
 
     /**
@@ -678,7 +700,7 @@ trait LinkDigest_RestApi {
         if (is_string($origin) && $this->isFromChromeExtension($origin)) {
             $this->setCorsOriginHeaders($origin);
             header('Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE');
-            header('Access-Control-Allow-Headers: Content-Type, X-LinkDigest-API-Key, Authorization');
+            header('Access-Control-Allow-Headers: Content-Type, X-LynxJournal-API-Key, Authorization');
         }
         return $served;
     }
@@ -699,7 +721,7 @@ trait LinkDigest_RestApi {
             if ($this->isFromChromeExtension($origin)) {
                 $this->setCorsOriginHeaders($origin);
                 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-                header('Access-Control-Allow-Headers: Content-Type, X-LinkDigest-API-Key, Authorization');
+                header('Access-Control-Allow-Headers: Content-Type, X-LynxJournal-API-Key, Authorization');
                 header('Access-Control-Max-Age: 86400');
                 exit;
             }

@@ -1,43 +1,43 @@
-.linkdigest-settings-wrap {
+.lynxjournal-settings-wrap {
   max-width: 640px;
   margin-top: 16px;
 }
 
-.linkdigest-settings-actions,
-.linkdigest-card-mt {
+.lynxjournal-settings-actions,
+.lynxjournal-card-mt {
   margin-top: 16px;
 }
 
-.linkdigest-field-mt {
+.lynxjournal-field-mt {
   margin-top: 16px;
 }
 
-.linkdigest-field-row {
+.lynxjournal-field-row {
   display: flex;
   align-items: flex-end;
   gap: 8px;
 }
 
-.linkdigest-field-row .components-base-control {
+.lynxjournal-field-row .components-base-control {
   flex: 1;
   min-width: 0;
 }
 
-.linkdigest-field-row .components-text-control__input {
+.lynxjournal-field-row .components-text-control__input {
   height: 36px;
 }
 
-.linkdigest-test-wrap {
+.lynxjournal-test-wrap {
   flex-shrink: 0;
 }
 
-.linkdigest-hint {
+.lynxjournal-hint {
   color: #757575;
   font-size: 12px;
   margin: 4px 0 0;
 }
 
-.linkdigest-snackbar-region {
+.lynxjournal-snackbar-region {
   position: fixed;
   bottom: 32px;
   left: 50%;

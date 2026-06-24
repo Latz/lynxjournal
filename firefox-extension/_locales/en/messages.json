@@ -1,0 +1,68 @@
+{
+  "appName":              { "message": "LynxJournal Chrome Extension" },
+  "appDescription":       { "message": "Save links to your LynxJournal WordPress plugin" },
+
+  "pageTitle":            { "message": "LynxJournal" },
+  "settingsTitle":        { "message": "LynxJournal Settings" },
+  "settingsSubtitle":     { "message": "Connect to your WordPress site" },
+
+  "labelTitle":           { "message": "Title *" },
+  "placeholderTitle":     { "message": "Link title" },
+  "labelUrl":             { "message": "URL" },
+  "labelDescription":     { "message": "Description" },
+  "placeholderDesc":      { "message": "Optional description" },
+  "labelCategories":      { "message": "Categories" },
+  "msgLoadingCategories": { "message": "Loading categories..." },
+  "labelTags":            { "message": "Tags" },
+  "placeholderTags":      { "message": "Separate with commas" },
+  "placeholderAddTags":   { "message": "Add tags..." },
+  "btnSaveLink":          { "message": "Save Link" },
+  "btnSaving":            { "message": "Saving..." },
+  "btnSettings":          { "message": "Settings" },
+  "btnOpenSettings":      { "message": "Open Settings" },
+  "msgConfigureFirst":    { "message": "⚙️ Please configure your API settings first." },
+
+  "labelWpAddress":       { "message": "WordPress Address" },
+  "descWpAddress":        { "message": "Your WordPress site URL. Used to auto-fill the endpoint below." },
+  "btnCreateEndpoint":    { "message": "Create API endpoint" },
+  "labelApiEndpoint":     { "message": "API Endpoint *" },
+  "descApiEndpoint":      { "message": "The API endpoint URL from your WordPress LynxJournal settings page." },
+  "labelApiKey":          { "message": "API Key *" },
+  "placeholderApiKey":    { "message": "Your API key from WordPress" },
+  "descApiKey":           { "message": "The API key generated in your WordPress LynxJournal settings." },
+  "btnSaveSettings":      { "message": "Save Settings" },
+  "infoBoxTitle":         { "message": "How to get your API credentials:" },
+  "infoStep1":            { "message": "Go to your WordPress admin panel" },
+  "infoStep2":            { "message": "Navigate to LynxJournal → Settings" },
+  "infoStep3":            { "message": "Generate an API Key if you haven't already" },
+  "infoStep4":            { "message": "Copy the API Endpoint and API Key" },
+  "infoStep5":            { "message": "Paste them into the fields above" },
+
+  "msgNoCategories":      { "message": "No categories available" },
+  "msgFailedCategories":  { "message": "Failed to load categories" },
+  "msgSelectCategory":    { "message": "Please select at least one category before saving." },
+  "msgSaveFailed":        { "message": "Failed to save link. Please check your settings." },
+
+  "notifAlreadySavedTitle": { "message": "Already saved" },
+  "notifAlreadySavedBody":  { "message": "This URL has already been saved." },
+  "notifLinkSavedTitle":    { "message": "Link saved" },
+  "notifLinkSavedBody":     { "message": "Link saved successfully!" },
+
+  "msgConnectionFailed":  { "message": "Failed to connect to WordPress. Please check your credentials." },
+  "msgSettingsSaved":     { "message": "Settings saved successfully! Connection verified." },
+  "msgSettingsFailed":    { "message": "Failed to save settings. Please try again." },
+  "msgChecking":          { "message": "Checking…" },
+  "msgNoWp":              { "message": "✗ No WordPress installation found at this URL" },
+  "msgUrlCorrected":      { "message": "✓ WordPress found — URL updated to site root" },
+  "msgNotLoggedIn":       { "message": "✗ Not logged in to WordPress" },
+  "msgFetchingNonce":     { "message": "✓ Logged in — fetching nonce…" },
+  "msgFetchingKey":       { "message": "✓ Logged in — fetching API key…" },
+  "msgKeyFilled":         { "message": "✓ Logged in — API key filled automatically" },
+  "msgAutoFetchFailed":   {
+    "message": "✓ Logged in — auto-fetch failed ($ERROR$)",
+    "placeholders": { "error": { "content": "$1", "example": "network error" } }
+  },
+
+  "menuOpenAdmin":        { "message": "Open LynxJournal Admin" },
+  "menuUpdateCategories": { "message": "Update categories" }
+}

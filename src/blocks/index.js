@@ -69,7 +69,7 @@ const BLOCKS = [
 ];
 
 BLOCKS.forEach( ( { name, title, description, label, icon } ) => {
-	registerBlockType( `linkdigest/${ name }`, {
+	registerBlockType( `lynxjournal/${ name }`, {
 		apiVersion: 3,
 		title,
 		description,
@@ -78,7 +78,7 @@ BLOCKS.forEach( ( { name, title, description, label, icon } ) => {
 		supports: BLOCK_SUPPORTS,
 		edit: function PlaceholderEdit() {
 			const blockProps = useBlockProps( {
-				className: 'linkdigest-placeholder-block',
+				className: 'lynxjournal-placeholder-block',
 			} );
 			return <div { ...blockProps }>{ label }</div>;
 		},
@@ -86,7 +86,7 @@ BLOCKS.forEach( ( { name, title, description, label, icon } ) => {
 	} );
 } );
 
-registerBlockType( 'linkdigest/field-items-list', {
+registerBlockType( 'lynxjournal/field-items-list', {
 	apiVersion: 3,
 	title: 'Items List',
 	description: 'Marks where the digest items list is rendered. Choose ul or ol.',
@@ -100,7 +100,7 @@ registerBlockType( 'linkdigest/field-items-list', {
 	},
 	edit: function ItemsListEdit( { attributes, setAttributes } ) {
 		const { listType } = attributes;
-		const blockProps = useBlockProps( { className: 'linkdigest-placeholder-block' } );
+		const blockProps = useBlockProps( { className: 'lynxjournal-placeholder-block' } );
 		return (
 			<>
 				<BlockControls>
@@ -126,7 +126,7 @@ registerBlockType( 'linkdigest/field-items-list', {
 	save: () => null,
 } );
 
-registerBlockType( 'linkdigest/field-category', {
+registerBlockType( 'lynxjournal/field-category', {
 	apiVersion: 3,
 	title: 'Category Heading',
 	description: 'Outputs the category name as a heading. Use in the Digest Group template.',
@@ -141,7 +141,7 @@ registerBlockType( 'linkdigest/field-category', {
 	},
 	edit: function CategoryEdit( { attributes, setAttributes } ) {
 		const { level } = attributes;
-		const blockProps = useBlockProps( { className: 'linkdigest-placeholder-block' } );
+		const blockProps = useBlockProps( { className: 'lynxjournal-placeholder-block' } );
 		const levelControls = [ 1, 2, 3, 4, 5, 6 ].map( ( l ) => ( {
 			title: `H${ l }`,
 			isActive: level === l,
