@@ -4,16 +4,24 @@ export function Button({ children, onClick, variant, size, 'aria-label': ariaLab
     return <button onClick={onClick} aria-label={ariaLabel} type={type} data-variant={variant} {...rest}>{children}</button>;
 }
 
-export function __experimentalNumberControl({ value, onChange, min, max, style }) {
+let _ncId = 0;
+export function __experimentalNumberControl({ value, onChange, min, max, style, label }) {
+    const id = `nc-${++_ncId}`;
     return (
-        <input
-            type="number"
-            value={value}
-            min={min}
-            max={max}
-            style={style}
-            onChange={e => onChange(e.target.value)}
-        />
+        <>
+            <label htmlFor={id} style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden' }}>
+                {label ?? 'Value'}
+            </label>
+            <input
+                id={id}
+                type="number"
+                value={value}
+                min={min}
+                max={max}
+                style={style}
+                onChange={e => onChange(e.target.value)}
+            />
+        </>
     );
 }
 

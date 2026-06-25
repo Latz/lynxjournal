@@ -1,9 +1,15 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { axe } from 'vitest-axe';
 import TimePicker from '../../../src/schedule/components/TimePicker.jsx';
 
 describe('TimePicker', () => {
+    it('has no accessibility violations', async () => {
+        const { container } = render(<TimePicker times={['09:00']} onChange={() => {}} />);
+        expect(await axe(container)).toHaveNoViolations();
+    });
+
     it('renders one time input per initial time', () => {
         render(<TimePicker times={['09:00', '18:00']} onChange={() => {}} />);
         expect(screen.getAllByDisplayValue(/\d{2}:\d{2}/)).toHaveLength(2);

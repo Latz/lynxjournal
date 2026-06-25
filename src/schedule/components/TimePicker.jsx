@@ -45,6 +45,7 @@ export default function TimePicker({ times, onChange }) {
             type="time"
             className="lynxjournal-time-input"
             value={t}
+            aria-label={`${__('Run time', 'lynx-journal')} ${i + 1}`}
             onChange={e => updateTime(i, e.target.value)}
           />
           {/* At least one time must remain; hide the remove button when only one entry exists. */}

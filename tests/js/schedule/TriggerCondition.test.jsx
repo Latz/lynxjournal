@@ -1,8 +1,23 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { axe } from 'vitest-axe';
 import TriggerCondition from '../../../src/schedule/components/TriggerCondition.jsx';
 
 describe('TriggerCondition', () => {
+    it('has no accessibility violations (count mode)', async () => {
+        const { container } = render(
+            <TriggerCondition mode="count" value={{ count: 10, days: 7 }} onChange={() => {}} />
+        );
+        expect(await axe(container)).toHaveNoViolations();
+    });
+
+    it('has no accessibility violations (age mode)', async () => {
+        const { container } = render(
+            <TriggerCondition mode="age" value={{ count: 10, days: 7 }} onChange={() => {}} />
+        );
+        expect(await axe(container)).toHaveNoViolations();
+    });
+
     it('renders nothing for an unknown mode', () => {
         const { container } = render(
             <TriggerCondition mode="unknown" value={{ count: 5, days: 7 }} onChange={() => {}} />

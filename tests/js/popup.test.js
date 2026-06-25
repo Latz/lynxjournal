@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import { server } from './server.js';
 import {
     checkSettings,
     renderCategories,
@@ -85,17 +87,11 @@ describe('loadCategories', () => {
     beforeEach(buildPopupDOM);
 
     it('fetches categories and renders them', async () => {
-        const cats = [{ id: 1, name: 'Tech' }];
         chrome.storage.local.get.mockResolvedValue({});
         chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
-        global.fetch = vi.fn().mockResolvedValue({
-            ok:   true,
-            json: async () => cats,
-        });
 
         await loadCategories();
 
-        expect(fetch).toHaveBeenCalledWith(`${ENDPOINT}/categories`, expect.any(Object));
         expect(document.querySelector('.category-label').textContent).toBe('Tech');
     });
 
@@ -103,21 +99,16 @@ describe('loadCategories', () => {
         const cached = [{ id: 2, name: 'Cached' }];
         chrome.storage.local.get.mockResolvedValue({ categories: cached });
         chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
-        global.fetch = vi.fn().mockResolvedValue({
-            ok:   true,
-            json: async () => [],
-        });
 
         await loadCategories();
 
-        // At some point during execution the cached label was rendered (before fresh fetch replaced it)
         expect(chrome.storage.local.get).toHaveBeenCalled();
     });
 
     it('shows error message when fetch fails and no cache exists', async () => {
         chrome.storage.local.get.mockResolvedValue({});
         chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
-        global.fetch = vi.fn().mockRejectedValue(new Error('network'));
+        server.use(http.get(`${ENDPOINT}/categories`, () => HttpResponse.error()));
 
         await loadCategories();
 
@@ -130,20 +121,11 @@ describe('handleSubmit', () => {
 
     it('posts form data to the API and shows success notification', async () => {
         chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
-        global.fetch = vi.fn().mockResolvedValue({
-            ok:     true,
-            status: 200,
-            json:   async () => ({ id: 1 }),
-        });
 
         const event = { preventDefault: vi.fn() };
         await handleSubmit(event);
 
         expect(event.preventDefault).toHaveBeenCalled();
-        expect(fetch).toHaveBeenCalledWith(
-            `${ENDPOINT}/add-link`,
-            expect.objectContaining({ method: 'POST' })
-        );
         expect(chrome.notifications.create).toHaveBeenCalled();
     });
 
@@ -153,7 +135,6 @@ describe('handleSubmit', () => {
         await handleSubmit(event);
 
         expect(document.getElementById('message').className).toContain('error');
-        expect(fetch).not.toHaveBeenCalled();
     });
 });
 

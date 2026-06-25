@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { axe } from 'vitest-axe';
 import ScheduleTypePicker from '../../../src/schedule/components/ScheduleTypePicker.jsx';
 
 describe('ScheduleTypePicker', () => {
@@ -25,6 +26,11 @@ describe('ScheduleTypePicker', () => {
         render(<ScheduleTypePicker value="daily" onChange={onChange} />);
         await userEvent.click(screen.getByRole('radio', { name: /monthly/i }));
         expect(onChange).toHaveBeenCalledWith('monthly');
+    });
+
+    it('has no accessibility violations', async () => {
+        const { container } = render(<ScheduleTypePicker value="daily" onChange={() => {}} />);
+        expect(await axe(container)).toHaveNoViolations();
     });
 
     it('renders the three group labels', () => {

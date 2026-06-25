@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { axe } from 'vitest-axe';
 import RecurrenceConfig from '../../../src/schedule/components/RecurrenceConfig.jsx';
 
 const baseValue = {
@@ -11,6 +12,11 @@ const baseValue = {
 };
 
 describe('RecurrenceConfig — daily', () => {
+    it('has no accessibility violations', async () => {
+        const { container } = render(<RecurrenceConfig type="daily" value={baseValue} onChange={() => {}} />);
+        expect(await axe(container)).toHaveNoViolations();
+    });
+
     it('renders an interval number input', () => {
         render(<RecurrenceConfig type="daily" value={baseValue} onChange={() => {}} />);
         expect(screen.getByRole('spinbutton')).toBeInTheDocument();
