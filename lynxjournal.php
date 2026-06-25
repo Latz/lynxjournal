@@ -3,7 +3,7 @@
  * Plugin Name: LynxJournal
  * Description: Save and publish links to your blog
  * Version: 1.0.2
- * Author: latz
+ * Author: Latz
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: lynx-journal
@@ -24,7 +24,7 @@ define('LYNXJOURNAL_POST_TYPE',      'lynxjournal');
 
 define('LYNXJOURNAL_PLUGIN_FILE', __FILE__);
 
-require_once __DIR__ . '/src/php/schedule-mode.php';
+require_once __DIR__ . '/src/php/ScheduleMode.php';
 
 // Traits (must be required before the class)
 require_once __DIR__ . '/src/php/traits/trait-post-type.php';

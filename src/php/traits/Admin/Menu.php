@@ -299,9 +299,9 @@ trait LynxJournal_Admin_Menu {
             );
 
             wp_localize_script('lynxjournal-schedule', 'lynxjournalSchedule', array(
-                'allModes'     => array_column(\LynxJournal_ScheduleMode::cases(), 'value'),
-                'timeModes'    => array_column(\LynxJournal_ScheduleMode::time_based(), 'value'),
-                'triggerModes' => array_column(\LynxJournal_ScheduleMode::trigger_based(), 'value'),
+                'allModes'     => array_column(ScheduleMode::cases(), 'value'),
+                'timeModes'    => array_column(ScheduleMode::timeBased(), 'value'),
+                'triggerModes' => array_column(ScheduleMode::triggerBased(), 'value'),
                 'timezone'     => wp_timezone_string(),
             ));
 

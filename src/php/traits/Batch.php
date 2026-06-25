@@ -303,11 +303,12 @@ trait LynxJournal_Batch {
         $date        = current_time('mysql');
 
         $placeholders = implode(',', array_fill(0, count($link_ids), '%d'));
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $wpdb->query( $wpdb->prepare(
             "UPDATE {$wpdb->posts} SET post_status = %s WHERE ID IN ({$placeholders}) AND post_type = 'lynx-journal'",
             array_merge([$wp_status], $link_ids)
         ) );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         foreach ($link_ids as $link_id) {
             update_post_meta($link_id, '_lynxjournal_published_post_id', $post_id);
