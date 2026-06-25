@@ -35,6 +35,7 @@
         "test": "pest --testsuite=Unit",
         "test:unit": "pest --testsuite=Unit",
         "test:integration": "pest --testsuite=Integration --bootstrap tests/bootstrap-integration.php",
+        "test:integration:multisite": "pest -c tests/phpunit/multisite.xml",
         "i18n:pot": "wp i18n make-pot . languages/lynxjournal.pot --domain=lynxjournal --exclude=vendor,node_modules,tests,bin,dist,chrome-extension,memory",
         "check-compatibility": [
             "vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility",

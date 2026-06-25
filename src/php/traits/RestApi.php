@@ -529,7 +529,7 @@ trait LynxJournal_RestApi {
      */
     public function handlePreflight(): void {
         $request_uri = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '';
-        if (!$request_uri || strpos($request_uri, '/wp-json/') === false) {
+        if (!$request_uri || !str_contains($request_uri, '/wp-json/')) {
             return;
         }
         if (isset($_SERVER['REQUEST_METHOD']) && sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'])) === 'OPTIONS') {
@@ -552,7 +552,7 @@ trait LynxJournal_RestApi {
      * @return bool True if from Chrome extension.
      */
     private function isFromChromeExtension( string $origin ): bool {
-        return strpos( $origin, 'chrome-extension://' ) === 0;
+        return str_starts_with( $origin, 'chrome-extension://' );
     }
 
     /**

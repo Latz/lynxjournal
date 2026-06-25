@@ -296,17 +296,23 @@ trait LynxJournal_Batch {
      * @return void
      */
     private function markLinksAsPublished(array $link_ids, int $post_id, bool $as_draft): void {
+        global $wpdb;
+
         $meta_status = $as_draft ? 'draft' : 'published';
         $wp_status   = $as_draft ? 'lynxjournal_draft' : 'lynxjournal_pub';
         $date        = current_time('mysql');
+
+        $placeholders = implode(',', array_fill(0, count($link_ids), '%d'));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        $wpdb->query( $wpdb->prepare(
+            "UPDATE {$wpdb->posts} SET post_status = %s WHERE ID IN ({$placeholders}) AND post_type = 'lynx-journal'",
+            array_merge([$wp_status], $link_ids)
+        ) );
+
         foreach ($link_ids as $link_id) {
-            $link = get_post($link_id);
-            if ($link && $link->post_type === 'lynx-journal') {
-                wp_update_post(['ID' => $link_id, 'post_status' => $wp_status]);
-                update_post_meta($link_id, '_lynxjournal_published_post_id', $post_id);
-                update_post_meta($link_id, '_lynxjournal_publish_status', $meta_status);
-                update_post_meta($link_id, '_lynxjournal_published_date', $date);
-            }
+            update_post_meta($link_id, '_lynxjournal_published_post_id', $post_id);
+            update_post_meta($link_id, '_lynxjournal_publish_status', $meta_status);
+            update_post_meta($link_id, '_lynxjournal_published_date', $date);
         }
         delete_transient('lynxjournal_publish_stats');
     }

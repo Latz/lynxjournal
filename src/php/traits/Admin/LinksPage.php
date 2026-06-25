@@ -179,12 +179,7 @@ trait LynxJournal_Admin_LinksPage {
     }
 
     private function hasLinks(array $grouped_links): bool {
-        foreach ($grouped_links as $category_links) {
-            if (!empty($category_links)) {
-                return true;
-            }
-        }
-        return false;
+        return !empty(array_filter($grouped_links));
     }
 
     private function renderCategoryLinks(array $grouped_links): void {
@@ -324,13 +319,12 @@ trait LynxJournal_Admin_LinksPage {
     }
 
     private function renderLinkStatusBadge(string $publish_status): void {
-        if ($publish_status === 'published') {
-            echo esc_html__('Published', 'lynx-journal');
-        } elseif ($publish_status === 'draft') {
-            echo '<span class="lynxjournal-status-badge lynxjournal-status-draft">📝 ' . esc_html__('Draft', 'lynx-journal') . '</span>';
-        } elseif ($publish_status === 'unpublished') {
-            echo '<span class="lynxjournal-status-badge lynxjournal-status-unpublished">' . esc_html__('Unpublished', 'lynx-journal') . '</span>';
-        }
+        echo match ($publish_status) {
+            'published'   => esc_html__('Published', 'lynx-journal'),
+            'draft'       => '<span class="lynxjournal-status-badge lynxjournal-status-draft">📝 ' . esc_html__('Draft', 'lynx-journal') . '</span>',
+            'unpublished' => '<span class="lynxjournal-status-badge lynxjournal-status-unpublished">' . esc_html__('Unpublished', 'lynx-journal') . '</span>',
+            default       => '',
+        };
     }
 
     private function renderLinkActions(\WP_Post $link, string $publish_status, mixed $published_post_id): void {
