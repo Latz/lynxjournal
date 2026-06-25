@@ -289,7 +289,6 @@ describe('LynxJournal::matchesWeeklySchedule()', function (): void {
     beforeEach(function (): void {
         $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
         $this->method = new \ReflectionMethod(LynxJournal::class, 'matchesWeeklySchedule');
-        $this->method->setAccessible(true);
     });
 
     it('returns true when the date weekday is in the configured weekdays', function (): void {
@@ -338,7 +337,6 @@ describe('LynxJournal::matchesMonthlySchedule()', function (): void {
     beforeEach(function (): void {
         $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
         $this->method = new \ReflectionMethod(LynxJournal::class, 'matchesMonthlySchedule');
-        $this->method->setAccessible(true);
     });
 
     it('type=day: returns true when the calendar day matches', function (): void {
@@ -402,7 +400,6 @@ describe('LynxJournal::isLinkOlderThan()', function (): void {
     beforeEach(function (): void {
         $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
         $this->method = new \ReflectionMethod(LynxJournal::class, 'isLinkOlderThan');
-        $this->method->setAccessible(true);
     });
 
     it('returns false when the post is not found', function (): void {
