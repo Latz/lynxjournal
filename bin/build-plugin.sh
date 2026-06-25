@@ -96,6 +96,11 @@ sed -i \
 mv "$STAGE_DIR/build" "$STAGE_DIR/schedule"
 sed -i "s|'build/|'schedule/|g" "$STAGE_DIR/includes/Menu.php"
 
+SVN_TRUNK="$PROJECT_DIR/svn/trunk"
+
+echo "Syncing to svn/trunk..."
+rsync -a --delete "$STAGE_DIR/" "$SVN_TRUNK/"
+
 echo ""
 echo "=========================================="
 echo "Build complete"
@@ -103,4 +108,5 @@ echo "=========================================="
 echo ""
 echo "Path : $STAGE_DIR"
 echo "Size : $(du -sh "$STAGE_DIR" | cut -f1)"
+echo "SVN  : $SVN_TRUNK"
 echo ""
