@@ -13,13 +13,13 @@ if (!defined('ABSPATH')) {
  * WP_Post and WP_REST_Request are already defined.
  */
 
-const LINKDIGEST_URL_EXAMPLE   = 'https://example.com';
-const LINKDIGEST_TITLE_MY_LINK = 'My Link';
+const LYNXJOURNAL_URL_EXAMPLE   = 'https://example.com';
+const LYNXJOURNAL_TITLE_MY_LINK = 'My Link';
 
 /**
  * Build a concrete WP_REST_Request stub with preset params and headers.
  */
-function linkdigest_make_request(array $params = [], array $headers = []): WP_REST_Request
+function lynxjournal_make_request(array $params = [], array $headers = []): WP_REST_Request
 {
     $request = new WP_REST_Request();
     foreach ($params  as $k => $v) { $request[$k] = $v; }
@@ -30,7 +30,7 @@ function linkdigest_make_request(array $params = [], array $headers = []): WP_RE
 /**
  * Build a minimal WP_Post object.
  */
-function linkdigest_make_post(int $id, string $title, string $type = 'linkdigest', string $content = ''): WP_Post
+function lynxjournal_make_post(int $id, string $title, string $type = 'lynx-journal', string $content = ''): WP_Post
 {
     $post               = new WP_Post();
     $post->ID           = $id;

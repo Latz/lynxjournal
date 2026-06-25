@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-trait LinkDigest_Templates {
+trait LynxJournal_Templates {
 
     /**
-     * Register the hidden linkdigest_template post type used as Gutenberg template canvases.
+     * Register the hidden lynxjournal_template post type used as Gutenberg template canvases.
      *
      * @since 2.1.0
      * @return void
      */
     public function registerTemplateCPT(): void {
-        register_post_type('linkdigest_template', array(
-            'label'           => __('Link Templates', 'linkdigest'),
+        register_post_type('lynxjournal_template', array(
+            'label'           => __('Link Templates', 'lynx-journal'),
             'public'          => false,
             'show_ui'         => true,
             'show_in_menu'    => false,
@@ -30,7 +30,7 @@ trait LinkDigest_Templates {
      * @return void
      */
     public function registerPlaceholderBlocks(): void {
-        $asset_file = plugin_dir_path(LINKDIGEST_PLUGIN_FILE) . 'build/linkdigest-blocks.asset.php';
+        $asset_file = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'build/lynxjournal-blocks.asset.php';
         if (!file_exists($asset_file)) {
             return;
         }
@@ -38,8 +38,8 @@ trait LinkDigest_Templates {
         $asset = require $asset_file;
 
         wp_register_script(
-            'linkdigest-blocks',
-            plugin_dir_url(LINKDIGEST_PLUGIN_FILE) . 'build/linkdigest-blocks.js',
+            'lynxjournal-blocks',
+            plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'build/lynxjournal-blocks.js',
             $asset['dependencies'],
             $asset['version'],
             true
@@ -69,17 +69,17 @@ trait LinkDigest_Templates {
         );
 
         foreach ($blocks as $block_name => $callback) {
-            register_block_type("linkdigest/{$block_name}", array(
+            register_block_type("lynxjournal/{$block_name}", array(
                 'api_version'     => 3,
-                'editor_script'   => 'linkdigest-blocks',
+                'editor_script'   => 'lynxjournal-blocks',
                 'supports'        => $supports,
                 'render_callback' => $callback,
             ));
         }
 
-        register_block_type('linkdigest/field-items-list', array(
+        register_block_type('lynxjournal/field-items-list', array(
             'api_version'     => 3,
-            'editor_script'   => 'linkdigest-blocks',
+            'editor_script'   => 'lynxjournal-blocks',
             'attributes'      => array(
                 'listType' => array(
                     'type'    => 'string',
@@ -89,9 +89,9 @@ trait LinkDigest_Templates {
             'render_callback' => array($this, 'renderBlockFieldItemsList'),
         ));
 
-        register_block_type('linkdigest/field-category', array(
+        register_block_type('lynxjournal/field-category', array(
             'api_version'     => 3,
-            'editor_script'   => 'linkdigest-blocks',
+            'editor_script'   => 'lynxjournal-blocks',
             'supports'        => $supports,
             'attributes'      => array(
                 'level' => array(
@@ -112,19 +112,19 @@ trait LinkDigest_Templates {
      */
     public function ensureTemplatePosts(): void {
         $single_default =
-            "<!-- wp:linkdigest/field-title /-->\n\n" .
-            "<!-- wp:linkdigest/field-description /-->\n\n" .
-            "<!-- wp:linkdigest/field-read-more /-->";
+            "<!-- wp:lynxjournal/field-title /-->\n\n" .
+            "<!-- wp:lynxjournal/field-description /-->\n\n" .
+            "<!-- wp:lynxjournal/field-read-more /-->";
 
         $digest_default =
-            "<!-- wp:linkdigest/field-title-link /-->\n\n" .
-            "<!-- wp:linkdigest/field-description /-->";
+            "<!-- wp:lynxjournal/field-title-link /-->\n\n" .
+            "<!-- wp:lynxjournal/field-description /-->";
 
-        $digest_group_default = "<!-- wp:linkdigest/field-category /-->";
+        $digest_group_default = "<!-- wp:lynxjournal/field-category /-->";
 
-        $this->ensureTemplatePost('single_link',   __('LinkDigest: Single Link Template',   'linkdigest'), $single_default);
-        $this->ensureTemplatePost('digest_item',  __('LinkDigest: Digest Item Template',  'linkdigest'), $digest_default);
-        $this->ensureTemplatePost('digest_group', __('LinkDigest: Digest Group Template', 'linkdigest'), $digest_group_default);
+        $this->ensureTemplatePost('single_link',   __('LynxJournal: Single Link Template',   'lynx-journal'), $single_default);
+        $this->ensureTemplatePost('digest_item',  __('LynxJournal: Digest Item Template',  'lynx-journal'), $digest_default);
+        $this->ensureTemplatePost('digest_group', __('LynxJournal: Digest Group Template', 'lynx-journal'), $digest_group_default);
     }
 
     /**
@@ -137,7 +137,7 @@ trait LinkDigest_Templates {
      * @return void
      */
     private function ensureTemplatePost(string $type, string $title, string $default_content): void {
-        $option_key = "linkdigest_template_{$type}";
+        $option_key = "lynxjournal_template_{$type}";
         $post_id    = (int) get_option($option_key, 0);
 
         if ($post_id && get_post($post_id)) {
@@ -145,7 +145,7 @@ trait LinkDigest_Templates {
         }
 
         $new_id = wp_insert_post(array(
-            'post_type'    => 'linkdigest_template',
+            'post_type'    => 'lynxjournal_template',
             'post_title'   => $title,
             'post_content' => $default_content,
             'post_status'  => 'publish',
@@ -164,7 +164,7 @@ trait LinkDigest_Templates {
      * @return int|null
      */
     public function getTemplatePostId(string $type): ?int {
-        $post_id = (int) get_option("linkdigest_template_{$type}", 0);
+        $post_id = (int) get_option("lynxjournal_template_{$type}", 0);
         return ($post_id && get_post($post_id)) ? $post_id : null;
     }
 
@@ -188,24 +188,24 @@ trait LinkDigest_Templates {
             return '';
         }
 
-        $GLOBALS['linkdigest_template_data'] = $data;
+        $GLOBALS['lynxjournal_template_data'] = $data;
         $rendered = do_blocks($post->post_content);
-        unset($GLOBALS['linkdigest_template_data']);
+        unset($GLOBALS['lynxjournal_template_data']);
 
         return trim($rendered);
     }
 
     /**
      * Return which template type is being edited on the current admin screen,
-     * or null when not on a linkdigest_template post edit screen.
+     * or null when not on a lynxjournal_template post edit screen.
      *
      * @since 2.1.0
      * @return string|null 'single_link', 'digest_item', or null.
      */
-    public function isLinkDigestTemplate(): ?string {
+    public function isLynxJournalTemplate(): ?string {
         global $pagenow, $post;
 
-        if ($pagenow !== 'post.php' || !$post || $post->post_type !== 'linkdigest_template') {
+        if ($pagenow !== 'post.php' || !$post || $post->post_type !== 'lynxjournal_template') {
             return null;
         }
         if ($post->ID === $this->getTemplatePostId('single_link')) {
@@ -232,16 +232,16 @@ trait LinkDigest_Templates {
         $post_id = $this->getTemplatePostId($type);
 
         if (!$post_id) {
-            echo '<div class="wrap"><p>' . esc_html__('Template post not found. Please deactivate and reactivate the plugin.', 'linkdigest') . '</p></div>';
+            echo '<div class="wrap"><p>' . esc_html__('Template post not found. Please deactivate and reactivate the plugin.', 'lynx-journal') . '</p></div>';
             return;
         }
 
         $editor_url = admin_url('post.php?post=' . $post_id . '&action=edit');
         ?>
         <iframe
-            class="linkdigest-editor-frame"
+            class="lynxjournal-editor-frame"
             src="<?php echo esc_url($editor_url); ?>"
-            title="<?php esc_attr_e('Template Editor', 'linkdigest'); ?>"
+            title="<?php esc_attr_e('Template Editor', 'lynx-journal'); ?>"
         ></iframe>
         <?php
     }
@@ -256,7 +256,7 @@ trait LinkDigest_Templates {
      * @return string
      */
     public function renderBlockFieldTitle(array $attributes): string {
-        $data  = $GLOBALS['linkdigest_template_data'] ?? array();
+        $data  = $GLOBALS['lynxjournal_template_data'] ?? array();
         $title = $data['title'] ?? '';
         return empty($title) ? '' : '<h2 ' . get_block_wrapper_attributes() . '>' . esc_html($title) . '</h2>';
     }
@@ -267,7 +267,7 @@ trait LinkDigest_Templates {
      * @return string
      */
     public function renderBlockFieldTitleLink(array $attributes): string {
-        $data  = $GLOBALS['linkdigest_template_data'] ?? array();
+        $data  = $GLOBALS['lynxjournal_template_data'] ?? array();
         $title = $data['title'] ?? '';
         $url   = $data['url']   ?? '';
 
@@ -286,7 +286,7 @@ trait LinkDigest_Templates {
      * @return string
      */
     public function renderBlockFieldUrl(array $attributes): string {
-        $data = $GLOBALS['linkdigest_template_data'] ?? array();
+        $data = $GLOBALS['lynxjournal_template_data'] ?? array();
         $url  = $data['url'] ?? '';
         return empty($url) ? '' : '<span ' . get_block_wrapper_attributes() . '>' . esc_url($url) . '</span>';
     }
@@ -297,7 +297,7 @@ trait LinkDigest_Templates {
      * @return string
      */
     public function renderBlockFieldDescription(array $attributes): string {
-        $data        = $GLOBALS['linkdigest_template_data'] ?? array();
+        $data        = $GLOBALS['lynxjournal_template_data'] ?? array();
         $description = $data['description'] ?? '';
         return empty($description) ? '' : '<div ' . get_block_wrapper_attributes() . '>' . wp_kses_post($description) . '</div>';
     }
@@ -308,12 +308,12 @@ trait LinkDigest_Templates {
      * @return string
      */
     public function renderBlockFieldReadMore(array $attributes): string {
-        $data = $GLOBALS['linkdigest_template_data'] ?? array();
+        $data = $GLOBALS['lynxjournal_template_data'] ?? array();
         $url  = $data['url'] ?? '';
         if (empty($url)) {
             return '';
         }
-        return '<p ' . get_block_wrapper_attributes() . '><a href="' . esc_url($url) . '">' . esc_html__('Read more', 'linkdigest') . ' &rarr;</a></p>';
+        return '<p ' . get_block_wrapper_attributes() . '><a href="' . esc_url($url) . '">' . esc_html__('Read more', 'lynx-journal') . ' &rarr;</a></p>';
     }
 
     /**
@@ -322,7 +322,7 @@ trait LinkDigest_Templates {
      * @return string
      */
     public function renderBlockFieldTags(array $attributes): string {
-        $data = $GLOBALS['linkdigest_template_data'] ?? array();
+        $data = $GLOBALS['lynxjournal_template_data'] ?? array();
         $tags = $data['tags'] ?? array();
         return empty($tags) ? '' : '<p ' . get_block_wrapper_attributes() . '>' . esc_html(implode(', ', $tags)) . '</p>';
     }
@@ -343,7 +343,7 @@ trait LinkDigest_Templates {
      */
     public function renderBlockFieldItemsList(array $attributes): string {
         $type = ($attributes['listType'] ?? 'ul') === 'ol' ? 'ol' : 'ul';
-        $GLOBALS['linkdigest_list_type'] = $type;
+        $GLOBALS['lynxjournal_list_type'] = $type;
         return '';
     }
 
@@ -353,7 +353,7 @@ trait LinkDigest_Templates {
      * @return string
      */
     public function renderBlockFieldCategory(array $attributes): string {
-        $data     = $GLOBALS['linkdigest_template_data'] ?? array();
+        $data     = $GLOBALS['lynxjournal_template_data'] ?? array();
         $category = $data['category'] ?? '';
         if (empty($category)) {
             return '';

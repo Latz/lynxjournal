@@ -38,21 +38,21 @@ describe('buildRestUrl()', () => {
 
     it('builds the add-link URL', () => {
         expect(buildRestUrl(base, REST_NAMESPACE, ROUTES.ADD_LINK))
-            .toBe('http://localhost:8888/wp-json/linkdigest/v1/add-link');
+            .toBe('http://localhost:8888/wp-json/lynxjournal/v1/add-link');
     });
 
     it('builds the categories URL', () => {
         expect(buildRestUrl(base, REST_NAMESPACE, ROUTES.CATEGORIES))
-            .toBe('http://localhost:8888/wp-json/linkdigest/v1/categories');
+            .toBe('http://localhost:8888/wp-json/lynxjournal/v1/categories');
     });
 
     it('builds the links URL', () => {
         expect(buildRestUrl(base, REST_NAMESPACE, ROUTES.LINKS))
-            .toBe('http://localhost:8888/wp-json/linkdigest/v1/links');
+            .toBe('http://localhost:8888/wp-json/lynxjournal/v1/links');
     });
 
     it('tolerates a trailing slash on baseUrl', () => {
         expect(buildRestUrl(base + '/', REST_NAMESPACE, ROUTES.ADD_LINK))
-            .toBe('http://localhost:8888/wp-json/linkdigest/v1/add-link');
+            .toBe('http://localhost:8888/wp-json/lynxjournal/v1/add-link');
     });
 });

@@ -1,5 +1,5 @@
 {
-  "name": "linkdigest",
+  "name": "lynxjournal",
   "version": "2.0.0",
   "scripts": {
     "build": "wp-scripts build",
@@ -8,12 +8,14 @@
     "env:stop": "wp-env stop",
     "env:clean": "wp-env clean all",
     "env:logs": "wp-env logs",
+    "test:all": "vendor/bin/pest --testsuite=Unit && vitest run",
     "test:js": "vitest run",
     "test:js:watch": "vitest",
     "test:js:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:api": "playwright test tests/e2e/api",
+    "test:e2e:ext": "playwright test --config=playwright.extension.config.mjs",
     "test:e2e:debug": "playwright test --debug"
   },
   "devDependencies": {

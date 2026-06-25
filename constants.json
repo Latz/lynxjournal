@@ -4,6 +4,8 @@
     "ADD_LINK":   "/add-link",
     "CATEGORIES": "/categories",
     "LINKS":      "/links",
+    "NONCE":      "/nonce",
+    "API_KEY":    "/api-key",
     "SCHEDULE":   "/schedule"
   },
   "POST_TYPE": "linkdigest",

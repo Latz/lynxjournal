@@ -9,10 +9,10 @@ if (!defined("ABSPATH")) {
 use Brain\Monkey\Functions;
 
 beforeEach(function (): void {
-    $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
-describe('LinkDigest CORS helpers', function (): void { // NOSONAR
+describe('LynxJournal CORS helpers', function (): void { // NOSONAR
 
     describe('addCorsHeaders()', function (): void {
 
@@ -78,6 +78,35 @@ describe('LinkDigest CORS helpers', function (): void { // NOSONAR
 
             expect(true)->toBeTrue();
             unset($_SERVER['REQUEST_METHOD']);
+        });
+    });
+
+    describe('restGetNonce()', function (): void {
+
+        it('nonce route is publicly accessible (permission_callback always returns true)', function (): void {
+            // The /nonce endpoint is intentionally public so the Chrome extension can
+            // bootstrap auth without a chicken-and-egg nonce dependency.
+            $route = null;
+            Functions\when('register_rest_route')->alias(function (string $ns, string $path, array $args) use (&$route): void {
+                if ($path === '/nonce') {
+                    $route = $args;
+                }
+            });
+            $this->plugin->registerRestRoutes();
+
+            expect($route)->not->toBeNull();
+            expect(($route['permission_callback'])())->toBeTrue();
+        });
+
+        it('returns nonce in REST response when user has edit_posts', function (): void {
+            Functions\when('current_user_can')->justReturn(true);
+            Functions\when('is_user_logged_in')->justReturn(true);
+            Functions\when('wp_create_nonce')->justReturn('rest-nonce-value');
+            Functions\when('rest_ensure_response')->alias(fn(mixed $data) => $data);
+
+            $result = $this->plugin->restGetNonce();
+
+            expect($result['nonce'])->toBe('rest-nonce-value');
         });
     });
 

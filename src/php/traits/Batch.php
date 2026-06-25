@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-trait LinkDigest_Batch {
+trait LynxJournal_Batch {
 
     /**
      * Publish multiple links as individual blog posts.
@@ -21,7 +21,7 @@ trait LinkDigest_Batch {
             return array(
                 'success' => 0,
                 'failed' => 0,
-                'messages' => array(__('No links to publish.', 'linkdigest'))
+                'messages' => array(__('No links to publish.', 'lynx-journal'))
             );
         }
 
@@ -35,7 +35,7 @@ trait LinkDigest_Batch {
                 $link = get_post($link_id);
                 $messages[] = sprintf(
                     /* translators: 1: link title, 2: error message */
-                    __('Failed to publish "%1$s": %2$s', 'linkdigest'),
+                    __('Failed to publish "%1$s": %2$s', 'lynx-journal'),
                     $link ? $link->post_title : '#' . $link_id,
                     $result['message']
                 );
@@ -61,7 +61,7 @@ trait LinkDigest_Batch {
      */
     public function createDigestPost(mixed $link_ids, string $post_title, bool $as_draft = false, string $mode = 'manual', int $author_id = 0): array {
         if (empty($link_ids) || !is_array($link_ids)) {
-            return array('success' => false, 'post_id' => 0, 'message' => __('No links to publish.', 'linkdigest'), 'error_code' => 'no_links');
+            return array('success' => false, 'post_id' => 0, 'message' => __('No links to publish.', 'lynx-journal'), 'error_code' => 'no_links');
         }
 
         // Prime caches: 4 queries instead of ~5×N in the batch publishing path
@@ -75,19 +75,19 @@ trait LinkDigest_Batch {
             'update_post_term_cache' => false,
         ]);
         update_meta_cache('post', $link_ids);
-        update_object_term_cache($link_ids, 'linkdigest_category');
-        update_object_term_cache($link_ids, 'linkdigest_tag');
+        update_object_term_cache($link_ids, 'lynxjournal_category');
+        update_object_term_cache($link_ids, 'lynxjournal_tag');
 
         if (empty($post_title)) {
-            $next = (int) get_option('linkdigest_digest_count', 0) + 1;
+            $next = (int) get_option('lynxjournal_digest_count', 0) + 1;
             /* translators: %d: digest issue number, e.g. 1, 2, 3 */
-            $post_title = sprintf(__('Links #%d', 'linkdigest'), $next);
+            $post_title = sprintf(__('Links #%d', 'lynx-journal'), $next);
         }
 
         [$links_by_category, $uncategorized_links, $published_count] = $this->groupLinksByCategory($link_ids);
 
         if ($published_count === 0) {
-            return array('success' => false, 'post_id' => 0, 'message' => __('No valid links to publish.', 'linkdigest'), 'error_code' => 'no_valid_links');
+            return array('success' => false, 'post_id' => 0, 'message' => __('No valid links to publish.', 'lynx-journal'), 'error_code' => 'no_valid_links');
         }
 
         return $this->executeDigestInsertion($post_title, $as_draft, $links_by_category, $uncategorized_links, $published_count, $link_ids, $mode, $author_id);
@@ -108,7 +108,7 @@ trait LinkDigest_Batch {
      * @return array Result array with success status, post_id, link_count, and message.
      */
     private function executeDigestInsertion(string $post_title, bool $as_draft, array $links_by_category, array $uncategorized_links, int $count, array $link_ids, string $mode = 'manual', int $author_id = 0): array {
-        // post_type 'post': the digest is a normal blog post, not a linkdigest CPT entry.
+        // post_type 'post': the digest is a normal blog post, not a lynxjournal CPT entry.
         $post_args = array(
             'post_title'   => $post_title,
             'post_content' => $this->buildDigestContent($links_by_category, $uncategorized_links),
@@ -118,14 +118,14 @@ trait LinkDigest_Batch {
         if ($author_id > 0) {
             $post_args['post_author'] = $author_id;
         }
-        $args    = apply_filters('linkdigest_digest_post_args', $post_args, $link_ids, $mode);
+        $args    = apply_filters('lynxjournal_digest_post_args', $post_args, $link_ids, $mode);
         $post_id = wp_insert_post($args);
 
         if (is_wp_error($post_id) || !$post_id) {
-            return array('success' => false, 'post_id' => 0, 'message' => __('Failed to create digest post.', 'linkdigest'), 'error_code' => 'insert_failed');
+            return array('success' => false, 'post_id' => 0, 'message' => __('Failed to create digest post.', 'lynx-journal'), 'error_code' => 'insert_failed');
         }
 
-        update_option('linkdigest_digest_count', (int) get_option('linkdigest_digest_count', 0) + 1);
+        update_option('lynxjournal_digest_count', (int) get_option('lynxjournal_digest_count', 0) + 1);
 
         $this->assignDigestCategories($post_id, $links_by_category);
         $this->assignDigestTags($post_id, $link_ids);
@@ -136,7 +136,7 @@ trait LinkDigest_Batch {
             'post_id'    => $post_id,
             'link_count' => $count,
             /* translators: %d: number of links */
-            'message'    => sprintf(__('Digest post created successfully with %d link(s).', 'linkdigest'), $count),
+            'message'    => sprintf(__('Digest post created successfully with %d link(s).', 'lynx-journal'), $count),
         );
     }
 
@@ -154,10 +154,10 @@ trait LinkDigest_Batch {
 
         foreach ($link_ids as $link_id) {
             $link = get_post($link_id);
-            if (!$link || $link->post_type !== 'linkdigest') {
+            if (!$link || $link->post_type !== 'lynx-journal') {
                 continue;
             }
-            $cats = get_the_terms($link_id, 'linkdigest_category');
+            $cats = get_the_terms($link_id, 'lynxjournal_category');
             if ($cats && !is_wp_error($cats)) {
                 $primary = $cats[0];
                 if (!isset($links_by_category[$primary->slug])) {
@@ -198,17 +198,17 @@ trait LinkDigest_Batch {
         };
 
         $render_list = function(array $ids) use (&$content, $has_item_template) {
-            $tag = isset($GLOBALS['linkdigest_list_type']) && $GLOBALS['linkdigest_list_type'] === 'ol' ? 'ol' : 'ul';
-            unset($GLOBALS['linkdigest_list_type']);
+            $tag = isset($GLOBALS['lynxjournal_list_type']) && $GLOBALS['lynxjournal_list_type'] === 'ol' ? 'ol' : 'ul';
+            unset($GLOBALS['lynxjournal_list_type']);
             $content .= "<{$tag}>\n";
             foreach ($ids as $link_id) {
                 $link = get_post($link_id);
-                $url  = get_post_meta($link_id, '_linkdigest_url', true);
+                $url  = get_post_meta($link_id, '_lynxjournal_url', true);
                 $desc = trim($link->post_content);
 
                 $item_html = '';
                 if ($has_item_template) {
-                    $tags      = get_the_terms($link_id, 'linkdigest_tag');
+                    $tags      = get_the_terms($link_id, 'lynxjournal_tag');
                     $tag_names = ($tags && !is_wp_error($tags)) ? wp_list_pluck($tags, 'name') : array();
                     $item_html = $this->renderTemplate('digest_item', array(
                         'title'       => $link->post_title,
@@ -238,7 +238,7 @@ trait LinkDigest_Batch {
         }
 
         if (!empty($uncategorized_links)) {
-            $render_group_heading(__('Other', 'linkdigest'));
+            $render_group_heading(__('Other', 'lynx-journal'));
             $render_list($uncategorized_links);
         }
 
@@ -254,7 +254,7 @@ trait LinkDigest_Batch {
      * @return void
      */
     private function assignDigestCategories(int $post_id, array $links_by_category): void {
-        // Mirrors linkdigest_category terms into native WP categories so the digest
+        // Mirrors lynxjournal_category terms into native WP categories so the digest
         // appears in standard category archives; creates the WP category if it doesn't exist.
         $all_cats = $this->collectCategoryTerms($links_by_category);
 
@@ -291,7 +291,7 @@ trait LinkDigest_Batch {
         $all_cats = array();
         foreach ($links_by_category as $group) {
             foreach ($group['links'] as $link_id) {
-                $cats = get_the_terms($link_id, 'linkdigest_category');
+                $cats = get_the_terms($link_id, 'lynxjournal_category');
                 if ($cats && !is_wp_error($cats)) {
                     foreach ($cats as $cat) {
                         $all_cats[] = $cat;
@@ -313,7 +313,7 @@ trait LinkDigest_Batch {
     private function assignDigestTags(int $post_id, array $link_ids): void {
         $tag_names = array();
         foreach ($link_ids as $link_id) {
-            $tags = get_the_terms($link_id, 'linkdigest_tag');
+            $tags = get_the_terms($link_id, 'lynxjournal_tag');
             if ($tags && !is_wp_error($tags)) {
                 foreach ($tags as $tag) {
                     $tag_names[] = $tag->name;
@@ -336,17 +336,17 @@ trait LinkDigest_Batch {
      */
     private function markLinksAsPublished(array $link_ids, int $post_id, bool $as_draft): void {
         $meta_status = $as_draft ? 'draft' : 'published';
-        $wp_status   = $as_draft ? 'linkdigest_draft' : 'linkdigest_published';
+        $wp_status   = $as_draft ? 'lynxjournal_draft' : 'lynxjournal_published';
         $date        = current_time('mysql');
         foreach ($link_ids as $link_id) {
             $link = get_post($link_id);
-            if ($link && $link->post_type === 'linkdigest') {
+            if ($link && $link->post_type === 'lynx-journal') {
                 wp_update_post(['ID' => $link_id, 'post_status' => $wp_status]);
-                update_post_meta($link_id, '_linkdigest_published_post_id', $post_id);
-                update_post_meta($link_id, '_linkdigest_publish_status', $meta_status);
-                update_post_meta($link_id, '_linkdigest_published_date', $date);
+                update_post_meta($link_id, '_lynxjournal_published_post_id', $post_id);
+                update_post_meta($link_id, '_lynxjournal_publish_status', $meta_status);
+                update_post_meta($link_id, '_lynxjournal_published_date', $date);
             }
         }
-        delete_transient('linkdigest_publish_stats');
+        delete_transient('lynxjournal_publish_stats');
     }
 }

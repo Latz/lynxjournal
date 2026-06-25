@@ -7,7 +7,7 @@ import {
     extractPageDescription,
 } from '../../chrome-extension/popup.js';
 
-const ENDPOINT = 'https://example.com/wp-json/linkdigest/v1';
+const ENDPOINT = 'https://example.com/wp-json/lynxjournal/v1';
 const API_KEY  = 'test-key';
 
 function buildPopupDOM() {

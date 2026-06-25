@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-trait LinkDigest_Admin_Menu {
+trait LynxJournal_Admin_Menu {
 
     /**
      * Register admin menu pages and submenus.
@@ -12,27 +12,27 @@ trait LinkDigest_Admin_Menu {
      */
     public function adminMenu(): void {
         add_menu_page(
-            __('Link Digest', 'linkdigest'),
-            __('Link Digest', 'linkdigest'),
+            __('Link Digest', 'lynx-journal'),
+            __('Link Digest', 'lynx-journal'),
             'read',
-            'linkdigest-dashboard',
+            'lynxjournal-dashboard',
             [$this, 'dashboardPage'],
-            plugins_url('assets/icon-menu.png', LINKDIGEST_PLUGIN_FILE),
+            plugins_url('assets/icon-menu.png', LYNXJOURNAL_PLUGIN_FILE),
             100
         );
 
-        $this->addSubmenu(__('Dashboard',        'linkdigest'), __('Dashboard',        'linkdigest'), 'read',              'linkdigest-dashboard',                                    'dashboardPage');
-        $this->addSubmenu(__('Show Links',       'linkdigest'), __('All Links',        'linkdigest'), 'read',              'linkdigest-admin',                                        'showLinksPage');
-        $this->addSubmenu(__('Add Link',         'linkdigest'), __('Add Link',         'linkdigest'), 'read',              'linkdigest-add',                                          'addLinkPage');
-        $this->addSubmenu(__('Categories',       'linkdigest'), __('Categories',       'linkdigest'), 'manage_categories', 'linkdigest-categories',                                   'categoriesPage');
-        $this->addSubmenu(__('Tags',             'linkdigest'), __('Tags',             'linkdigest'), 'manage_categories', 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest');
-        $this->addSubmenu(__('Chrome Extension', 'linkdigest'), __('Chrome Extension', 'linkdigest'), 'manage_options', 'linkdigest-settings',          'settingsPage');
-        $this->addSubmenu(__('Notifications',    'linkdigest'), __('Notifications',    'linkdigest'), 'manage_options', 'linkdigest-notifications',     'notificationsPage');
-        $this->addSubmenu(__('Schedule',         'linkdigest'), __('Schedule',         'linkdigest'), 'manage_options', 'linkdigest-schedule',          'schedulePage');
-        $this->addSubmenu(__('Templates', 'linkdigest'), __('Templates', 'linkdigest'), 'manage_options', 'linkdigest-templates', 'renderTemplatesOverviewPage');
-        add_submenu_page(null, __('Link Template',          'linkdigest'), '', 'manage_options', 'linkdigest-template-single',        [$this, 'renderTemplateSinglePage']);
-        add_submenu_page(null, __('Digest Item Template',   'linkdigest'), '', 'manage_options', 'linkdigest-template-digest',        [$this, 'renderTemplateDigestPage']);
-        add_submenu_page(null, __('Digest Group Template',  'linkdigest'), '', 'manage_options', 'linkdigest-template-digest-group',  [$this, 'renderTemplateDigestGroupPage']);
+        $this->addSubmenu(__('Dashboard',        'lynx-journal'), __('Dashboard',        'lynx-journal'), 'read',              'lynxjournal-dashboard',                                    'dashboardPage');
+        $this->addSubmenu(__('Show Links',       'lynx-journal'), __('All Links',        'lynx-journal'), 'read',              'lynxjournal-admin',                                        'showLinksPage');
+        $this->addSubmenu(__('Add Link',         'lynx-journal'), __('Add Link',         'lynx-journal'), 'read',              'lynxjournal-add',                                          'addLinkPage');
+        $this->addSubmenu(__('Categories',       'lynx-journal'), __('Categories',       'lynx-journal'), 'manage_categories', 'lynxjournal-categories',                                   'categoriesPage');
+        $this->addSubmenu(__('Tags',             'lynx-journal'), __('Tags',             'lynx-journal'), 'manage_categories', 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal');
+        $this->addSubmenu(__('Chrome Extension', 'lynx-journal'), __('Chrome Extension', 'lynx-journal'), 'manage_options', 'lynxjournal-settings',          'settingsPage');
+        $this->addSubmenu(__('Notifications',    'lynx-journal'), __('Notifications',    'lynx-journal'), 'manage_options', 'lynxjournal-notifications',     'notificationsPage');
+        $this->addSubmenu(__('Schedule',         'lynx-journal'), __('Schedule',         'lynx-journal'), 'manage_options', 'lynxjournal-schedule',          'schedulePage');
+        $this->addSubmenu(__('Templates', 'lynx-journal'), __('Templates', 'lynx-journal'), 'manage_options', 'lynxjournal-templates', 'renderTemplatesOverviewPage');
+        add_submenu_page(null, __('Link Template',          'lynx-journal'), '', 'manage_options', 'lynxjournal-template-single',        [$this, 'renderTemplateSinglePage']);
+        add_submenu_page(null, __('Digest Item Template',   'lynx-journal'), '', 'manage_options', 'lynxjournal-template-digest',        [$this, 'renderTemplateDigestPage']);
+        add_submenu_page(null, __('Digest Group Template',  'lynx-journal'), '', 'manage_options', 'lynxjournal-template-digest-group',  [$this, 'renderTemplateDigestGroupPage']);
     }
 
     /**
@@ -74,33 +74,33 @@ trait LinkDigest_Admin_Menu {
     public function renderTemplatesOverviewPage(): void {
         $templates = [
             [
-                'title' => __('Link Template',         'linkdigest'),
-                'desc'  => __('Controls how a single link item is rendered inside a digest.', 'linkdigest'),
+                'title' => __('Link Template',         'lynx-journal'),
+                'desc'  => __('Controls how a single link item is rendered inside a digest.', 'lynx-journal'),
                 'icon'  => 'dashicons-admin-links',
-                'slug'  => 'linkdigest-template-single',
+                'slug'  => 'lynxjournal-template-single',
             ],
             [
-                'title' => __('Digest Item Template',  'linkdigest'),
-                'desc'  => __('Controls the layout of each link entry within a digest group.', 'linkdigest'),
+                'title' => __('Digest Item Template',  'lynx-journal'),
+                'desc'  => __('Controls the layout of each link entry within a digest group.', 'lynx-journal'),
                 'icon'  => 'dashicons-list-view',
-                'slug'  => 'linkdigest-template-digest',
+                'slug'  => 'lynxjournal-template-digest',
             ],
             [
-                'title' => __('Digest Group Template', 'linkdigest'),
-                'desc'  => __('Defines the outer structure wrapping a group of digest links.', 'linkdigest'),
+                'title' => __('Digest Group Template', 'lynx-journal'),
+                'desc'  => __('Defines the outer structure wrapping a group of digest links.', 'lynx-journal'),
                 'icon'  => 'dashicons-category',
-                'slug'  => 'linkdigest-template-digest-group',
+                'slug'  => 'lynxjournal-template-digest-group',
             ],
         ];
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('Templates', 'linkdigest'); ?></h1>
-            <div class="linkdigest-templates-grid">
+            <h1><?php esc_html_e('Templates', 'lynx-journal'); ?></h1>
+            <div class="lynxjournal-templates-grid">
                 <?php foreach ($templates as $tpl) : ?>
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=' . $tpl['slug'])); ?>" class="linkdigest-template-card">
-                        <span class="linkdigest-template-card__icon dashicons <?php echo esc_attr($tpl['icon']); ?>"></span>
-                        <span class="linkdigest-template-card__title"><?php echo esc_html($tpl['title']); ?></span>
-                        <span class="linkdigest-template-card__desc"><?php echo esc_html($tpl['desc']); ?></span>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=' . $tpl['slug'])); ?>" class="lynxjournal-template-card">
+                        <span class="lynxjournal-template-card__icon dashicons <?php echo esc_attr($tpl['icon']); ?>"></span>
+                        <span class="lynxjournal-template-card__title"><?php echo esc_html($tpl['title']); ?></span>
+                        <span class="lynxjournal-template-card__desc"><?php echo esc_html($tpl['desc']); ?></span>
                     </a>
                 <?php endforeach; ?>
             </div>
@@ -116,8 +116,8 @@ trait LinkDigest_Admin_Menu {
      * @return string The filtered parent menu file name.
      */
     public function parentFileFilter(string $parent_file): string {
-        if ($this->isLinkDigestTag() || $this->isLinkDigestTemplate() !== null) {
-            return 'linkdigest-dashboard';
+        if ($this->isLynxJournalTag() || $this->isLynxJournalTemplate() !== null) {
+            return 'lynxjournal-dashboard';
         }
         return $parent_file;
     }
@@ -130,12 +130,12 @@ trait LinkDigest_Admin_Menu {
      * @return string The filtered submenu file name.
      */
     public function submenuFileFilter(?string $submenu_file): string {
-        if ($this->isLinkDigestTag()) {
-            return 'edit-tags.php?taxonomy=linkdigest_tag&post_type=linkdigest';
+        if ($this->isLynxJournalTag()) {
+            return 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal';
         }
-        $template_type = $this->isLinkDigestTemplate();
+        $template_type = $this->isLynxJournalTemplate();
         if ($template_type !== null) {
-            return 'linkdigest-templates';
+            return 'lynxjournal-templates';
         }
         return $submenu_file ?? '';
     }
@@ -150,7 +150,7 @@ trait LinkDigest_Admin_Menu {
      */
     private function renderCopyableField(string $id, string $value): void {
         ?>
-        <div class="linkdigest-row">
+        <div class="lynxjournal-row">
             <input
                 type="text"
                 id="<?php echo esc_attr($id); ?>"
@@ -159,8 +159,8 @@ trait LinkDigest_Admin_Menu {
                 onclick="this.select();"
                 class="large-text code"
             >
-            <button type="button" class="button linkdigest-copy-btn" data-clipboard-target="<?php echo esc_attr($id); ?>">
-                <span class="dashicons dashicons-clipboard linkdigest-btn-icon"></span>
+            <button type="button" class="button lynxjournal-copy-btn" data-clipboard-target="<?php echo esc_attr($id); ?>">
+                <span class="dashicons dashicons-clipboard lynxjournal-btn-icon"></span>
             </button>
         </div>
         <?php
@@ -174,102 +174,102 @@ trait LinkDigest_Admin_Menu {
      */
     public function settingsPage(): void {
         // Handle API key generation
-        $nonce = isset($_POST['linkdigest_settings_nonce']) ? sanitize_text_field(wp_unslash($_POST['linkdigest_settings_nonce'])) : '';
-        if (isset($_POST['linkdigest_generate_api_key']) && wp_verify_nonce($nonce, 'linkdigest_settings')) {
+        $nonce = isset($_POST['lynxjournal_settings_nonce']) ? sanitize_text_field(wp_unslash($_POST['lynxjournal_settings_nonce'])) : '';
+        if (isset($_POST['lynxjournal_generate_api_key']) && wp_verify_nonce($nonce, 'lynxjournal_settings')) {
             $api_key = wp_generate_password(32, false);
-            update_option('linkdigest_api_key', $api_key);
-            echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('New API key generated successfully!', 'linkdigest') . '</p></div>';
+            update_option('lynxjournal_api_key', $api_key);
+            echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('New API key generated successfully!', 'lynx-journal') . '</p></div>';
         }
 
-        $api_key     = get_option('linkdigest_api_key');
-        $endpoint    = rest_url(LINKDIGEST_REST_NAMESPACE);
+        $api_key     = get_option('lynxjournal_api_key');
+        $endpoint    = rest_url(LYNXJOURNAL_REST_NAMESPACE);
         $has_key_attr = $api_key ? 'data-has-key="1"' : '';
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('LinkDigest Chrome Extension', 'linkdigest'); ?></h1>
+            <h1><?php esc_html_e('LynxJournal Chrome Extension', 'lynx-journal'); ?></h1>
 
-            <div class="card linkdigest-settings-card">
-                <h2><?php esc_html_e('Chrome Extension Access Data', 'linkdigest'); ?></h2>
-                <p><?php esc_html_e('Use these credentials to connect the LinkDigest Chrome extension to your WordPress site.', 'linkdigest'); ?></p>
+            <div class="card lynxjournal-settings-card">
+                <h2><?php esc_html_e('Chrome Extension Access Data', 'lynx-journal'); ?></h2>
+                <p><?php esc_html_e('Use these credentials to connect the LynxJournal Chrome extension to your WordPress site.', 'lynx-journal'); ?></p>
 
-                <div class="linkdigest-settings-field">
-                    <label class="linkdigest-settings-label" for="linkdigest-api-endpoint">
-                        <?php esc_html_e('API Endpoint', 'linkdigest'); ?>
-                        <span class="linkdigest-settings-note">(<?php esc_html_e('read-only', 'linkdigest'); ?>)</span>
+                <div class="lynxjournal-settings-field">
+                    <label class="lynxjournal-settings-label" for="lynxjournal-api-endpoint">
+                        <?php esc_html_e('API Endpoint', 'lynx-journal'); ?>
+                        <span class="lynxjournal-settings-note">(<?php esc_html_e('read-only', 'lynx-journal'); ?>)</span>
                     </label>
-                    <div class="linkdigest-row">
+                    <div class="lynxjournal-row">
                         <input
                             type="text"
-                            id="linkdigest-api-endpoint"
+                            id="lynxjournal-api-endpoint"
                             value="<?php echo esc_attr($endpoint); ?>"
                             readonly
                             class="large-text code"
                         >
-                        <button type="button" class="button linkdigest-copy-btn" data-clipboard-target="linkdigest-api-endpoint">
-                            <span class="dashicons dashicons-clipboard linkdigest-btn-icon"></span>
+                        <button type="button" class="button lynxjournal-copy-btn" data-clipboard-target="lynxjournal-api-endpoint">
+                            <span class="dashicons dashicons-clipboard lynxjournal-btn-icon"></span>
                         </button>
                     </div>
                     <p class="description">
-                        <?php esc_html_e('Use this URL in the Chrome extension settings.', 'linkdigest'); ?>
-                        <a href="<?php echo esc_url($endpoint); ?>" target="_blank" class="linkdigest-rest-link">
-                            <?php esc_html_e('View REST API', 'linkdigest'); ?> ↗
+                        <?php esc_html_e('Use this URL in the Chrome extension settings.', 'lynx-journal'); ?>
+                        <a href="<?php echo esc_url($endpoint); ?>" target="_blank" class="lynxjournal-rest-link">
+                            <?php esc_html_e('View REST API', 'lynx-journal'); ?> ↗
                         </a>
                     </p>
                 </div>
 
                 <?php if ($api_key) : ?>
-                    <div class="linkdigest-settings-field">
-                        <label for="linkdigest-api-key" class="linkdigest-settings-label">
-                            <?php esc_html_e('API Key:', 'linkdigest'); ?>
+                    <div class="lynxjournal-settings-field">
+                        <label for="lynxjournal-api-key" class="lynxjournal-settings-label">
+                            <?php esc_html_e('API Key:', 'lynx-journal'); ?>
                         </label>
-                        <div class="linkdigest-row">
+                        <div class="lynxjournal-row">
                             <input
                                 type="password"
-                                id="linkdigest-api-key"
+                                id="lynxjournal-api-key"
                                 value="<?php echo esc_attr($api_key); ?>"
                                 readonly
                                 class="large-text code"
                             >
-                            <button type="button" class="button linkdigest-toggle-key" title="<?php esc_attr_e('Show / hide API key', 'linkdigest'); ?>">
-                                <span class="dashicons dashicons-visibility linkdigest-btn-icon"></span>
+                            <button type="button" class="button lynxjournal-toggle-key" title="<?php esc_attr_e('Show / hide API key', 'lynx-journal'); ?>">
+                                <span class="dashicons dashicons-visibility lynxjournal-btn-icon"></span>
                             </button>
-                            <button type="button" class="button linkdigest-copy-btn" data-clipboard-target="linkdigest-api-key">
-                                <span class="dashicons dashicons-clipboard linkdigest-btn-icon"></span>
+                            <button type="button" class="button lynxjournal-copy-btn" data-clipboard-target="lynxjournal-api-key">
+                                <span class="dashicons dashicons-clipboard lynxjournal-btn-icon"></span>
                             </button>
                         </div>
-                        <p class="description linkdigest-settings-desc">
-                            <?php esc_html_e('Keep this key secure. Use the copy button to transfer it without revealing it.', 'linkdigest'); ?>
+                        <p class="description lynxjournal-settings-desc">
+                            <?php esc_html_e('Keep this key secure. Use the copy button to transfer it without revealing it.', 'lynx-journal'); ?>
                         </p>
-                        <div class="linkdigest-settings-test-row">
-                            <button type="button" id="linkdigest-test-connection" class="button">
-                                <?php esc_html_e('Test Connection', 'linkdigest'); ?>
+                        <div class="lynxjournal-settings-test-row">
+                            <button type="button" id="lynxjournal-test-connection" class="button">
+                                <?php esc_html_e('Test Connection', 'lynx-journal'); ?>
                             </button>
-                            <span id="linkdigest-connection-status"></span>
+                            <span id="lynxjournal-connection-status"></span>
                         </div>
                     </div>
                 <?php endif; ?>
 
-                <form method="post" action="" id="linkdigest-generate-form" <?php echo $has_key_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-                    <?php wp_nonce_field('linkdigest_settings', 'linkdigest_settings_nonce'); ?>
+                <form method="post" action="" id="lynxjournal-generate-form" <?php echo $has_key_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+                    <?php wp_nonce_field('lynxjournal_settings', 'lynxjournal_settings_nonce'); ?>
                     <?php if ($api_key) : ?>
                         <div class="notice notice-warning inline">
-                            <p><?php esc_html_e('Warning: Generating a new key will permanently invalidate the current one. You will need to update the Chrome extension with the new key.', 'linkdigest'); ?></p>
+                            <p><?php esc_html_e('Warning: Generating a new key will permanently invalidate the current one. You will need to update the Chrome extension with the new key.', 'lynx-journal'); ?></p>
                         </div>
                     <?php endif; ?>
-                    <button type="submit" name="linkdigest_generate_api_key" class="button button-primary">
-                        <?php echo $api_key ? esc_html__('Generate New API Key', 'linkdigest') : esc_html__('Generate API Key', 'linkdigest'); ?>
+                    <button type="submit" name="lynxjournal_generate_api_key" class="button button-primary">
+                        <?php echo $api_key ? esc_html__('Generate New API Key', 'lynx-journal') : esc_html__('Generate API Key', 'lynx-journal'); ?>
                     </button>
                 </form>
             </div>
 
-            <div class="card linkdigest-setup-card">
-                <h2><?php esc_html_e('Chrome Extension Setup', 'linkdigest'); ?></h2>
+            <div class="card lynxjournal-setup-card">
+                <h2><?php esc_html_e('Chrome Extension Setup', 'lynx-journal'); ?></h2>
                 <ol>
-                    <li><?php esc_html_e('Download and install the LinkDigest Chrome extension', 'linkdigest'); ?></li>
-                    <li><?php esc_html_e('Click the extension icon and go to Settings', 'linkdigest'); ?></li>
-                    <li><?php esc_html_e('Paste your API Endpoint and API Key from above', 'linkdigest'); ?></li>
-                    <li><?php esc_html_e('Click Save', 'linkdigest'); ?></li>
-                    <li><?php esc_html_e('Now you can save links directly from any webpage!', 'linkdigest'); ?></li>
+                    <li><?php esc_html_e('Download and install the LynxJournal Chrome extension', 'lynx-journal'); ?></li>
+                    <li><?php esc_html_e('Click the extension icon and go to Settings', 'lynx-journal'); ?></li>
+                    <li><?php esc_html_e('Paste your API Endpoint and API Key from above', 'lynx-journal'); ?></li>
+                    <li><?php esc_html_e('Click Save', 'lynx-journal'); ?></li>
+                    <li><?php esc_html_e('Now you can save links directly from any webpage!', 'lynx-journal'); ?></li>
                 </ol>
             </div>
         </div>
@@ -286,8 +286,8 @@ trait LinkDigest_Admin_Menu {
     public function schedulePage(): void {
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('Schedule Configuration', 'linkdigest'); ?></h1>
-            <div id="linkdigest-schedule-root"></div>
+            <h1><?php esc_html_e('Schedule Configuration', 'lynx-journal'); ?></h1>
+            <div id="lynxjournal-schedule-root"></div>
         </div>
         <?php
     }
@@ -300,77 +300,77 @@ trait LinkDigest_Admin_Menu {
      * @return void
      */
     public function enqueueAdminAssets(string $hook): void {
-        $is_linkdigest = strpos($hook, 'linkdigest') !== false;
+        $is_lynxjournal = strpos($hook, 'lynx-journal') !== false;
 
-        // CSS must also load on the WP core dashboard (index.php) for the linkdigest widget
-        if ($is_linkdigest || $hook === 'index.php') {
+        // CSS must also load on the WP core dashboard (index.php) for the lynxjournal widget
+        if ($is_lynxjournal || $hook === 'index.php') {
             wp_enqueue_style('dashicons');
             wp_enqueue_style(
-                'linkdigest-dashboard',
-                plugin_dir_url(LINKDIGEST_PLUGIN_FILE) . 'dashboard.css',
+                'lynxjournal-dashboard',
+                plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'dashboard.css',
                 array(),
-                (string) filemtime(plugin_dir_path(LINKDIGEST_PLUGIN_FILE) . 'dashboard.css')
+                (string) filemtime(plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'dashboard.css')
             );
         }
 
-        if (!$is_linkdigest) {
+        if (!$is_lynxjournal) {
             return;
         }
 
-        if (strpos($hook, 'linkdigest-dashboard') !== false) {
+        if (strpos($hook, 'lynxjournal-dashboard') !== false) {
             wp_enqueue_script('postbox');
-            $this->enqueuePageScript('linkdigest-dashboard-js', 'dashboard.js');
-            wp_localize_script('linkdigest-dashboard-js', 'linkdigestDash', array(
-                'restUrl' => rest_url(LINKDIGEST_REST_NAMESPACE . '/links/'),
+            $this->enqueuePageScript('lynxjournal-dashboard-js', 'dashboard.js');
+            wp_localize_script('lynxjournal-dashboard-js', 'lynxjournalDash', array(
+                'restUrl' => rest_url(LYNXJOURNAL_REST_NAMESPACE . '/links/'),
                 'nonce'   => wp_create_nonce('wp_rest'),
                 'labels'  => array(
-                    'delete' => __('Delete?', 'linkdigest'),
-                    'yes'    => __('Yes', 'linkdigest'),
-                    'cancel' => __('Cancel', 'linkdigest'),
+                    'delete' => __('Delete?', 'lynx-journal'),
+                    'yes'    => __('Yes', 'lynx-journal'),
+                    'cancel' => __('Cancel', 'lynx-journal'),
                 ),
             ));
         }
 
-        if (strpos($hook, 'linkdigest-settings') !== false) {
-            $this->enqueuePageScript('linkdigest-settings-page', 'settings-page.js', array('jquery'));
-            wp_localize_script('linkdigest-settings-page', 'linkdigestSettings', array(
+        if (strpos($hook, 'lynxjournal-settings') !== false) {
+            $this->enqueuePageScript('lynxjournal-settings-page', 'settings-page.js', array('jquery'));
+            wp_localize_script('lynxjournal-settings-page', 'lynxjournalSettings', array(
                 'labels' => array(
-                    'confirmRegenerate' => __('This will permanently invalidate your current API key. You will need to update the Chrome extension with the new key. Continue?', 'linkdigest'),
-                    'missingFields'     => __('Missing endpoint or API key.', 'linkdigest'),
-                    'statusTesting'     => __('Testing…', 'linkdigest'),
-                    'statusOk'          => __('Connected successfully.', 'linkdigest'),
-                    'statusFail'        => __('Connection failed', 'linkdigest'),
-                    'statusUnreachable' => __('Could not reach endpoint.', 'linkdigest'),
+                    'confirmRegenerate' => __('This will permanently invalidate your current API key. You will need to update the Chrome extension with the new key. Continue?', 'lynx-journal'),
+                    'missingFields'     => __('Missing endpoint or API key.', 'lynx-journal'),
+                    'statusTesting'     => __('Testing…', 'lynx-journal'),
+                    'statusOk'          => __('Connected successfully.', 'lynx-journal'),
+                    'statusFail'        => __('Connection failed', 'lynx-journal'),
+                    'statusUnreachable' => __('Could not reach endpoint.', 'lynx-journal'),
                 ),
             ));
         }
 
-        if (strpos($hook, 'linkdigest-admin') !== false) {
-            $this->enqueuePageScript('linkdigest-links-page', 'links-page.js');
+        if (strpos($hook, 'lynxjournal-admin') !== false) {
+            $this->enqueuePageScript('lynxjournal-links-page', 'links-page.js');
         }
 
-        if (strpos($hook, 'linkdigest-categories') !== false) {
-            $this->enqueuePageScript('linkdigest-categories-js', 'categories.js');
-            wp_localize_script('linkdigest-categories-js', 'linkdigestCats', array(
-                'restUrl' => rest_url(LINKDIGEST_REST_NAMESPACE . '/categories/'),
+        if (strpos($hook, 'lynxjournal-categories') !== false) {
+            $this->enqueuePageScript('lynxjournal-categories-js', 'categories.js');
+            wp_localize_script('lynxjournal-categories-js', 'lynxjournalCats', array(
+                'restUrl' => rest_url(LYNXJOURNAL_REST_NAMESPACE . '/categories/'),
                 'nonce'   => wp_create_nonce('wp_rest'),
                 'labels'  => array(
-                    'edit'            => __('Edit', 'linkdigest'),
-                    'save'            => __('Save', 'linkdigest'),
-                    'cancel'          => __('Cancel', 'linkdigest'),
-                    'saving'          => __('Saving…', 'linkdigest'),
-                    'saveError'       => __('Save failed.', 'linkdigest'),
-                    'nameRequired'    => __('Name is required.', 'linkdigest'),
-                    'descPlaceholder' => __('Description (optional)', 'linkdigest'),
-                    'slugPlaceholder' => __('Leave blank to keep current', 'linkdigest'),
-                    'deleteOne'       => __('link will become uncategorized.', 'linkdigest'),
-                    'deleteMany'      => __('links will become uncategorized.', 'linkdigest'),
+                    'edit'            => __('Edit', 'lynx-journal'),
+                    'save'            => __('Save', 'lynx-journal'),
+                    'cancel'          => __('Cancel', 'lynx-journal'),
+                    'saving'          => __('Saving…', 'lynx-journal'),
+                    'saveError'       => __('Save failed.', 'lynx-journal'),
+                    'nameRequired'    => __('Name is required.', 'lynx-journal'),
+                    'descPlaceholder' => __('Description (optional)', 'lynx-journal'),
+                    'slugPlaceholder' => __('Leave blank to keep current', 'lynx-journal'),
+                    'deleteOne'       => __('link will become uncategorized.', 'lynx-journal'),
+                    'deleteMany'      => __('links will become uncategorized.', 'lynx-journal'),
                 ),
             ));
         }
 
-        if (strpos($hook, 'linkdigest-notifications') !== false) {
-            $asset_file = plugin_dir_path(LINKDIGEST_PLUGIN_FILE) . 'build/settings.asset.php';
+        if (strpos($hook, 'lynxjournal-notifications') !== false) {
+            $asset_file = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'build/settings.asset.php';
             if (file_exists($asset_file)) {
                 $asset = require_once $asset_file;
             } else {
@@ -378,25 +378,25 @@ trait LinkDigest_Admin_Menu {
             }
 
             wp_enqueue_script(
-                'linkdigest-settings',
-                plugin_dir_url(LINKDIGEST_PLUGIN_FILE) . 'build/settings.js',
+                'lynxjournal-settings',
+                plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'build/settings.js',
                 $asset['dependencies'],
                 $asset['version'],
                 true
             );
 
-            if (file_exists(plugin_dir_path(LINKDIGEST_PLUGIN_FILE) . 'build/settings.css')) {
+            if (file_exists(plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'build/settings.css')) {
                 wp_enqueue_style(
-                    'linkdigest-settings-style',
-                    plugin_dir_url(LINKDIGEST_PLUGIN_FILE) . 'build/settings.css',
+                    'lynxjournal-settings-style',
+                    plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'build/settings.css',
                     array('wp-components'),
                     $asset['version']
                 );
             }
         }
 
-        if (strpos($hook, 'linkdigest-schedule') !== false) {
-            $asset_file = plugin_dir_path(LINKDIGEST_PLUGIN_FILE) . 'build/schedule.asset.php';
+        if (strpos($hook, 'lynxjournal-schedule') !== false) {
+            $asset_file = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'build/schedule.asset.php';
             if (file_exists($asset_file)) {
                 $asset = require_once $asset_file;
             } else {
@@ -404,24 +404,24 @@ trait LinkDigest_Admin_Menu {
             }
 
             wp_enqueue_script(
-                'linkdigest-schedule',
-                plugin_dir_url(LINKDIGEST_PLUGIN_FILE) . 'build/schedule.js',
+                'lynxjournal-schedule',
+                plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'build/schedule.js',
                 $asset['dependencies'],
                 $asset['version'],
                 true
             );
 
-            wp_localize_script('linkdigest-schedule', 'linkdigestSchedule', array(
+            wp_localize_script('lynxjournal-schedule', 'lynxjournalSchedule', array(
                 'allModes'     => array_column(\ScheduleMode::cases(), 'value'),
                 'timeModes'    => array_column(\ScheduleMode::timeBased(), 'value'),
                 'triggerModes' => array_column(\ScheduleMode::triggerBased(), 'value'),
                 'timezone'     => wp_timezone_string(),
             ));
 
-            if (file_exists(plugin_dir_path(LINKDIGEST_PLUGIN_FILE) . 'build/schedule.css')) {
+            if (file_exists(plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'build/schedule.css')) {
                 wp_enqueue_style(
-                    'linkdigest-schedule-style',
-                    plugin_dir_url(LINKDIGEST_PLUGIN_FILE) . 'build/schedule.css',
+                    'lynxjournal-schedule-style',
+                    plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'build/schedule.css',
                     array('wp-components'),
                     $asset['version']
                 );
@@ -438,14 +438,14 @@ trait LinkDigest_Admin_Menu {
     public function notificationsPage(): void {
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('Notifications', 'linkdigest'); ?></h1>
-            <div id="linkdigest-settings-root"></div>
+            <h1><?php esc_html_e('Notifications', 'lynx-journal'); ?></h1>
+            <div id="lynxjournal-settings-root"></div>
         </div>
         <?php
     }
 
     /**
-     * Register a submenu page under the linkdigest-dashboard parent.
+     * Register a submenu page under the lynxjournal-dashboard parent.
      *
      * @since 1.0.0
      * @param string      $page_title Page title.
@@ -456,23 +456,23 @@ trait LinkDigest_Admin_Menu {
      * @return void
      */
     private function addSubmenu(string $page_title, string $menu_title, string $cap, string $slug, ?string $callback = null): void {
-        add_submenu_page('linkdigest-dashboard', $page_title, $menu_title, $cap, $slug, $callback !== null ? [$this, $callback] : null);
+        add_submenu_page('lynxjournal-dashboard', $page_title, $menu_title, $cap, $slug, $callback !== null ? [$this, $callback] : null);
     }
 
     /**
-     * Return true when the current request is for the linkdigest_tag taxonomy screen.
+     * Return true when the current request is for the lynxjournal_tag taxonomy screen.
      *
      * @since 1.0.0
      * @return bool
      */
-    private function isLinkDigestTag(): bool {
+    private function isLynxJournalTag(): bool {
         global $pagenow;
         if ($pagenow !== 'edit-tags.php') {
             return false;
         }
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $taxonomy = isset($_GET['taxonomy']) ? sanitize_key(wp_unslash($_GET['taxonomy'])) : '';
-        return $taxonomy === 'linkdigest_tag';
+        return $taxonomy === 'lynxjournal_tag';
     }
 
     /**
@@ -485,8 +485,8 @@ trait LinkDigest_Admin_Menu {
      * @return void
      */
     private function enqueuePageScript(string $handle, string $file, array $deps = []): void {
-        $js_dir = plugin_dir_path(LINKDIGEST_PLUGIN_FILE) . 'assets/js/';
-        $js_url = plugin_dir_url(LINKDIGEST_PLUGIN_FILE) . 'assets/js/';
+        $js_dir = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'assets/js/';
+        $js_url = plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'assets/js/';
         wp_enqueue_script($handle, $js_url . $file, $deps, (string) filemtime($js_dir . $file), true);
     }
 
@@ -498,8 +498,8 @@ trait LinkDigest_Admin_Menu {
      */
     public function addDashboardWidget(): void {
         wp_add_dashboard_widget(
-            'linkdigest_dashboard_widget',
-            __('LinkDigest Summary', 'linkdigest'),
+            'lynxjournal_dashboard_widget',
+            __('LynxJournal Summary', 'lynx-journal'),
             [$this, 'dashboardWidgetContent']
         );
     }

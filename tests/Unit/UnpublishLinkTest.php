@@ -9,15 +9,15 @@ if (!defined("ABSPATH")) {
 use Brain\Monkey\Functions;
 
 /**
- * Tests for LinkDigest::unpublishLink()
+ * Tests for LynxJournal::unpublishLink()
  */
 
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
-    $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
-describe('LinkDigest::unpublishLink()', function (): void {
+describe('LynxJournal::unpublishLink()', function (): void {
 
     it('returns an error when the link has no published post id in meta', function (): void {
         Functions\when('get_post_meta')->justReturn(''); // no stored post ID
@@ -40,7 +40,7 @@ describe('LinkDigest::unpublishLink()', function (): void {
 
     it('returns success and removes all three meta keys on success', function (): void {
         Functions\when('get_post_meta')->justReturn(50);
-        Functions\when('wp_trash_post')->justReturn(linkdigest_make_post(50, 'Blog Post', 'post'));
+        Functions\when('wp_trash_post')->justReturn(lynxjournal_make_post(50, 'Blog Post', 'post'));
 
         $deleted = [];
         Functions\when('delete_post_meta')
@@ -52,9 +52,9 @@ describe('LinkDigest::unpublishLink()', function (): void {
         $result = $this->plugin->unpublishLink(1);
 
         expect($result['success'])->toBeTrue();
-        expect($deleted)->toContain('_linkdigest_published_post_id');
-        expect($deleted)->toContain('_linkdigest_publish_status');
-        expect($deleted)->toContain('_linkdigest_published_date');
+        expect($deleted)->toContain('_lynxjournal_published_post_id');
+        expect($deleted)->toContain('_lynxjournal_publish_status');
+        expect($deleted)->toContain('_lynxjournal_published_date');
     });
 
     it('trashes the correct blog post ID', function (): void {
@@ -65,7 +65,7 @@ describe('LinkDigest::unpublishLink()', function (): void {
         Functions\when('wp_trash_post')->alias(
             function (int $id) use (&$trashedId): WP_Post|false|null {
                 $trashedId = $id;
-                return linkdigest_make_post($id, 'Post', 'post');
+                return lynxjournal_make_post($id, 'Post', 'post');
             }
         );
 

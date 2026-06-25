@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { refreshCategories, handleContextMenuClick } from '../../chrome-extension/background.js';
 
-const ENDPOINT = 'https://example.com/wp-json/linkdigest/v1';
+const ENDPOINT = 'https://example.com/wp-json/lynxjournal/v1';
 const API_KEY  = 'test-key';
 
 describe('refreshCategories', () => {
@@ -52,17 +52,17 @@ describe('handleContextMenuClick', () => {
     it('opens admin tab with correct URL when apiEndpoint is set', async () => {
         chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT });
 
-        await handleContextMenuClick({ menuItemId: 'linkdigest-admin' });
+        await handleContextMenuClick({ menuItemId: 'lynxjournal-admin' });
 
         expect(chrome.tabs.create).toHaveBeenCalledWith({
-            url: 'https://example.com/wp-admin/admin.php?page=linkdigest-dashboard',
+            url: 'https://example.com/wp-admin/admin.php?page=lynxjournal-dashboard',
         });
     });
 
     it('opens options page when apiEndpoint is not set', async () => {
         chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: undefined });
 
-        await handleContextMenuClick({ menuItemId: 'linkdigest-admin' });
+        await handleContextMenuClick({ menuItemId: 'lynxjournal-admin' });
 
         expect(chrome.runtime.openOptionsPage).toHaveBeenCalled();
         expect(chrome.tabs.create).not.toHaveBeenCalled();
@@ -72,7 +72,7 @@ describe('handleContextMenuClick', () => {
         chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
         global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => [] });
 
-        await handleContextMenuClick({ menuItemId: 'linkdigest-refresh-categories' });
+        await handleContextMenuClick({ menuItemId: 'lynxjournal-refresh-categories' });
 
         expect(fetch).toHaveBeenCalled();
         expect(chrome.tabs.create).not.toHaveBeenCalled();

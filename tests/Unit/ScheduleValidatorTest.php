@@ -10,10 +10,11 @@ use Brain\Monkey\Functions;
 
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
-    $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+    Functions\when('user_can')->justReturn(true);
+    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
-describe('LinkDigest::validateScheduleConfig()', function (): void {
+describe('LynxJournal::validateScheduleConfig()', function (): void {
 
     it('returns 400 unknown_keys when an unrecognized top-level key is present', function (): void {
         $result = $this->plugin->validateScheduleConfig(['mode' => 'daily', 'foo' => 'bar']);

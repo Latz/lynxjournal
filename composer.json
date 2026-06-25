@@ -1,16 +1,16 @@
 {
-    "name": "latz/linkdigest",
-    "description": "LinkDigest WordPress plugin – curated link digests",
+    "name": "latz/lynxjournal",
+    "description": "LynxJournal WordPress plugin – curated link roundups",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
     "autoload": {
         "psr-4": {
-            "LinkDigest\\": "src/"
+            "LynxJournal\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "LinkDigest\\Tests\\": "tests/"
+            "LynxJournal\\Tests\\": "tests/"
         }
     },
     "require": {
@@ -34,6 +34,6 @@
         "test": "pest --testsuite=Unit",
         "test:unit": "pest --testsuite=Unit",
         "test:integration": "pest --testsuite=Integration --bootstrap tests/bootstrap-integration.php",
-        "i18n:pot": "wp i18n make-pot . languages/linkdigest.pot --domain=linkdigest --exclude=vendor,node_modules,tests,bin,dist,chrome-extension,memory"
+        "i18n:pot": "wp i18n make-pot . languages/lynxjournal.pot --domain=lynx-journal --exclude=vendor,node_modules,tests,bin,dist,chrome-extension,memory"
     }
 }

@@ -1,0 +1,32 @@
+name: Publish to npm
+
+on:
+  release:
+    types: [published] # Triggers only when a release is fully published
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write # Required to secure a short-lived OIDC token from npm
+      contents: read # Required to check out your repository files
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Upgrade npm CLI
+        run: npm install -g npm@latest
+
+      - name: Publish Package with Provenance
+        run: npm publish --provenance

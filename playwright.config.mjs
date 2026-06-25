@@ -39,11 +39,5 @@ export default defineConfig({
         },
     ],
 
-    // Automatically start wp-env before the suite runs.
-    // Comment out if you manage wp-env manually.
-    // webServer: {
-    //     command: 'npm run env:start',
-    //     url: baseURL,
-    //     reuseExistingServer: true,
-    // },
+    globalSetup: './tests/e2e/global-setup.js',
 });

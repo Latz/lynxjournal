@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace LinkDigest\Tests\Unit;
+namespace LynxJournal\Tests\Unit;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use LinkDigest;
+use LynxJournal;
 use Mockery;
 use Brain\Monkey\Functions;
 use Brain\Monkey\Actions;
 use Brain\Monkey\Filters;
 
-describe('LinkDigest_Publishing Trait', function () {
+describe('LynxJournal_Publishing Trait', function () {
     beforeEach(function () {
-        $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+        $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
     });
 
     describe('validateLinkForPublish()', function () {
@@ -29,10 +29,10 @@ describe('LinkDigest_Publishing Trait', function () {
             expect($result['error_code'])->toBe('no_permission');
         });
 
-        it('returns error if post is not a linkdigest type', function () {
+        it('returns error if post is not a lynxjournal type', function () {
             Functions\when('current_user_can')->justReturn(true);
 
-            $post = linkdigest_make_post(123, 'Title', 'post'); // Helper from tests/helpers.php
+            $post = lynxjournal_make_post(123, 'Title', 'post'); // Helper from tests/helpers.php
             Functions\when('get_post')->justReturn($post);
 
             $result = $this->plugin->validateLinkForPublish(123);
@@ -42,7 +42,7 @@ describe('LinkDigest_Publishing Trait', function () {
         it('returns error if link has no title', function () {
             Functions\when('current_user_can')->justReturn(true);
 
-            $post = linkdigest_make_post(123, '', 'linkdigest');
+            $post = lynxjournal_make_post(123, '', 'lynx-journal');
             Functions\when('get_post')->justReturn($post);
 
             $result = $this->plugin->validateLinkForPublish(123);
@@ -57,8 +57,8 @@ describe('LinkDigest_Publishing Trait', function () {
 
             Functions\when('get_post')->alias(function ($id) {
                 return match ($id) {
-                    123 => linkdigest_make_post(123, 'Title', 'linkdigest'),
-                    456 => linkdigest_make_post(456, 'Published', 'post'),
+                    123 => lynxjournal_make_post(123, 'Title', 'lynx-journal'),
+                    456 => lynxjournal_make_post(456, 'Published', 'post'),
                     default => null,
                 };
             });
@@ -69,7 +69,7 @@ describe('LinkDigest_Publishing Trait', function () {
 
         it('returns null when validation passes', function () {
             Functions\when('current_user_can')->justReturn(true);
-            Functions\when('get_post')->justReturn(linkdigest_make_post(123, 'Title', 'linkdigest'));
+            Functions\when('get_post')->justReturn(lynxjournal_make_post(123, 'Title', 'lynx-journal'));
             Functions\when('get_post_meta')->justReturn(null);
 
             $result = $this->plugin->validateLinkForPublish(123);
@@ -85,7 +85,7 @@ describe('LinkDigest_Publishing Trait', function () {
 
             $applied = false;
             Functions\when('apply_filters')->alias(function ($hook, $value) use (&$applied) {
-                if ($hook === 'linkdigest_blog_post_content') {
+                if ($hook === 'lynxjournal_blog_post_content') {
                     $applied = true;
                 }
                 return $value;
@@ -111,7 +111,7 @@ describe('LinkDigest_Publishing Trait', function () {
             $this->plugin->shouldReceive('mapTaxonomies')->once();
 
             // 2. Mock WordPress functions
-            Functions\when('get_post')->justReturn(linkdigest_make_post($link_id, 'Original Title', 'linkdigest'));
+            Functions\when('get_post')->justReturn(lynxjournal_make_post($link_id, 'Original Title', 'lynx-journal'));
             Functions\when('get_post_meta')->justReturn('https://test.com');
             Functions\when('wp_insert_post')->justReturn($new_post_id);
             Functions\when('update_post_meta')->justReturn(true);
@@ -121,7 +121,7 @@ describe('LinkDigest_Publishing Trait', function () {
             $actionFired = false;
             $actionArgs = null;
             Functions\when('do_action')->alias(function ($hook, ...$args) use (&$actionFired, &$actionArgs) {
-                if ($hook === 'linkdigest_after_publish') {
+                if ($hook === 'lynxjournal_after_publish') {
                     $actionFired = true;
                     $actionArgs = $args;
                 }

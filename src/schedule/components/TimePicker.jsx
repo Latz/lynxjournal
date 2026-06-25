@@ -38,12 +38,12 @@ export default function TimePicker({ times, onChange }) {
   }
 
   return (
-    <div className="linkdigest-timepicker">
+    <div className="lynxjournal-timepicker">
       {times.map((t, i) => (
-        <div key={`time-${t}`} className="linkdigest-time-row">
+        <div key={`time-${t}`} className="lynxjournal-time-row">
           <input
             type="time"
-            className="linkdigest-time-input"
+            className="lynxjournal-time-input"
             value={t}
             onChange={e => updateTime(i, e.target.value)}
           />
@@ -53,7 +53,7 @@ export default function TimePicker({ times, onChange }) {
               variant="destructive"
               size="compact"
               onClick={() => removeTime(i)}
-              aria-label={__('Remove time', 'linkdigest')}
+              aria-label={__('Remove time', 'lynx-journal')}
             >
               ✕
             </Button>
@@ -61,7 +61,7 @@ export default function TimePicker({ times, onChange }) {
         </div>
       ))}
       <Button variant="secondary" size="compact" onClick={addTime}>
-        + {__('Add time', 'linkdigest')}
+        + {__('Add time', 'lynx-journal')}
       </Button>
     </div>
   );

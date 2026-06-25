@@ -125,7 +125,7 @@ describe('renderCategories()', () => {
         renderCategories(cats, container, document);
         const radios = container.querySelectorAll('input[type="radio"]');
         for (const r of radios) {
-            expect(r.name).toBe('linkdigest_category');
+            expect(r.name).toBe('lynxjournal_category');
         }
     });
 
@@ -193,27 +193,27 @@ describe('isCacheFresh()', () => {
 
 describe('buildApiUrl()', () => {
     it('concatenates endpoint and route', () => {
-        expect(buildApiUrl('https://example.com/wp-json/linkdigest/v1', '/categories'))
-            .toBe('https://example.com/wp-json/linkdigest/v1/categories');
+        expect(buildApiUrl('https://example.com/wp-json/lynxjournal/v1', '/categories'))
+            .toBe('https://example.com/wp-json/lynxjournal/v1/categories');
     });
 
     it('strips a trailing slash from the endpoint', () => {
-        expect(buildApiUrl('https://example.com/wp-json/linkdigest/v1/', '/add-link'))
-            .toBe('https://example.com/wp-json/linkdigest/v1/add-link');
+        expect(buildApiUrl('https://example.com/wp-json/lynxjournal/v1/', '/add-link'))
+            .toBe('https://example.com/wp-json/lynxjournal/v1/add-link');
     });
 
     it('strips multiple trailing slashes', () => {
-        expect(buildApiUrl('https://example.com/wp-json/linkdigest/v1///', '/links'))
-            .toBe('https://example.com/wp-json/linkdigest/v1/links');
+        expect(buildApiUrl('https://example.com/wp-json/lynxjournal/v1///', '/links'))
+            .toBe('https://example.com/wp-json/lynxjournal/v1/links');
     });
 
     it('builds the /links route', () => {
-        expect(buildApiUrl('https://site.test/wp-json/linkdigest/v1', '/links'))
-            .toBe('https://site.test/wp-json/linkdigest/v1/links');
+        expect(buildApiUrl('https://site.test/wp-json/lynxjournal/v1', '/links'))
+            .toBe('https://site.test/wp-json/lynxjournal/v1/links');
     });
 
     it('builds the /schedule route', () => {
-        expect(buildApiUrl('https://site.test/wp-json/linkdigest/v1', '/schedule'))
-            .toBe('https://site.test/wp-json/linkdigest/v1/schedule');
+        expect(buildApiUrl('https://site.test/wp-json/lynxjournal/v1', '/schedule'))
+            .toBe('https://site.test/wp-json/lynxjournal/v1/schedule');
     });
 });

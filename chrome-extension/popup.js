@@ -1,5 +1,5 @@
 import { applyI18n } from './i18n.js';
-import { extractPageDescription as extractPageDescriptionUtil, renderCategories as renderCategoriesUtil } from '../src/js/popup-utils.js';
+import { renderCategories as renderCategoriesUtil } from './popup-utils.js';
 
 // Check if settings are configured
 export async function checkSettings() {
@@ -16,9 +16,27 @@ export async function checkSettings() {
     return true;
 }
 
-// Extract description from page meta tags (runs inside the tab's context)
+// Extract description from page meta tags (runs inside the tab's context).
+// Must be self-contained — no references to extension-scope imports,
+// since this function is serialized and injected into the target tab.
 export function extractPageDescription() {
-    return extractPageDescriptionUtil(document);
+    const candidates = [
+        ['property', 'og:description'],
+        ['name',     'description'],
+        ['name',     'twitter:description'],
+        ['name',     'og:description'],
+        ['http-equiv', 'description'],
+    ];
+    for (const [attr, value] of candidates) {
+        const nodes = document.querySelectorAll(`[${attr}="${value}" i]`);
+        for (const node of nodes) {
+            let text = (node.content || '').trim();
+            while (text.startsWith('\n')) text = text.slice(1);
+            while (text.endsWith('\n')) text = text.slice(0, -1);
+            if (text) return text;
+        }
+    }
+    return '';
 }
 
 // Load current page info
@@ -80,9 +98,14 @@ export async function loadCategories() {
             cache: 'no-store',
             headers: {
                 'Content-Type': 'application/json',
-                'X-LinkDigest-API-Key': settings.apiKey
+                'X-LynxJournal-API-Key': settings.apiKey
             }
         });
+        if (response.status === 401 || response.status === 403 || response.status === 404) {
+            document.getElementById('setupMessage').style.display = 'block';
+            document.getElementById('mainForm').style.display = 'none';
+            return;
+        }
         if (!response.ok) throw new Error('Failed to load categories');
         const categories = await response.json();
         await chrome.storage.local.set({ categories, categoriesTimestamp: Date.now() });
@@ -147,7 +170,7 @@ export async function handleSubmit(e) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-LinkDigest-API-Key': settings.apiKey
+                'X-LynxJournal-API-Key': settings.apiKey
             },
             body: JSON.stringify(formData)
         });
@@ -155,12 +178,13 @@ export async function handleSubmit(e) {
         const result = await response.json();
 
         if (response.status === 409) {
-            chrome.notifications.create({
+            await chrome.notifications.create({
                 type: 'basic',
-                iconUrl: 'icon48.png',
+                iconUrl: 'icons/icon48.png',
                 title: chrome.i18n.getMessage('notifAlreadySavedTitle'),
                 message: result.message || chrome.i18n.getMessage('notifAlreadySavedBody')
-            }, () => window.close());
+            });
+            window.close();
             return;
         }
 
@@ -168,12 +192,13 @@ export async function handleSubmit(e) {
             throw new Error(result.message || chrome.i18n.getMessage('msgSaveFailed'));
         }
 
-        chrome.notifications.create({
+        await chrome.notifications.create({
             type: 'basic',
-            iconUrl: 'icon48.png',
+            iconUrl: 'icons/icon48.png',
             title: chrome.i18n.getMessage('notifLinkSavedTitle'),
             message: formData.title || chrome.i18n.getMessage('notifLinkSavedBody')
-        }, () => window.close());
+        });
+        window.close();
 
     } catch (error) {
         showMessage(error.message || chrome.i18n.getMessage('msgSaveFailed'), 'error');
@@ -219,7 +244,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 trim: true,
                 duplicates: false,
                 addTagOnBlur: true,
-                placeholder: 'Add tags...',
+                placeholder: chrome.i18n.getMessage('placeholderAddTags'),
                 dropdown: {
                     enabled: 0
                 }

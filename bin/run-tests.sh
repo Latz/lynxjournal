@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "=========================================="
-echo "LinkDigest Test Suite"
+echo "LynxJournal Test Suite"
 echo "=========================================="
 echo ""
 

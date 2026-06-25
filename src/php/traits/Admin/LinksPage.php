@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-trait LinkDigest_Admin_LinksPage {
+trait LynxJournal_Admin_LinksPage {
 
     /**
      * Render the All Links admin page with filters, table, and pagination.
@@ -18,11 +18,11 @@ trait LinkDigest_Admin_LinksPage {
         // phpcs:disable WordPress.Security.NonceVerification.Recommended
         $search = isset($_GET['s'])              ? sanitize_text_field(wp_unslash($_GET['s'])) : '';
         $month  = isset($_GET['m'])              ? absint($_GET['m']) : 0;
-        $cat    = isset($_GET['linkdigest_cat']) ? absint($_GET['linkdigest_cat']) : 0;
+        $cat    = isset($_GET['lynxjournal_cat']) ? absint($_GET['lynxjournal_cat']) : 0;
         $paged  = isset($_GET['paged'])          ? max(1, absint($_GET['paged'])) : 1;
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-        $settings = wp_parse_args((array) get_option('linkdigest_x_settings', []), ['ui_links_per_page' => 20]);
+        $settings = wp_parse_args((array) get_option('lynxjournal_x_settings', []), ['ui_links_per_page' => 20]);
         $per_page = max(1, (int) $settings['ui_links_per_page']);
 
         $result        = $this->getLinksGroupedByCategory($search, $month, $cat, $paged, $per_page);
@@ -32,12 +32,12 @@ trait LinkDigest_Admin_LinksPage {
         $has_links     = $this->hasLinks($grouped_links);
         $is_filtered   = $search !== '' || $month > 0 || $cat > 0;
 
-        // Date options: distinct year/month from linkdigest posts.
+        // Date options: distinct year/month from lynxjournal posts.
         $date_options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
             "SELECT DISTINCT YEAR(post_date) AS year, MONTH(post_date) AS month
              FROM {$wpdb->posts}
-             WHERE post_type = 'linkdigest'
-               AND post_status IN ('linkdigest_pending','linkdigest_published','linkdigest_draft')
+             WHERE post_type = 'lynx-journal'
+               AND post_status IN ('lynxjournal_pending','lynxjournal_pub','lynxjournal_draft')
              ORDER BY post_date DESC"
         );
 
@@ -46,10 +46,10 @@ trait LinkDigest_Admin_LinksPage {
         // Build pagination links, preserving current filters.
         $base_url = add_query_arg(
             array_filter([
-                'page'           => 'linkdigest-admin',
+                'page'           => 'lynxjournal-admin',
                 's'              => $search ?: null,
                 'm'              => $month  ?: null,
-                'linkdigest_cat' => $cat    ?: null,
+                'lynxjournal_cat' => $cat    ?: null,
                 'paged'          => '%#%',
             ]),
             admin_url('admin.php')
@@ -65,8 +65,8 @@ trait LinkDigest_Admin_LinksPage {
         ]) : '';
         ?>
         <div class="wrap">
-            <h1 class="wp-heading-inline"><?php esc_html_e('LinkDigest - All Links', 'linkdigest'); ?></h1>
-            <a href="<?php echo esc_url(admin_url('admin.php?page=linkdigest-add')); ?>" class="page-title-action"><?php esc_html_e('Add New', 'linkdigest'); ?></a>
+            <h1 class="wp-heading-inline"><?php esc_html_e('LynxJournal - All Links', 'lynx-journal'); ?></h1>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=lynxjournal-add')); ?>" class="page-title-action"><?php esc_html_e('Add New', 'lynx-journal'); ?></a>
             <hr class="wp-header-end">
 
             <?php if ($action_message) : ?>
@@ -112,19 +112,19 @@ trait LinkDigest_Admin_LinksPage {
         $cat    = (int) ($filters['cat'] ?? 0);
         $search = (string) ($filters['search'] ?? '');
         ?>
-        <form method="get" class="linkdigest-filter-form">
-            <input type="hidden" name="page" value="linkdigest-admin">
+        <form method="get" class="lynxjournal-filter-form">
+            <input type="hidden" name="page" value="lynxjournal-admin">
 
-            <div class="tablenav top linkdigest-links-tablenav">
+            <div class="tablenav top lynxjournal-links-tablenav">
                 <div class="alignleft actions">
-                    <label class="screen-reader-text" for="filter-by-date"><?php esc_html_e('Filter by date', 'linkdigest'); ?></label>
+                    <label class="screen-reader-text" for="filter-by-date"><?php esc_html_e('Filter by date', 'lynx-journal'); ?></label>
                     <select name="m" id="filter-by-date">
-                        <option value="0"<?php selected($month, 0); ?>><?php esc_html_e('All dates', 'linkdigest'); ?></option>
+                        <option value="0"<?php selected($month, 0); ?>><?php esc_html_e('All dates', 'lynx-journal'); ?></option>
                         <?php foreach ($date_options as $row) :
                             $val = (int) $row->year * 100 + (int) $row->month;
                             $label = sprintf(
                                 /* translators: 1: month name, 2: year */
-                                _x('%1$s %2$d', 'month year', 'linkdigest'),
+                                _x('%1$s %2$d', 'month year', 'lynx-journal'),
                                 $wp_locale->get_month($row->month),
                                 $row->year
                             );
@@ -133,21 +133,21 @@ trait LinkDigest_Admin_LinksPage {
                         <?php endforeach; ?>
                     </select>
 
-                    <label class="screen-reader-text" for="linkdigest-filter-cat"><?php esc_html_e('Filter by category', 'linkdigest'); ?></label>
-                    <select name="linkdigest_cat" id="linkdigest-filter-cat">
-                        <option value="0"<?php selected($cat, 0); ?>><?php esc_html_e('All categories', 'linkdigest'); ?></option>
+                    <label class="screen-reader-text" for="lynxjournal-filter-cat"><?php esc_html_e('Filter by category', 'lynx-journal'); ?></label>
+                    <select name="lynxjournal_cat" id="lynxjournal-filter-cat">
+                        <option value="0"<?php selected($cat, 0); ?>><?php esc_html_e('All categories', 'lynx-journal'); ?></option>
                         <?php foreach ($categories as $term) : ?>
                             <option value="<?php echo esc_attr((string) $term->term_id); ?>"<?php selected($cat, $term->term_id); ?>><?php echo esc_html($term->name); ?></option>
                         <?php endforeach; ?>
                     </select>
 
-                    <input type="submit" name="filter_action" id="post-query-submit" class="button" value="<?php esc_attr_e('Filter', 'linkdigest'); ?>">
+                    <input type="submit" name="filter_action" id="post-query-submit" class="button" value="<?php esc_attr_e('Filter', 'lynx-journal'); ?>">
                 </div>
 
                 <p class="search-box">
-                    <label class="screen-reader-text" for="link-search-input"><?php esc_html_e('Search Links', 'linkdigest'); ?></label>
+                    <label class="screen-reader-text" for="link-search-input"><?php esc_html_e('Search Links', 'lynx-journal'); ?></label>
                     <input type="search" id="link-search-input" name="s" value="<?php echo esc_attr($search); ?>">
-                    <input type="submit" class="button" value="<?php esc_attr_e('Search Links', 'linkdigest'); ?>">
+                    <input type="submit" class="button" value="<?php esc_attr_e('Search Links', 'lynx-journal'); ?>">
                 </p>
 
                 <?php if ($max_num_pages > 1) : ?>
@@ -155,7 +155,7 @@ trait LinkDigest_Admin_LinksPage {
                     <span class="displaying-num">
                         <?php echo esc_html(sprintf(
                             /* translators: %s: number of items in the list table */
-                            _n('%s item', '%s items', $total_items, 'linkdigest'),
+                            _n('%s item', '%s items', $total_items, 'lynx-journal'),
                             number_format_i18n($total_items)
                         )); ?>
                     </span>
@@ -180,23 +180,23 @@ trait LinkDigest_Admin_LinksPage {
      */
     private function renderLinksTableSection(bool $has_links, bool $is_filtered, array $grouped_links): void {
         if (!$has_links && !$is_filtered) {
-            echo '<p>' . esc_html__('No links found. Add your first link!', 'linkdigest') . '</p>';
+            echo '<p>' . esc_html__('No links found. Add your first link!', 'lynx-journal') . '</p>';
             return;
         }
         if (!$has_links) {
             ?>
             <table class="wp-list-table widefat fixed striped">
                 <thead><tr>
-                    <th class="manage-column column-title"><?php esc_html_e('Title', 'linkdigest'); ?></th>
-                    <th class="manage-column column-url"><?php esc_html_e('URL', 'linkdigest'); ?></th>
-                    <th class="manage-column column-status"><?php esc_html_e('Status', 'linkdigest'); ?></th>
-                    <th class="manage-column column-published"><?php esc_html_e('Published', 'linkdigest'); ?></th>
-                    <th class="manage-column column-date"><?php esc_html_e('Date', 'linkdigest'); ?></th>
-                    <th class="manage-column column-actions"><?php esc_html_e('Actions', 'linkdigest'); ?></th>
+                    <th class="manage-column column-title"><?php esc_html_e('Title', 'lynx-journal'); ?></th>
+                    <th class="manage-column column-url"><?php esc_html_e('URL', 'lynx-journal'); ?></th>
+                    <th class="manage-column column-status"><?php esc_html_e('Status', 'lynx-journal'); ?></th>
+                    <th class="manage-column column-published"><?php esc_html_e('Published', 'lynx-journal'); ?></th>
+                    <th class="manage-column column-date"><?php esc_html_e('Date', 'lynx-journal'); ?></th>
+                    <th class="manage-column column-actions"><?php esc_html_e('Actions', 'lynx-journal'); ?></th>
                 </tr></thead>
                 <tbody>
                     <tr class="no-items">
-                        <td class="colspanchange" colspan="6"><?php esc_html_e('No links found.', 'linkdigest'); ?></td>
+                        <td class="colspanchange" colspan="6"><?php esc_html_e('No links found.', 'lynx-journal'); ?></td>
                     </tr>
                 </tbody>
             </table>
@@ -231,18 +231,18 @@ trait LinkDigest_Admin_LinksPage {
      */
     private function renderCategoryLinks(array $grouped_links): void {
         foreach ($grouped_links as $category_name => $category_links) : ?>
-            <div class="linkdigest-category-section">
-                <h2 class="linkdigest-category-heading"><?php echo esc_html($category_name); ?></h2>
+            <div class="lynxjournal-category-section">
+                <h2 class="lynxjournal-category-heading"><?php echo esc_html($category_name); ?></h2>
 
                 <table class="wp-list-table widefat fixed striped">
                     <thead>
                         <tr>
-                            <th class="manage-column column-title sortable desc" data-col="0"><a href="#"><span><?php esc_html_e('Title', 'linkdigest'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
-                            <th class="manage-column column-url sortable desc" data-col="1"><a href="#"><span><?php esc_html_e('URL', 'linkdigest'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
-                            <th class="manage-column column-status sortable desc" data-col="2"><a href="#"><span><?php esc_html_e('Status', 'linkdigest'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
-                            <th class="manage-column column-published sortable desc" data-col="3"><a href="#"><span><?php esc_html_e('Published', 'linkdigest'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
-                            <th class="manage-column column-date sortable desc" data-col="4"><a href="#"><span><?php esc_html_e('Date', 'linkdigest'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
-                            <th class="manage-column column-actions"><?php esc_html_e('Actions', 'linkdigest'); ?></th>
+                            <th class="manage-column column-title sortable desc" data-col="0"><a href="#"><span><?php esc_html_e('Title', 'lynx-journal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
+                            <th class="manage-column column-url sortable desc" data-col="1"><a href="#"><span><?php esc_html_e('URL', 'lynx-journal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
+                            <th class="manage-column column-status sortable desc" data-col="2"><a href="#"><span><?php esc_html_e('Status', 'lynx-journal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
+                            <th class="manage-column column-published sortable desc" data-col="3"><a href="#"><span><?php esc_html_e('Published', 'lynx-journal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
+                            <th class="manage-column column-date sortable desc" data-col="4"><a href="#"><span><?php esc_html_e('Date', 'lynx-journal'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
+                            <th class="manage-column column-actions"><?php esc_html_e('Actions', 'lynx-journal'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -263,10 +263,10 @@ trait LinkDigest_Admin_LinksPage {
      * @return void
      */
     private function renderLinkTableRow(\WP_Post $link): void {
-        $url = get_post_meta($link->ID, '_linkdigest_url', true);
-        $publish_status = get_post_meta($link->ID, '_linkdigest_publish_status', true);
-        $published_post_id = get_post_meta($link->ID, '_linkdigest_published_post_id', true);
-        $published_date = get_post_meta($link->ID, '_linkdigest_published_date', true);
+        $url = get_post_meta($link->ID, '_lynxjournal_url', true);
+        $publish_status = get_post_meta($link->ID, '_lynxjournal_publish_status', true);
+        $published_post_id = get_post_meta($link->ID, '_lynxjournal_published_post_id', true);
+        $published_date = get_post_meta($link->ID, '_lynxjournal_published_date', true);
         if (empty($publish_status)) {
             $publish_status = 'unpublished';
         }
@@ -315,26 +315,45 @@ trait LinkDigest_Admin_LinksPage {
             return [$message, $error];
         }
 
-        if (!current_user_can('edit_posts')) {
-            return [$message, $error];
-        }
-
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $action  = sanitize_key(wp_unslash($_GET['action']));
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $link_id = absint($_GET['link_id']);
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $nonce   = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
 
-        if ($action === 'publish_link' && wp_verify_nonce($nonce, 'publish_link_' . $link_id)) {
+        $nonce_actions = [
+            'publish_link'   => 'publish_link_' . $link_id,
+            'draft_link'     => 'draft_link_' . $link_id,
+            'unpublish_link' => 'unpublish_link_' . $link_id,
+            'delete'         => 'delete_link_' . $link_id,
+        ];
+
+        if (!array_key_exists($action, $nonce_actions)
+            || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), $nonce_actions[$action])
+        ) {
+            return [$message, $error];
+        }
+
+        if ($action === 'publish_link') {
+            if (!current_user_can('publish_post', $link_id)) {
+                return [$message, $error];
+            }
             [$message, $error] = $this->executePublishAction($link_id, false);
-        } elseif ($action === 'draft_link' && wp_verify_nonce($nonce, 'draft_link_' . $link_id)) {
+        } elseif ($action === 'draft_link') {
+            if (!current_user_can('edit_post', $link_id)) {
+                return [$message, $error];
+            }
             [$message, $error] = $this->executePublishAction($link_id, true);
-        } elseif ($action === 'unpublish_link' && wp_verify_nonce($nonce, 'unpublish_link_' . $link_id)) {
+        } elseif ($action === 'unpublish_link') {
+            if (!current_user_can('edit_post', $link_id)) {
+                return [$message, $error];
+            }
             [$message, $error] = $this->executeUnpublishAction($link_id);
-        } elseif ($action === 'delete' && wp_verify_nonce($nonce, 'delete_link_' . $link_id)) {
+        } elseif ($action === 'delete') {
+            if (!current_user_can('delete_post', $link_id)) {
+                return [$message, $error];
+            }
             wp_delete_post($link_id, true);
-            $message = __('Link deleted successfully.', 'linkdigest');
+            $message = __('Link deleted successfully.', 'lynx-journal');
         }
 
         return [$message, $error];
@@ -354,9 +373,9 @@ trait LinkDigest_Admin_LinksPage {
             return ['', $result['message']];
         }
         if ($as_draft) {
-            return [esc_html($result['message']) . ' <a href="' . esc_url(get_edit_post_link($result['post_id'])) . '" target="_blank">' . esc_html__('Edit Draft', 'linkdigest') . '</a>', ''];
+            return [esc_html($result['message']) . ' <a href="' . esc_url(get_edit_post_link($result['post_id'])) . '" target="_blank">' . esc_html__('Edit Draft', 'lynx-journal') . '</a>', ''];
         }
-        return [esc_html($result['message']) . ' <a href="' . esc_url(get_permalink($result['post_id'])) . '" target="_blank">' . esc_html__('View Post', 'linkdigest') . '</a>', ''];
+        return [esc_html($result['message']) . ' <a href="' . esc_url(get_permalink($result['post_id'])) . '" target="_blank">' . esc_html__('View Post', 'lynx-journal') . '</a>', ''];
     }
 
     /**
@@ -383,11 +402,11 @@ trait LinkDigest_Admin_LinksPage {
      */
     private function renderLinkStatusBadge(string $publish_status): void {
         if ($publish_status === 'published') {
-            echo esc_html__('Published', 'linkdigest');
+            echo esc_html__('Published', 'lynx-journal');
         } elseif ($publish_status === 'draft') {
-            echo '<span class="linkdigest-status-badge linkdigest-status-draft">📝 ' . esc_html__('Draft', 'linkdigest') . '</span>';
+            echo '<span class="lynxjournal-status-badge lynxjournal-status-draft">📝 ' . esc_html__('Draft', 'lynx-journal') . '</span>';
         } elseif ($publish_status === 'unpublished') {
-            echo '<span class="linkdigest-status-badge linkdigest-status-unpublished">' . esc_html__('Unpublished', 'linkdigest') . '</span>';
+            echo '<span class="lynxjournal-status-badge lynxjournal-status-unpublished">' . esc_html__('Unpublished', 'lynx-journal') . '</span>';
         }
     }
 
@@ -405,13 +424,13 @@ trait LinkDigest_Admin_LinksPage {
         $delete_url    = esc_url( wp_nonce_url( admin_url( self::ADMIN_LINKS_PAGE . '&action=delete&link_id=' . $link->ID ), 'delete_link_' . $link->ID ) );
 
         if ( $publish_status === 'published' ) {
-            echo '<a href="' . esc_url( get_permalink( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Post', 'linkdigest' ) . '</a> | ';
-            echo '<a href="' . esc_url( $unpublish_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'linkdigest' ) ) . '\');">' . esc_html__( 'Unpublish', 'linkdigest' ) . '</a> | ';
+            echo '<a href="' . esc_url( get_permalink( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Post', 'lynx-journal' ) . '</a> | ';
+            echo '<a href="' . esc_url( $unpublish_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'lynx-journal' ) ) . '\');">' . esc_html__( 'Unpublish', 'lynx-journal' ) . '</a> | ';
         } elseif ( $publish_status === 'draft' ) {
-            echo '<a href="' . esc_url( get_edit_post_link( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Draft', 'linkdigest' ) . '</a> | ';
-            echo '<a href="' . esc_url( $unpublish_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'linkdigest' ) ) . '\');">' . esc_html__( 'Unpublish', 'linkdigest' ) . '</a> | ';
+            echo '<a href="' . esc_url( get_edit_post_link( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Draft', 'lynx-journal' ) . '</a> | ';
+            echo '<a href="' . esc_url( $unpublish_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'lynx-journal' ) ) . '\');">' . esc_html__( 'Unpublish', 'lynx-journal' ) . '</a> | ';
         }
-        echo '<a href="' . esc_url( get_edit_post_link( $link->ID ) ) . '">' . esc_html__( 'Edit', 'linkdigest' ) . '</a> | ';
-        echo '<a href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete this link?', 'linkdigest' ) ) . '\');">' . esc_html__( 'Delete', 'linkdigest' ) . '</a>';
+        echo '<a href="' . esc_url( get_edit_post_link( $link->ID ) ) . '">' . esc_html__( 'Edit', 'lynx-journal' ) . '</a> | ';
+        echo '<a href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete this link?', 'lynx-journal' ) ) . '\');">' . esc_html__( 'Delete', 'lynx-journal' ) . '</a>';
     }
 }

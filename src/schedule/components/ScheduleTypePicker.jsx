@@ -1,10 +1,10 @@
 import { __ } from '@wordpress/i18n';
 
-const createMode = (value, label, desc) => ({ value, label: __(label, 'linkdigest'), desc: __(desc, 'linkdigest') });
+const createMode = (value, label, desc) => ({ value, label: __(label, 'lynx-journal'), desc: __(desc, 'lynx-journal') });
 
 const GROUPS = [
   {
-    label: __('Scheduled', 'linkdigest'),
+    label: __('Scheduled', 'lynx-journal'),
     modes: [
       createMode('daily',   'Daily',   'Every N days'),
       createMode('weekly',  'Weekly',  'Specific weekdays'),
@@ -12,14 +12,14 @@ const GROUPS = [
     ],
   },
   {
-    label: __('Trigger-based', 'linkdigest'),
+    label: __('Trigger-based', 'lynx-journal'),
     modes: [
       createMode('count', 'By Count', 'When N links queue'),
       createMode('age',   'By Age',   'When oldest link ages'),
     ],
   },
   {
-    label: __('Manual', 'linkdigest'),
+    label: __('Manual', 'lynx-journal'),
     modes: [
       createMode('manual', 'Manual', 'No auto-publish'),
     ],
@@ -28,11 +28,11 @@ const GROUPS = [
 
 export default function ScheduleTypePicker({ value, onChange }) {
   return (
-    <div className="linkdigest-mode-picker-v2" role="radiogroup">
+    <div className="lynxjournal-mode-picker-v2" role="radiogroup">
       {GROUPS.map(group => (
-        <div key={group.label} className="linkdigest-mode-card-group">
-          <div className="linkdigest-mode-card-group-label">{group.label}</div>
-          <div className="linkdigest-mode-cards">
+        <div key={group.label} className="lynxjournal-mode-card-group">
+          <div className="lynxjournal-mode-card-group-label">{group.label}</div>
+          <div className="lynxjournal-mode-cards">
             {group.modes.map(mode => {
               const active = value === mode.value;
               return (
@@ -40,12 +40,12 @@ export default function ScheduleTypePicker({ value, onChange }) {
                   key={mode.value}
                   role="radio"
                   aria-checked={active}
-                  className={`linkdigest-mode-card${active ? ' linkdigest-mode-card--active' : ''}`}
+                  className={`lynxjournal-mode-card${active ? ' lynxjournal-mode-card--active' : ''}`}
                   onClick={() => onChange(mode.value)}
                   type="button"
                 >
-                  <div className="linkdigest-mode-card__title">{mode.label}</div>
-                  <div className="linkdigest-mode-card__desc">{mode.desc}</div>
+                  <div className="lynxjournal-mode-card__title">{mode.label}</div>
+                  <div className="lynxjournal-mode-card__desc">{mode.desc}</div>
                 </button>
               );
             })}

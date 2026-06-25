@@ -9,15 +9,15 @@ if (!defined("ABSPATH")) {
 use Brain\Monkey\Functions;
 
 /**
- * Tests for linkdigest_get_schedule() and linkdigest_save_schedule()
+ * Tests for lynxjournal_get_schedule() and lynxjournal_save_schedule()
  */
 
 beforeEach(function (): void {
     Functions\when('rest_ensure_response')->returnArg();
-    $this->plugin = Mockery::mock(LinkDigest::class)->makePartial();
+    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
-describe('LinkDigest::getSchedule()', function (): void {
+describe('LynxJournal::getSchedule()', function (): void {
 
     it('returns the stored option when one exists', function (): void {
         $stored = ['mode' => 'weekly', 'times' => ['08:00']];
@@ -42,14 +42,14 @@ describe('LinkDigest::getSchedule()', function (): void {
     });
 });
 
-describe('LinkDigest::saveSchedule()', function (): void {
+describe('LynxJournal::saveSchedule()', function (): void {
 
     beforeEach(function (): void {
         Functions\when('__')->returnArg();
     });
 
     it('returns a 400 WP_Error when the request body is empty', function (): void {
-        $request = linkdigest_make_request(); // no JSON body
+        $request = lynxjournal_make_request(); // no JSON body
 
         $result = $this->plugin->saveSchedule($request);
 
@@ -59,7 +59,7 @@ describe('LinkDigest::saveSchedule()', function (): void {
     });
 
     it('returns a 400 WP_Error when mode key is missing', function (): void {
-        $request = linkdigest_make_request(['recurrence' => []]);
+        $request = lynxjournal_make_request(['recurrence' => []]);
 
         $result = $this->plugin->saveSchedule($request);
 
@@ -68,7 +68,7 @@ describe('LinkDigest::saveSchedule()', function (): void {
     });
 
     it('returns a 400 WP_Error when mode is not in the whitelist', function (): void {
-        $request = linkdigest_make_request(['mode' => 'invalid']);
+        $request = lynxjournal_make_request(['mode' => 'invalid']);
 
         $result = $this->plugin->saveSchedule($request);
 
@@ -78,7 +78,7 @@ describe('LinkDigest::saveSchedule()', function (): void {
     });
 
     it('returns a 400 WP_Error when times contains a non-HH:MM entry', function (): void {
-        $request = linkdigest_make_request(['mode' => 'daily', 'times' => ['9am']]);
+        $request = lynxjournal_make_request(['mode' => 'daily', 'times' => ['9am']]);
 
         $result = $this->plugin->saveSchedule($request);
 
@@ -88,7 +88,7 @@ describe('LinkDigest::saveSchedule()', function (): void {
     });
 
     it('returns a 400 WP_Error when trigger.count is zero', function (): void {
-        $request = linkdigest_make_request(['mode' => 'count', 'trigger' => ['count' => 0]]);
+        $request = lynxjournal_make_request(['mode' => 'count', 'trigger' => ['count' => 0]]);
 
         $result = $this->plugin->saveSchedule($request);
 
@@ -98,7 +98,7 @@ describe('LinkDigest::saveSchedule()', function (): void {
     });
 
     it('returns a 400 WP_Error when trigger.days is negative', function (): void {
-        $request = linkdigest_make_request(['mode' => 'age', 'trigger' => ['days' => -1]]);
+        $request = lynxjournal_make_request(['mode' => 'age', 'trigger' => ['days' => -1]]);
 
         $result = $this->plugin->saveSchedule($request);
 
@@ -109,7 +109,7 @@ describe('LinkDigest::saveSchedule()', function (): void {
 
     it('saves valid schedule data and returns success', function (): void {
         $data    = ['mode' => 'daily', 'times' => ['09:00']];
-        $request = linkdigest_make_request($data);
+        $request = lynxjournal_make_request($data);
 
         $savedKey = null;
         $savedVal = null;
@@ -126,14 +126,14 @@ describe('LinkDigest::saveSchedule()', function (): void {
         $result = $this->plugin->saveSchedule($request);
 
         expect($result['success'])->toBeTrue();
-        expect($savedKey)->toBe('linkdigest_schedule');
+        expect($savedKey)->toBe('lynxjournal_schedule');
         expect($savedVal['mode'])->toBe($data['mode']);
         expect($savedVal['times'])->toBe($data['times']);
         expect($savedVal)->toHaveKey('publishAs');
     });
 });
 
-describe('LinkDigest::runScheduleNow()', function (): void {
+describe('LynxJournal::runScheduleNow()', function (): void {
 
     it('returns a 429 WP_Error when a run is already in progress', function (): void {
         Functions\when('__')->returnArg();

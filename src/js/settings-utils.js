@@ -25,7 +25,7 @@ export function normalizeEndpoint(url) {
 }
 
 /**
- * Build the headers object for a LinkDigest API request.
+ * Build the headers object for a LynxJournal API request.
  *
  * @param {string} apiKey
  * @returns {Record<string, string>}
@@ -33,7 +33,7 @@ export function normalizeEndpoint(url) {
 export function buildRequestHeaders(apiKey) {
     return {
         'Content-Type': 'application/json',
-        'X-LinkDigest-API-Key': apiKey,
+        'X-LynxJournal-API-Key': apiKey,
     };
 }
 
