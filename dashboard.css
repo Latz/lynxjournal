@@ -828,8 +828,17 @@ textarea.lynxjournal-cat-inline-input {
 }
 
 #lynxjournal-template-preview ul {
-	margin: .15em 0 .15em 1em;
+	margin: .15em 0;
+	padding-left: 1.4em;
 	list-style: disc;
+}
+
+#lynxjournal-template-preview ul ul {
+	list-style: circle;
+}
+
+#lynxjournal-template-preview ul ul ul {
+	list-style: square;
 }
 
 #lynxjournal-template-preview hr {
