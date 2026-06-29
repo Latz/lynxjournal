@@ -792,6 +792,7 @@ textarea.lynxjournal-cat-inline-input {
 	font-family: monospace;
 	font-weight: 600;
 	font-size: 13px;
+	line-height: 1.2;
 }
 
 .lynxjournal-insert-token .token-desc {
