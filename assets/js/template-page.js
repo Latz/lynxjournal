@@ -5,8 +5,9 @@
 	var _data            = window.lynxjournalPreviewData || {};
 	var scalarData       = _data.scalar || {};
 	var categoryVariants = ( _data.categories || [] ).map( function ( cat ) {
-		var entry          = { links: cat.links || [] };
-		entry[ cat.token ] = cat.name;
+		var entry                        = { links: cat.links || [] };
+		entry[ cat.token ]               = cat.name;
+		entry[ '[category_link_count]' ] = String( ( cat.links || [] ).length );
 		return entry;
 	} );
 
@@ -73,7 +74,10 @@
 			/\[category_start\]([\s\S]*?)\[category_end\]/g,
 			function ( _match, inner ) {
 				return categoryVariants.map( function ( cat ) {
-					var catText = replaceTokens( inner, { '[category_name]': cat['[category_name]'] } );
+					var catText = replaceTokens( inner, {
+					'[category_name]'       : cat['[category_name]'],
+					'[category_link_count]' : cat['[category_link_count]'],
+				} );
 					catText = expandLinkBlocks( catText, cat.links );
 					catText = expandLinkLines( catText, cat.links );
 					return catText;
