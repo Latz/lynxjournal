@@ -49,7 +49,7 @@ trait LynxJournal_Admin_TemplatePage {
                 '[link_date]'        => __('Datum, wann der Link gespeichert wurde', 'lynx-journal'),
             ],
             __('Kategorien', 'lynx-journal') => [
-                '[category]'      => __('Primäre Kategorie', 'lynx-journal'),
+                '[category_name]' => __('Primäre Kategorie', 'lynx-journal'),
                 '[category_list]' => __('Alle Kategorien, kommagetrennt', 'lynx-journal'),
             ],
             __('Tags', 'lynx-journal') => [

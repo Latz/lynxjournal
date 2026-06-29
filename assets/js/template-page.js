@@ -3,72 +3,100 @@
 	var preview  = null;
 
 	var scalarData = {
-		'[title]'           : 'Wochenrückblick KW 26',
-		'[date]'            : '29.06.2026',
+		'[title]'           : 'Weekly Roundup #26',
+		'[date]'            : '2026-06-29',
 		'[author]'          : 'Latz',
-		'[site_name]'       : 'Mein Blog',
-		'[link_count]'      : '5',
-		'[category]'        : 'Technologie',
-		'[category_list]'   : 'Technologie, Design, Open Source',
-		'[tags]'            : 'javascript, typescript, webdev',
-		'[unpublished]'     : '3',
-		'[oldest_link_date]': '21.06.2026',
+		'[site_name]'       : 'My Blog',
+		'[link_count]'      : '9',
+		'[category_name]'   : 'Travel',
+		'[category_list]'   : 'Travel, Food & Cooking, Nature & Environment',
+		'[tags]'            : 'tips, guide, lifestyle',
+		'[unpublished]'     : '4',
+		'[oldest_link_date]': '2026-06-21',
 		// Fallbacks for link tokens used outside a link block
-		'[link_title]'      : 'Warum TypeScript die bessere Wahl ist',
-		'[link_url]'        : 'https://example.com/typescript-vs-javascript',
-		'[link_description]': 'Ein ausführlicher Vergleich beider Sprachen mit praktischen Beispielen.',
-		'[link_domain]'     : 'example.com',
-		'[link_date]'       : '27.06.2026',
+		'[link_title]'      : '10 Tips for Stress-Free Travel',
+		'[link_url]'        : 'https://travelblog.com/stress-free-travel',
+		'[link_description]': 'Everything you need to know before your next trip.',
+		'[link_domain]'     : 'travelblog.com',
+		'[link_date]'       : '2026-06-27',
 	};
 
 	var categoryVariants = [
 		{
-			'[category]': 'Technologie',
+			'[category_name]': 'Travel',
 			links: [
 				{
-					'[link_title]'      : 'Warum TypeScript die bessere Wahl ist',
-					'[link_url]'        : 'https://example.com/typescript-vs-javascript',
-					'[link_description]': 'Ein ausführlicher Vergleich beider Sprachen mit praktischen Beispielen.',
-					'[link_domain]'     : 'example.com',
-					'[link_date]'       : '27.06.2026',
+					'[link_title]'      : '10 Tips for Stress-Free Travel',
+					'[link_url]'        : 'https://travelblog.com/stress-free-travel',
+					'[link_description]': 'Everything you need to know before your next trip.',
+					'[link_domain]'     : 'travelblog.com',
+					'[link_date]'       : '2026-06-27',
 				},
 				{
-					'[link_title]'      : 'CSS Grid vs. Flexbox',
-					'[link_url]'        : 'https://css-tricks.com/snippets/css/complete-guide-grid/',
-					'[link_description]': 'Wann welches Layout-Modell sinnvoll ist.',
-					'[link_domain]'     : 'css-tricks.com',
-					'[link_date]'       : '25.06.2026',
+					'[link_title]'      : 'Hidden Gems in Southern Europe',
+					'[link_url]'        : 'https://wanderlust.io/southern-europe-gems',
+					'[link_description]': 'Lesser-known destinations worth adding to your bucket list.',
+					'[link_domain]'     : 'wanderlust.io',
+					'[link_date]'       : '2026-06-25',
+				},
+				{
+					'[link_title]'      : 'How to Pack Light for Any Trip',
+					'[link_url]'        : 'https://packingpro.net/pack-light',
+					'[link_description]': 'A minimalist packing guide for travellers of all kinds.',
+					'[link_domain]'     : 'packingpro.net',
+					'[link_date]'       : '2026-06-24',
 				},
 			],
 		},
 		{
-			'[category]': 'Design',
+			'[category_name]': 'Food & Cooking',
 			links: [
 				{
-					'[link_title]'      : 'Figma Tipps für Einsteiger',
-					'[link_url]'        : 'https://figma.com/blog/tips',
-					'[link_description]': 'Praktische Tricks für den Design-Alltag.',
-					'[link_domain]'     : 'figma.com',
-					'[link_date]'       : '24.06.2026',
+					'[link_title]'      : 'Easy Weeknight Pasta in 20 Minutes',
+					'[link_url]'        : 'https://kitchenstories.com/pasta-20min',
+					'[link_description]': 'Quick, satisfying meals for busy evenings.',
+					'[link_domain]'     : 'kitchenstories.com',
+					'[link_date]'       : '2026-06-26',
+				},
+				{
+					'[link_title]'      : "Beginner's Guide to Plant-Based Eating",
+					'[link_url]'        : 'https://eatwell.org/plant-based-guide',
+					'[link_description]': 'How to get started without giving up your favourite foods.',
+					'[link_domain]'     : 'eatwell.org',
+					'[link_date]'       : '2026-06-24',
+				},
+				{
+					'[link_title]'      : '5 Soups You Can Make from Leftovers',
+					'[link_url]'        : 'https://homecook.io/leftover-soups',
+					'[link_description]': 'Reduce food waste and eat well at the same time.',
+					'[link_domain]'     : 'homecook.io',
+					'[link_date]'       : '2026-06-22',
 				},
 			],
 		},
 		{
-			'[category]': 'Open Source',
+			'[category_name]': 'Nature & Environment',
 			links: [
 				{
-					'[link_title]'      : 'Open Source im Wandel',
-					'[link_url]'        : 'https://opensource.com/article/trends',
-					'[link_description]': 'Aktuelle Entwicklungen in der Open-Source-Welt.',
-					'[link_domain]'     : 'opensource.com',
-					'[link_date]'       : '23.06.2026',
+					'[link_title]'      : 'Why Bees Are Essential to Our Ecosystem',
+					'[link_url]'        : 'https://naturemag.org/bees-ecosystem',
+					'[link_description]': 'A closer look at the role pollinators play in our food supply.',
+					'[link_domain]'     : 'naturemag.org',
+					'[link_date]'       : '2026-06-25',
 				},
 				{
-					'[link_title]'      : 'Linux Kernel 6.9 veröffentlicht',
-					'[link_url]'        : 'https://kernel.org/news',
-					'[link_description]': 'Neue Features und Verbesserungen im Überblick.',
-					'[link_domain]'     : 'kernel.org',
-					'[link_date]'       : '22.06.2026',
+					'[link_title]'      : 'Simple Everyday Habits for Climate Action',
+					'[link_url]'        : 'https://greenliving.net/climate-habits',
+					'[link_description]': 'Small changes that add up to a real difference.',
+					'[link_domain]'     : 'greenliving.net',
+					'[link_date]'       : '2026-06-23',
+				},
+				{
+					'[link_title]'      : 'Best Hiking Trails for Beginners',
+					'[link_url]'        : 'https://outdoorguide.com/beginner-hiking',
+					'[link_description]': 'Accessible routes that still offer stunning views.',
+					'[link_domain]'     : 'outdoorguide.com',
+					'[link_date]'       : '2026-06-21',
 				},
 			],
 		},
@@ -107,7 +135,7 @@
 			/\[category_start\]([\s\S]*?)\[category_end\]/g,
 			function ( _match, inner ) {
 				return categoryVariants.map( function ( cat ) {
-					var catText = replaceTokens( inner, { '[category]': cat['[category]'] } );
+					var catText = replaceTokens( inner, { '[category_name]': cat['[category_name]'] } );
 					return expandLinkBlocks( catText, cat.links );
 				} ).join( '' );
 			}
