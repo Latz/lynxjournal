@@ -13,7 +13,7 @@
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 12px;
-	margin-bottom: 16px;
+	margin-block-end: 16px;
 }
 
 .lynxjournal-widget-stat-cell {
@@ -41,17 +41,19 @@
 	font-size: 11px;
 	color: #646970;
 	text-transform: uppercase;
-	margin-top: 4px;
+	margin-block-start: 4px;
 }
 
 .lynxjournal-widget-recent {
-	margin-bottom: 12px;
+	margin-block-end: 12px;
 }
 
 .lynxjournal-widget-heading {
-	margin: 0 0 8px 0;
+	margin-block-end: 8px;
+	margin-inline: 0;
 	font-size: 13px;
 	color: var(--lj-color-text);
+	text-wrap: balance;
 }
 
 .lynxjournal-widget-list {
@@ -61,15 +63,15 @@
 }
 
 .lynxjournal-widget-item {
-	margin-bottom: 8px;
-	padding-bottom: 8px;
+	margin-block-end: 8px;
+	padding-block-end: 8px;
 	border-bottom: 1px solid #f0f0f1;
 }
 
 .lynxjournal-widget-link-title {
 	font-weight: 500;
 	font-size: 13px;
-	margin-bottom: 2px;
+	margin-block-end: 2px;
 }
 
 .lynxjournal-widget-link-url {
@@ -82,7 +84,7 @@
 
 .lynxjournal-widget-footer {
 	text-align: center;
-	padding-top: 8px;
+	padding-block-start: 8px;
 	border-top: 1px solid #f0f0f1;
 }
 
@@ -91,14 +93,16 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
-	margin: 0 0 16px;
+	margin-block-end: 16px;
+	margin-inline: 0;
 }
 
 .lynxjournal-stat-card {
 	background: #fff;
 	border: 1px solid #c3c4c7;
 	border-inline-start: 4px solid var(--wp-admin-theme-color, #2271b1);
-	padding: 10px 14px;
+	padding-block: 10px;
+	padding-inline: 14px;
 	display: flex;
 	align-items: center;
 	gap: 10px;
@@ -127,7 +131,7 @@
 	display: block;
 	font-size: 11px;
 	color: #646970;
-	margin: 1px 0 0;
+	margin-block-start: 1px;
 }
 
 /* ── Stat card as link ───────────────────────────────────── */
@@ -154,8 +158,9 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	background: #fff;
 	border: 1px solid #c3c4c7;
 	border-inline-start: 4px solid var(--wp-admin-theme-color, #2271b1);
-	padding: 16px 20px;
-	margin-bottom: 16px;
+	padding-block: 16px;
+	padding-inline: 20px;
+	margin-block-end: 16px;
 	box-shadow: 0 1px 1px rgba(0,0,0,.04);
 	flex-wrap: wrap;
 }
@@ -172,6 +177,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	margin: 0;
 	flex: 1;
 	min-width: 160px;
+	text-wrap: pretty;
 }
 
 /* ── Schedule status bar ─────────────────────────────────── */
@@ -182,8 +188,9 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	background: #f6f7f7;
 	border: 1px solid #c3c4c7;
 	border-radius: 2px;
-	padding: 7px 12px;
-	margin-bottom: 16px;
+	padding-block: 7px;
+	padding-inline: 12px;
+	margin-block-end: 16px;
 	font-size: 13px;
 }
 
@@ -259,7 +266,8 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	grid-template-rows: auto auto auto; /* header · url · meta */
 	column-gap: 8px;
 	align-items: center;
-	padding: 5px 12px;
+	padding-block: 5px;
+	padding-inline: 12px;
 	border-bottom: 1px solid #f0f0f1;
 }
 
@@ -287,7 +295,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	color: var(--wp-admin-theme-color, #2271b1);
 	text-decoration: none;
 	display: block;
-	margin: 1px 0 0;
+	margin-block-start: 1px;
 }
 
 .lynxjournal-link-url:hover {
@@ -301,7 +309,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	font-size: 11px;
 	color: #646970;
 	flex-wrap: wrap;
-	margin: 1px 0 0;
+	margin-block-start: 1px;
 }
 
 /* ── Delete button ───────────────────────────────────────── */
@@ -312,7 +320,8 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	background: none;
 	border: none;
 	cursor: pointer;
-	padding: 2px 4px;
+	padding-block: 2px;
+	padding-inline: 4px;
 	border-radius: 3px;
 	opacity: 0;
 	transition: opacity .15s, background .15s;
@@ -341,7 +350,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	display: flex;
 	align-items: center;
 	gap: 6px;
-	margin: 2px 0 0;
+	margin-block-start: 2px;
 }
 
 .lynxjournal-delete-confirm-label {
@@ -352,7 +361,8 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 .lynxjournal-delete-confirm-yes {
 	font-size: 11px;
 	font-weight: 600;
-	padding: 2px 8px;
+	padding-block: 2px;
+	padding-inline: 8px;
 	border-radius: 3px;
 	border: 1px solid;
 	cursor: pointer;
@@ -367,7 +377,8 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 .lynxjournal-delete-cancel {
 	font-size: 11px;
 	font-weight: 600;
-	padding: 2px 8px;
+	padding-block: 2px;
+	padding-inline: 8px;
 	border-radius: 3px;
 	border: 1px solid;
 	cursor: pointer;
@@ -382,7 +393,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 
 /* ── Status badges ───────────────────────────────────────── */
 .lynxjournal-status-badge {
-	display: inline-block;
+	display: inline block;
 	padding-block: 1px;
 	padding-inline: 0 6px;
 	border-radius: 2px;
@@ -397,7 +408,8 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 
 /* ── Category distribution bar ───────────────────────────── */
 .lynxjournal-category-item {
-	padding: 8px 0;
+	padding-block: 8px;
+	padding-inline: 0;
 	border-bottom: 1px solid #f0f0f1;
 }
 
@@ -435,8 +447,10 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	font-size: 16px;
 	font-weight: 600;
 	color: var(--lj-color-text);
-	margin: 16px 0 8px;
-	padding-bottom: 6px;
+	margin-block: 16px 8px;
+	margin-inline: 0;
+	padding-block-end: 6px;
+	text-wrap: balance;
 }
 
 /* ── Responsive ──────────────────────────────────────────── */
@@ -498,7 +512,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 
 /* ── Categories table ────────────────────────────────────── */
 .lynxjournal-cat-table {
-	margin-top: 0;
+	margin-block-start: 0;
 }
 
 .lynxjournal-cat-count-col,
@@ -511,6 +525,7 @@ td.lynxjournal-cat-count-col {
 	color: #646970;
 	font-size: 12px;
 	max-width: 220px;
+	text-wrap: pretty;
 }
 
 .lynxjournal-cat-delete-btn {
@@ -532,7 +547,8 @@ td.lynxjournal-cat-count-col {
 	width: 100%;
 	box-sizing: border-box;
 	font-size: 13px;
-	padding: 3px 6px;
+	padding-block: 3px;
+	padding-inline: 6px;
 	border: 1px solid #8c8f94;
 	border-radius: 3px;
 }
@@ -551,13 +567,12 @@ textarea.lynxjournal-cat-inline-input {
 	display: block;
 	color: #b32d2e;
 	font-size: 12px;
-	margin-top: 4px;
+	margin-block-start: 4px;
 }
 
 .lynxjournal-cat-editing td {
 	vertical-align: top;
-	padding-top: 6px;
-	padding-bottom: 6px;
+	padding-block: 6px;
 }
 
 .lynxjournal-cat-actions {
@@ -571,7 +586,8 @@ textarea.lynxjournal-cat-inline-input {
 	font-weight: 400;
 	background: var(--lj-color-warning);
 	color: var(--lj-color-text);
-	padding: 2px 8px;
+	padding-block: 2px;
+	padding-inline: 8px;
 	border-radius: 10px;
 	vertical-align: middle;
 	margin-inline-start: 8px;
@@ -581,7 +597,8 @@ textarea.lynxjournal-cat-inline-input {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	margin: 16px 0;
+	margin-block: 16px;
+	margin-inline: 0;
 }
 
 .lynxjournal-expansion-list {
@@ -592,13 +609,14 @@ textarea.lynxjournal-cat-inline-input {
 	background: #fff;
 	border: 1px solid #ccd0d4;
 	border-radius: 8px;
-	margin-bottom: 24px;
+	margin-block-end: 24px;
 	overflow: hidden;
 }
 
 .lynxjournal-category-header {
 	background: #f6f7f7;
-	padding: 12px 20px;
+	padding-block: 12px;
+	padding-inline: 20px;
 	border-bottom: 1px solid #ccd0d4;
 	display: flex;
 	align-items: center;
@@ -608,6 +626,7 @@ textarea.lynxjournal-cat-inline-input {
 .lynxjournal-category-header h2 {
 	margin: 0;
 	font-size: 1rem;
+	text-wrap: balance;
 }
 
 .lynxjournal-category-header .dashicons {
@@ -630,7 +649,8 @@ textarea.lynxjournal-cat-inline-input {
 
 .lynxjournal-expansion-trigger {
 	width: 100%;
-	padding: 16px 20px;
+	padding-block: 16px;
+	padding-inline: 20px;
 	background: none;
 	border: none;
 	display: flex;
@@ -648,11 +668,13 @@ textarea.lynxjournal-cat-inline-input {
 	flex: 1;
 	font-weight: 600;
 	text-align: start;
+	text-wrap: balance;
 }
 
 .lynxjournal-setting-summary {
 	color: #646970;
 	font-size: 12px;
+	text-wrap: pretty;
 }
 
 .lynxjournal-expansion-trigger .dashicons {
@@ -665,15 +687,18 @@ textarea.lynxjournal-cat-inline-input {
 }
 
 .lynxjournal-expansion-content {
-	max-height: 0;
+	interpolate-size: allow-keywords;
+	height: 0;
+	padding-block: 0;
 	overflow: hidden;
-	transition: max-height .3s ease-out;
+	transition: height .3s ease-out, padding-block .3s ease-out;
 	background: #fafafa;
 }
 
 .lynxjournal-expansion-row.is-open .lynxjournal-expansion-content {
-	max-height: 500px;
-	padding: 20px;
+	height: auto;
+	padding-block: 20px;
+	padding-inline: 20px;
 	border-top: 1px solid #f0f0f1;
 }
 
@@ -682,7 +707,8 @@ textarea.lynxjournal-cat-inline-input {
 	bottom: 0;
 	inset-inline-start: 160px; /* WordPress admin sidebar width */
 	inset-inline-end: 0;
-	padding: 14px 30px;
+	padding-block: 14px;
+	padding-inline: 30px;
 	background: rgba(255,255,255,.88);
 	backdrop-filter: blur(8px);
 	border-top: 1px solid #ddd;
@@ -731,7 +757,7 @@ textarea.lynxjournal-cat-inline-input {
 }
 
 .lynxjournal-row .button {
-	display: inline-flex;
+	display: inline flex;
 	align-items: center;
 	justify-content: center;
 }
