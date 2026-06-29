@@ -144,6 +144,16 @@
 		// 3. Replace scalar tokens.
 		text = replaceTokens( text, scalarData );
 
+		// 3.5. Convert indented list lines (2+ spaces) to padded divs so the
+		//      preview shows visual indentation regardless of parent context.
+		text = text.split( '\n' ).map( function ( line ) {
+			var m = line.match( /^( {2,})- (.*)/ );
+			if ( ! m ) { return line; }
+			var level   = Math.floor( m[1].length / 2 );
+			var content = window.marked.parseInline( m[2] );
+			return '<div style="padding-left:' + ( level * 1.5 ) + 'em">• ' + content + '</div>';
+		} ).join( '\n' );
+
 		// 4. Render Markdown.
 		preview.innerHTML = text.trim()
 			? window.marked.parse( text )
