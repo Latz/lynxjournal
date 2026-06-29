@@ -5,6 +5,7 @@
 :root {
 	--lj-color-warning: #dba617;
 	--lj-color-text: #1d2327;
+	--lj-color-text-ui: #3c434a;
 }
 
 /* ── Dashboard Widget ────────────────────────────────────── */
@@ -788,7 +789,7 @@ textarea.lynxjournal-cat-inline-input {
 	border-radius: 3px;
 	text-align: left;
 	line-height: 1.2;
-	color: var(--lj-color-text);
+	color: var(--lj-color-text-ui);
 }
 
 .lynxjournal-insert-token:hover,
@@ -804,14 +805,14 @@ textarea.lynxjournal-cat-inline-input {
 	font-weight: 600;
 	font-size: 12px;
 	line-height: 1.2;
-	color: var(--lj-color-text);
+	color: var(--lj-color-text-ui);
 }
 
 .lynxjournal-insert-token .token-desc {
 	display: block;
 	font-family: sans-serif;
 	font-size: 10px;
-	opacity: .75;
+	color: var(--lj-color-text-ui);
 }
 
 /* ── Post Template page: format toolbar ─────────────────────── */
@@ -822,11 +823,25 @@ textarea.lynxjournal-cat-inline-input {
 }
 
 .lynxjournal-format-btn {
-	font-weight: 600;
-	min-width: 32px;
-	padding: 0 8px;
+	min-width: 28px;
+	padding: 0 6px;
 	line-height: 28px;
 	height: 28px;
+}
+
+.lynxjournal-format-btn svg {
+	width: 16px;
+	height: 16px;
+	fill: currentColor;
+	vertical-align: middle;
+	pointer-events: none;
+}
+
+.lynxjournal-heading-select {
+	height: 28px;
+	line-height: 28px;
+	font-size: 13px;
+	padding: 0 4px;
 }
 
 .lynxjournal-format-btn:hover,
@@ -834,6 +849,26 @@ textarea.lynxjournal-cat-inline-input {
 	background: var(--wp-admin-theme-color, #2271b1);
 	border-color: var(--wp-admin-theme-color, #2271b1);
 	color: #fff;
+}
+
+/* ── CodeMirror template editor ─────────────────────────────── */
+.lynxjournal-settings-field .CodeMirror {
+	font-family: Consolas, Monaco, 'Courier New', monospace;
+	font-size: 13px;
+	line-height: 1.6;
+	border: 1px solid #8c8f94;
+	border-top: none;
+	border-radius: 0 0 3px 3px;
+	min-height: 220px;
+}
+
+.lynxjournal-settings-field .CodeMirror-scroll {
+	min-height: 220px;
+}
+
+.cm-lynxjournal-token {
+	color: #7c3aed;
+	font-weight: 600;
 }
 
 /* ── Post Template page: Markdown preview output ─────────────── */
