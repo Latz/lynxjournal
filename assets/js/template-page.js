@@ -1,8 +1,11 @@
 ( function () {
-	var editor     = null;   // CodeMirror instance; null = plain-textarea fallback
-	var textarea   = null;
-	var preview    = null;
-	var inputTimer = null;
+	var editor            = null;   // CodeMirror instance; null = plain-textarea fallback
+	var textarea          = null;
+	var preview           = null;
+	var previewStatus     = null;
+	var previewValidation = null;
+	var inputTimer        = null;
+	var previewTimer      = null;
 	var btnUndo, btnRedo;
 
 	var _data            = window.lynxjournalPreviewData || {};
@@ -67,6 +70,50 @@
 		return result.join( '\n' );
 	}
 
+	// ── Preview status ──────────────────────────────────────────
+
+	function setPreviewUpdating() {
+		if ( previewStatus ) {
+			previewStatus.textContent = 'Aktualisiert…';
+			previewStatus.classList.add( 'is-updating' );
+		}
+		if ( preview ) { preview.classList.add( 'is-updating' ); }
+	}
+
+	function setPreviewLive() {
+		if ( previewStatus ) {
+			previewStatus.textContent = 'Live';
+			previewStatus.classList.remove( 'is-updating' );
+		}
+		if ( preview ) { preview.classList.remove( 'is-updating' ); }
+	}
+
+	// ── Validation ──────────────────────────────────────────────
+
+	function validateTemplate( text ) {
+		var warnings = [];
+		var cs = ( text.match( /\[category_start\]/g ) || [] ).length;
+		var ce = ( text.match( /\[category_end\]/g )   || [] ).length;
+		var ls = ( text.match( /\[link_start\]/g )     || [] ).length;
+		var le = ( text.match( /\[link_end\]/g )       || [] ).length;
+		if ( cs !== ce ) {
+			warnings.push( '[category_start] / [category_end] mismatch (' + cs + ' / ' + ce + ')' );
+		}
+		if ( ls !== le ) {
+			warnings.push( '[link_start] / [link_end] mismatch (' + ls + ' / ' + le + ')' );
+		}
+		return warnings;
+	}
+
+	function renderValidation( warnings ) {
+		if ( ! previewValidation ) { return; }
+		previewValidation.innerHTML = warnings.map( function ( msg ) {
+			return '<div class="lynxjournal-preview-warning">'
+				+ '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1L15 14H1L8 1z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 6v4m0 1.5v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
+				+ '<span>' + msg + '</span></div>';
+		} ).join( '' );
+	}
+
 	// ── Preview ─────────────────────────────────────────────────
 
 	function getEditorValue() {
@@ -74,7 +121,9 @@
 	}
 
 	function updateTemplatePreview() {
-		var text = getEditorValue();
+		var rawText  = getEditorValue();
+		renderValidation( validateTemplate( rawText ) );
+		var text = rawText;
 
 		text = text.replace(
 			/\[category_start\]([\s\S]*?)\[category_end\]/g,
@@ -108,6 +157,7 @@
 		preview.innerHTML = text.trim()
 			? window.marked.parse( text )
 			: '<span class="lynxjournal-preview-empty">—</span>';
+		setPreviewLive();
 	}
 
 	// ── Undo/redo button state ──────────────────────────────────
@@ -313,8 +363,10 @@
 	// ── Init ────────────────────────────────────────────────────
 
 	document.addEventListener( 'DOMContentLoaded', function () {
-		textarea = document.getElementById( 'lynxjournal-post-template' );
-		preview  = document.getElementById( 'lynxjournal-template-preview' );
+		textarea          = document.getElementById( 'lynxjournal-post-template' );
+		preview           = document.getElementById( 'lynxjournal-template-preview' );
+		previewStatus     = document.getElementById( 'lynxjournal-preview-status' );
+		previewValidation = document.getElementById( 'lynxjournal-preview-validation' );
 
 		if ( ! textarea || ! preview ) { return; }
 
@@ -332,15 +384,19 @@
 			editor = instance.codemirror;
 
 			editor.on( 'change', function () {
-				clearTimeout( inputTimer );
-				inputTimer = setTimeout( updateUndoRedoState, 300 );
-				updateTemplatePreview();
+				setPreviewUpdating();
+				clearTimeout( previewTimer );
+				previewTimer = setTimeout( function () {
+					updateUndoRedoState();
+					updateTemplatePreview();
+				}, 400 );
 			} );
 		} else {
 			// Accessibility mode or CodeMirror unavailable — use plain textarea.
 			textarea.addEventListener( 'input', function () {
-				clearTimeout( inputTimer );
-				inputTimer = setTimeout( updateTemplatePreview, 100 );
+				setPreviewUpdating();
+				clearTimeout( previewTimer );
+				previewTimer = setTimeout( updateTemplatePreview, 400 );
 			} );
 			textarea.addEventListener( 'keydown', function ( e ) {
 				if ( ! ( e.ctrlKey || e.metaKey ) ) { return; }
@@ -388,6 +444,15 @@
 					textarea.focus();
 				}
 				updateTemplatePreview();
+			} );
+		} );
+
+		document.querySelectorAll( '.lynxjournal-accordion-toggle' ).forEach( function ( btn ) {
+			btn.addEventListener( 'click', function () {
+				var expanded = this.getAttribute( 'aria-expanded' ) === 'true';
+				this.setAttribute( 'aria-expanded', String( ! expanded ) );
+				var panel = document.getElementById( this.getAttribute( 'aria-controls' ) );
+				if ( panel ) { panel.hidden = expanded; }
 			} );
 		} );
 	} );

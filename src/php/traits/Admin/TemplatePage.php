@@ -60,7 +60,7 @@ trait LynxJournal_Admin_TemplatePage {
         <div class="wrap">
             <h1><?php esc_html_e('Post Template', 'lynx-journal'); ?></h1>
 
-            <div class="card" style="max-width:none;">
+            <div class="card lynxjournal-template-card">
                 <form method="post" action="">
                     <?php wp_nonce_field('lynxjournal_template', 'lynxjournal_template_nonce'); ?>
 
@@ -98,13 +98,24 @@ trait LynxJournal_Admin_TemplatePage {
                     </div>
 
                     <div id="lynxjournal-template-preview-wrap">
-                        <p class="lynxjournal-settings-label"><?php esc_html_e('Vorschau', 'lynx-journal'); ?></p>
+                        <div class="lynxjournal-preview-header">
+                            <span class="lynxjournal-preview-label"><?php esc_html_e('Vorschau', 'lynx-journal'); ?></span>
+                            <span id="lynxjournal-preview-status">Live</span>
+                        </div>
+                        <div id="lynxjournal-preview-validation"></div>
                         <div id="lynxjournal-template-preview"></div>
                     </div>
 
-                    <details id="lynxjournal-token-accordion">
-                        <summary><?php esc_html_e('💡 Verfügbare Platzhalter anzeigen (Klicken zum Einfügen)', 'lynx-journal'); ?></summary>
-                        <div class="lynxjournal-token-grid">
+                    <div id="lynxjournal-token-accordion">
+                        <button
+                            type="button"
+                            class="lynxjournal-accordion-toggle"
+                            aria-expanded="false"
+                            aria-controls="lynxjournal-token-panel"
+                        >
+                            <span><?php esc_html_e('Verfügbare Platzhalter', 'lynx-journal'); ?></span>
+                        </button>
+                        <div id="lynxjournal-token-panel" class="lynxjournal-token-grid" hidden>
                             <?php foreach ($token_groups as $group_label => $tokens) : ?>
                                 <div class="lynxjournal-token-group">
                                     <h4><?php echo esc_html($group_label); ?></h4>
@@ -121,10 +132,10 @@ trait LynxJournal_Admin_TemplatePage {
                                 </div>
                             <?php endforeach; ?>
                         </div>
-                    </details>
+                    </div>
 
-                    <p class="submit" style="margin-top:16px;">
-                        <button type="submit" class="button button-primary">
+                    <p class="submit">
+                        <button type="submit" class="button button-primary button-large">
                             <?php esc_html_e('Save Template', 'lynx-journal'); ?>
                         </button>
                     </p>
