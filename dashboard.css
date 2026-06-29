@@ -754,14 +754,14 @@ textarea.lynxjournal-cat-inline-input {
 
 .lynxjournal-token-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-	gap: 16px;
-	padding: 16px 0 8px;
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	gap: 10px;
+	padding: 10px 0 4px;
 }
 
 .lynxjournal-token-group h4 {
-	margin: 0 0 8px;
-	font-size: 12px;
+	margin: 0 0 4px;
+	font-size: 11px;
 	text-transform: uppercase;
 	letter-spacing: .04em;
 	color: #646970;
@@ -773,11 +773,11 @@ textarea.lynxjournal-cat-inline-input {
 	align-items: flex-start;
 	width: 100%;
 	height: auto;
-	padding: 6px 8px;
-	margin-bottom: 6px;
+	padding: 3px 6px;
+	margin-bottom: 3px;
 	border-radius: 3px;
 	text-align: left;
-	line-height: 1.4;
+	line-height: 1.2;
 }
 
 .lynxjournal-insert-token:hover,
@@ -791,14 +791,14 @@ textarea.lynxjournal-cat-inline-input {
 	display: block;
 	font-family: monospace;
 	font-weight: 600;
-	font-size: 13px;
+	font-size: 12px;
 	line-height: 1.2;
 }
 
 .lynxjournal-insert-token .token-desc {
 	display: block;
 	font-family: sans-serif;
-	font-size: 11px;
+	font-size: 10px;
 	opacity: .75;
 }
 
