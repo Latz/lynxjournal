@@ -6,7 +6,7 @@ import {
 	expandLinkLines,
 	validateTemplate,
 	getLineStart,
-} from '../src/js/template-utils.js';
+} from '../../src/js/template-utils.js';
 
 /**
  * @typedef {{ '[category_link_count]': string, links: Array<Record<string, string>>, [key: string]: string | Array<Record<string, string>> }} CategoryVariant
