@@ -10,8 +10,7 @@
 		"[tags]"            : "tips, guide, lifestyle",
 		"[unpublished]"     : "4",
 		"[oldest_link_date]": "2026-06-21",
-		"[link_title]"      : "10 Tips for Stress-Free Travel",
-		"[link_url]"        : "https://travelblog.com/stress-free-travel",
+		"[link]"            : "[10 Tips for Stress-Free Travel](https://travelblog.com/stress-free-travel)",
 		"[link_description]": "Everything you need to know before your next trip.",
 		"[link_domain]"     : "travelblog.com",
 		"[link_date]"       : "2026-06-27"
@@ -22,36 +21,31 @@
 			"token": "[category_name]",
 			"links": [
 				{
-					"[link_title]"      : "10 Tips for Stress-Free Travel",
-					"[link_url]"        : "https://travelblog.com/stress-free-travel",
+					"[link]"            : "[10 Tips for Stress-Free Travel](https://travelblog.com/stress-free-travel)",
 					"[link_description]": "Everything you need to know before your next trip.",
 					"[link_domain]"     : "travelblog.com",
 					"[link_date]"       : "2026-06-27"
 				},
 				{
-					"[link_title]"      : "Hidden Gems in Southern Europe",
-					"[link_url]"        : "https://wanderlust.io/southern-europe-gems",
+					"[link]"            : "[Hidden Gems in Southern Europe](https://wanderlust.io/southern-europe-gems)",
 					"[link_description]": "Lesser-known destinations worth adding to your bucket list.",
 					"[link_domain]"     : "wanderlust.io",
 					"[link_date]"       : "2026-06-25"
 				},
 				{
-					"[link_title]"      : "How to Pack Light for Any Trip",
-					"[link_url]"        : "https://packingpro.net/pack-light",
+					"[link]"            : "[How to Pack Light for Any Trip](https://packingpro.net/pack-light)",
 					"[link_description]": "A minimalist packing guide for travellers of all kinds.",
 					"[link_domain]"     : "packingpro.net",
 					"[link_date]"       : "2026-06-24"
 				},
 				{
-					"[link_title]"      : "The Best Travel Apps for 2026",
-					"[link_url]"        : "https://traveltech.io/best-apps-2026",
+					"[link]"            : "[The Best Travel Apps for 2026](https://traveltech.io/best-apps-2026)",
 					"[link_description]": "Tools that make every trip smoother.",
 					"[link_domain]"     : "traveltech.io",
 					"[link_date]"       : "2026-06-23"
 				},
 				{
-					"[link_title]"      : "Solo Travel Safety Tips",
-					"[link_url]"        : "https://safeabroad.com/solo-tips",
+					"[link]"            : "[Solo Travel Safety Tips](https://safeabroad.com/solo-tips)",
 					"[link_description]": "Practical advice for confident solo adventures.",
 					"[link_domain]"     : "safeabroad.com",
 					"[link_date]"       : "2026-06-22"
@@ -63,36 +57,31 @@
 			"token": "[category_name]",
 			"links": [
 				{
-					"[link_title]"      : "Easy Weeknight Pasta in 20 Minutes",
-					"[link_url]"        : "https://kitchenstories.com/pasta-20min",
+					"[link]"            : "[Easy Weeknight Pasta in 20 Minutes](https://kitchenstories.com/pasta-20min)",
 					"[link_description]": "Quick, satisfying meals for busy evenings.",
 					"[link_domain]"     : "kitchenstories.com",
 					"[link_date]"       : "2026-06-26"
 				},
 				{
-					"[link_title]"      : "Beginner's Guide to Plant-Based Eating",
-					"[link_url]"        : "https://eatwell.org/plant-based-guide",
+					"[link]"            : "[Beginner's Guide to Plant-Based Eating](https://eatwell.org/plant-based-guide)",
 					"[link_description]": "How to get started without giving up your favourite foods.",
 					"[link_domain]"     : "eatwell.org",
 					"[link_date]"       : "2026-06-24"
 				},
 				{
-					"[link_title]"      : "5 Soups You Can Make from Leftovers",
-					"[link_url]"        : "https://homecook.io/leftover-soups",
+					"[link]"            : "[5 Soups You Can Make from Leftovers](https://homecook.io/leftover-soups)",
 					"[link_description]": "Reduce food waste and eat well at the same time.",
 					"[link_domain]"     : "homecook.io",
 					"[link_date]"       : "2026-06-22"
 				},
 				{
-					"[link_title]"      : "How to Meal Prep Like a Pro",
-					"[link_url]"        : "https://mealplanner.co/meal-prep-guide",
+					"[link]"            : "[How to Meal Prep Like a Pro](https://mealplanner.co/meal-prep-guide)",
 					"[link_description]": "Save time and eat better every week.",
 					"[link_domain]"     : "mealplanner.co",
 					"[link_date]"       : "2026-06-21"
 				},
 				{
-					"[link_title]"      : "The World's Most Underrated Cuisines",
-					"[link_url]"        : "https://foodexplorer.net/underrated-cuisines",
+					"[link]"            : "[The World's Most Underrated Cuisines](https://foodexplorer.net/underrated-cuisines)",
 					"[link_description]": "Dishes worth seeking out on your next trip.",
 					"[link_domain]"     : "foodexplorer.net",
 					"[link_date]"       : "2026-06-20"
@@ -104,36 +93,31 @@
 			"token": "[category_name]",
 			"links": [
 				{
-					"[link_title]"      : "Why Bees Are Essential to Our Ecosystem",
-					"[link_url]"        : "https://naturemag.org/bees-ecosystem",
+					"[link]"            : "[Why Bees Are Essential to Our Ecosystem](https://naturemag.org/bees-ecosystem)",
 					"[link_description]": "A closer look at the role pollinators play in our food supply.",
 					"[link_domain]"     : "naturemag.org",
 					"[link_date]"       : "2026-06-25"
 				},
 				{
-					"[link_title]"      : "Simple Everyday Habits for Climate Action",
-					"[link_url]"        : "https://greenliving.net/climate-habits",
+					"[link]"            : "[Simple Everyday Habits for Climate Action](https://greenliving.net/climate-habits)",
 					"[link_description]": "Small changes that add up to a real difference.",
 					"[link_domain]"     : "greenliving.net",
 					"[link_date]"       : "2026-06-23"
 				},
 				{
-					"[link_title]"      : "Best Hiking Trails for Beginners",
-					"[link_url]"        : "https://outdoorguide.com/beginner-hiking",
+					"[link]"            : "[Best Hiking Trails for Beginners](https://outdoorguide.com/beginner-hiking)",
 					"[link_description]": "Accessible routes that still offer stunning views.",
 					"[link_domain]"     : "outdoorguide.com",
 					"[link_date]"       : "2026-06-21"
 				},
 				{
-					"[link_title]"      : "10 National Parks Worth Visiting This Year",
-					"[link_url]"        : "https://parkguide.org/top-parks-2026",
+					"[link]"            : "[10 National Parks Worth Visiting This Year](https://parkguide.org/top-parks-2026)",
 					"[link_description]": "Stunning landscapes and easy trails for everyone.",
 					"[link_domain]"     : "parkguide.org",
 					"[link_date]"       : "2026-06-20"
 				},
 				{
-					"[link_title]"      : "How Urban Gardens Are Changing Cities",
-					"[link_url]"        : "https://citygreen.io/urban-gardens",
+					"[link]"            : "[How Urban Gardens Are Changing Cities](https://citygreen.io/urban-gardens)",
 					"[link_description]": "Green spaces bringing communities together.",
 					"[link_domain]"     : "citygreen.io",
 					"[link_date]"       : "2026-06-19"

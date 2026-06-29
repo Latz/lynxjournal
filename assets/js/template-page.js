@@ -13,7 +13,7 @@
 	// ── Token replacement ───────────────────────────────────────
 
 	var LINK_TOKENS = [
-		'[link_title]', '[link_url]', '[link_description]',
+		'[link]', '[link_description]',
 		'[link_domain]', '[link_date]',
 	];
 

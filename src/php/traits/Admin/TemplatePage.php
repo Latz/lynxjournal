@@ -42,8 +42,7 @@ trait LynxJournal_Admin_TemplatePage {
             ],
             __('Links', 'lynx-journal') => [
                 '[link_count]'       => __('Anzahl Links im Roundup', 'lynx-journal'),
-                '[link_title]'       => __('Titel eines einzelnen Links', 'lynx-journal'),
-                '[link_url]'         => __('Externe URL', 'lynx-journal'),
+                '[link]'             => __('Link als Markdown-Hyperlink (Titel + URL)', 'lynx-journal'),
                 '[link_description]' => __('Beschreibungstext des Links', 'lynx-journal'),
                 '[link_domain]'      => __('Domain der URL (z. B. "example.com")', 'lynx-journal'),
                 '[link_date]'        => __('Datum, wann der Link gespeichert wurde', 'lynx-journal'),
