@@ -1,70 +1,85 @@
 ( function () {
-	var editor            = null;   // CodeMirror instance; null = plain-textarea fallback
-	var textarea          = null;
-	var preview           = null;
-	var previewStatus     = null;
-	var previewValidation = null;
-	var inputTimer        = null;
-	var previewTimer      = null;
-	var btnUndo, btnRedo;
+	/**
+	 * @typedef {{ '[category_link_count]': string, links: Array<Record<string, string>>, [key: string]: string | Array<Record<string, string>> }} CategoryVariant
+	 */
 
-	var _data            = window.lynxjournalPreviewData || {};
-	var scalarData       = _data.scalar || {};
-	var categoryVariants = ( _data.categories || [] ).map( function ( cat ) {
-		var entry                        = { links: cat.links || [] };
-		entry[ cat.token ]               = cat.name;
-		entry[ '[category_link_count]' ] = String( ( cat.links || [] ).length );
-		return entry;
+	let editor            = null;   // CodeMirror instance; null = plain-textarea fallback
+	let textarea          = null;
+	let preview           = null;
+	let previewStatus     = null;
+	let previewValidation = null;
+	let previewTimer      = null;
+	let btnUndo, btnRedo;
+
+	const _data            = window.lynxjournalPreviewData ?? {};
+	const scalarData       = _data.scalar ?? {};
+	const categoryVariants = ( _data.categories ?? [] ).map( cat => {
+		const { token, name } = cat;
+		const links = cat.links ?? [];
+		return { [ token ]: name, '[category_link_count]': String( links.length ), links };
 	} );
 
 	// ── Token replacement ───────────────────────────────────────
 
-	var LINK_TOKENS = [
+	const LINK_TOKENS = Object.freeze( [
 		'[link]', '[link_description]',
 		'[link_domain]', '[link_date]',
-	];
+	] );
 
+	/**
+	 * @param {string} text
+	 * @param {Record<string, string>} data
+	 * @returns {string}
+	 */
 	function replaceTokens( text, data ) {
-		Object.keys( data ).forEach( function ( token ) {
-			text = text.split( token ).join( data[ token ] );
-		} );
+		for ( const [ token, value ] of Object.entries( data ) ) {
+			text = text.replaceAll( token, value );
+		}
 		return text;
 	}
 
+	/**
+	 * @param {string} text
+	 * @param {Array<Record<string, string>>} links
+	 * @returns {string}
+	 */
 	function expandLinkBlocks( text, links ) {
 		return text.replace(
 			/\[link_start\]([\s\S]*?)\[link_end\]/g,
-			function ( _match, inner ) {
-				return links.map( function ( variant ) {
-					return replaceTokens( inner, variant );
-				} ).join( '' );
-			}
+			( _match, inner ) => links.map( variant => replaceTokens( inner, variant ) ).join( '' )
 		);
 	}
 
+	/**
+	 * @param {string} line
+	 * @returns {boolean}
+	 */
 	function hasLinkToken( line ) {
-		return LINK_TOKENS.some( function ( t ) { return line.indexOf( t ) !== -1; } );
+		return LINK_TOKENS.some( t => line.includes( t ) );
 	}
 
+	/**
+	 * @param {string} text
+	 * @param {Array<Record<string, string>>} links
+	 * @returns {string}
+	 */
 	function expandLinkLines( text, links ) {
-		var lines  = text.split( '\n' );
-		var result = [];
-		var i = 0;
+		const lines  = text.split( '\n' );
+		const result = [];
+		let i = 0;
 		while ( i < lines.length ) {
-			if ( ! hasLinkToken( lines[i] ) ) {
-				result.push( lines[i] );
+			if ( !hasLinkToken( lines[ i ] ) ) {
+				result.push( lines[ i ] );
 				i++;
 				continue;
 			}
-			var group = [];
-			while ( i < lines.length && hasLinkToken( lines[i] ) ) {
-				group.push( lines[i] );
+			const group = [];
+			while ( i < lines.length && hasLinkToken( lines[ i ] ) ) {
+				group.push( lines[ i ] );
 				i++;
 			}
-			links.forEach( function ( link ) {
-				group.forEach( function ( groupLine ) {
-					result.push( replaceTokens( groupLine, link ) );
-				} );
+			links.forEach( link => {
+				group.forEach( groupLine => result.push( replaceTokens( groupLine, link ) ) );
 			} );
 		}
 		return result.join( '\n' );
@@ -90,68 +105,83 @@
 
 	// ── Validation ──────────────────────────────────────────────
 
+	/**
+	 * @param {string} text
+	 * @returns {string[]}
+	 */
 	function validateTemplate( text ) {
-		var warnings = [];
-		var cs = ( text.match( /\[category_start\]/g ) || [] ).length;
-		var ce = ( text.match( /\[category_end\]/g )   || [] ).length;
-		var ls = ( text.match( /\[link_start\]/g )     || [] ).length;
-		var le = ( text.match( /\[link_end\]/g )       || [] ).length;
+		const warnings = [];
+		const cs = ( text.match( /\[category_start\]/g ) ?? [] ).length;
+		const ce = ( text.match( /\[category_end\]/g )   ?? [] ).length;
+		const ls = ( text.match( /\[link_start\]/g )     ?? [] ).length;
+		const le = ( text.match( /\[link_end\]/g )       ?? [] ).length;
 		if ( cs !== ce ) {
-			warnings.push( '[category_start] / [category_end] mismatch (' + cs + ' / ' + ce + ')' );
+			warnings.push( `[category_start] / [category_end] mismatch (${ cs } / ${ ce })` );
 		}
 		if ( ls !== le ) {
-			warnings.push( '[link_start] / [link_end] mismatch (' + ls + ' / ' + le + ')' );
+			warnings.push( `[link_start] / [link_end] mismatch (${ ls } / ${ le })` );
 		}
 		return warnings;
 	}
 
+	/**
+	 * @param {string[]} warnings
+	 */
 	function renderValidation( warnings ) {
-		if ( ! previewValidation ) { return; }
-		previewValidation.innerHTML = warnings.map( function ( msg ) {
-			return '<div class="lynxjournal-preview-warning">'
-				+ '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1L15 14H1L8 1z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 6v4m0 1.5v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
-				+ '<span>' + msg + '</span></div>';
-		} ).join( '' );
+		if ( !previewValidation ) { return; }
+		previewValidation.replaceChildren(
+			...warnings.map( msg => {
+				const div = document.createElement( 'div' );
+				div.className = 'lynxjournal-preview-warning';
+				div.innerHTML =
+					'<svg viewBox="0 0 16 16" aria-hidden="true">' +
+					'<path d="M8 1L15 14H1L8 1z" stroke="currentColor" stroke-width="1.5" fill="none"/>' +
+					'<path d="M8 6v4m0 1.5v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' +
+					'</svg>';
+				const span = document.createElement( 'span' );
+				span.textContent = msg;
+				div.append( span );
+				return div;
+			} )
+		);
 	}
 
 	// ── Preview ─────────────────────────────────────────────────
 
+	/** @returns {string} */
 	function getEditorValue() {
 		return editor ? editor.getValue() : ( textarea ? textarea.value : '' );
 	}
 
 	function updateTemplatePreview() {
-		var rawText  = getEditorValue();
+		const rawText = getEditorValue();
 		renderValidation( validateTemplate( rawText ) );
-		var text = rawText;
+		let text = rawText;
 
 		text = text.replace(
 			/\[category_start\]([\s\S]*?)\[category_end\]/g,
-			function ( _match, inner ) {
-				return categoryVariants.map( function ( cat ) {
-					var catText = replaceTokens( inner, {
-						'[category_name]'       : cat['[category_name]'],
-						'[category_link_count]' : cat['[category_link_count]'],
-					} );
-					catText = expandLinkBlocks( catText, cat.links );
-					catText = expandLinkLines( catText, cat.links );
-					return catText;
-				} ).join( '' );
-			}
+			( _match, inner ) => categoryVariants.map( cat => {
+				let catText = replaceTokens( inner, {
+					'[category_name]'       : cat[ '[category_name]' ],
+					'[category_link_count]' : cat[ '[category_link_count]' ],
+				} );
+				catText = expandLinkBlocks( catText, cat.links );
+				catText = expandLinkLines( catText, cat.links );
+				return catText;
+			} ).join( '' )
 		);
 
-		text = expandLinkBlocks( text, categoryVariants[0] ? categoryVariants[0].links : [] );
+		text = expandLinkBlocks( text, categoryVariants[ 0 ]?.links ?? [] );
 		text = replaceTokens( text, scalarData );
 
 		// Convert indented lines (2+ spaces) to padded divs for visual indentation.
-		text = text.split( '\n' ).map( function ( line ) {
-			var m = line.match( /^( {2,})(- )?(.+)/ );
-			if ( ! m ) { return line; }
-			var level   = Math.floor( m[1].length / 2 );
-			var isList  = !! m[2];
-			var content = window.marked.parseInline( m[3] );
-			return '<div style="padding-left:' + ( level * 1.5 ) + 'em">'
-				+ ( isList ? '• ' : '' ) + content + '</div>';
+		text = text.split( '\n' ).map( line => {
+			const m = line.match( /^( {2,})(- )?(.+)/ );
+			if ( !m ) { return line; }
+			const level   = Math.floor( m[ 1 ].length / 2 );
+			const isList  = !!m[ 2 ];
+			const content = window.marked.parseInline( m[ 3 ] );
+			return `<div style="padding-left:${ level * 1.5 }em">${ isList ? '• ' : '' }${ content }</div>`;
 		} ).join( '\n' );
 
 		preview.innerHTML = text.trim()
@@ -164,7 +194,7 @@
 
 	function updateUndoRedoState() {
 		if ( editor ) {
-			var hist = editor.historySize();
+			const hist = editor.historySize();
 			if ( btnUndo ) { btnUndo.disabled = hist.undo === 0; }
 			if ( btnRedo ) { btnRedo.disabled = hist.redo === 0; }
 		} else {
@@ -176,28 +206,29 @@
 	// ── Custom CodeMirror overlay for [token] highlighting ──────
 
 	function defineTokenOverlay() {
-		wp.CodeMirror.defineMode( 'lynxjournal', function ( config ) {
-			return wp.CodeMirror.overlayMode(
-				wp.CodeMirror.getMode( config, { name: 'null' } ),
+		window.wp.CodeMirror.defineMode( 'lynxjournal', config =>
+			window.wp.CodeMirror.overlayMode(
+				window.wp.CodeMirror.getMode( config, { name: 'null' } ),
 				{
-					token: function ( stream ) {
+					token( stream ) {
 						if ( stream.match( /\[[^\]]*\]/ ) ) { return 'lynxjournal-token'; }
 						stream.next();
 						return null;
-					}
+					},
 				}
-			);
-		} );
+			)
+		);
 	}
 
 	// ── Line-prefix helper (headings, lists) ────────────────────
 
+	/** @param {string} prefix */
 	function applyLinePrefix( prefix ) {
-		var cursor   = editor.getCursor();
-		var lineNum  = cursor.line;
-		var line     = editor.getLine( lineNum );
-		var stripped = line.replace( /^(#{1,6} |- |\d+\. |> )/, '' );
-		var removed  = line.length - stripped.length;
+		const cursor   = editor.getCursor();
+		const lineNum  = cursor.line;
+		const line     = editor.getLine( lineNum );
+		const stripped = line.replace( /^(#{1,6} |- |\d+\. |> )/, '' );
+		const removed  = line.length - stripped.length;
 		editor.replaceRange(
 			prefix + stripped,
 			{ line: lineNum, ch: 0 },
@@ -211,8 +242,9 @@
 
 	// ── Toolbar: CodeMirror path ────────────────────────────────
 
+	/** @param {string} action */
 	function applyFormat( action ) {
-		if ( ! editor ) { fallbackApplyFormat( action ); return; }
+		if ( !editor ) { fallbackApplyFormat( action ); return; }
 
 		if ( action === 'undo' ) {
 			editor.undo();
@@ -227,29 +259,29 @@
 			return;
 		}
 
-		var sel = editor.getSelection();
+		const sel = editor.getSelection();
 
 		if ( action === 'bold' ) {
-			editor.replaceSelection( '**' + ( sel || 'bold text' ) + '**' );
+			editor.replaceSelection( `**${ sel || 'bold text' }**` );
 		} else if ( action === 'italic' ) {
-			editor.replaceSelection( '*' + ( sel || 'italic text' ) + '*' );
+			editor.replaceSelection( `*${ sel || 'italic text' }*` );
 		} else if ( action === 'underline' ) {
-			editor.replaceSelection( '<u>' + ( sel || 'underlined text' ) + '</u>' );
+			editor.replaceSelection( `<u>${ sel || 'underlined text' }</u>` );
 		} else if ( /^h[1-6]$/.test( action ) ) {
-			applyLinePrefix( '#'.repeat( parseInt( action[1], 10 ) ) + ' ' );
+			applyLinePrefix( '#'.repeat( parseInt( action[ 1 ], 10 ) ) + ' ' );
 		} else if ( action === 'list' ) {
 			applyLinePrefix( '- ' );
 		} else if ( action === 'ol' ) {
 			applyLinePrefix( '1. ' );
 		} else if ( action === 'indent' ) {
-			var cur = editor.getCursor();
+			const cur = editor.getCursor();
 			editor.replaceRange( '  ', { line: cur.line, ch: 0 } );
 		} else if ( action === 'outdent' ) {
-			var cur  = editor.getCursor();
-			var line = editor.getLine( cur.line );
-			var sp   = line.match( /^ {1,2}/ );
+			const cur  = editor.getCursor();
+			const line = editor.getLine( cur.line );
+			const sp   = line.match( /^ {1,2}/ );
 			if ( sp ) {
-				editor.replaceRange( '', { line: cur.line, ch: 0 }, { line: cur.line, ch: sp[0].length } );
+				editor.replaceRange( '', { line: cur.line, ch: 0 }, { line: cur.line, ch: sp[ 0 ].length } );
 			}
 		} else if ( action === 'hr' ) {
 			editor.replaceSelection( '\n---\n' );
@@ -262,9 +294,9 @@
 
 	// ── Toolbar: plain-textarea fallback ────────────────────────
 
-	var undoStack = [];
-	var redoStack = [];
-	var MAX_HIST  = 100;
+	let undoStack = [];
+	let redoStack = [];
+	const MAX_HIST = 100;
 
 	function saveSnapshot() {
 		undoStack.push( { value: textarea.value, start: textarea.selectionStart, end: textarea.selectionEnd } );
@@ -272,6 +304,7 @@
 		redoStack = [];
 	}
 
+	/** @param {{ value: string, start: number, end: number }} snap */
 	function restoreSnapshot( snap ) {
 		textarea.value = snap.value;
 		textarea.setSelectionRange( snap.start, snap.end );
@@ -279,74 +312,80 @@
 		updateTemplatePreview();
 	}
 
+	/**
+	 * @param {string} value
+	 * @param {number} pos
+	 * @returns {number}
+	 */
 	function getLineStart( value, pos ) {
-		var idx = value.lastIndexOf( '\n', pos - 1 );
+		const idx = value.lastIndexOf( '\n', pos - 1 );
 		return idx === -1 ? 0 : idx + 1;
 	}
 
+	/** @param {string} action */
 	function fallbackApplyFormat( action ) {
-		var start = textarea.selectionStart;
-		var end   = textarea.selectionEnd;
-		var value = textarea.value;
-		var newVal, cursor;
+		const start = textarea.selectionStart;
+		const end   = textarea.selectionEnd;
+		const value = textarea.value;
+		let newVal, cursor;
 
 		if ( action === 'undo' ) {
-			if ( ! undoStack.length ) { return; }
-			redoStack.push( { value: value, start: start, end: end } );
+			if ( !undoStack.length ) { return; }
+			redoStack.push( { value, start, end } );
 			restoreSnapshot( undoStack.pop() );
 			return;
 		}
 		if ( action === 'redo' ) {
-			if ( ! redoStack.length ) { return; }
-			undoStack.push( { value: value, start: start, end: end } );
+			if ( !redoStack.length ) { return; }
+			undoStack.push( { value, start, end } );
 			restoreSnapshot( redoStack.pop() );
 			return;
 		}
 
 		saveSnapshot();
-		var sel = value.slice( start, end );
+		const sel = value.slice( start, end );
 
 		if ( action === 'bold' ) {
-			var inner = sel || 'bold text';
-			newVal = value.slice( 0, start ) + '**' + inner + '**' + value.slice( end );
+			const inner = sel || 'bold text';
+			newVal = value.slice( 0, start ) + `**${ inner }**` + value.slice( end );
 			cursor = sel ? end + 4 : start + 2 + inner.length;
 		} else if ( action === 'italic' ) {
-			var inner = sel || 'italic text';
-			newVal = value.slice( 0, start ) + '*' + inner + '*' + value.slice( end );
+			const inner = sel || 'italic text';
+			newVal = value.slice( 0, start ) + `*${ inner }*` + value.slice( end );
 			cursor = sel ? end + 2 : start + 1 + inner.length;
 		} else if ( action === 'underline' ) {
-			var inner = sel || 'underlined text';
-			newVal = value.slice( 0, start ) + '<u>' + inner + '</u>' + value.slice( end );
+			const inner = sel || 'underlined text';
+			newVal = value.slice( 0, start ) + `<u>${ inner }</u>` + value.slice( end );
 			cursor = sel ? end + 7 : start + 3 + inner.length;
 		} else if ( /^h[1-6]$/.test( action ) || action === 'list' ) {
-			var prefix    = action === 'list' ? '- ' : '#'.repeat( parseInt( action[1], 10 ) ) + ' ';
-			var lineStart = getLineStart( value, start );
-			var rest      = value.slice( lineStart );
-			var stripped  = rest.replace( /^(#{1,6} |- |\d+\. |> )/, '' );
-			var removed   = rest.length - stripped.length;
+			const prefix    = action === 'list' ? '- ' : '#'.repeat( parseInt( action[ 1 ], 10 ) ) + ' ';
+			const lineStart = getLineStart( value, start );
+			const rest      = value.slice( lineStart );
+			const stripped  = rest.replace( /^(#{1,6} |- |\d+\. |> )/, '' );
+			const removed   = rest.length - stripped.length;
 			newVal  = value.slice( 0, lineStart ) + prefix + stripped;
 			cursor  = Math.max( lineStart + prefix.length, start - removed + prefix.length );
 		} else if ( action === 'indent' ) {
-			var lineStart = getLineStart( value, start );
+			const lineStart = getLineStart( value, start );
 			newVal  = value.slice( 0, lineStart ) + '  ' + value.slice( lineStart );
 			cursor  = start + 2;
 		} else if ( action === 'outdent' ) {
-			var lineStart  = getLineStart( value, start );
-			var lineText   = value.slice( lineStart );
-			var spaces     = lineText.match( /^ {1,2}/ );
-			var removed    = spaces ? spaces[0].length : 0;
+			const lineStart = getLineStart( value, start );
+			const lineText  = value.slice( lineStart );
+			const spaces    = lineText.match( /^ {1,2}/ );
+			const removed   = spaces ? spaces[ 0 ].length : 0;
 			newVal  = value.slice( 0, lineStart ) + value.slice( lineStart + removed );
 			cursor  = Math.max( lineStart, start - removed );
 		} else if ( action === 'hr' ) {
-			var insert = '\n---\n';
+			const insert = '\n---\n';
 			newVal  = value.slice( 0, start ) + insert + value.slice( end );
 			cursor  = start + insert.length;
 		} else if ( action === 'ol' ) {
-			var prefix    = '1. ';
-			var lineStart = getLineStart( value, start );
-			var rest      = value.slice( lineStart );
-			var stripped  = rest.replace( /^(#{1,6} |- |\d+\. |> )/, '' );
-			var removed   = rest.length - stripped.length;
+			const prefix    = '1. ';
+			const lineStart = getLineStart( value, start );
+			const rest      = value.slice( lineStart );
+			const stripped  = rest.replace( /^(#{1,6} |- |\d+\. |> )/, '' );
+			const removed   = rest.length - stripped.length;
 			newVal  = value.slice( 0, lineStart ) + prefix + stripped;
 			cursor  = Math.max( lineStart + prefix.length, start - removed + prefix.length );
 		} else {
@@ -362,44 +401,44 @@
 
 	// ── Init ────────────────────────────────────────────────────
 
-	document.addEventListener( 'DOMContentLoaded', function () {
+	document.addEventListener( 'DOMContentLoaded', () => {
 		textarea          = document.getElementById( 'lynxjournal-post-template' );
 		preview           = document.getElementById( 'lynxjournal-template-preview' );
 		previewStatus     = document.getElementById( 'lynxjournal-preview-status' );
 		previewValidation = document.getElementById( 'lynxjournal-preview-validation' );
 
-		if ( ! textarea || ! preview ) { return; }
+		if ( !textarea || !preview ) { return; }
 
 		btnUndo = document.querySelector( '.lynxjournal-format-btn[data-action="undo"]' );
 		btnRedo = document.querySelector( '.lynxjournal-format-btn[data-action="redo"]' );
 
 		if ( window.wp && window.wp.codeEditor && window.wp.CodeMirror ) {
 			defineTokenOverlay();
-			var settings = window.lynxjournalEditorSettings || {};
-			if ( ! settings.codemirror ) { settings.codemirror = {}; }
+			const settings = window.lynxjournalEditorSettings ?? {};
+			if ( !settings.codemirror ) { settings.codemirror = {}; }
 			settings.codemirror.mode        = 'lynxjournal';
 			settings.codemirror.lineWrapping = true;
 
-			var instance = window.wp.codeEditor.initialize( textarea, settings );
+			const instance = window.wp.codeEditor.initialize( textarea, settings );
 			editor = instance.codemirror;
 
-			editor.on( 'change', function () {
+			editor.on( 'change', () => {
 				setPreviewUpdating();
 				clearTimeout( previewTimer );
-				previewTimer = setTimeout( function () {
+				previewTimer = setTimeout( () => {
 					updateUndoRedoState();
 					updateTemplatePreview();
 				}, 400 );
 			} );
 		} else {
 			// Accessibility mode or CodeMirror unavailable — use plain textarea.
-			textarea.addEventListener( 'input', function () {
+			textarea.addEventListener( 'input', () => {
 				setPreviewUpdating();
 				clearTimeout( previewTimer );
 				previewTimer = setTimeout( updateTemplatePreview, 400 );
 			} );
-			textarea.addEventListener( 'keydown', function ( e ) {
-				if ( ! ( e.ctrlKey || e.metaKey ) ) { return; }
+			textarea.addEventListener( 'keydown', e => {
+				if ( !( e.ctrlKey || e.metaKey ) ) { return; }
 				if ( e.key === 'z' || e.key === 'Z' ) {
 					e.preventDefault();
 					fallbackApplyFormat( e.shiftKey ? 'redo' : 'undo' );
@@ -413,31 +452,29 @@
 		updateTemplatePreview();
 		updateUndoRedoState();
 
-		document.querySelectorAll( '.lynxjournal-format-btn' ).forEach( function ( btn ) {
-			btn.addEventListener( 'click', function () {
-				applyFormat( this.dataset.action );
-			} );
+		document.querySelectorAll( '.lynxjournal-format-btn' ).forEach( btn => {
+			btn.addEventListener( 'click', () => applyFormat( btn.dataset.action ) );
 		} );
 
-		var headingSelect = document.getElementById( 'lynxjournal-heading-select' );
+		const headingSelect = document.getElementById( 'lynxjournal-heading-select' );
 		if ( headingSelect ) {
-			headingSelect.addEventListener( 'change', function () {
-				if ( this.value ) {
-					applyFormat( this.value );
-					this.value = '';
+			headingSelect.addEventListener( 'change', () => {
+				if ( headingSelect.value ) {
+					applyFormat( headingSelect.value );
+					headingSelect.value = '';
 				}
 			} );
 		}
 
-		document.querySelectorAll( '.lynxjournal-insert-token' ).forEach( function ( btn ) {
-			btn.addEventListener( 'click', function () {
-				var token = this.dataset.token;
+		document.querySelectorAll( '.lynxjournal-insert-token' ).forEach( btn => {
+			btn.addEventListener( 'click', () => {
+				const token = btn.dataset.token;
 				if ( editor ) {
 					editor.replaceSelection( token );
 					editor.focus();
 				} else {
-					var start = textarea.selectionStart;
-					var end   = textarea.selectionEnd;
+					const start = textarea.selectionStart;
+					const end   = textarea.selectionEnd;
 					saveSnapshot();
 					textarea.value = textarea.value.slice( 0, start ) + token + textarea.value.slice( end );
 					textarea.setSelectionRange( start + token.length, start + token.length );
@@ -447,12 +484,12 @@
 			} );
 		} );
 
-		document.querySelectorAll( '.lynxjournal-accordion-toggle' ).forEach( function ( btn ) {
-			btn.addEventListener( 'click', function () {
-				var expanded = this.getAttribute( 'aria-expanded' ) === 'true';
-				this.setAttribute( 'aria-expanded', String( ! expanded ) );
-				var panel = document.getElementById( this.getAttribute( 'aria-controls' ) );
-				if ( panel ) { panel.classList.toggle( 'is-open', ! expanded ); }
+		document.querySelectorAll( '.lynxjournal-accordion-toggle' ).forEach( btn => {
+			btn.addEventListener( 'click', () => {
+				const expanded = btn.getAttribute( 'aria-expanded' ) === 'true';
+				btn.setAttribute( 'aria-expanded', String( !expanded ) );
+				const panel = document.getElementById( btn.getAttribute( 'aria-controls' ) );
+				panel?.classList.toggle( 'is-open', !expanded );
 			} );
 		} );
 	} );
