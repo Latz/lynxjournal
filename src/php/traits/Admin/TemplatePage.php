@@ -28,6 +28,12 @@ trait LynxJournal_Admin_TemplatePage {
         $template = get_option('lynxjournal_post_template', '');
 
         $token_groups = [
+            __('Struktur', 'lynx-journal') => [
+                '[category_start]' => __('Beginn eines Kategorieblocks', 'lynx-journal'),
+                '[category_end]'   => __('Ende eines Kategorieblocks', 'lynx-journal'),
+                '[link_start]'     => __('Beginn eines Linkeintrags', 'lynx-journal'),
+                '[link_end]'       => __('Ende eines Linkeintrags', 'lynx-journal'),
+            ],
             __('Beitrag', 'lynx-journal') => [
                 '[title]'     => __('Titel des Roundup-Beitrags', 'lynx-journal'),
                 '[date]'      => __('Veröffentlichungsdatum', 'lynx-journal'),
