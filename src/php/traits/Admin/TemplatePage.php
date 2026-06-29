@@ -29,29 +29,29 @@ trait LynxJournal_Admin_TemplatePage {
 
         $token_groups = [
             __('Beitrag', 'lynx-journal') => [
-                '[titel]'     => __('Titel des Roundup-Beitrags', 'lynx-journal'),
-                '[datum]'     => __('Veröffentlichungsdatum', 'lynx-journal'),
-                '[autor]'     => __('Name des Beitragsautors', 'lynx-journal'),
+                '[title]'     => __('Titel des Roundup-Beitrags', 'lynx-journal'),
+                '[date]'      => __('Veröffentlichungsdatum', 'lynx-journal'),
+                '[author]'    => __('Name des Beitragsautors', 'lynx-journal'),
                 '[site_name]' => __('Name des Blogs', 'lynx-journal'),
             ],
             __('Links', 'lynx-journal') => [
-                '[link_anzahl]'       => __('Anzahl Links im Roundup', 'lynx-journal'),
-                '[link_titel]'        => __('Titel eines einzelnen Links', 'lynx-journal'),
-                '[link_url]'          => __('Externe URL', 'lynx-journal'),
-                '[link_beschreibung]' => __('Beschreibungstext des Links', 'lynx-journal'),
-                '[link_domain]'       => __('Domain der URL (z. B. "example.com")', 'lynx-journal'),
-                '[link_datum]'        => __('Datum, wann der Link gespeichert wurde', 'lynx-journal'),
+                '[link_count]'       => __('Anzahl Links im Roundup', 'lynx-journal'),
+                '[link_title]'       => __('Titel eines einzelnen Links', 'lynx-journal'),
+                '[link_url]'         => __('Externe URL', 'lynx-journal'),
+                '[link_description]' => __('Beschreibungstext des Links', 'lynx-journal'),
+                '[link_domain]'      => __('Domain der URL (z. B. "example.com")', 'lynx-journal'),
+                '[link_date]'        => __('Datum, wann der Link gespeichert wurde', 'lynx-journal'),
             ],
             __('Kategorien', 'lynx-journal') => [
-                '[kategorie]'       => __('Primäre Kategorie', 'lynx-journal'),
-                '[kategorien_liste]' => __('Alle Kategorien, kommagetrennt', 'lynx-journal'),
+                '[category]'      => __('Primäre Kategorie', 'lynx-journal'),
+                '[category_list]' => __('Alle Kategorien, kommagetrennt', 'lynx-journal'),
             ],
             __('Tags', 'lynx-journal') => [
                 '[tags]' => __('Tags des Links, kommagetrennt', 'lynx-journal'),
             ],
             __('Statistik', 'lynx-journal') => [
-                '[unveröffentlicht]'    => __('Anzahl unveröffentlichter Links', 'lynx-journal'),
-                '[ältester_link_datum]' => __('Datum des ältesten unveröff. Links', 'lynx-journal'),
+                '[unpublished]'     => __('Anzahl unveröffentlichter Links', 'lynx-journal'),
+                '[oldest_link_date]' => __('Datum des ältesten unveröff. Links', 'lynx-journal'),
             ],
         ];
         ?>
