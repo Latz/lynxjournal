@@ -55,10 +55,6 @@ trait LynxJournal_Admin_TemplatePage {
             __('Tags', 'lynx-journal') => [
                 '[tags]' => __('Tags des Links, kommagetrennt', 'lynx-journal'),
             ],
-            __('Statistik', 'lynx-journal') => [
-                '[unpublished]'     => __('Anzahl unveröffentlichter Links', 'lynx-journal'),
-                '[oldest_link_date]' => __('Datum des ältesten unveröff. Links', 'lynx-journal'),
-            ],
         ];
         ?>
         <div class="wrap">
