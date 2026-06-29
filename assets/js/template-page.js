@@ -87,14 +87,17 @@
 		// 3. Replace scalar tokens.
 		text = replaceTokens( text, scalarData );
 
-		// 3.5. Convert indented list lines (2+ spaces) to padded divs so the
+		// 3.5. Convert indented lines (2+ spaces) to padded divs so the
 		//      preview shows visual indentation regardless of parent context.
+		//      Matches both "  - item" (bullet) and "  plain text" (no bullet).
 		text = text.split( '\n' ).map( function ( line ) {
-			var m = line.match( /^( {2,})- (.*)/ );
+			var m = line.match( /^( {2,})(- )?(.+)/ );
 			if ( ! m ) { return line; }
 			var level   = Math.floor( m[1].length / 2 );
-			var content = window.marked.parseInline( m[2] );
-			return '<div style="padding-left:' + ( level * 1.5 ) + 'em">• ' + content + '</div>';
+			var isList  = !! m[2];
+			var content = window.marked.parseInline( m[3] );
+			return '<div style="padding-left:' + ( level * 1.5 ) + 'em">'
+				+ ( isList ? '• ' : '' ) + content + '</div>';
 		} ).join( '\n' );
 
 		// 4. Render Markdown.
