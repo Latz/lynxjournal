@@ -28,6 +28,7 @@ trait LynxJournal_Admin_Menu {
         $this->addSubmenu(__('Tags',             'lynx-journal'), __('Tags',             'lynx-journal'), 'edit_posts', 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal');
         $this->addSubmenu(__('Chrome Extension', 'lynx-journal'), __('Chrome Extension', 'lynx-journal'), 'edit_posts', 'lynxjournal-settings',                                     'settingsPage');
         $this->addSubmenu(__('Schedule',         'lynx-journal'), __('Schedule',         'lynx-journal'), 'edit_posts', 'lynxjournal-schedule',                                     'schedulePage');
+        $this->addSubmenu(__('Post Template',    'lynx-journal'), __('Post Template',    'lynx-journal'), 'edit_posts', 'lynxjournal-template',                                     'templatePage');
     }
 
     /**
@@ -280,6 +281,10 @@ trait LynxJournal_Admin_Menu {
                     'deleteMany'      => __('links will become uncategorized.', 'lynx-journal'),
                 ),
             ));
+        }
+
+        if (strpos($hook, 'lynxjournal-template') !== false) {
+            $this->enqueuePageScript('lynxjournal-template-js', 'template-page.js');
         }
 
         if (strpos($hook, 'lynxjournal-schedule') !== false) {

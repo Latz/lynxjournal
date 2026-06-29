@@ -34,6 +34,7 @@ class LynxJournal {
     use LynxJournal_Admin_LinksPage;
     use LynxJournal_Admin_AddLink;
     use LynxJournal_Admin_Categories;
+    use LynxJournal_Admin_TemplatePage;
 
     /**
      * Register hooks and initialize plugin.

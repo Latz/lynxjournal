@@ -39,6 +39,7 @@ require_once __DIR__ . '/src/php/traits/Admin/Dashboard.php';
 require_once __DIR__ . '/src/php/traits/Admin/LinksPage.php';
 require_once __DIR__ . '/src/php/traits/Admin/AddLink.php';
 require_once __DIR__ . '/src/php/traits/Admin/Categories.php';
+require_once __DIR__ . '/src/php/traits/Admin/TemplatePage.php';
 require_once __DIR__ . '/src/php/traits/Scheduler.php';
 require_once __DIR__ . '/src/php/class-lynxjournal.php';
 
