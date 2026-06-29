@@ -13,7 +13,7 @@
 		'[link_description]': 'Ein ausführlicher Vergleich beider Sprachen mit praktischen Beispielen.',
 		'[link_domain]'    : 'example.com',
 		'[link_date]'      : '27.06.2026',
-		'[category]'       : 'Technologie',
+		'[category]'       : 'Technologie, Design, Open Source',
 		'[category_list]'  : 'Technologie, Design, Open Source',
 		'[tags]'           : 'javascript, typescript, webdev',
 		'[unpublished]'    : '3',
