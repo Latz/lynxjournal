@@ -77,8 +77,10 @@ trait LynxJournal_Admin_TemplatePage {
                             <button type="button" class="button lynxjournal-format-btn" data-action="italic" title="Italic"><em>I</em></button>
                             <button type="button" class="button lynxjournal-format-btn" data-action="h2"    title="Heading 2">H2</button>
                             <button type="button" class="button lynxjournal-format-btn" data-action="h3"    title="Heading 3">H3</button>
-                            <button type="button" class="button lynxjournal-format-btn" data-action="list"  title="Bullet list">•</button>
-                            <button type="button" class="button lynxjournal-format-btn" data-action="hr"    title="Horizontal rule">—</button>
+                            <button type="button" class="button lynxjournal-format-btn" data-action="list"    title="Bullet list">•</button>
+                            <button type="button" class="button lynxjournal-format-btn" data-action="indent"  title="Indent">→</button>
+                            <button type="button" class="button lynxjournal-format-btn" data-action="outdent" title="Outdent">←</button>
+                            <button type="button" class="button lynxjournal-format-btn" data-action="hr"      title="Horizontal rule">—</button>
                         </div>
                         <textarea
                             id="lynxjournal-post-template"

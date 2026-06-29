@@ -177,6 +177,17 @@
 			var lineStart = getLineStart( value, start );
 			newVal  = value.slice( 0, lineStart ) + prefix + value.slice( lineStart );
 			cursor  = start + prefix.length;
+		} else if ( action === 'indent' ) {
+			var lineStart = getLineStart( value, start );
+			newVal  = value.slice( 0, lineStart ) + '  ' + value.slice( lineStart );
+			cursor  = start + 2;
+		} else if ( action === 'outdent' ) {
+			var lineStart  = getLineStart( value, start );
+			var lineText   = value.slice( lineStart );
+			var spaces     = lineText.match( /^ {1,2}/ );
+			var removed    = spaces ? spaces[0].length : 0;
+			newVal  = value.slice( 0, lineStart ) + value.slice( lineStart + removed );
+			cursor  = Math.max( lineStart, start - removed );
 		} else if ( action === 'hr' ) {
 			var insert = '\n---\n';
 			newVal  = value.slice( 0, start ) + insert + value.slice( end );
