@@ -799,6 +799,49 @@ textarea.lynxjournal-cat-inline-input {
 	opacity: .75;
 }
 
+/* ── Post Template page: format toolbar ─────────────────────── */
+.lynxjournal-format-toolbar {
+	display: flex;
+	gap: 4px;
+	margin-bottom: 6px;
+}
+
+.lynxjournal-format-btn {
+	font-weight: 600;
+	min-width: 32px;
+	padding: 0 8px;
+	line-height: 28px;
+	height: 28px;
+}
+
+.lynxjournal-format-btn:hover,
+.lynxjournal-format-btn:focus {
+	background: #2271b1;
+	border-color: #2271b1;
+	color: #fff;
+}
+
+/* ── Post Template page: Markdown preview output ─────────────── */
+#lynxjournal-template-preview h2,
+#lynxjournal-template-preview h3 {
+	margin: .5em 0 .25em;
+}
+
+#lynxjournal-template-preview ul {
+	margin: .25em 0 .25em 1.2em;
+	list-style: disc;
+}
+
+#lynxjournal-template-preview hr {
+	border: none;
+	border-top: 1px solid #c3c4c7;
+	margin: .75em 0;
+}
+
+#lynxjournal-template-preview p {
+	margin: .25em 0;
+}
+
 /* ── Post Template page: live preview ───────────────────────── */
 #lynxjournal-template-preview-wrap {
 	margin: 12px 0 16px;

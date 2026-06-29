@@ -102,6 +102,8 @@
 		},
 	];
 
+	// ── Token replacement ───────────────────────────────────────
+
 	function replaceTokens( text, data ) {
 		Object.keys( data ).forEach( function ( token ) {
 			text = text.split( token ).join( data[ token ] );
@@ -120,17 +122,12 @@
 		);
 	}
 
-	function escapeHtml( text ) {
-		return text
-			.replace( /&/g, '&amp;' )
-			.replace( /</g, '&lt;' )
-			.replace( />/g, '&gt;' );
-	}
+	// ── Preview ─────────────────────────────────────────────────
 
 	function updateTemplatePreview() {
 		var text = textarea.value;
 
-		// 1. Expand [category_start]...[category_end] blocks — 3 category iterations.
+		// 1. Expand [category_start]...[category_end] → 3 category iterations.
 		text = text.replace(
 			/\[category_start\]([\s\S]*?)\[category_end\]/g,
 			function ( _match, inner ) {
@@ -141,17 +138,60 @@
 			}
 		);
 
-		// 2. Expand any remaining [link_start]...[link_end] outside category blocks.
+		// 2. Expand remaining [link_start]...[link_end] outside category blocks.
 		text = expandLinkBlocks( text, categoryVariants[0].links );
 
-		// 3. Replace scalar tokens (including link token fallbacks).
+		// 3. Replace scalar tokens.
 		text = replaceTokens( text, scalarData );
 
-		// 4. Escape HTML and convert newlines.
-		text = escapeHtml( text ).replace( /\n/g, '<br>' );
-
-		preview.innerHTML = text || '<span class="lynxjournal-preview-empty">—</span>';
+		// 4. Render Markdown.
+		preview.innerHTML = text.trim()
+			? window.marked.parse( text )
+			: '<span class="lynxjournal-preview-empty">—</span>';
 	}
+
+	// ── Toolbar ─────────────────────────────────────────────────
+
+	function getLineStart( value, pos ) {
+		var idx = value.lastIndexOf( '\n', pos - 1 );
+		return idx === -1 ? 0 : idx + 1;
+	}
+
+	function applyFormat( action ) {
+		var start  = textarea.selectionStart;
+		var end    = textarea.selectionEnd;
+		var value  = textarea.value;
+		var sel    = value.slice( start, end );
+		var newVal, cursor;
+
+		if ( action === 'bold' ) {
+			var inner  = sel || 'bold text';
+			newVal     = value.slice( 0, start ) + '**' + inner + '**' + value.slice( end );
+			cursor     = sel ? end + 4 : start + 2 + inner.length;
+		} else if ( action === 'italic' ) {
+			var inner  = sel || 'italic text';
+			newVal     = value.slice( 0, start ) + '*' + inner + '*' + value.slice( end );
+			cursor     = sel ? end + 2 : start + 1 + inner.length;
+		} else if ( action === 'h2' || action === 'h3' || action === 'list' ) {
+			var prefix  = action === 'h2' ? '## ' : action === 'h3' ? '### ' : '- ';
+			var lineStart = getLineStart( value, start );
+			newVal  = value.slice( 0, lineStart ) + prefix + value.slice( lineStart );
+			cursor  = start + prefix.length;
+		} else if ( action === 'hr' ) {
+			var insert = '\n---\n';
+			newVal  = value.slice( 0, start ) + insert + value.slice( end );
+			cursor  = start + insert.length;
+		} else {
+			return;
+		}
+
+		textarea.value = newVal;
+		textarea.setSelectionRange( cursor, cursor );
+		textarea.focus();
+		updateTemplatePreview();
+	}
+
+	// ── Init ────────────────────────────────────────────────────
 
 	document.addEventListener( 'DOMContentLoaded', function () {
 		textarea = document.getElementById( 'lynxjournal-post-template' );
@@ -163,6 +203,12 @@
 
 		textarea.addEventListener( 'input', updateTemplatePreview );
 		updateTemplatePreview();
+
+		document.querySelectorAll( '.lynxjournal-format-btn' ).forEach( function ( btn ) {
+			btn.addEventListener( 'click', function () {
+				applyFormat( this.dataset.action );
+			} );
+		} );
 
 		document.querySelectorAll( '.lynxjournal-insert-token' ).forEach( function ( btn ) {
 			btn.addEventListener( 'click', function () {

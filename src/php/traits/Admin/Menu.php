@@ -284,7 +284,14 @@ trait LynxJournal_Admin_Menu {
         }
 
         if (strpos($hook, 'lynxjournal-template') !== false) {
-            $this->enqueuePageScript('lynxjournal-template-js', 'template-page.js');
+            wp_enqueue_script(
+                'marked',
+                plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'assets/js/marked.min.js',
+                [],
+                '15.0.12',
+                true
+            );
+            $this->enqueuePageScript('lynxjournal-template-js', 'template-page.js', ['marked']);
         }
 
         if (strpos($hook, 'lynxjournal-schedule') !== false) {
