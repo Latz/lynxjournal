@@ -115,7 +115,7 @@ trait LynxJournal_Admin_TemplatePage {
                         >
                             <span><?php esc_html_e('Verfügbare Platzhalter', 'lynx-journal'); ?></span>
                         </button>
-                        <div id="lynxjournal-token-panel" class="lynxjournal-token-grid" hidden>
+                        <div id="lynxjournal-token-panel" class="lynxjournal-token-grid">
                             <?php foreach ($token_groups as $group_label => $tokens) : ?>
                                 <div class="lynxjournal-token-group">
                                     <h4><?php echo esc_html($group_label); ?></h4>

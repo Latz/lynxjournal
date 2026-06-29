@@ -452,7 +452,7 @@
 				var expanded = this.getAttribute( 'aria-expanded' ) === 'true';
 				this.setAttribute( 'aria-expanded', String( ! expanded ) );
 				var panel = document.getElementById( this.getAttribute( 'aria-controls' ) );
-				if ( panel ) { panel.hidden = expanded; }
+				if ( panel ) { panel.classList.toggle( 'is-open', ! expanded ); }
 			} );
 		} );
 	} );
