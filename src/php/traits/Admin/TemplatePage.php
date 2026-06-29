@@ -74,6 +74,11 @@ trait LynxJournal_Admin_TemplatePage {
                         ><?php echo esc_textarea($template); ?></textarea>
                     </div>
 
+                    <div id="lynxjournal-template-preview-wrap">
+                        <p class="lynxjournal-settings-label"><?php esc_html_e('Vorschau', 'lynx-journal'); ?></p>
+                        <div id="lynxjournal-template-preview"></div>
+                    </div>
+
                     <details id="lynxjournal-token-accordion">
                         <summary><?php esc_html_e('💡 Verfügbare Platzhalter anzeigen (Klicken zum Einfügen)', 'lynx-journal'); ?></summary>
                         <div class="lynxjournal-token-grid">
