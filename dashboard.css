@@ -824,37 +824,37 @@ textarea.lynxjournal-cat-inline-input {
 /* ── Post Template page: Markdown preview output ─────────────── */
 #lynxjournal-template-preview h2,
 #lynxjournal-template-preview h3 {
-	margin: .5em 0 .25em;
+	margin: .3em 0 .15em;
 }
 
 #lynxjournal-template-preview ul {
-	margin: .25em 0 .25em 1.2em;
+	margin: .15em 0 .15em 1em;
 	list-style: disc;
 }
 
 #lynxjournal-template-preview hr {
 	border: none;
 	border-top: 1px solid #c3c4c7;
-	margin: .75em 0;
+	margin: .4em 0;
 }
 
 #lynxjournal-template-preview p {
-	margin: .25em 0;
+	margin: .1em 0;
 }
 
 /* ── Post Template page: live preview ───────────────────────── */
 #lynxjournal-template-preview-wrap {
-	margin: 12px 0 16px;
+	margin: 8px 0 10px;
 }
 
 #lynxjournal-template-preview {
-	min-height: 80px;
-	padding: 12px 14px;
+	min-height: 60px;
+	padding: 8px 10px;
 	background: #f6f7f7;
 	border: 1px solid #c3c4c7;
 	border-radius: 3px;
-	font-size: 13px;
-	line-height: 1.6;
+	font-size: 12px;
+	line-height: 1.4;
 	color: #1d2327;
 	white-space: pre-wrap;
 	word-break: break-word;
