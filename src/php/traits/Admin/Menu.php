@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 trait LynxJournal_Admin_Menu {
 
     /**
@@ -301,6 +305,12 @@ trait LynxJournal_Admin_Menu {
                     'indentWithTabs' => false,
                 ],
             ]);
+            add_filter('script_loader_tag', function (string $tag, string $handle): string {
+                if ($handle === 'lynxjournal-template-js') {
+                    return str_replace(' src=', ' type="module" src=', $tag);
+                }
+                return $tag;
+            }, 10, 2);
             $this->enqueuePageScript('lynxjournal-template-js', 'template-page.js', ['marked', 'code-editor']);
             if (false !== $editor_settings) {
                 wp_add_inline_script(
