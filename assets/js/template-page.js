@@ -35,14 +35,32 @@
 		);
 	}
 
+	function hasLinkToken( line ) {
+		return LINK_TOKENS.some( function ( t ) { return line.indexOf( t ) !== -1; } );
+	}
+
 	function expandLinkLines( text, links ) {
-		return text.split( '\n' ).map( function ( line ) {
-			var hasToken = LINK_TOKENS.some( function ( t ) { return line.indexOf( t ) !== -1; } );
-			if ( ! hasToken ) { return line; }
-			return links.map( function ( link ) {
-				return replaceTokens( line, link );
-			} ).join( '\n' );
-		} ).join( '\n' );
+		var lines  = text.split( '\n' );
+		var result = [];
+		var i = 0;
+		while ( i < lines.length ) {
+			if ( ! hasLinkToken( lines[i] ) ) {
+				result.push( lines[i] );
+				i++;
+				continue;
+			}
+			var group = [];
+			while ( i < lines.length && hasLinkToken( lines[i] ) ) {
+				group.push( lines[i] );
+				i++;
+			}
+			links.forEach( function ( link ) {
+				group.forEach( function ( groupLine ) {
+					result.push( replaceTokens( groupLine, link ) );
+				} );
+			} );
+		}
+		return result.join( '\n' );
 	}
 
 	// ── Preview ─────────────────────────────────────────────────
