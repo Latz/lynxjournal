@@ -35,10 +35,11 @@ trait LynxJournal_Admin_TemplatePage {
                 '[link_end]'       => __('Ende eines Linkeintrags', 'lynx-journal'),
             ],
             __('Beitrag', 'lynx-journal') => [
-                '[title]'     => __('Titel des Roundup-Beitrags', 'lynx-journal'),
-                '[date]'      => __('Veröffentlichungsdatum', 'lynx-journal'),
-                '[author]'    => __('Name des Beitragsautors', 'lynx-journal'),
-                '[site_name]' => __('Name des Blogs', 'lynx-journal'),
+                '[title]'         => __('Titel des Roundup-Beitrags', 'lynx-journal'),
+                '[date]'          => __('Veröffentlichungsdatum', 'lynx-journal'),
+                '[author]'        => __('Name des Beitragsautors', 'lynx-journal'),
+                '[site_name]'     => __('Name des Blogs', 'lynx-journal'),
+                '[roundup_count]' => __('Anzahl bisher veröffentlichter Roundups', 'lynx-journal'),
             ],
             __('Links', 'lynx-journal') => [
                 '[link_count]'       => __('Anzahl Links im Roundup', 'lynx-journal'),

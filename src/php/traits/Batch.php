@@ -128,6 +128,10 @@ trait LynxJournal_Batch {
         $this->assignRoundupTags($post_id, $link_ids);
         $this->markLinksAsPublished($link_ids, $post_id, $as_draft);
 
+        if (!$as_draft) {
+            update_option('lynxjournal_roundup_count', (int) get_option('lynxjournal_roundup_count', 0) + 1);
+        }
+
         return array(
             'success'    => true,
             'post_id'    => $post_id,
