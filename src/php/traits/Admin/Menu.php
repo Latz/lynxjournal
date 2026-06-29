@@ -292,6 +292,11 @@ trait LynxJournal_Admin_Menu {
                 true
             );
             $this->enqueuePageScript('lynxjournal-template-js', 'template-page.js', ['marked']);
+            $data_file = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'assets/js/template-preview-data.json';
+            if (file_exists($data_file)) {
+                $preview_data = json_decode((string) file_get_contents($data_file), true);
+                wp_localize_script('lynxjournal-template-js', 'lynxjournalPreviewData', $preview_data);
+            }
         }
 
         if (strpos($hook, 'lynxjournal-schedule') !== false) {
