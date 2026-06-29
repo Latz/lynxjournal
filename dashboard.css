@@ -773,7 +773,7 @@ textarea.lynxjournal-cat-inline-input {
 	align-items: flex-start;
 	width: 100%;
 	height: auto;
-	padding: 6px;
+	padding: 6px 8px;
 	margin-bottom: 6px;
 	border-radius: 3px;
 	text-align: left;
