@@ -12,6 +12,11 @@
 
 	// ── Token replacement ───────────────────────────────────────
 
+	var LINK_TOKENS = [
+		'[link_title]', '[link_url]', '[link_description]',
+		'[link_domain]', '[link_date]',
+	];
+
 	function replaceTokens( text, data ) {
 		Object.keys( data ).forEach( function ( token ) {
 			text = text.split( token ).join( data[ token ] );
@@ -30,6 +35,16 @@
 		);
 	}
 
+	function expandLinkLines( text, links ) {
+		return text.split( '\n' ).map( function ( line ) {
+			var hasToken = LINK_TOKENS.some( function ( t ) { return line.indexOf( t ) !== -1; } );
+			if ( ! hasToken ) { return line; }
+			return links.map( function ( link ) {
+				return replaceTokens( line, link );
+			} ).join( '\n' );
+		} ).join( '\n' );
+	}
+
 	// ── Preview ─────────────────────────────────────────────────
 
 	function updateTemplatePreview() {
@@ -41,7 +56,9 @@
 			function ( _match, inner ) {
 				return categoryVariants.map( function ( cat ) {
 					var catText = replaceTokens( inner, { '[category_name]': cat['[category_name]'] } );
-					return expandLinkBlocks( catText, cat.links );
+					catText = expandLinkBlocks( catText, cat.links );
+					catText = expandLinkLines( catText, cat.links );
+					return catText;
 				} ).join( '' );
 			}
 		);
