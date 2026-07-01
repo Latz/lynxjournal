@@ -28,33 +28,33 @@ trait LynxJournal_Admin_TemplatePage {
         $template = get_option('lynxjournal_post_template', '');
 
         $token_groups = [
-            __('Struktur', 'lynx-journal') => [
-                '[category_start]' => __('Beginn eines Kategorieblocks', 'lynx-journal'),
-                '[category_end]'   => __('Ende eines Kategorieblocks', 'lynx-journal'),
-                '[link_start]'     => __('Beginn eines Linkeintrags', 'lynx-journal'),
-                '[link_end]'       => __('Ende eines Linkeintrags', 'lynx-journal'),
+            __('Structure', 'lynx-journal') => [
+                '[category_start]' => __('Start of a category block', 'lynx-journal'),
+                '[category_end]'   => __('End of a category block', 'lynx-journal'),
+                '[link_start]'     => __('Start of a link entry', 'lynx-journal'),
+                '[link_end]'       => __('End of a link entry', 'lynx-journal'),
             ],
-            __('Beitrag', 'lynx-journal') => [
-                '[title]'         => __('Titel des Roundup-Beitrags', 'lynx-journal'),
-                '[date]'          => __('Veröffentlichungsdatum', 'lynx-journal'),
-                '[author]'        => __('Name des Beitragsautors', 'lynx-journal'),
-                '[site_name]'     => __('Name des Blogs', 'lynx-journal'),
-                '[roundup_count]' => __('Anzahl bisher veröffentlichter Roundups', 'lynx-journal'),
+            __('Post', 'lynx-journal') => [
+                '[title]'         => __('Title of the roundup post', 'lynx-journal'),
+                '[date]'          => __('Publish date', 'lynx-journal'),
+                '[author]'        => __('Name of the post author', 'lynx-journal'),
+                '[site_name]'     => __('Name of the site', 'lynx-journal'),
+                '[roundup_count]' => __('Number of roundups published so far', 'lynx-journal'),
             ],
             __('Links', 'lynx-journal') => [
-                '[link_count]'       => __('Anzahl Links im Roundup', 'lynx-journal'),
-                '[link]'             => __('Link als Markdown-Hyperlink (Titel + URL)', 'lynx-journal'),
-                '[link_description]' => __('Beschreibungstext des Links', 'lynx-journal'),
-                '[link_domain]'      => __('Domain der URL (z. B. "example.com")', 'lynx-journal'),
-                '[link_date]'        => __('Datum, wann der Link gespeichert wurde', 'lynx-journal'),
+                '[link_count]'       => __('Number of links in the roundup', 'lynx-journal'),
+                '[link]'             => __('Link as a Markdown hyperlink (title + URL)', 'lynx-journal'),
+                '[link_description]' => __("Link's description text", 'lynx-journal'),
+                '[link_domain]'      => __('Domain of the URL (e.g. "example.com")', 'lynx-journal'),
+                '[link_date]'        => __('Date the link was saved', 'lynx-journal'),
             ],
-            __('Kategorien', 'lynx-journal') => [
-                '[category_name]'       => __('Primäre Kategorie', 'lynx-journal'),
-                '[category_link_count]' => __('Anzahl Links in der Kategorie', 'lynx-journal'),
-                '[category_list]'       => __('Alle Kategorien, kommagetrennt', 'lynx-journal'),
+            __('Categories', 'lynx-journal') => [
+                '[category_name]'       => __('Primary category', 'lynx-journal'),
+                '[category_link_count]' => __('Number of links in the category', 'lynx-journal'),
+                '[category_list]'       => __('All categories, comma-separated', 'lynx-journal'),
             ],
             __('Tags', 'lynx-journal') => [
-                '[tags]' => __('Tags des Links, kommagetrennt', 'lynx-journal'),
+                '[tags]' => __("Link's tags, comma-separated", 'lynx-journal'),
             ],
         ];
         ?>
@@ -100,7 +100,11 @@ trait LynxJournal_Admin_TemplatePage {
 
                     <div id="lynxjournal-template-preview-wrap">
                         <div class="lynxjournal-preview-header">
-                            <span class="lynxjournal-preview-label"><?php esc_html_e('Vorschau', 'lynx-journal'); ?></span>
+                            <span class="lynxjournal-preview-label"><?php esc_html_e('Preview', 'lynx-journal'); ?></span>
+                            <div class="lynxjournal-preview-width-toggle" role="group" aria-label="<?php esc_attr_e('Preview width', 'lynx-journal'); ?>">
+                                <button type="button" class="button lynxjournal-preview-width-btn is-active" data-width="desktop"><?php esc_html_e('Desktop', 'lynx-journal'); ?></button>
+                                <button type="button" class="button lynxjournal-preview-width-btn" data-width="mobile"><?php esc_html_e('Mobile', 'lynx-journal'); ?></button>
+                            </div>
                             <span id="lynxjournal-preview-status">Live</span>
                         </div>
                         <div id="lynxjournal-preview-validation"></div>
@@ -114,15 +118,15 @@ trait LynxJournal_Admin_TemplatePage {
                             aria-expanded="false"
                             aria-controls="lynxjournal-token-panel"
                         >
-                            <span><?php esc_html_e('Verfügbare Platzhalter', 'lynx-journal'); ?></span>
+                            <span><?php esc_html_e('Available tokens', 'lynx-journal'); ?></span>
                         </button>
                         <div id="lynxjournal-token-panel" class="lynxjournal-token-grid">
                             <input
                                 type="search"
                                 id="lynxjournal-token-search"
                                 class="lynxjournal-token-search"
-                                placeholder="<?php esc_attr_e('Platzhalter suchen…', 'lynx-journal'); ?>"
-                                aria-label="<?php esc_attr_e('Platzhalter suchen', 'lynx-journal'); ?>"
+                                placeholder="<?php esc_attr_e('Search tokens…', 'lynx-journal'); ?>"
+                                aria-label="<?php esc_attr_e('Search tokens', 'lynx-journal'); ?>"
                             >
                             <?php foreach ($token_groups as $group_label => $tokens) : ?>
                                 <div class="lynxjournal-token-group">

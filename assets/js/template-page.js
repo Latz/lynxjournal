@@ -333,6 +333,14 @@ function initTemplateEditor() {
 		tokenSearch.addEventListener( 'input', () => filterTokenPanel( tokenSearch.value ) );
 	}
 
+	document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( btn => {
+		btn.addEventListener( 'click', () => {
+			document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( b => b.classList.remove( 'is-active' ) );
+			btn.classList.add( 'is-active' );
+			preview.classList.toggle( 'is-width-mobile', btn.dataset.width === 'mobile' );
+		} );
+	} );
+
 	document.querySelectorAll( '.lynxjournal-accordion-toggle' ).forEach( btn => {
 		btn.addEventListener( 'click', () => {
 			const expanded = btn.getAttribute( 'aria-expanded' ) === 'true';

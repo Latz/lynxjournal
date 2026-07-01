@@ -296,12 +296,36 @@
 
 .lynxjournal-preview-header {
 	display: grid;
-	grid-template-columns: 1fr auto;
+	grid-template-columns: 1fr auto auto;
 	align-items: center;
+	gap: 10px;
 	padding-block: 5px;
 	padding-inline: 10px;
 	background: #fff;
 	border-bottom: 1px solid #dcdcde;
+}
+
+.lynxjournal-preview-width-toggle {
+	display: flex;
+	gap: 2px;
+}
+
+.lynxjournal-preview-width-btn {
+	height: 22px;
+	line-height: 20px;
+	padding: 0 8px;
+	font-size: 11px;
+}
+
+.lynxjournal-preview-width-btn.is-active {
+	background: var(--wp-admin-theme-color, #2271b1);
+	border-color: var(--wp-admin-theme-color, #2271b1);
+	color: #fff;
+}
+
+#lynxjournal-template-preview.is-width-mobile {
+	max-width: 375px;
+	margin-inline: auto;
 }
 
 .lynxjournal-preview-label {
