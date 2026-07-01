@@ -31,6 +31,7 @@ class LynxJournal {
     use LynxJournal_Scheduler;
     use LynxJournal_Admin_Menu;
     use LynxJournal_Admin_Dashboard;
+    use LynxJournal_Admin_Dashboard_Actions;
     use LynxJournal_Admin_LinksPage;
     use LynxJournal_Admin_AddLink;
     use LynxJournal_Admin_Categories;
