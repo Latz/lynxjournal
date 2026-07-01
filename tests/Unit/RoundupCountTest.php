@@ -24,7 +24,6 @@ beforeEach(function (): void {
 
     // WP hooks / taxonomy
     Functions\when('apply_filters')->returnArg(2);
-    Functions\when('is_wp_error')->justReturn(false);
     Functions\when('get_the_terms')->justReturn(false);
 
     // Cache-priming calls in createRoundupPost() entry
