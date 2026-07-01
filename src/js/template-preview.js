@@ -91,3 +91,49 @@ export function buildTemplateText( rawText, categoryVariants, scalarData, utils 
 
 	return text;
 }
+
+/**
+ * Converts indented lines (2+ leading spaces) into padded `<div>` wrappers so
+ * indentation survives Markdown rendering, which otherwise discards leading
+ * whitespace on plain paragraph text. Batches each contiguous run of indented
+ * lines into a single `parseInline()` call (joined/split on `\n`, which
+ * `marked.parseInline()` preserves verbatim) instead of calling it once per
+ * line, since each call carries its own lexer/tokenizer setup cost.
+ *
+ * @param {string} text
+ * @param {(markdown: string) => string} parseInline
+ * @returns {string}
+ */
+export function convertIndentedLines( text, parseInline ) {
+	const INDENT_RE = /^( {2,})(- )?(.+)/;
+	const lines     = text.split( '\n' );
+	const result    = [];
+	let i = 0;
+
+	while ( i < lines.length ) {
+		const match = lines[ i ].match( INDENT_RE );
+		if ( !match ) {
+			result.push( lines[ i ] );
+			i++;
+			continue;
+		}
+
+		const group = [];
+		while ( i < lines.length ) {
+			const groupMatch = lines[ i ].match( INDENT_RE );
+			if ( !groupMatch ) { break; }
+			group.push( groupMatch );
+			i++;
+		}
+
+		const rendered = parseInline( group.map( g => g[ 3 ] ).join( '\n' ) ).split( '\n' );
+		group.forEach( ( g, idx ) => {
+			const level   = Math.floor( g[ 1 ].length / 2 );
+			const isList  = !!g[ 2 ];
+			const content = rendered[ idx ] ?? '';
+			result.push( `<div style="padding-left:${ level * 1.5 }em">${ isList ? '• ' : '' }${ content }</div>` );
+		} );
+	}
+
+	return result.join( '\n' );
+}

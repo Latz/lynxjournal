@@ -12,7 +12,7 @@ const {
 	preserveBlankLines,
 	getActiveFormatsAtCursor,
 } = await import( `../../src/js/template-utils.js?v=${ utilsVersion }` );
-const { setPreviewUpdating, setPreviewLive, renderValidation, buildTemplateText } =
+const { setPreviewUpdating, setPreviewLive, renderValidation, buildTemplateText, convertIndentedLines } =
 	await import( `../../src/js/template-preview.js?v=${ utilsVersion }` );
 const { saveSnapshot, fallbackApplyFormat } =
 	await import( `../../src/js/template-toolbar-fallback.js?v=${ utilsVersion }` );
@@ -30,6 +30,8 @@ let previewTimer        = null;
 let btnUndo, btnRedo;
 let initialTemplateValue = '';
 let isSubmitting         = false;
+let formatButtons        = [];   // cached toolbar buttons, excluding undo/redo
+let headingSelectEl      = null;
 
 const _data            = window.lynxjournalPreviewData ?? {};
 const scalarData       = _data.scalar ?? {};
@@ -54,15 +56,7 @@ function updateTemplatePreview() {
 		replaceTokens, expandLinkBlocks, expandLinkLines, preserveBlankLines,
 	} );
 
-	// Convert indented lines (2+ spaces) to padded divs for visual indentation.
-	text = text.split( '\n' ).map( line => {
-		const m = line.match( /^( {2,})(- )?(.+)/ );
-		if ( !m ) { return line; }
-		const level   = Math.floor( m[ 1 ].length / 2 );
-		const isList  = !!m[ 2 ];
-		const content = window.marked.parseInline( m[ 3 ] );
-		return `<div style="padding-left:${ level * 1.5 }em">${ isList ? '• ' : '' }${ content }</div>`;
-	} ).join( '\n' );
+	text = convertIndentedLines( text, window.marked.parseInline );
 
 	preview.innerHTML = text.trim()
 		? window.marked.parse( text )
@@ -170,15 +164,12 @@ function updateToolbarActiveState() {
 
 	const active = getActiveFormatsAtCursor( line, ch );
 
-	document.querySelectorAll( '.lynxjournal-format-btn[data-action]' ).forEach( btn => {
-		const action = btn.dataset.action;
-		if ( action === 'undo' || action === 'redo' ) { return; }
-		btn.classList.toggle( 'is-active', active.has( action ) );
+	formatButtons.forEach( btn => {
+		btn.classList.toggle( 'is-active', active.has( btn.dataset.action ) );
 	} );
 
-	const headingSelect = document.getElementById( 'lynxjournal-heading-select' );
-	if ( headingSelect ) {
-		headingSelect.value = [ ...active ].find( a => /^h[1-6]$/.test( a ) ) ?? '';
+	if ( headingSelectEl ) {
+		headingSelectEl.value = [ ...active ].find( a => /^h[1-6]$/.test( a ) ) ?? '';
 	}
 }
 
@@ -308,10 +299,10 @@ function initTemplateEditor() {
 		editor = instance.codemirror;
 
 		editor.on( 'change', () => {
-			updateBlankLineMarkers();
 			setPreviewUpdating( previewStatus, preview );
 			clearTimeout( previewTimer );
 			previewTimer = setTimeout( () => {
+				updateBlankLineMarkers();
 				updateUndoRedoState();
 				updateTemplatePreview();
 			}, 400 );
@@ -339,21 +330,24 @@ function initTemplateEditor() {
 		} );
 	}
 
+	const allFormatButtons = [ ...document.querySelectorAll( '.lynxjournal-format-btn[data-action]' ) ];
+	formatButtons   = allFormatButtons.filter( btn => btn.dataset.action !== 'undo' && btn.dataset.action !== 'redo' );
+	headingSelectEl = document.getElementById( 'lynxjournal-heading-select' );
+
 	if ( editor ) { updateBlankLineMarkers(); }
 	updateTemplatePreview();
 	updateUndoRedoState();
 	updateToolbarActiveState();
 
-	document.querySelectorAll( '.lynxjournal-format-btn' ).forEach( btn => {
+	allFormatButtons.forEach( btn => {
 		btn.addEventListener( 'click', () => applyFormat( btn.dataset.action ) );
 	} );
 
-	const headingSelect = document.getElementById( 'lynxjournal-heading-select' );
-	if ( headingSelect ) {
-		headingSelect.addEventListener( 'change', () => {
-			if ( headingSelect.value ) {
-				applyFormat( headingSelect.value );
-				headingSelect.value = '';
+	if ( headingSelectEl ) {
+		headingSelectEl.addEventListener( 'change', () => {
+			if ( headingSelectEl.value ) {
+				applyFormat( headingSelectEl.value );
+				headingSelectEl.value = '';
 			}
 		} );
 	}
