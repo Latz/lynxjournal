@@ -288,6 +288,7 @@ trait LynxJournal_Admin_Menu {
         }
 
         if (strpos($hook, 'lynxjournal-template') !== false) {
+            $this->enqueuePageStyle('lynxjournal-template-css', 'template-page.css', ['lynxjournal-dashboard']);
             wp_enqueue_script(
                 'marked',
                 plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'assets/js/marked.min.js',
@@ -428,6 +429,21 @@ trait LynxJournal_Admin_Menu {
         $js_dir = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'assets/js/';
         $js_url = plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'assets/js/';
         wp_enqueue_script($handle, $js_url . $file, $deps, (string) filemtime($js_dir . $file), true);
+    }
+
+    /**
+     * Enqueue a versioned CSS asset from the assets/css/ directory.
+     *
+     * @since 1.0.0
+     * @param string   $handle Style handle.
+     * @param string   $file   Filename inside assets/css/.
+     * @param string[] $deps   Style dependencies.
+     * @return void
+     */
+    private function enqueuePageStyle(string $handle, string $file, array $deps = []): void {
+        $css_dir = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'assets/css/';
+        $css_url = plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'assets/css/';
+        wp_enqueue_style($handle, $css_url . $file, $deps, (string) filemtime($css_dir . $file));
     }
 
     /**
