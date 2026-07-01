@@ -4,15 +4,17 @@
 // static ES imports, only the top-level enqueued script.
 const utilsVersion = window.lynxjournalTemplateUtilsVersion ?? '';
 const {
-	LINK_TOKENS,
 	replaceTokens,
-	hasLinkToken,
 	expandLinkBlocks,
 	expandLinkLines,
 	validateTemplate,
 	getLineStart,
 	preserveBlankLines,
 } = await import( `../../src/js/template-utils.js?v=${ utilsVersion }` );
+const { setPreviewUpdating, setPreviewLive, renderValidation, buildTemplateText } =
+	await import( `../../src/js/template-preview.js?v=${ utilsVersion }` );
+const { saveSnapshot, fallbackApplyFormat } =
+	await import( `../../src/js/template-toolbar-fallback.js?v=${ utilsVersion }` );
 
 /**
  * @typedef {{ '[category_link_count]': string, links: Array<Record<string, string>>, [key: string]: string | Array<Record<string, string>> }} CategoryVariant
@@ -34,48 +36,6 @@ const categoryVariants = ( _data.categories ?? [] ).map( cat => {
 	return { [ token ]: name, '[category_link_count]': String( links.length ), links };
 } );
 
-// ── Preview status ──────────────────────────────────────────
-
-function setPreviewUpdating() {
-	if ( previewStatus ) {
-		previewStatus.textContent = 'Aktualisiert…';
-		previewStatus.classList.add( 'is-updating' );
-	}
-	if ( preview ) { preview.classList.add( 'is-updating' ); }
-}
-
-function setPreviewLive() {
-	if ( previewStatus ) {
-		previewStatus.textContent = 'Live';
-		previewStatus.classList.remove( 'is-updating' );
-	}
-	if ( preview ) { preview.classList.remove( 'is-updating' ); }
-}
-
-// ── Validation ──────────────────────────────────────────────
-
-/**
- * @param {string[]} warnings
- */
-function renderValidation( warnings ) {
-	if ( !previewValidation ) { return; }
-	previewValidation.replaceChildren(
-		...warnings.map( msg => {
-			const div = document.createElement( 'div' );
-			div.className = 'lynxjournal-preview-warning';
-			div.innerHTML =
-				'<svg viewBox="0 0 16 16" aria-hidden="true">' +
-				'<path d="M8 1L15 14H1L8 1z" stroke="currentColor" stroke-width="1.5" fill="none"/>' +
-				'<path d="M8 6v4m0 1.5v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' +
-				'</svg>';
-			const span = document.createElement( 'span' );
-			span.textContent = msg;
-			div.append( span );
-			return div;
-		} )
-	);
-}
-
 // ── Preview ─────────────────────────────────────────────────
 
 /** @returns {string} */
@@ -85,30 +45,11 @@ function getEditorValue() {
 
 function updateTemplatePreview() {
 	const rawText = getEditorValue();
-	renderValidation( validateTemplate( rawText ) );
-	// Run before category/link expansion so only blank lines the user actually
-	// typed become visible markers — the category-loop's own join below relies
-	// on a real (untouched) blank line between repetitions to terminate the
-	// preceding <div> HTML block from the indentation step further down, so
-	// marking blank lines any later would either miss real ones inside a
-	// category block or wrongly mark that structural join boundary.
-	let text = preserveBlankLines( rawText );
+	renderValidation( previewValidation, validateTemplate( rawText ) );
 
-	text = text.replace(
-		/\[category_start\]([\s\S]*?)\[category_end\]/g,
-		( _match, inner ) => categoryVariants.map( cat => {
-			let catText = replaceTokens( inner, {
-				'[category_name]'       : cat[ '[category_name]' ],
-				'[category_link_count]' : cat[ '[category_link_count]' ],
-			} );
-			catText = expandLinkBlocks( catText, cat.links );
-			catText = expandLinkLines( catText, cat.links );
-			return catText;
-		} ).join( '' )
-	);
-
-	text = expandLinkBlocks( text, categoryVariants[ 0 ]?.links ?? [] );
-	text = replaceTokens( text, scalarData );
+	let text = buildTemplateText( rawText, categoryVariants, scalarData, {
+		replaceTokens, expandLinkBlocks, expandLinkLines, preserveBlankLines,
+	} );
 
 	// Convert indented lines (2+ spaces) to padded divs for visual indentation.
 	text = text.split( '\n' ).map( line => {
@@ -123,7 +64,7 @@ function updateTemplatePreview() {
 	preview.innerHTML = text.trim()
 		? window.marked.parse( text )
 		: '<span class="lynxjournal-preview-empty">—</span>';
-	setPreviewLive();
+	setPreviewLive( previewStatus, preview );
 }
 
 // ── Undo/redo button state ──────────────────────────────────
@@ -203,7 +144,7 @@ function applyLinePrefix( prefix ) {
 
 /** @param {string} action */
 function applyFormat( action ) {
-	if ( !editor ) { fallbackApplyFormat( action ); return; }
+	if ( !editor ) { fallbackApplyFormat( textarea, action, getLineStart, updateTemplatePreview ); return; }
 
 	if ( action === 'undo' ) {
 		editor.undo();
@@ -251,103 +192,6 @@ function applyFormat( action ) {
 	updateUndoRedoState();
 }
 
-// ── Toolbar: plain-textarea fallback ────────────────────────
-
-let undoStack = [];
-let redoStack = [];
-const MAX_HIST = 100;
-
-function saveSnapshot() {
-	undoStack.push( { value: textarea.value, start: textarea.selectionStart, end: textarea.selectionEnd } );
-	if ( undoStack.length > MAX_HIST ) { undoStack.shift(); }
-	redoStack = [];
-}
-
-/** @param {{ value: string, start: number, end: number }} snap */
-function restoreSnapshot( snap ) {
-	textarea.value = snap.value;
-	textarea.setSelectionRange( snap.start, snap.end );
-	textarea.focus();
-	updateTemplatePreview();
-}
-
-/** @param {string} action */
-function fallbackApplyFormat( action ) {
-	const start = textarea.selectionStart;
-	const end   = textarea.selectionEnd;
-	const value = textarea.value;
-	let newVal, cursor;
-
-	if ( action === 'undo' ) {
-		if ( !undoStack.length ) { return; }
-		redoStack.push( { value, start, end } );
-		restoreSnapshot( undoStack.pop() );
-		return;
-	}
-	if ( action === 'redo' ) {
-		if ( !redoStack.length ) { return; }
-		undoStack.push( { value, start, end } );
-		restoreSnapshot( redoStack.pop() );
-		return;
-	}
-
-	saveSnapshot();
-	const sel = value.slice( start, end );
-
-	if ( action === 'bold' ) {
-		const inner = sel || 'bold text';
-		newVal = value.slice( 0, start ) + `**${ inner }**` + value.slice( end );
-		cursor = sel ? end + 4 : start + 2 + inner.length;
-	} else if ( action === 'italic' ) {
-		const inner = sel || 'italic text';
-		newVal = value.slice( 0, start ) + `*${ inner }*` + value.slice( end );
-		cursor = sel ? end + 2 : start + 1 + inner.length;
-	} else if ( action === 'underline' ) {
-		const inner = sel || 'underlined text';
-		newVal = value.slice( 0, start ) + `<u>${ inner }</u>` + value.slice( end );
-		cursor = sel ? end + 7 : start + 3 + inner.length;
-	} else if ( /^h[1-6]$/.test( action ) || action === 'list' ) {
-		const prefix    = action === 'list' ? '- ' : '#'.repeat( parseInt( action[ 1 ], 10 ) ) + ' ';
-		const lineStart = getLineStart( value, start );
-		const rest      = value.slice( lineStart );
-		const stripped  = rest.replace( /^(#{1,6} |- |\d+\. |> )/, '' );
-		const removed   = rest.length - stripped.length;
-		newVal  = value.slice( 0, lineStart ) + prefix + stripped;
-		cursor  = Math.max( lineStart + prefix.length, start - removed + prefix.length );
-	} else if ( action === 'indent' ) {
-		const lineStart = getLineStart( value, start );
-		newVal  = value.slice( 0, lineStart ) + '  ' + value.slice( lineStart );
-		cursor  = start + 2;
-	} else if ( action === 'outdent' ) {
-		const lineStart = getLineStart( value, start );
-		const lineText  = value.slice( lineStart );
-		const spaces    = lineText.match( /^ {1,2}/ );
-		const removed   = spaces ? spaces[ 0 ].length : 0;
-		newVal  = value.slice( 0, lineStart ) + value.slice( lineStart + removed );
-		cursor  = Math.max( lineStart, start - removed );
-	} else if ( action === 'hr' ) {
-		const insert = '\n---\n';
-		newVal  = value.slice( 0, start ) + insert + value.slice( end );
-		cursor  = start + insert.length;
-	} else if ( action === 'ol' ) {
-		const prefix    = '1. ';
-		const lineStart = getLineStart( value, start );
-		const rest      = value.slice( lineStart );
-		const stripped  = rest.replace( /^(#{1,6} |- |\d+\. |> )/, '' );
-		const removed   = rest.length - stripped.length;
-		newVal  = value.slice( 0, lineStart ) + prefix + stripped;
-		cursor  = Math.max( lineStart + prefix.length, start - removed + prefix.length );
-	} else {
-		undoStack.pop();
-		return;
-	}
-
-	textarea.value = newVal;
-	textarea.setSelectionRange( cursor, cursor );
-	textarea.focus();
-	updateTemplatePreview();
-}
-
 // ── Init ────────────────────────────────────────────────────
 
 /**
@@ -380,7 +224,7 @@ function initTemplateEditor() {
 
 		editor.on( 'change', () => {
 			updateBlankLineMarkers();
-			setPreviewUpdating();
+			setPreviewUpdating( previewStatus, preview );
 			clearTimeout( previewTimer );
 			previewTimer = setTimeout( () => {
 				updateUndoRedoState();
@@ -390,7 +234,7 @@ function initTemplateEditor() {
 	} else {
 		// Accessibility mode or CodeMirror unavailable — use plain textarea.
 		textarea.addEventListener( 'input', () => {
-			setPreviewUpdating();
+			setPreviewUpdating( previewStatus, preview );
 			clearTimeout( previewTimer );
 			previewTimer = setTimeout( updateTemplatePreview, 400 );
 		} );
@@ -398,10 +242,10 @@ function initTemplateEditor() {
 			if ( !( e.ctrlKey || e.metaKey ) ) { return; }
 			if ( e.key === 'z' || e.key === 'Z' ) {
 				e.preventDefault();
-				fallbackApplyFormat( e.shiftKey ? 'redo' : 'undo' );
+				fallbackApplyFormat( textarea, e.shiftKey ? 'redo' : 'undo', getLineStart, updateTemplatePreview );
 			} else if ( e.key === 'y' || e.key === 'Y' ) {
 				e.preventDefault();
-				fallbackApplyFormat( 'redo' );
+				fallbackApplyFormat( textarea, 'redo', getLineStart, updateTemplatePreview );
 			}
 		} );
 	}
@@ -433,7 +277,7 @@ function initTemplateEditor() {
 			} else {
 				const start = textarea.selectionStart;
 				const end   = textarea.selectionEnd;
-				saveSnapshot();
+				saveSnapshot( textarea );
 				textarea.value = textarea.value.slice( 0, start ) + token + textarea.value.slice( end );
 				textarea.setSelectionRange( start + token.length, start + token.length );
 				textarea.focus();
