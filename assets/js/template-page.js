@@ -20,13 +20,15 @@ const { saveSnapshot, fallbackApplyFormat } =
  * @typedef {{ '[category_link_count]': string, links: Array<Record<string, string>>, [key: string]: string | Array<Record<string, string>> }} CategoryVariant
  */
 
-let editor            = null;   // CodeMirror instance; null = plain-textarea fallback
-let textarea          = null;
-let preview           = null;
-let previewStatus     = null;
-let previewValidation = null;
-let previewTimer      = null;
+let editor              = null;   // CodeMirror instance; null = plain-textarea fallback
+let textarea            = null;
+let preview             = null;
+let previewStatus       = null;
+let previewValidation   = null;
+let previewTimer        = null;
 let btnUndo, btnRedo;
+let initialTemplateValue = '';
+let isSubmitting         = false;
 
 const _data            = window.lynxjournalPreviewData ?? {};
 const scalarData       = _data.scalar ?? {};
@@ -192,6 +194,42 @@ function applyFormat( action ) {
 	updateUndoRedoState();
 }
 
+// ── Token panel search filter ────────────────────────────────
+
+/**
+ * Filters `.lynxjournal-insert-token` buttons by token/description text and
+ * hides any `.lynxjournal-token-group` left with no visible tokens.
+ *
+ * @param {string} query
+ */
+function filterTokenPanel( query ) {
+	const needle = query.trim().toLowerCase();
+	document.querySelectorAll( '.lynxjournal-token-group' ).forEach( group => {
+		let anyVisible = false;
+		group.querySelectorAll( '.lynxjournal-insert-token' ).forEach( btn => {
+			const haystack = ( btn.dataset.token + ' ' + btn.textContent ).toLowerCase();
+			const visible  = !needle || haystack.includes( needle );
+			btn.hidden = !visible;
+			anyVisible = anyVisible || visible;
+		} );
+		group.hidden = !anyVisible;
+	} );
+}
+
+// ── Unsaved-changes guard ────────────────────────────────────
+
+/**
+ * Warns before leaving the page if the template textarea/editor value has
+ * changed since load. Suppressed once the form is actually being submitted.
+ *
+ * @listens beforeunload
+ * @param {BeforeUnloadEvent} event
+ */
+function warnOnUnsavedChanges( event ) {
+	if ( isSubmitting || getEditorValue() === initialTemplateValue ) { return; }
+	event.preventDefault();
+}
+
 // ── Init ────────────────────────────────────────────────────
 
 /**
@@ -208,6 +246,10 @@ function initTemplateEditor() {
 	previewValidation = document.getElementById( 'lynxjournal-preview-validation' );
 
 	if ( !textarea || !preview ) { return; }
+
+	initialTemplateValue = textarea.value;
+	window.addEventListener( 'beforeunload', warnOnUnsavedChanges );
+	textarea.form?.addEventListener( 'submit', () => { isSubmitting = true; } );
 
 	btnUndo = document.querySelector( '.lynxjournal-format-btn[data-action="undo"]' );
 	btnRedo = document.querySelector( '.lynxjournal-format-btn[data-action="redo"]' );
@@ -285,6 +327,11 @@ function initTemplateEditor() {
 			updateTemplatePreview();
 		} );
 	} );
+
+	const tokenSearch = document.getElementById( 'lynxjournal-token-search' );
+	if ( tokenSearch ) {
+		tokenSearch.addEventListener( 'input', () => filterTokenPanel( tokenSearch.value ) );
+	}
 
 	document.querySelectorAll( '.lynxjournal-accordion-toggle' ).forEach( btn => {
 		btn.addEventListener( 'click', () => {

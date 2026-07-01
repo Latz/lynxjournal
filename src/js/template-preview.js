@@ -28,6 +28,7 @@ export function setPreviewLive( previewStatus, preview ) {
  */
 export function renderValidation( previewValidation, warnings ) {
 	if ( !previewValidation ) { return; }
+	previewValidation.hidden = warnings.length === 0;
 	previewValidation.replaceChildren(
 		...warnings.map( msg => {
 			const div = document.createElement( 'div' );
