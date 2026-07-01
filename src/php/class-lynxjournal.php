@@ -27,6 +27,7 @@ class LynxJournal {
     use LynxJournal_Batch;
     use LynxJournal_Queries;
     use LynxJournal_RestApi;
+    use LynxJournal_RestApi_Support;
     use LynxJournal_ScheduleValidator;
     use LynxJournal_Scheduler;
     use LynxJournal_Admin_Menu;
