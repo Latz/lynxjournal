@@ -66,9 +66,6 @@ trait LynxJournal_Admin_TemplatePage {
                     <?php wp_nonce_field('lynxjournal_template', 'lynxjournal_template_nonce'); ?>
 
                     <div class="lynxjournal-settings-field">
-                        <label class="lynxjournal-settings-label" for="lynxjournal-post-template">
-                            <?php esc_html_e('Template', 'lynx-journal'); ?>
-                        </label>
                         <div class="lynxjournal-format-toolbar">
                             <button type="button" class="button lynxjournal-format-btn" data-action="undo" title="Undo" aria-label="<?php esc_attr_e('Undo', 'lynx-journal'); ?>"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path transform="matrix(1,0,0,-1,0,1024)" d="M761.862-64c113.726 206.032 132.888 520.306-313.862 509.824v-253.824l-384 384 384 384v-248.372c534.962 13.942 594.57-472.214 313.862-775.628z"/></svg></button>
                             <button type="button" class="button lynxjournal-format-btn" data-action="redo" title="Redo" aria-label="<?php esc_attr_e('Redo', 'lynx-journal'); ?>"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path transform="matrix(1,0,0,-1,0,1024)" d="M576 711.628v248.372l384-384-384-384v253.824c-446.75 10.482-427.588-303.792-313.86-509.824-280.712 303.414-221.1 789.57 313.86 775.628z"/></svg></button>
@@ -95,6 +92,7 @@ trait LynxJournal_Admin_TemplatePage {
                             name="lynxjournal_post_template"
                             class="large-text code"
                             rows="10"
+                            aria-label="<?php esc_attr_e('Template', 'lynx-journal'); ?>"
                         ><?php echo esc_textarea($template); ?></textarea>
                     </div>
 
