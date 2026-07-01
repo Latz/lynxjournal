@@ -128,14 +128,6 @@ describe('LynxJournal::templatePage() — rendering', function (): void {
         expect($html)->toContain('data-token="[link]"');
     });
 
-    it('renders the token search input', function (): void {
-        ob_start();
-        $this->plugin->templatePage();
-        $html = ob_get_clean();
-
-        expect($html)->toContain('id="lynxjournal-token-search"');
-    });
-
     it('renders the preview width toggle buttons', function (): void {
         ob_start();
         $this->plugin->templatePage();

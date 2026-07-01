@@ -228,28 +228,6 @@ function applyFormat( action ) {
 	updateToolbarActiveState();
 }
 
-// ── Token panel search filter ────────────────────────────────
-
-/**
- * Filters `.lynxjournal-insert-token` buttons by token/description text and
- * hides any `.lynxjournal-token-group` left with no visible tokens.
- *
- * @param {string} query
- */
-function filterTokenPanel( query ) {
-	const needle = query.trim().toLowerCase();
-	document.querySelectorAll( '.lynxjournal-token-group' ).forEach( group => {
-		let anyVisible = false;
-		group.querySelectorAll( '.lynxjournal-insert-token' ).forEach( btn => {
-			const haystack = ( btn.dataset.token + ' ' + btn.textContent ).toLowerCase();
-			const visible  = !needle || haystack.includes( needle );
-			btn.hidden = !visible;
-			anyVisible = anyVisible || visible;
-		} );
-		group.hidden = !anyVisible;
-	} );
-}
-
 // ── Unsaved-changes guard ────────────────────────────────────
 
 /**
@@ -370,11 +348,6 @@ function initTemplateEditor() {
 			updateToolbarActiveState();
 		} );
 	} );
-
-	const tokenSearch = document.getElementById( 'lynxjournal-token-search' );
-	if ( tokenSearch ) {
-		tokenSearch.addEventListener( 'input', () => filterTokenPanel( tokenSearch.value ) );
-	}
 
 	document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( btn => {
 		btn.addEventListener( 'click', () => {

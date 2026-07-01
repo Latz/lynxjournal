@@ -74,19 +74,6 @@
 	padding: 12px;
 }
 
-.lynxjournal-token-search {
-	width: 100%;
-	max-width: 260px;
-	height: 28px;
-	padding-inline: 8px;
-}
-
-/* `display: flex` on these elements otherwise outranks the UA [hidden]
-   rule at equal specificity, since the author stylesheet loads later. */
-.lynxjournal-token-group[hidden],
-.lynxjournal-insert-token[hidden] {
-	display: none;
-}
 
 .lynxjournal-token-group h4 {
 	width: 100%;

@@ -119,13 +119,6 @@ trait LynxJournal_Admin_TemplatePage {
                             <span><?php esc_html_e('Available tokens', 'lynx-journal'); ?></span>
                         </button>
                         <div id="lynxjournal-token-panel" class="lynxjournal-token-grid">
-                            <input
-                                type="search"
-                                id="lynxjournal-token-search"
-                                class="lynxjournal-token-search"
-                                placeholder="<?php esc_attr_e('Search tokens…', 'lynx-journal'); ?>"
-                                aria-label="<?php esc_attr_e('Search tokens', 'lynx-journal'); ?>"
-                            >
                             <?php foreach ($token_groups as $group_label => $tokens) : ?>
                                 <div class="lynxjournal-token-group">
                                     <h4><?php echo esc_html($group_label); ?></h4>
