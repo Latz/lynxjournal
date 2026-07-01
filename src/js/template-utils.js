@@ -92,6 +92,40 @@ export function getLineStart( value, pos ) {
 }
 
 /**
+ * Determines which toolbar actions apply to the current cursor position on
+ * a single line, so the matching toolbar button can be shown as "pressed" —
+ * mirroring the toggle-state UX of a typical rich text editor toolbar.
+ *
+ * @param {string} line
+ * @param {number} ch
+ * @returns {Set<string>}
+ */
+export function getActiveFormatsAtCursor( line, ch ) {
+	const active = new Set();
+
+	const heading = line.match( /^(#{1,6})\s/ );
+	if ( heading ) { active.add( 'h' + heading[ 1 ].length ); }
+	if ( /^-\s/.test( line ) ) { active.add( 'list' ); }
+	if ( /^\d+\.\s/.test( line ) ) { active.add( 'ol' ); }
+
+	/** @param {RegExp} regex */
+	const cursorIsWithin = regex => {
+		regex.lastIndex = 0;
+		let match;
+		while ( ( match = regex.exec( line ) ) !== null ) {
+			if ( ch >= match.index && ch <= match.index + match[ 0 ].length ) { return true; }
+		}
+		return false;
+	};
+
+	if ( cursorIsWithin( /\*\*[^*]*?\*\*/g ) ) { active.add( 'bold' ); }
+	if ( cursorIsWithin( /(?<!\*)\*[^*]+?\*(?!\*)/g ) ) { active.add( 'italic' ); }
+	if ( cursorIsWithin( /<u>[\s\S]*?<\/u>/g ) ) { active.add( 'underline' ); }
+
+	return active;
+}
+
+/**
  * Markdown collapses any run of blank lines into a single paragraph break,
  * so a blank line the user typed never actually shows up as visible empty
  * space — the shared, deliberately compact `<p>` margin used for regular

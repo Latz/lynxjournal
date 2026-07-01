@@ -8,6 +8,7 @@ import {
     validateTemplate,
     getLineStart,
     preserveBlankLines,
+    getActiveFormatsAtCursor,
 } from '../../src/js/template-utils.js';
 
 // ---------------------------------------------------------------------------
@@ -216,5 +217,58 @@ describe( 'preserveBlankLines()', () => {
 
     it( 'returns empty string unchanged', () => {
         expect( preserveBlankLines( '' ) ).toBe( '' );
+    } );
+} );
+
+// ---------------------------------------------------------------------------
+// getActiveFormatsAtCursor()
+// ---------------------------------------------------------------------------
+
+describe( 'getActiveFormatsAtCursor()', () => {
+    it( 'detects h1-h6 headings from the line prefix', () => {
+        expect( getActiveFormatsAtCursor( '# Heading', 3 ) ).toEqual( new Set( [ 'h1' ] ) );
+        expect( getActiveFormatsAtCursor( '###### Heading', 8 ) ).toEqual( new Set( [ 'h6' ] ) );
+    } );
+
+    it( 'detects a bullet list line', () => {
+        expect( getActiveFormatsAtCursor( '- item', 3 ) ).toEqual( new Set( [ 'list' ] ) );
+    } );
+
+    it( 'detects a numbered list line', () => {
+        expect( getActiveFormatsAtCursor( '1. item', 3 ) ).toEqual( new Set( [ 'ol' ] ) );
+    } );
+
+    it( 'returns an empty set for a plain line', () => {
+        expect( getActiveFormatsAtCursor( 'plain text', 3 ) ).toEqual( new Set() );
+    } );
+
+    it( 'detects bold when the cursor is inside **text**', () => {
+        const line = 'before **bold** after';
+        expect( getActiveFormatsAtCursor( line, 11 ) ).toEqual( new Set( [ 'bold' ] ) );
+    } );
+
+    it( 'does not detect bold when the cursor is outside **text**', () => {
+        const line = 'before **bold** after';
+        expect( getActiveFormatsAtCursor( line, 2 ) ).toEqual( new Set() );
+    } );
+
+    it( 'detects italic when the cursor is inside *text*', () => {
+        const line = 'before *italic* after';
+        expect( getActiveFormatsAtCursor( line, 11 ) ).toEqual( new Set( [ 'italic' ] ) );
+    } );
+
+    it( 'does not misdetect italic inside a **bold** span', () => {
+        const line = 'before **bold** after';
+        expect( getActiveFormatsAtCursor( line, 11 ) ).not.toContain( 'italic' );
+    } );
+
+    it( 'detects underline when the cursor is inside <u>text</u>', () => {
+        const line = 'before <u>underlined</u> after';
+        expect( getActiveFormatsAtCursor( line, 15 ) ).toEqual( new Set( [ 'underline' ] ) );
+    } );
+
+    it( 'combines a heading with an inline bold span on the same line', () => {
+        const line = '# **Bold heading**';
+        expect( getActiveFormatsAtCursor( line, 10 ) ).toEqual( new Set( [ 'h1', 'bold' ] ) );
     } );
 } );

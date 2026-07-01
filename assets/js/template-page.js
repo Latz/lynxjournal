@@ -10,6 +10,7 @@ const {
 	validateTemplate,
 	getLineStart,
 	preserveBlankLines,
+	getActiveFormatsAtCursor,
 } = await import( `../../src/js/template-utils.js?v=${ utilsVersion }` );
 const { setPreviewUpdating, setPreviewLive, renderValidation, buildTemplateText } =
 	await import( `../../src/js/template-preview.js?v=${ utilsVersion }` );
@@ -142,6 +143,45 @@ function applyLinePrefix( prefix ) {
 	} );
 }
 
+// ── Toolbar active-state detection ──────────────────────────
+
+/**
+ * Syncs toolbar button/select "pressed" state to the current cursor position.
+ *
+ * @returns {void}
+ */
+function updateToolbarActiveState() {
+	let line = '';
+	let ch   = 0;
+
+	if ( editor ) {
+		const cursor = editor.getCursor();
+		line = editor.getLine( cursor.line );
+		ch   = cursor.ch;
+	} else if ( textarea ) {
+		const pos       = textarea.selectionStart;
+		const lineStart = getLineStart( textarea.value, pos );
+		const lineEnd   = textarea.value.indexOf( '\n', pos );
+		line = textarea.value.slice( lineStart, lineEnd === -1 ? textarea.value.length : lineEnd );
+		ch   = pos - lineStart;
+	} else {
+		return;
+	}
+
+	const active = getActiveFormatsAtCursor( line, ch );
+
+	document.querySelectorAll( '.lynxjournal-format-btn[data-action]' ).forEach( btn => {
+		const action = btn.dataset.action;
+		if ( action === 'undo' || action === 'redo' ) { return; }
+		btn.classList.toggle( 'is-active', active.has( action ) );
+	} );
+
+	const headingSelect = document.getElementById( 'lynxjournal-heading-select' );
+	if ( headingSelect ) {
+		headingSelect.value = [ ...active ].find( a => /^h[1-6]$/.test( a ) ) ?? '';
+	}
+}
+
 // ── Toolbar: CodeMirror path ────────────────────────────────
 
 /** @param {string} action */
@@ -152,12 +192,14 @@ function applyFormat( action ) {
 		editor.undo();
 		updateTemplatePreview();
 		updateUndoRedoState();
+		updateToolbarActiveState();
 		return;
 	}
 	if ( action === 'redo' ) {
 		editor.redo();
 		updateTemplatePreview();
 		updateUndoRedoState();
+		updateToolbarActiveState();
 		return;
 	}
 
@@ -192,6 +234,7 @@ function applyFormat( action ) {
 	editor.focus();
 	updateTemplatePreview();
 	updateUndoRedoState();
+	updateToolbarActiveState();
 }
 
 // ── Token panel search filter ────────────────────────────────
@@ -273,13 +316,17 @@ function initTemplateEditor() {
 				updateTemplatePreview();
 			}, 400 );
 		} );
+		editor.on( 'cursorActivity', updateToolbarActiveState );
 	} else {
 		// Accessibility mode or CodeMirror unavailable — use plain textarea.
 		textarea.addEventListener( 'input', () => {
 			setPreviewUpdating( previewStatus, preview );
 			clearTimeout( previewTimer );
 			previewTimer = setTimeout( updateTemplatePreview, 400 );
+			updateToolbarActiveState();
 		} );
+		textarea.addEventListener( 'keyup', updateToolbarActiveState );
+		textarea.addEventListener( 'click', updateToolbarActiveState );
 		textarea.addEventListener( 'keydown', e => {
 			if ( !( e.ctrlKey || e.metaKey ) ) { return; }
 			if ( e.key === 'z' || e.key === 'Z' ) {
@@ -295,6 +342,7 @@ function initTemplateEditor() {
 	if ( editor ) { updateBlankLineMarkers(); }
 	updateTemplatePreview();
 	updateUndoRedoState();
+	updateToolbarActiveState();
 
 	document.querySelectorAll( '.lynxjournal-format-btn' ).forEach( btn => {
 		btn.addEventListener( 'click', () => applyFormat( btn.dataset.action ) );
@@ -325,6 +373,7 @@ function initTemplateEditor() {
 				textarea.focus();
 			}
 			updateTemplatePreview();
+			updateToolbarActiveState();
 		} );
 	} );
 
