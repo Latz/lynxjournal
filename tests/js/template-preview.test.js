@@ -1,5 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
-import { convertIndentedLines } from '../../src/js/template-preview.js';
+import { convertIndentedLines, buildTemplateText, renderValidation, setPreviewUpdating, setPreviewLive } from '../../src/js/template-preview.js';
+import { replaceTokens, expandLinkBlocks, expandLinkLines, preserveBlankLines } from '../../src/js/template-utils.js';
+
+const utils = { replaceTokens, expandLinkBlocks, expandLinkLines, preserveBlankLines };
 
 /**
  * Minimal stand-in for marked.parseInline(): renders bold and italic markup
@@ -67,5 +70,138 @@ describe( 'convertIndentedLines()', () => {
 
     it( 'returns an empty string unchanged', () => {
         expect( convertIndentedLines( '', stubParseInline ) ).toBe( '' );
+    } );
+} );
+
+// ---------------------------------------------------------------------------
+// buildTemplateText()
+// ---------------------------------------------------------------------------
+
+describe( 'buildTemplateText()', () => {
+    it( 'expands a category block for a single category with multiple links', () => {
+        const rawText = '[category_start]**[category_name]**\n[link_start]- [link]\n[link_end][category_end]';
+        const categoryVariants = [ {
+            '[category_name]': 'Tech',
+            '[category_link_count]': '2',
+            links: [ { '[link]': 'A' }, { '[link]': 'B' } ],
+        } ];
+
+        const result = buildTemplateText( rawText, categoryVariants, {}, utils );
+
+        expect( result ).toBe( '**Tech**\n- A\n- B\n' );
+    } );
+
+    it( 'repeats the category block once per category', () => {
+        const rawText = '[category_start][category_name]\n[category_end]';
+        const categoryVariants = [
+            { '[category_name]': 'Tech', '[category_link_count]': '0', links: [] },
+            { '[category_name]': 'Design', '[category_link_count]': '0', links: [] },
+        ];
+
+        const result = buildTemplateText( rawText, categoryVariants, {}, utils );
+
+        expect( result ).toBe( 'Tech\nDesign\n' );
+    } );
+
+    it( 'replaces scalar tokens outside category blocks', () => {
+        const rawText = '# [title]\nby [author]';
+        const result  = buildTemplateText( rawText, [], { '[title]': 'My Roundup', '[author]': 'Latz' }, utils );
+
+        expect( result ).toBe( '# My Roundup\nby Latz' );
+    } );
+
+    it( 'produces an empty category expansion when categoryVariants is empty', () => {
+        const rawText = 'Intro\n[category_start]anything[category_end]\nOutro';
+        const result  = buildTemplateText( rawText, [], {}, utils );
+
+        expect( result ).toBe( 'Intro\n\nOutro' );
+    } );
+
+    it( 'preserves blank lines through the full pipeline', () => {
+        const rawText = 'Intro\n\nOutro';
+        const result  = buildTemplateText( rawText, [], {}, utils );
+
+        expect( result ).toContain( '<p class="lynxjournal-blank-line">&nbsp;</p>' );
+    } );
+
+    it( 'expands bare link tokens outside category blocks using the first category’s links', () => {
+        const rawText = '[link_start]- [link]\n[link_end]';
+        const categoryVariants = [ { '[category_name]': 'Tech', '[category_link_count]': '1', links: [ { '[link]': 'A' } ] } ];
+
+        const result = buildTemplateText( rawText, categoryVariants, {}, utils );
+
+        expect( result ).toBe( '- A\n' );
+    } );
+} );
+
+// ---------------------------------------------------------------------------
+// renderValidation()
+// ---------------------------------------------------------------------------
+
+describe( 'renderValidation()', () => {
+    it( 'does nothing when previewValidation is null', () => {
+        expect( () => renderValidation( null, [ 'some warning' ] ) ).not.toThrow();
+    } );
+
+    it( 'hides the panel when there are no warnings', () => {
+        const el = document.createElement( 'div' );
+        renderValidation( el, [] );
+        expect( el.hidden ).toBe( true );
+        expect( el.children ).toHaveLength( 0 );
+    } );
+
+    it( 'shows the panel and renders one warning element per message', () => {
+        const el = document.createElement( 'div' );
+        renderValidation( el, [ 'first issue', 'second issue' ] );
+
+        expect( el.hidden ).toBe( false );
+        const warnings = el.querySelectorAll( '.lynxjournal-preview-warning' );
+        expect( warnings ).toHaveLength( 2 );
+        expect( warnings[ 0 ].textContent ).toContain( 'first issue' );
+        expect( warnings[ 1 ].textContent ).toContain( 'second issue' );
+    } );
+
+    it( 'replaces previously rendered warnings rather than appending', () => {
+        const el = document.createElement( 'div' );
+        renderValidation( el, [ 'stale warning' ] );
+        renderValidation( el, [ 'fresh warning' ] );
+
+        const warnings = el.querySelectorAll( '.lynxjournal-preview-warning' );
+        expect( warnings ).toHaveLength( 1 );
+        expect( warnings[ 0 ].textContent ).toContain( 'fresh warning' );
+    } );
+} );
+
+// ---------------------------------------------------------------------------
+// setPreviewUpdating() / setPreviewLive()
+// ---------------------------------------------------------------------------
+
+describe( 'setPreviewUpdating() / setPreviewLive()', () => {
+    it( 'setPreviewUpdating() sets the "updating" status text and class', () => {
+        const status  = document.createElement( 'span' );
+        const preview = document.createElement( 'div' );
+
+        setPreviewUpdating( status, preview );
+
+        expect( status.textContent ).toBe( 'Aktualisiert…' );
+        expect( status.classList.contains( 'is-updating' ) ).toBe( true );
+        expect( preview.classList.contains( 'is-updating' ) ).toBe( true );
+    } );
+
+    it( 'setPreviewLive() resets the status text and removes the "updating" class', () => {
+        const status  = document.createElement( 'span' );
+        const preview = document.createElement( 'div' );
+        setPreviewUpdating( status, preview );
+
+        setPreviewLive( status, preview );
+
+        expect( status.textContent ).toBe( 'Live' );
+        expect( status.classList.contains( 'is-updating' ) ).toBe( false );
+        expect( preview.classList.contains( 'is-updating' ) ).toBe( false );
+    } );
+
+    it( 'both functions tolerate null elements without throwing', () => {
+        expect( () => setPreviewUpdating( null, null ) ).not.toThrow();
+        expect( () => setPreviewLive( null, null ) ).not.toThrow();
     } );
 } );

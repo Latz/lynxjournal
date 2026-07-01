@@ -18,7 +18,6 @@ beforeEach(function (): void {
     Functions\when('get_edit_post_link')->justReturn('https://example.com/wp-admin/edit?p=1');
     Functions\when('selected')->justReturn('');
     Functions\when('esc_attr')->returnArg(1);
-    Functions\when('esc_attr_e')->returnArg(1);
     Functions\when('get_the_terms')->justReturn(false);
     $GLOBALS['wpdb'] = Mockery::mock('wpdb');
     $GLOBALS['wpdb']->posts = '{prefix}posts';
