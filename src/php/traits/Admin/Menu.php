@@ -313,11 +313,21 @@ trait LynxJournal_Admin_Menu {
                 return $tag;
             }, 10, 2);
             $this->enqueuePageScript('lynxjournal-template-js', 'template-page.js', ['marked', 'code-editor']);
+            // template-page.js appends this version to the dynamic import() URL of every
+            // module below — take the newest mtime across all of them so editing any one
+            // busts the shared cache-buster, not just template-utils.js.
+            $template_js_modules = [
+                'src/js/template-utils.js',
+                'src/js/template-preview.js',
+                'src/js/template-toolbar-fallback.js',
+            ];
+            $template_utils_version = (string) max(array_map(
+                static fn (string $file): int => (int) filemtime(plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . $file),
+                $template_js_modules
+            ));
             wp_add_inline_script(
                 'lynxjournal-template-js',
-                'var lynxjournalTemplateUtilsVersion = ' . wp_json_encode(
-                    (string) filemtime(plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'src/js/template-utils.js')
-                ) . ';',
+                'var lynxjournalTemplateUtilsVersion = ' . wp_json_encode($template_utils_version) . ';',
                 'before'
             );
             if (false !== $editor_settings) {
