@@ -7,6 +7,7 @@ import {
     expandLinkLines,
     validateTemplate,
     getLineStart,
+    preserveBlankLines,
 } from '../../src/js/template-utils.js';
 
 // ---------------------------------------------------------------------------
@@ -176,5 +177,44 @@ describe( 'getLineStart()', () => {
     it( 'handles multiple newlines correctly', () => {
         // "a\nb\nc" — 'c' is at index 4, line start is 4
         expect( getLineStart( 'a\nb\nc', 4 ) ).toBe( 4 );
+    } );
+} );
+
+// ---------------------------------------------------------------------------
+// preserveBlankLines()
+// ---------------------------------------------------------------------------
+
+describe( 'preserveBlankLines()', () => {
+    it( 'turns a single blank line into a blank-line marker', () => {
+        expect( preserveBlankLines( 'Line one\n\nLine two' ) )
+            .toBe( 'Line one\n\n<p class="lynxjournal-blank-line">&nbsp;</p>\n\nLine two' );
+    } );
+
+    it( 'inserts two blank-line markers for a run of two blank lines', () => {
+        expect( preserveBlankLines( 'Line one\n\n\nLine two' ) )
+            .toBe( 'Line one\n\n<p class="lynxjournal-blank-line">&nbsp;</p>\n\n<p class="lynxjournal-blank-line">&nbsp;</p>\n\nLine two' );
+    } );
+
+    it( 'inserts three blank-line markers for a run of three blank lines', () => {
+        expect( preserveBlankLines( 'Line one\n\n\n\nLine two' ) )
+            .toBe( 'Line one\n\n<p class="lynxjournal-blank-line">&nbsp;</p>\n\n<p class="lynxjournal-blank-line">&nbsp;</p>\n\n<p class="lynxjournal-blank-line">&nbsp;</p>\n\nLine two' );
+    } );
+
+    it( 'is a no-op when there are no blank lines', () => {
+        expect( preserveBlankLines( 'Single line no blanks' ) ).toBe( 'Single line no blanks' );
+    } );
+
+    it( 'handles a blank run at the start of the text', () => {
+        expect( preserveBlankLines( '\n\nLeading blanks then text' ) )
+            .toBe( '\n<p class="lynxjournal-blank-line">&nbsp;</p>\n\n<p class="lynxjournal-blank-line">&nbsp;</p>\n\nLeading blanks then text' );
+    } );
+
+    it( 'handles a blank run at the end of the text', () => {
+        expect( preserveBlankLines( 'Trailing text then blanks\n\n' ) )
+            .toBe( 'Trailing text then blanks\n\n<p class="lynxjournal-blank-line">&nbsp;</p>\n\n<p class="lynxjournal-blank-line">&nbsp;</p>\n' );
+    } );
+
+    it( 'returns empty string unchanged', () => {
+        expect( preserveBlankLines( '' ) ).toBe( '' );
     } );
 } );

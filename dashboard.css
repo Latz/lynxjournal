@@ -989,6 +989,11 @@ textarea.lynxjournal-cat-inline-input {
 	font-weight: 600;
 }
 
+.lynxjournal-blank-line-marker {
+	color: #c3c4c7;
+	font-size: 13px;
+}
+
 /* ── Post Template page: Markdown preview output ─────────────── */
 #lynxjournal-template-preview h2,
 #lynxjournal-template-preview h3 {
@@ -1021,6 +1026,17 @@ textarea.lynxjournal-cat-inline-input {
 #lynxjournal-template-preview p {
 	margin-block: .1em;
 	margin-inline: 0;
+}
+
+/* Injected by preserveBlankLines() for each blank line in the source —
+   a left border + reserved height marks the row as a blank line so a
+   trailing/leading blank run reads as intentional and not just background
+   padding, without showing any visible character in the row itself. */
+#lynxjournal-template-preview p.lynxjournal-blank-line {
+	margin-block: 0.25em;
+	min-height: 1.5em;
+	padding-inline-start: 6px;
+	border-inline-start: 3px solid #c3c4c7;
 }
 
 /* ── Post Template page: live preview container ─────────────── */

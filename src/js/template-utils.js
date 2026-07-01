@@ -90,3 +90,40 @@ export function getLineStart( value, pos ) {
 	const idx = value.lastIndexOf( '\n', pos - 1 );
 	return idx === -1 ? 0 : idx + 1;
 }
+
+/**
+ * Markdown collapses any run of blank lines into a single paragraph break,
+ * so a blank line the user typed never actually shows up as visible empty
+ * space — the shared, deliberately compact `<p>` margin used for regular
+ * preview content is too tight to read as a blank line either. This turns
+ * every blank line in a run into its own `.lynxjournal-blank-line`
+ * paragraph (a raw HTML block CommonMark passes through unchanged), which
+ * gets a dedicated CSS rule (left border + reserved height) so it reads as
+ * a distinct blank line even when trailing/leading with nothing adjacent.
+ *
+ * @param {string} text
+ * @returns {string}
+ */
+export function preserveBlankLines( text ) {
+	if ( text === '' ) { return text; }
+	const lines  = text.split( '\n' );
+	const result = [];
+	let i = 0;
+	while ( i < lines.length ) {
+		if ( lines[ i ].trim() !== '' ) {
+			result.push( lines[ i ] );
+			i++;
+			continue;
+		}
+		let j = i;
+		while ( j < lines.length && lines[ j ].trim() === '' ) { j++; }
+		const blankCount = j - i;
+		result.push( '' );
+		for ( let k = 0; k < blankCount; k++ ) {
+			result.push( '<p class="lynxjournal-blank-line">&nbsp;</p>' );
+			result.push( '' );
+		}
+		i = j;
+	}
+	return result.join( '\n' );
+}

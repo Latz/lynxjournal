@@ -1,4 +1,9 @@
-import {
+// Dynamic import with a filemtime-based version query string (set in
+// Menu.php) so a stale browser cache of this file can't desync from
+// template-page.js — WP's own enqueue cache-busting doesn't reach nested
+// static ES imports, only the top-level enqueued script.
+const utilsVersion = window.lynxjournalTemplateUtilsVersion ?? '';
+const {
 	LINK_TOKENS,
 	replaceTokens,
 	hasLinkToken,
@@ -6,7 +11,8 @@ import {
 	expandLinkLines,
 	validateTemplate,
 	getLineStart,
-} from '../../src/js/template-utils.js';
+	preserveBlankLines,
+} = await import( `../../src/js/template-utils.js?v=${ utilsVersion }` );
 
 /**
  * @typedef {{ '[category_link_count]': string, links: Array<Record<string, string>>, [key: string]: string | Array<Record<string, string>> }} CategoryVariant
@@ -80,7 +86,13 @@ function getEditorValue() {
 function updateTemplatePreview() {
 	const rawText = getEditorValue();
 	renderValidation( validateTemplate( rawText ) );
-	let text = rawText;
+	// Run before category/link expansion so only blank lines the user actually
+	// typed become visible markers — the category-loop's own join below relies
+	// on a real (untouched) blank line between repetitions to terminate the
+	// preceding <div> HTML block from the indentation step further down, so
+	// marking blank lines any later would either miss real ones inside a
+	// category block or wrongly mark that structural join boundary.
+	let text = preserveBlankLines( rawText );
 
 	text = text.replace(
 		/\[category_start\]([\s\S]*?)\[category_end\]/g,
@@ -142,6 +154,29 @@ function defineTokenOverlay() {
 			}
 		)
 	);
+}
+
+// ── Blank-line marker (¶ shown on empty lines) ──────────────
+
+let blankLineMarkers = [];
+
+/**
+ * Marks every empty line in the editor with a faint ¶ widget, so blank
+ * lines are easy to spot while typing. Clears and rebuilds all markers
+ * each time — templates are short enough that this is cheap.
+ */
+function updateBlankLineMarkers() {
+	blankLineMarkers.forEach( m => m.clear() );
+	blankLineMarkers = [];
+	const count = editor.lineCount();
+	for ( let i = 0; i < count; i++ ) {
+		if ( editor.getLine( i ) !== '' ) { continue; }
+		const marker = document.createElement( 'span' );
+		marker.className = 'lynxjournal-blank-line-marker';
+		marker.textContent = '¶';
+		marker.setAttribute( 'aria-hidden', 'true' );
+		blankLineMarkers.push( editor.setBookmark( { line: i, ch: 0 }, { widget: marker } ) );
+	}
 }
 
 // ── Line-prefix helper (headings, lists) ────────────────────
@@ -315,7 +350,14 @@ function fallbackApplyFormat( action ) {
 
 // ── Init ────────────────────────────────────────────────────
 
-document.addEventListener( 'DOMContentLoaded', () => {
+/**
+ * Runs directly rather than on 'DOMContentLoaded': this module is deferred
+ * (type="module"), so the DOM is already parsed by the time it executes —
+ * and since the top-level `await import()` above can resolve after the
+ * real DOMContentLoaded event has already fired, a listener registered
+ * here would otherwise never run.
+ */
+function initTemplateEditor() {
 	textarea          = document.getElementById( 'lynxjournal-post-template' );
 	preview           = document.getElementById( 'lynxjournal-template-preview' );
 	previewStatus     = document.getElementById( 'lynxjournal-preview-status' );
@@ -337,6 +379,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		editor = instance.codemirror;
 
 		editor.on( 'change', () => {
+			updateBlankLineMarkers();
 			setPreviewUpdating();
 			clearTimeout( previewTimer );
 			previewTimer = setTimeout( () => {
@@ -363,6 +406,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		} );
 	}
 
+	if ( editor ) { updateBlankLineMarkers(); }
 	updateTemplatePreview();
 	updateUndoRedoState();
 
@@ -406,4 +450,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			panel?.classList.toggle( 'is-open', !expanded );
 		} );
 	} );
-} );
+}
+
+initTemplateEditor();

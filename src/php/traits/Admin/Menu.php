@@ -312,6 +312,13 @@ trait LynxJournal_Admin_Menu {
                 return $tag;
             }, 10, 2);
             $this->enqueuePageScript('lynxjournal-template-js', 'template-page.js', ['marked', 'code-editor']);
+            wp_add_inline_script(
+                'lynxjournal-template-js',
+                'var lynxjournalTemplateUtilsVersion = ' . wp_json_encode(
+                    (string) filemtime(plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'src/js/template-utils.js')
+                ) . ';',
+                'before'
+            );
             if (false !== $editor_settings) {
                 wp_add_inline_script(
                     'lynxjournal-template-js',
