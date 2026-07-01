@@ -177,17 +177,19 @@ describe( 'renderValidation()', () => {
 // ---------------------------------------------------------------------------
 
 describe( 'setPreviewUpdating() / setPreviewLive()', () => {
-    it( 'setPreviewUpdating() sets the "updating" status text and class', () => {
+    it( 'setPreviewUpdating() adds the "updating" class without changing the label text', () => {
         const status = document.createElement( 'span' );
+        status.textContent = 'Live';
 
         setPreviewUpdating( status );
 
-        expect( status.textContent ).toBe( 'Aktualisiert…' );
+        expect( status.textContent ).toBe( 'Live' );
         expect( status.classList.contains( 'is-updating' ) ).toBe( true );
     } );
 
-    it( 'setPreviewLive() resets the status text and removes the "updating" class', () => {
+    it( 'setPreviewLive() removes the "updating" class without changing the label text', () => {
         const status = document.createElement( 'span' );
+        status.textContent = 'Live';
         setPreviewUpdating( status );
 
         setPreviewLive( status );

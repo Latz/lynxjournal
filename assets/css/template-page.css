@@ -360,21 +360,6 @@
 	border-color: #c3c4c7;
 }
 
-#lynxjournal-preview-status.is-updating::before {
-	content: '';
-	display: inline-block;
-	width: 8px;
-	height: 8px;
-	border: 1.5px solid #c3c4c7;
-	border-top-color: #646970;
-	border-radius: 50%;
-	animation: lj-spin .6s linear infinite;
-}
-
-@keyframes lj-spin {
-	to { transform: rotate(360deg); }
-}
-
 .lynxjournal-preview-warning {
 	display: flex;
 	align-items: flex-start;

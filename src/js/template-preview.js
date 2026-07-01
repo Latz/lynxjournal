@@ -2,13 +2,14 @@
  * Only updates the small status badge, not the preview content itself —
  * dimming the whole rendered preview on every debounced re-render caused a
  * visible flicker while typing, since natural typing pauses often exceed
- * the render debounce delay.
+ * the render debounce delay. Keeps the label text fixed at "Live" (greyed
+ * out via the `is-updating` class instead of swapped for a longer string)
+ * so the badge doesn't change width and cause the toolbar to jitter.
  *
  * @param {HTMLElement|null} previewStatus
  */
 export function setPreviewUpdating( previewStatus ) {
 	if ( !previewStatus ) { return; }
-	previewStatus.textContent = 'Aktualisiert…';
 	previewStatus.classList.add( 'is-updating' );
 }
 
@@ -17,7 +18,6 @@ export function setPreviewUpdating( previewStatus ) {
  */
 export function setPreviewLive( previewStatus ) {
 	if ( !previewStatus ) { return; }
-	previewStatus.textContent = 'Live';
 	previewStatus.classList.remove( 'is-updating' );
 }
 
