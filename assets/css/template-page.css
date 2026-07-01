@@ -404,11 +404,6 @@
 	line-height: 1.5;
 	color: var(--lj-color-text);
 	word-break: break-word;
-	transition: opacity .15s ease;
-}
-
-#lynxjournal-template-preview.is-updating {
-	opacity: .45;
 }
 
 .lynxjournal-preview-empty {

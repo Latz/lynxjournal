@@ -1,25 +1,24 @@
 /**
+ * Only updates the small status badge, not the preview content itself —
+ * dimming the whole rendered preview on every debounced re-render caused a
+ * visible flicker while typing, since natural typing pauses often exceed
+ * the render debounce delay.
+ *
  * @param {HTMLElement|null} previewStatus
- * @param {HTMLElement|null} preview
  */
-export function setPreviewUpdating( previewStatus, preview ) {
-	if ( previewStatus ) {
-		previewStatus.textContent = 'Aktualisiert…';
-		previewStatus.classList.add( 'is-updating' );
-	}
-	if ( preview ) { preview.classList.add( 'is-updating' ); }
+export function setPreviewUpdating( previewStatus ) {
+	if ( !previewStatus ) { return; }
+	previewStatus.textContent = 'Aktualisiert…';
+	previewStatus.classList.add( 'is-updating' );
 }
 
 /**
  * @param {HTMLElement|null} previewStatus
- * @param {HTMLElement|null} preview
  */
-export function setPreviewLive( previewStatus, preview ) {
-	if ( previewStatus ) {
-		previewStatus.textContent = 'Live';
-		previewStatus.classList.remove( 'is-updating' );
-	}
-	if ( preview ) { preview.classList.remove( 'is-updating' ); }
+export function setPreviewLive( previewStatus ) {
+	if ( !previewStatus ) { return; }
+	previewStatus.textContent = 'Live';
+	previewStatus.classList.remove( 'is-updating' );
 }
 
 /**

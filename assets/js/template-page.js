@@ -61,7 +61,7 @@ function updateTemplatePreview() {
 	preview.innerHTML = text.trim()
 		? window.marked.parse( text )
 		: '<span class="lynxjournal-preview-empty">—</span>';
-	setPreviewLive( previewStatus, preview );
+	setPreviewLive( previewStatus );
 }
 
 // ── Undo/redo button state ──────────────────────────────────
@@ -299,7 +299,7 @@ function initTemplateEditor() {
 		editor = instance.codemirror;
 
 		editor.on( 'change', () => {
-			setPreviewUpdating( previewStatus, preview );
+			setPreviewUpdating( previewStatus );
 			clearTimeout( previewTimer );
 			previewTimer = setTimeout( () => {
 				updateBlankLineMarkers();
@@ -311,7 +311,7 @@ function initTemplateEditor() {
 	} else {
 		// Accessibility mode or CodeMirror unavailable — use plain textarea.
 		textarea.addEventListener( 'input', () => {
-			setPreviewUpdating( previewStatus, preview );
+			setPreviewUpdating( previewStatus );
 			clearTimeout( previewTimer );
 			previewTimer = setTimeout( updateTemplatePreview, 400 );
 			updateToolbarActiveState();

@@ -178,30 +178,26 @@ describe( 'renderValidation()', () => {
 
 describe( 'setPreviewUpdating() / setPreviewLive()', () => {
     it( 'setPreviewUpdating() sets the "updating" status text and class', () => {
-        const status  = document.createElement( 'span' );
-        const preview = document.createElement( 'div' );
+        const status = document.createElement( 'span' );
 
-        setPreviewUpdating( status, preview );
+        setPreviewUpdating( status );
 
         expect( status.textContent ).toBe( 'Aktualisiert…' );
         expect( status.classList.contains( 'is-updating' ) ).toBe( true );
-        expect( preview.classList.contains( 'is-updating' ) ).toBe( true );
     } );
 
     it( 'setPreviewLive() resets the status text and removes the "updating" class', () => {
-        const status  = document.createElement( 'span' );
-        const preview = document.createElement( 'div' );
-        setPreviewUpdating( status, preview );
+        const status = document.createElement( 'span' );
+        setPreviewUpdating( status );
 
-        setPreviewLive( status, preview );
+        setPreviewLive( status );
 
         expect( status.textContent ).toBe( 'Live' );
         expect( status.classList.contains( 'is-updating' ) ).toBe( false );
-        expect( preview.classList.contains( 'is-updating' ) ).toBe( false );
     } );
 
-    it( 'both functions tolerate null elements without throwing', () => {
-        expect( () => setPreviewUpdating( null, null ) ).not.toThrow();
-        expect( () => setPreviewLive( null, null ) ).not.toThrow();
+    it( 'both functions tolerate a null status element without throwing', () => {
+        expect( () => setPreviewUpdating( null ) ).not.toThrow();
+        expect( () => setPreviewLive( null ) ).not.toThrow();
     } );
 } );
