@@ -1,3 +1,11 @@
+# Vulnerability scanning intentionally excludes dev/test dependencies
+# (--include-dev-deps is not set). composer.json's require-dev and
+# package.json's devDependencies (build tooling, e2e/test frameworks like
+# wp-playground, lighthouse, vite, vitest) never ship in the distributed
+# plugin (see .distignore) and generate a large volume of transitive-dep
+# findings unrelated to what actually reaches end users. Re-evaluate this
+# scoping if dev tooling starts being distributed or run against untrusted
+# input.
 scan:
   scanners:
     - vuln
