@@ -116,9 +116,9 @@ trait LynxJournal_Batch {
             $post_args['post_author'] = $author_id;
         }
         $args    = apply_filters('lynxjournal_roundup_post_args', $post_args, $link_ids, $mode);
-        $post_id = wp_insert_post($args);
+        $post_id = wp_insert_post($args, true);
 
-        if (is_wp_error($post_id) || !$post_id) {
+        if (is_wp_error($post_id)) {
             return array('success' => false, 'post_id' => 0, 'message' => __('Failed to create roundup post.', 'lynx-journal'), 'error_code' => 'insert_failed');
         }
 

@@ -141,7 +141,7 @@ trait LynxJournal_Admin_AddLink {
         <div class="lynxjournal-cat-scroll-list">
             <?php foreach ($all_categories as $category) : ?>
                 <label class="lynxjournal-cat-scroll-label">
-                    <input type="checkbox" name="lynxjournal_categories[]" value="<?php echo esc_attr($category->term_id); ?>" <?php echo in_array((int) $category->term_id, $current_cats, true) ? 'checked' : ''; ?>>
+                    <input type="checkbox" name="lynxjournal_categories[]" value="<?php echo esc_attr((string) $category->term_id); ?>" <?php echo in_array((int) $category->term_id, $current_cats, true) ? 'checked' : ''; ?>>
                     <?php echo esc_html($category->name); ?>
                 </label>
             <?php endforeach; ?>

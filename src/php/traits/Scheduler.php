@@ -17,7 +17,7 @@ trait LynxJournal_Scheduler {
      * @return void
      */
     public function registerSchedulerHooks(): void {
-        add_action('lynxjournal_execute_schedule', [$this, 'executeSchedule']);
+        add_action('lynxjournal_execute_schedule', function (): void { $this->executeSchedule(); });
         add_action('lynxjournal_after_run', [$this, 'maybeSendRunNotification'], 10, 3);
     }
 
@@ -325,7 +325,7 @@ trait LynxJournal_Scheduler {
             'would_publish' => $would_publish,
             'link_count'    => $would_publish ? count($batch_ids) : 0,
             'total_pending' => $total_count,
-            'by_category'   => array_values($by_category),
+            'by_category'   => $by_category,
             'mode'          => $mode,
         ];
     }

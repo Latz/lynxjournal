@@ -49,7 +49,7 @@ describe('LynxJournal::createRoundupPost()', function (): void {
     it('returns insert_failed when wp_insert_post fails', function (): void {
         Functions\when('get_post')->alias(fn($id) => lynxjournal_make_post($id, "Link $id"));
         Functions\when('get_the_terms')->justReturn(false);
-        Functions\when('wp_insert_post')->justReturn(0);
+        Functions\when('wp_insert_post')->justReturn(new WP_Error('insert_failed', 'Insert failed'));
 
         $result = $this->plugin->createRoundupPost([1], 'My Roundup');
 

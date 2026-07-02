@@ -162,7 +162,7 @@ trait LynxJournal_RestApi {
      */
     public function handleGetRestNonce(): void {
         $origin = get_http_origin();
-        if (is_string($origin) && $this->isFromChromeExtension($origin)) {
+        if ($this->isFromChromeExtension($origin)) {
             $this->setCorsOriginHeaders($origin);
         }
         if (!current_user_can('edit_posts')) {
@@ -330,7 +330,7 @@ trait LynxJournal_RestApi {
             'post_status'  => 'lynxjournal_pending',
         );
 
-        $post_id = wp_insert_post($post_data);
+        $post_id = wp_insert_post($post_data, true);
         if (is_wp_error($post_id)) {
             return new \WP_Error('insert_failed', __('Failed to create link.', 'lynx-journal'), array('status' => 500));
         }
@@ -513,7 +513,7 @@ trait LynxJournal_RestApi {
      */
     public function addCorsHeaders(bool $served): bool {
         $origin = get_http_origin();
-        if (is_string($origin) && $this->isFromChromeExtension($origin)) {
+        if ($this->isFromChromeExtension($origin)) {
             $this->setCorsOriginHeaders($origin);
             header('Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE');
             header('Access-Control-Allow-Headers: Content-Type, X-LynxJournal-API-Key, X-WP-Nonce, Authorization');

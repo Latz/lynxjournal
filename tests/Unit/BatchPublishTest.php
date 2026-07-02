@@ -72,9 +72,9 @@ describe('LynxJournal::batchPublishLinks()', function (): void {
             ->alias(fn($id) => lynxjournal_make_post($id, "Link $id"));
         Functions\when('get_post_meta')->justReturn('');
         Functions\when('wp_insert_post')
-            ->alias(function () use (&$calls): int {
+            ->alias(function () use (&$calls) {
                 $calls++;
-                return $calls === 2 ? 0 : 99; // second call fails
+                return $calls === 2 ? new WP_Error('insert_failed', 'Insert failed') : 99; // second call fails
             });
         Functions\when('update_post_meta')->justReturn(true);
 

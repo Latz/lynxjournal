@@ -104,12 +104,12 @@ describe('LynxJournal::createBlogPost()', function (): void { // NOSONAR — cog
         expect($capturedStatus)->toBe('draft');
     });
 
-    it('returns insert_failed error when wp_insert_post returns 0', function (): void {
+    it('returns insert_failed error when wp_insert_post returns a WP_Error', function (): void {
         Functions\when('current_user_can')->justReturn(true);
         Functions\when('get_post')
             ->alias(fn($id) => $id === 1 ? lynxjournal_make_post(1, 'Link') : null);
         Functions\when('get_post_meta')->justReturn('');
-        Functions\when('wp_insert_post')->justReturn(0);
+        Functions\when('wp_insert_post')->justReturn(new WP_Error('insert_failed', 'Insert failed'));
 
         $result = $this->plugin->createBlogPost(1);
 

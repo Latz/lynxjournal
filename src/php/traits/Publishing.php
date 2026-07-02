@@ -133,9 +133,9 @@ trait LynxJournal_Publishing {
             'post_content' => $post_content,
             'post_status'  => $as_draft ? 'draft' : 'publish',
             'post_type'    => 'post',
-        ));
+        ), true);
 
-        if (is_wp_error($post_id) || !$post_id) {
+        if (is_wp_error($post_id)) {
             return array(
                 'success' => false,
                 'post_id' => 0,

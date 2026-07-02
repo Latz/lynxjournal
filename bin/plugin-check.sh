@@ -20,7 +20,13 @@ echo "LynxJournal Plugin Check"
 echo "=========================================="
 echo ""
 
-# Build the plugin first
+# Static analysis first (fast fail before the build)
+echo "Running PHPStan..."
+"$PROJECT_DIR/vendor/bin/phpstan" analyse --no-progress --configuration="$PROJECT_DIR/phpstan.neon"
+
+echo ""
+
+# Build the plugin
 echo "Building plugin..."
 bash "$SCRIPT_DIR/build-plugin.sh"
 
