@@ -93,18 +93,30 @@ trait LynxJournal_Admin_Dashboard {
      * @return array|null Batch result or null if no request was made.
      */
     public function handleBatchPublishRequest(): ?array {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified in checkBatchPublishPermissions() below
         if ( ! isset( $_POST['lynxjournal_batch_publish'] ) ) {
             return null;
         }
-        $nonce = isset( $_POST['lynxjournal_batch_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_batch_nonce'] ) ) : '';
-        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_batch_publish' ) ) {
+        if ( ! $this->checkBatchPublishPermissions() ) {
             return null;
         }
-        if ( ! current_user_can( 'publish_posts' ) ) {
-            return null;
-        }
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified in checkBatchPublishPermissions() above
         $as_draft = isset( $_POST['publish_as_draft'] ) && sanitize_text_field( wp_unslash( $_POST['publish_as_draft'] ) ) === '1';
         return $this->batchPublishLinks( $this->getUnpublishedLinkIds(), $as_draft );
+    }
+
+    /**
+     * Verify the nonce and capability required to run a batch publish request.
+     *
+     * @since 1.0.0
+     * @return bool
+     */
+    private function checkBatchPublishPermissions(): bool {
+        $nonce = isset( $_POST['lynxjournal_batch_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_batch_nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_batch_publish' ) ) {
+            return false;
+        }
+        return current_user_can( 'publish_posts' );
     }
 
     /**
