@@ -252,12 +252,28 @@ trait LynxJournal_Admin_LinksPage {
     }
 
     private function processLinksPageAction(): array {
-        $message = '';
-        $error   = '';
+        $context = $this->resolveLinksPageActionContext();
+        if ($context === null) {
+            return ['', ''];
+        }
+        [$action, $link_id] = $context;
 
+        if (!$this->userCanPerformLinkAction($action, $link_id)) {
+            return ['', ''];
+        }
+
+        return $this->executeLinksPageAction($action, $link_id);
+    }
+
+    /**
+     * Read, sanitize, and nonce-verify the requested links-page action from $_GET.
+     *
+     * @return array{0: string, 1: int}|null [action, link_id], or null if absent/invalid.
+     */
+    private function resolveLinksPageActionContext(): ?array {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (!isset($_GET['action'], $_GET['link_id'], $_GET['_wpnonce'])) {
-            return [$message, $error];
+            return null;
         }
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -275,33 +291,35 @@ trait LynxJournal_Admin_LinksPage {
         if (!array_key_exists($action, $nonce_actions)
             || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), $nonce_actions[$action])
         ) {
-            return [$message, $error];
+            return null;
         }
 
-        if ($action === 'publish_link') {
-            if (!current_user_can('publish_post', $link_id)) {
-                return [$message, $error];
-            }
-            [$message, $error] = $this->executePublishAction($link_id, false);
-        } elseif ($action === 'draft_link') {
-            if (!current_user_can('edit_post', $link_id)) {
-                return [$message, $error];
-            }
-            [$message, $error] = $this->executePublishAction($link_id, true);
-        } elseif ($action === 'unpublish_link') {
-            if (!current_user_can('edit_post', $link_id)) {
-                return [$message, $error];
-            }
-            [$message, $error] = $this->executeUnpublishAction($link_id);
-        } elseif ($action === 'delete') {
-            if (!current_user_can('delete_post', $link_id)) {
-                return [$message, $error];
-            }
-            wp_delete_post($link_id, true);
-            $message = __('Link deleted successfully.', 'lynx-journal');
-        }
+        return [$action, $link_id];
+    }
 
-        return [$message, $error];
+    private function userCanPerformLinkAction(string $action, int $link_id): bool {
+        $capabilities = [
+            'publish_link'   => 'publish_post',
+            'draft_link'     => 'edit_post',
+            'unpublish_link' => 'edit_post',
+            'delete'         => 'delete_post',
+        ];
+        return current_user_can($capabilities[$action], $link_id);
+    }
+
+    private function executeLinksPageAction(string $action, int $link_id): array {
+        return match ($action) {
+            'publish_link'   => $this->executePublishAction($link_id, false),
+            'draft_link'     => $this->executePublishAction($link_id, true),
+            'unpublish_link' => $this->executeUnpublishAction($link_id),
+            'delete'         => $this->executeDeleteAction($link_id),
+            default          => ['', ''],
+        };
+    }
+
+    private function executeDeleteAction(int $link_id): array {
+        wp_delete_post($link_id, true);
+        return [__('Link deleted successfully.', 'lynx-journal'), ''];
     }
 
     private function executePublishAction(int $link_id, bool $as_draft): array {
