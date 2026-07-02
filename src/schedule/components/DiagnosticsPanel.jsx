@@ -133,8 +133,8 @@ export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
                 </button>
                 {showHistory && (
                   <ol className="lynxjournal-history-list">
-                    {history.map((run, i) => (
-                      <li key={i} className="lynxjournal-history-row">
+                    {history.map((run) => (
+                      <li key={run.ts} className="lynxjournal-history-row">
                         <div className="lynxjournal-history-row-main">
                           <RunBadge status={run.status} />
                           <PostLink postId={run.post_id} linkCount={run.link_count} />
