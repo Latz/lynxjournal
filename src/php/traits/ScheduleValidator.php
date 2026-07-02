@@ -88,17 +88,26 @@ trait LynxJournal_ScheduleValidator {
     }
 
     private function validatePublishOptions(array &$data): ?\WP_Error {
-        if (isset($data['publishAs'])) {
-            $data['publishAs'] = (int) $data['publishAs'];
-            if ($data['publishAs'] < 0) {
-                return new \WP_Error('invalid_publish_as', __('publishAs must be a non-negative integer', 'lynx-journal'), ['status' => 400]);
-            }
-            if ($data['publishAs'] > 0 && !user_can($data['publishAs'], 'edit_posts')) {
-                return new \WP_Error('invalid_publish_as', __('publishAs must refer to a user who can publish posts', 'lynx-journal'), ['status' => 400]);
-            }
+        $publish_as_error = $this->validatePublishAs($data);
+        if ($publish_as_error) {
+            return $publish_as_error;
         }
         if (isset($data['post_status']) && !in_array($data['post_status'], ['publish', 'draft'], true)) {
             return new \WP_Error('invalid_post_status', __('post_status must be "publish" or "draft"', 'lynx-journal'), ['status' => 400]);
+        }
+        return null;
+    }
+
+    private function validatePublishAs(array &$data): ?\WP_Error {
+        if (!isset($data['publishAs'])) {
+            return null;
+        }
+        $data['publishAs'] = (int) $data['publishAs'];
+        if ($data['publishAs'] < 0) {
+            return new \WP_Error('invalid_publish_as', __('publishAs must be a non-negative integer', 'lynx-journal'), ['status' => 400]);
+        }
+        if ($data['publishAs'] > 0 && !user_can($data['publishAs'], 'edit_posts')) {
+            return new \WP_Error('invalid_publish_as', __('publishAs must refer to a user who can publish posts', 'lynx-journal'), ['status' => 400]);
         }
         return null;
     }
