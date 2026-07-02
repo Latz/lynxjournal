@@ -23,6 +23,7 @@ defined('HOUR_IN_SECONDS')  || define('HOUR_IN_SECONDS',  3600);
 defined('DAY_IN_SECONDS')   || define('DAY_IN_SECONDS',   86400);
 defined('WEEK_IN_SECONDS')  || define('WEEK_IN_SECONDS',  604800);
 defined('MONTH_IN_SECONDS') || define('MONTH_IN_SECONDS', 2592000);
+defined('ARRAY_A') || define('ARRAY_A', 'ARRAY_A');
 
 // ---------------------------------------------------------------------------
 // Classes
