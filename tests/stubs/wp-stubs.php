@@ -142,7 +142,7 @@ if (!function_exists('sprintf'))    { /* built-in */ }
 // Output escaping — identity by default; override in tests that check escaping
 // ---------------------------------------------------------------------------
 if (!function_exists('esc_html'))     { function esc_html(string $t): string     { return htmlspecialchars($t, ENT_QUOTES); } }
-if (!function_exists('esc_attr'))     { function esc_attr(string $t): string     { return htmlspecialchars($t, ENT_QUOTES); } }
+if (!function_exists('esc_attr'))     { function esc_attr(int|string $t): string { return htmlspecialchars((string) $t, ENT_QUOTES); } }
 if (!function_exists('esc_url'))      { function esc_url(string $u): string      { return $u; } }
 if (!function_exists('esc_url_raw'))  { function esc_url_raw(string $u): string  { return $u; } }
 if (!function_exists('esc_js'))       { function esc_js(string $t): string       { return addslashes($t); } }
