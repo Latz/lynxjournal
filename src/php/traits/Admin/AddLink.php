@@ -118,17 +118,26 @@ trait LynxJournal_Admin_AddLink {
             return ['', ''];
         }
 
-        $nonce = isset($_POST['lynxjournal_add_nonce']) ? sanitize_text_field(wp_unslash($_POST['lynxjournal_add_nonce'])) : '';
-        if (!wp_verify_nonce($nonce, 'lynxjournal_add_link')) {
-            return ['', __('Security check failed.', 'lynx-journal')];
-        }
-
-        if (!current_user_can('edit_posts')) {
-            return ['', __('Insufficient permissions.', 'lynx-journal')];
+        $submission_error = $this->checkAddLinkPermissions();
+        if ($submission_error !== '') {
+            return ['', $submission_error];
         }
 
         $input = $this->validateAddLinkInput();
         return ($input['error'] !== '') ? ['', $input['error']] : $this->insertNewLink($input);
+    }
+
+    private function checkAddLinkPermissions(): string {
+        $nonce = isset($_POST['lynxjournal_add_nonce']) ? sanitize_text_field(wp_unslash($_POST['lynxjournal_add_nonce'])) : '';
+        if (!wp_verify_nonce($nonce, 'lynxjournal_add_link')) {
+            return __('Security check failed.', 'lynx-journal');
+        }
+
+        if (!current_user_can('edit_posts')) {
+            return __('Insufficient permissions.', 'lynx-journal');
+        }
+
+        return '';
     }
 
     private function validateAddLinkInput(): array {
