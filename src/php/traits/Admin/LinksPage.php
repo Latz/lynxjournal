@@ -339,12 +339,25 @@ trait LynxJournal_Admin_LinksPage {
 
         if ( $publish_status === 'published' ) {
             echo '<a href="' . esc_url( get_permalink( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Post', 'lynx-journal' ) . '</a> | ';
-            echo '<a href="' . esc_url( $unpublish_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'lynx-journal' ) ) . '\');">' . esc_html__( 'Unpublish', 'lynx-journal' ) . '</a> | ';
+            $this->renderConfirmLink( $unpublish_url, esc_js( __( 'Are you sure you want to unpublish this link?', 'lynx-journal' ) ), esc_html__( 'Unpublish', 'lynx-journal' ) );
+            echo ' | ';
         } elseif ( $publish_status === 'draft' ) {
             echo '<a href="' . esc_url( get_edit_post_link( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Draft', 'lynx-journal' ) . '</a> | ';
-            echo '<a href="' . esc_url( $unpublish_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to unpublish this link?', 'lynx-journal' ) ) . '\');">' . esc_html__( 'Unpublish', 'lynx-journal' ) . '</a> | ';
+            $this->renderConfirmLink( $unpublish_url, esc_js( __( 'Are you sure you want to unpublish this link?', 'lynx-journal' ) ), esc_html__( 'Unpublish', 'lynx-journal' ) );
+            echo ' | ';
         }
         echo '<a href="' . esc_url( get_edit_post_link( $link->ID ) ) . '">' . esc_html__( 'Edit', 'lynx-journal' ) . '</a> | ';
-        echo '<a href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete this link?', 'lynx-journal' ) ) . '\');">' . esc_html__( 'Delete', 'lynx-journal' ) . '</a>';
+        $this->renderConfirmLink( $delete_url, esc_js( __( 'Are you sure you want to delete this link?', 'lynx-journal' ) ), esc_html__( 'Delete', 'lynx-journal' ) );
+    }
+
+    /**
+     * Echo an anchor tag that prompts a JS confirm() dialog before following its href.
+     *
+     * @param string $url              Pre-escaped href value (esc_url).
+     * @param string $confirm_message  Pre-escaped confirmation text (esc_js).
+     * @param string $label            Pre-escaped link label (esc_html__).
+     */
+    private function renderConfirmLink( string $url, string $confirm_message, string $label ): void {
+        echo '<a href="' . $url . '" onclick="return confirm(\'' . $confirm_message . '\');">' . $label . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- all three arguments are pre-escaped by the caller via esc_url/esc_js/esc_html__
     }
 }
