@@ -273,7 +273,7 @@
 .lynxjournal-diag-row dd {
   margin: 0;
   text-align: end;
-  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .lynxjournal-diag-badge {
