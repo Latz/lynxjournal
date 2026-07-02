@@ -130,6 +130,16 @@ describe('LynxJournal::validateScheduleConfig()', function (): void {
         expect($result->get_error_data()['status'])->toBe(400);
     });
 
+    it('returns 400 invalid_publish_as when publishAs user cannot edit_posts', function (): void {
+        Functions\when('user_can')->justReturn(false);
+
+        $result = $this->plugin->validateScheduleConfig(['mode' => 'daily', 'publishAs' => 5]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_publish_as');
+        expect($result->get_error_data()['status'])->toBe(400);
+    });
+
     it('accepts post_status "publish" as a valid value', function (): void {
         $result = $this->plugin->validateScheduleConfig(['mode' => 'daily', 'post_status' => 'publish']);
 
