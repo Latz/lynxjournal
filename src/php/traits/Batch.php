@@ -83,13 +83,13 @@ trait LynxJournal_Batch {
             $post_title = sprintf(__('Links Roundup - %s', 'lynx-journal'), gmdate('F j, Y'));
         }
 
-        [$links_by_category, $uncategorized_links, $published_count] = $this->groupLinksByCategory($link_ids);
+        $grouped = $this->groupLinksByCategory($link_ids);
 
-        if ($published_count === 0) {
+        if ($grouped['count'] === 0) {
             return array('success' => false, 'post_id' => 0, 'message' => __('No valid links to publish.', 'lynx-journal'), 'error_code' => 'no_valid_links');
         }
 
-        return $this->executeRoundupInsertion($post_title, $as_draft, $links_by_category, $uncategorized_links, $published_count, $link_ids, $mode, $author_id);
+        return $this->executeRoundupInsertion($post_title, $as_draft, $grouped, $link_ids, $mode, $author_id);
     }
 
     /**
@@ -98,19 +98,17 @@ trait LynxJournal_Batch {
      * @since 1.0.0
      * @param string $post_title The roundup post title.
      * @param bool $as_draft Whether to create as draft.
-     * @param array $links_by_category Links grouped by category.
-     * @param array $uncategorized_links Links without a category.
-     * @param int $count Total count of links.
+     * @param array $grouped Result of groupLinksByCategory(): by_category, uncategorized, count.
      * @param array $link_ids All link post IDs.
      * @param string $mode The scheduling mode that triggered this.
      * @param int $author_id Optional post author user ID.
      * @return array Result array with success status, post_id, link_count, and message.
      */
-    private function executeRoundupInsertion(string $post_title, bool $as_draft, array $links_by_category, array $uncategorized_links, int $count, array $link_ids, string $mode = 'manual', int $author_id = 0): array {
+    private function executeRoundupInsertion(string $post_title, bool $as_draft, array $grouped, array $link_ids, string $mode = 'manual', int $author_id = 0): array {
         // post_type 'post': the roundup is a normal blog post, not a lynxjournal CPT entry.
         $post_args = array(
             'post_title'   => $post_title,
-            'post_content' => $this->buildRoundupContent($links_by_category, $uncategorized_links),
+            'post_content' => $this->buildRoundupContent($grouped['by_category'], $grouped['uncategorized']),
             'post_status'  => $as_draft ? 'draft' : 'publish',
             'post_type'    => 'post',
         );
@@ -124,10 +122,11 @@ trait LynxJournal_Batch {
             return array('success' => false, 'post_id' => 0, 'message' => __('Failed to create roundup post.', 'lynx-journal'), 'error_code' => 'insert_failed');
         }
 
-        $this->assignRoundupCategories($post_id, $links_by_category);
+        $this->assignRoundupCategories($post_id, $grouped['by_category']);
         $this->assignRoundupTags($post_id, $link_ids);
         $this->markLinksAsPublished($link_ids, $post_id, $as_draft);
 
+        $count = $grouped['count'];
         return array(
             'success'    => true,
             'post_id'    => $post_id,
@@ -138,6 +137,13 @@ trait LynxJournal_Batch {
         );
     }
 
+    /**
+     * Group publishable links by their primary category.
+     *
+     * @since 1.0.0
+     * @param array $link_ids Array of link post IDs.
+     * @return array{by_category: array, uncategorized: array, count: int}
+     */
     private function groupLinksByCategory(array $link_ids): array {
         $links_by_category  = array();
         $uncategorized_links = array();
@@ -161,7 +167,11 @@ trait LynxJournal_Batch {
             $count++;
         }
 
-        return [$links_by_category, $uncategorized_links, $count];
+        return [
+            'by_category'   => $links_by_category,
+            'uncategorized' => $uncategorized_links,
+            'count'         => $count,
+        ];
     }
 
     /**
