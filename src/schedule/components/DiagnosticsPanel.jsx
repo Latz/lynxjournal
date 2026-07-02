@@ -2,7 +2,7 @@ import { useState } from '@wordpress/element';
 import { Button } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 
-const SITE_TIMEZONE = (globalThis.lynxjournalSchedule || {}).timezone || undefined;
+const SITE_TIMEZONE = globalThis.lynxjournalSchedule?.timezone || undefined;
 
 function fmtTs(ts) {
   return new Date(ts * 1000).toLocaleString(undefined, {
