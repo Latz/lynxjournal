@@ -8,12 +8,12 @@ trait LynxJournal_Admin_AddLink {
         [$message, $error] = $this->processAddLinkSubmission();
 
         // Repopulate form fields from POST on submission; requires nonce to be present.
-        $nonce_ok        = isset( $_POST['lynxjournal_add_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['lynxjournal_add_nonce'] ) ), 'lynxjournal_add_link' );
-        $current_title   = $nonce_ok && isset( $_POST['lynxjournal_title'] )      ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_title'] ) )      : '';
-        $current_url     = $nonce_ok && isset( $_POST['lynxjournal_url'] )        ? esc_url_raw( wp_unslash( $_POST['lynxjournal_url'] ) )                : '';
-        $current_content = $nonce_ok && isset( $_POST['lynxjournal_content'] )    ? wp_kses_post( wp_unslash( $_POST['lynxjournal_content'] ) )           : '';
-        $current_tags    = $nonce_ok && isset( $_POST['lynxjournal_tags'] )       ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_tags'] ) )       : '';
-        $current_cats    = $nonce_ok && isset( $_POST['lynxjournal_categories'] ) ? array_map( 'intval', $_POST['lynxjournal_categories'] )               : array();
+        $fields          = $this->getRepopulatedAddLinkFields();
+        $current_title   = $fields['title'];
+        $current_url     = $fields['url'];
+        $current_content = $fields['content'];
+        $current_tags    = $fields['tags'];
+        $current_cats    = $fields['categories'];
 
         // Get all categories (cached for 1 hour, invalidated on term changes)
         $all_categories = $this->getCachedCategories();
@@ -77,18 +77,7 @@ trait LynxJournal_Admin_AddLink {
                         <td>
                             <fieldset>
                                 <legend class="screen-reader-text"><?php esc_html_e('Categories', 'lynx-journal'); ?></legend>
-                                <?php if (!empty($all_categories)) : ?>
-                                    <div class="lynxjournal-cat-scroll-list">
-                                        <?php foreach ($all_categories as $category) : ?>
-                                            <label class="lynxjournal-cat-scroll-label">
-                                                <input type="checkbox" name="lynxjournal_categories[]" value="<?php echo esc_attr($category->term_id); ?>" <?php echo in_array((int) $category->term_id, $current_cats, true) ? 'checked' : ''; ?>>
-                                                <?php echo esc_html($category->name); ?>
-                                            </label>
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php else : ?>
-                                    <p><?php esc_html_e('No categories available. Create categories first in LynxJournal > Categories.', 'lynx-journal'); ?></p>
-                                <?php endif; ?>
+                                <?php $this->renderAddLinkCategoryCheckboxes($all_categories, $current_cats); ?>
                             </fieldset>
                         </td>
                     </tr>
@@ -109,6 +98,53 @@ trait LynxJournal_Admin_AddLink {
                     <a href="<?php echo esc_url(admin_url(self::ADMIN_LINKS_PAGE)); ?>" class="button"><?php esc_html_e('Cancel', 'lynx-journal'); ?></a>
                 </p>
             </form>
+        </div>
+        <?php
+    }
+
+    /**
+     * Repopulate Add Link form fields from $_POST after a submission; requires nonce to be present.
+     *
+     * @return array{title: string, url: string, content: string, tags: string, categories: int[]}
+     */
+    private function getRepopulatedAddLinkFields(): array {
+        $empty = ['title' => '', 'url' => '', 'content' => '', 'tags' => '', 'categories' => []];
+
+        $nonce_ok = isset($_POST['lynxjournal_add_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['lynxjournal_add_nonce'])), 'lynxjournal_add_link'); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified on this line
+        if (!$nonce_ok) {
+            return $empty;
+        }
+
+        return [
+            'title'      => isset($_POST['lynxjournal_title'])      ? sanitize_text_field(wp_unslash($_POST['lynxjournal_title']))   : '',
+            'url'        => isset($_POST['lynxjournal_url'])        ? esc_url_raw(wp_unslash($_POST['lynxjournal_url']))             : '',
+            'content'    => isset($_POST['lynxjournal_content'])    ? wp_kses_post(wp_unslash($_POST['lynxjournal_content']))        : '',
+            'tags'       => isset($_POST['lynxjournal_tags'])       ? sanitize_text_field(wp_unslash($_POST['lynxjournal_tags']))    : '',
+            'categories' => isset($_POST['lynxjournal_categories']) ? array_map('intval', $_POST['lynxjournal_categories'])          : [],
+        ];
+    }
+
+    /**
+     * Render the category checkbox list for the Add Link form, or a fallback message when empty.
+     *
+     * @param \WP_Term[] $all_categories All available lynxjournal_category terms.
+     * @param int[]      $current_cats   Term IDs to pre-check (from a repopulated submission).
+     */
+    private function renderAddLinkCategoryCheckboxes(array $all_categories, array $current_cats): void {
+        if (empty($all_categories)) {
+            ?>
+            <p><?php esc_html_e('No categories available. Create categories first in LynxJournal > Categories.', 'lynx-journal'); ?></p>
+            <?php
+            return;
+        }
+        ?>
+        <div class="lynxjournal-cat-scroll-list">
+            <?php foreach ($all_categories as $category) : ?>
+                <label class="lynxjournal-cat-scroll-label">
+                    <input type="checkbox" name="lynxjournal_categories[]" value="<?php echo esc_attr($category->term_id); ?>" <?php echo in_array((int) $category->term_id, $current_cats, true) ? 'checked' : ''; ?>>
+                    <?php echo esc_html($category->name); ?>
+                </label>
+            <?php endforeach; ?>
         </div>
         <?php
     }
