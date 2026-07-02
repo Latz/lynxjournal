@@ -94,8 +94,10 @@ trait LynxJournal_Admin_Categories {
     }
 
     private function validateAddCategoryInput(): array {
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce is verified in checkAddCategoryPermissions() before this is called
         $name  = sanitize_text_field( wp_unslash( $_POST['cat_name'] ?? '' ) );
         $desc  = sanitize_textarea_field( wp_unslash( $_POST['cat_description'] ?? '' ) );
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
         $error = empty( $name ) ? __( 'Category name is required.', 'lynx-journal' ) : '';
         return array( 'name' => $name, 'description' => $desc, 'error' => $error );
     }
