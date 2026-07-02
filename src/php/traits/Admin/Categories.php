@@ -69,6 +69,20 @@ trait LynxJournal_Admin_Categories {
     }
 
     private function handleAddCategory(): ?string {
+        $permission_error = $this->checkAddCategoryPermissions();
+        if ( $permission_error ) {
+            return $permission_error;
+        }
+
+        $input = $this->validateAddCategoryInput();
+        if ( $input['error'] !== '' ) {
+            return $input['error'];
+        }
+
+        return $this->insertNewCategory( $input );
+    }
+
+    private function checkAddCategoryPermissions(): ?string {
         $nonce = isset( $_POST['lynxjournal_cat_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_cat_nonce'] ) ) : '';
         if ( ! wp_verify_nonce( $nonce, 'lynxjournal_add_category' ) ) {
             return __( 'Security check failed.', 'lynx-journal' );
@@ -76,12 +90,18 @@ trait LynxJournal_Admin_Categories {
         if ( ! current_user_can( 'edit_posts' ) ) {
             return __( 'Insufficient permissions.', 'lynx-journal' );
         }
-        $name = sanitize_text_field( wp_unslash( $_POST['cat_name'] ?? '' ) );
-        if ( empty( $name ) ) {
-            return __( 'Category name is required.', 'lynx-journal' );
-        }
-        $desc   = sanitize_textarea_field( wp_unslash( $_POST['cat_description'] ?? '' ) );
-        $result = wp_insert_term( $name, 'lynxjournal_category', array( 'description' => $desc ) );
+        return null;
+    }
+
+    private function validateAddCategoryInput(): array {
+        $name  = sanitize_text_field( wp_unslash( $_POST['cat_name'] ?? '' ) );
+        $desc  = sanitize_textarea_field( wp_unslash( $_POST['cat_description'] ?? '' ) );
+        $error = empty( $name ) ? __( 'Category name is required.', 'lynx-journal' ) : '';
+        return array( 'name' => $name, 'description' => $desc, 'error' => $error );
+    }
+
+    private function insertNewCategory( array $input ): ?string {
+        $result = wp_insert_term( $input['name'], 'lynxjournal_category', array( 'description' => $input['description'] ) );
         if ( is_wp_error( $result ) ) {
             return $result->get_error_message();
         }
