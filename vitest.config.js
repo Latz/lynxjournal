@@ -1,11 +1,28 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 export default defineConfig({
+    esbuild: {
+        jsx: 'automatic',
+    },
+    resolve: {
+        alias: {
+            // @wordpress/i18n, @wordpress/api-fetch, and @wordpress/components are
+            // externalized in production (provided by WP core as wp.i18n etc.) and
+            // aren't installed as dependencies, so Vite can't resolve them directly.
+            '@wordpress/i18n':        path.resolve(__dirname, 'tests/js/mocks/wordpress-i18n.js'),
+            '@wordpress/api-fetch':   path.resolve(__dirname, 'tests/js/mocks/wordpress-api-fetch.js'),
+            '@wordpress/components':  path.resolve(__dirname, 'tests/js/mocks/wordpress-components.jsx'),
+        },
+    },
     test: {
         globals:     true,
         environment: 'jsdom',
-        include:     ['tests/js/**/*.test.{js,ts}'],
-        setupFiles:  ['tests/js/chrome-mock.js'],
+        include:     ['tests/js/**/*.test.{js,jsx,ts}'],
+        setupFiles:  ['tests/js/chrome-mock.js', 'tests/js/react-setup.js'],
         coverage: {
             provider:          'v8',
             reportsDirectory:  'bin/reports/coverage-js',
