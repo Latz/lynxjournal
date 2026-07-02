@@ -350,9 +350,6 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	border-radius: 3px;
 	border: 1px solid;
 	cursor: pointer;
-}
-
-.lynxjournal-delete-confirm-yes {
 	background: #b32d2e;
 	border-color: #b32d2e;
 	color: #fff;
