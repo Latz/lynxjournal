@@ -126,19 +126,32 @@ trait LynxJournal_Admin_Dashboard {
      * @return array|null Roundup result or null if no request was made.
      */
     public function handleRoundupRequest(): ?array {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified in checkRoundupPermissions() below
         if ( ! isset( $_POST['lynxjournal_create_roundup'] ) ) {
             return null;
         }
-        $nonce = isset( $_POST['lynxjournal_roundup_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_roundup_nonce'] ) ) : '';
-        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_create_roundup' ) ) {
+        if ( ! $this->checkRoundupPermissions() ) {
             return null;
         }
-        if ( ! current_user_can( 'publish_posts' ) ) {
-            return null;
-        }
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified in checkRoundupPermissions() above
         $roundup_title = isset( $_POST['roundup_title'] ) ? sanitize_text_field( wp_unslash( $_POST['roundup_title'] ) ) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified in checkRoundupPermissions() above
         $as_draft      = isset( $_POST['roundup_as_draft'] ) && sanitize_text_field( wp_unslash( $_POST['roundup_as_draft'] ) ) === '1';
         return $this->createRoundupPost( $this->getUnpublishedLinkIds(), $roundup_title, $as_draft );
+    }
+
+    /**
+     * Verify the nonce and capability required to run a roundup creation request.
+     *
+     * @since 1.0.0
+     * @return bool
+     */
+    private function checkRoundupPermissions(): bool {
+        $nonce = isset( $_POST['lynxjournal_roundup_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_roundup_nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_create_roundup' ) ) {
+            return false;
+        }
+        return current_user_can( 'publish_posts' );
     }
 
     /**
@@ -148,30 +161,57 @@ trait LynxJournal_Admin_Dashboard {
      * @return bool True if link was added successfully.
      */
     public function handleQuickAddRequest(): bool {
-        if ( ! isset( $_POST['lynxjournal_quick_add'] ) ) {
+        $input = $this->validateQuickAddInput();
+        if ( $input === null ) {
             return false;
         }
+        return $this->insertQuickAddLink( $input );
+    }
+
+    /**
+     * Validate and sanitize a quick-add-link form submission.
+     *
+     * @since 1.0.0
+     * @return array{title: string, url: string, category: int}|null Validated input, or null if absent/invalid.
+     */
+    private function validateQuickAddInput(): ?array {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified via wp_verify_nonce() below
+        if ( ! isset( $_POST['lynxjournal_quick_add'] ) ) {
+            return null;
+        }
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified via wp_verify_nonce() below
         $nonce    = isset( $_POST['lynxjournal_quick_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_quick_nonce'] ) ) : '';
         $title    = isset( $_POST['quick_title'] )    ? sanitize_text_field( wp_unslash( $_POST['quick_title'] ) )    : '';
         $url      = isset( $_POST['quick_url'] )      ? esc_url_raw( wp_unslash( $_POST['quick_url'] ) )              : '';
         $category = isset( $_POST['quick_category'] ) ? (int) $_POST['quick_category']                                : 0;
         if ( ! wp_verify_nonce( $nonce, 'lynxjournal_quick_add_link' ) || empty( $title ) || empty( $url ) || $category <= 0 ) {
-            return false;
+            return null;
         }
         if ( ! current_user_can( 'edit_posts' ) ) {
-            return false;
+            return null;
         }
+        return compact( 'title', 'url', 'category' );
+    }
+
+    /**
+     * Insert a link post from validated quick-add input.
+     *
+     * @since 1.0.0
+     * @param array{title: string, url: string, category: int} $input Validated quick-add input.
+     * @return bool True if the link was inserted successfully.
+     */
+    private function insertQuickAddLink( array $input ): bool {
         $post_id = wp_insert_post( array(
-            'post_title'  => $title,
+            'post_title'  => $input['title'],
             'post_type'   => 'lynx-journal',
             'post_status' => 'lynxjournal_pending',
         ) );
         if ( $post_id ) {
-            if ( ! empty( $url ) ) {
-                update_post_meta( $post_id, '_lynxjournal_url', $url );
+            if ( ! empty( $input['url'] ) ) {
+                update_post_meta( $post_id, '_lynxjournal_url', $input['url'] );
             }
-            if ( $category > 0 ) {
-                wp_set_post_terms( $post_id, array( $category ), 'lynxjournal_category' );
+            if ( $input['category'] > 0 ) {
+                wp_set_post_terms( $post_id, array( $input['category'] ), 'lynxjournal_category' );
             }
         }
         return (bool) $post_id;
