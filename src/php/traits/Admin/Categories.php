@@ -113,17 +113,28 @@ trait LynxJournal_Admin_Categories {
     }
 
     private function handleDeleteCategory(): bool {
-        $nonce = isset( $_POST['lynxjournal_cat_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_cat_nonce'] ) ) : '';
-        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_delete_category' ) ) {
+        if ( ! $this->checkDeleteCategoryPermissions() ) {
             return false;
         }
-        if ( ! current_user_can( 'edit_posts' ) ) {
-            return false;
-        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified in checkDeleteCategoryPermissions() above
         $term_id = isset( $_POST['cat_term_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['cat_term_id'] ) ) : 0;
         if ( ! $term_id ) {
             return false;
         }
+
+        return $this->deleteCategoryTerm( $term_id );
+    }
+
+    private function checkDeleteCategoryPermissions(): bool {
+        $nonce = isset( $_POST['lynxjournal_cat_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_cat_nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_delete_category' ) ) {
+            return false;
+        }
+        return current_user_can( 'edit_posts' );
+    }
+
+    private function deleteCategoryTerm( int $term_id ): bool {
         $result = wp_delete_term( $term_id, 'lynxjournal_category' );
         if ( is_wp_error( $result ) || $result === false ) {
             return false;
