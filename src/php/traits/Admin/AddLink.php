@@ -114,7 +114,7 @@ trait LynxJournal_Admin_AddLink {
     }
 
     private function processAddLinkSubmission(): array {
-        if (!isset($_POST['lynxjournal_add_submit'])) {
+        if (!isset($_POST['lynxjournal_add_submit'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified in checkAddLinkPermissions() below
             return ['', ''];
         }
 
