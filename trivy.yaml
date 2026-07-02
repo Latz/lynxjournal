@@ -1,0 +1,19 @@
+scan:
+  scanners:
+    - vuln
+    - secret
+    - misconfig
+  skip-dirs:
+    - vendor
+    - node_modules
+    - dist
+    - build
+    - svn
+    - test-results
+    - .scannerwork
+
+severity:
+  - HIGH
+  - CRITICAL
+
+exit-code: 1
