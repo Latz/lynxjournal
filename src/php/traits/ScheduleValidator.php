@@ -103,10 +103,14 @@ trait LynxJournal_ScheduleValidator {
             return null;
         }
         $data['publishAs'] = (int) $data['publishAs'];
-        if ($data['publishAs'] < 0) {
+        return $this->validatePublishAsValue($data['publishAs']);
+    }
+
+    private function validatePublishAsValue(int $publish_as): ?\WP_Error {
+        if ($publish_as < 0) {
             return new \WP_Error('invalid_publish_as', __('publishAs must be a non-negative integer', 'lynx-journal'), ['status' => 400]);
         }
-        if ($data['publishAs'] > 0 && !user_can($data['publishAs'], 'edit_posts')) {
+        if ($publish_as > 0 && !user_can($publish_as, 'edit_posts')) {
             return new \WP_Error('invalid_publish_as', __('publishAs must refer to a user who can publish posts', 'lynx-journal'), ['status' => 400]);
         }
         return null;

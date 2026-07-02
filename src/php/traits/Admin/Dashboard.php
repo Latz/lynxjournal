@@ -175,22 +175,36 @@ trait LynxJournal_Admin_Dashboard {
      * @return array{title: string, url: string, category: int}|null Validated input, or null if absent/invalid.
      */
     private function validateQuickAddInput(): ?array {
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified via wp_verify_nonce() below
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified in checkQuickAddPermissions() below
         if ( ! isset( $_POST['lynxjournal_quick_add'] ) ) {
             return null;
         }
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce is verified via wp_verify_nonce() below
-        $nonce    = isset( $_POST['lynxjournal_quick_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_quick_nonce'] ) ) : '';
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce is verified in checkQuickAddPermissions() below
         $title    = isset( $_POST['quick_title'] )    ? sanitize_text_field( wp_unslash( $_POST['quick_title'] ) )    : '';
         $url      = isset( $_POST['quick_url'] )      ? esc_url_raw( wp_unslash( $_POST['quick_url'] ) )              : '';
         $category = isset( $_POST['quick_category'] ) ? (int) $_POST['quick_category']                                : 0;
-        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_quick_add_link' ) || empty( $title ) || empty( $url ) || $category <= 0 ) {
-            return null;
-        }
-        if ( ! current_user_can( 'edit_posts' ) ) {
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
+        if ( ! $this->checkQuickAddPermissions( $title, $url, $category ) ) {
             return null;
         }
         return compact( 'title', 'url', 'category' );
+    }
+
+    /**
+     * Verify the nonce, required fields, and capability for a quick-add-link submission.
+     *
+     * @since 1.0.0
+     * @param string $title    Sanitized title from the submission.
+     * @param string $url      Sanitized URL from the submission.
+     * @param int    $category Selected category term ID.
+     * @return bool
+     */
+    private function checkQuickAddPermissions( string $title, string $url, int $category ): bool {
+        $nonce = isset( $_POST['lynxjournal_quick_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['lynxjournal_quick_nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'lynxjournal_quick_add_link' ) || empty( $title ) || empty( $url ) || $category <= 0 ) {
+            return false;
+        }
+        return current_user_can( 'edit_posts' );
     }
 
     /**
