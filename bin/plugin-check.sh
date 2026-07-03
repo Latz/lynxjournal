@@ -26,15 +26,6 @@ echo "Running PHPStan..."
 
 echo ""
 
-if command -v trivy >/dev/null 2>&1; then
-    echo "Running Trivy filesystem scan..."
-    trivy fs --config "$PROJECT_DIR/trivy.yaml" "$PROJECT_DIR"
-else
-    echo "WARNING: trivy not found on PATH, skipping filesystem scan (install: https://trivy.dev)" >&2
-fi
-
-echo ""
-
 # Build the plugin
 echo "Building plugin..."
 bash "$SCRIPT_DIR/build-plugin.sh"

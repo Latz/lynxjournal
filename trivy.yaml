@@ -1,11 +1,14 @@
-# Vulnerability scanning intentionally excludes dev/test dependencies
-# (--include-dev-deps is not set). composer.json's require-dev and
-# package.json's devDependencies (build tooling, e2e/test frameworks like
-# wp-playground, lighthouse, vite, vitest) never ship in the distributed
-# plugin (see .distignore) and generate a large volume of transitive-dep
-# findings unrelated to what actually reaches end users. Re-evaluate this
-# scoping if dev tooling starts being distributed or run against untrusted
-# input.
+# Vulnerability scanning includes dev/test dependencies (package.json
+# devDependencies: build tooling, e2e/test frameworks like wp-playground,
+# lighthouse, vite, vitest). None of this ships in the distributed plugin
+# (see .distignore), but it's still real supply-chain exposure for anyone
+# running the dev toolchain, so it's in scope here.
+# Note: --include-dev-deps only supports npm/yarn/gradle in Trivy, not
+# composer — composer.json's require-dev packages are scanned regardless
+# (Trivy has no prod/dev split for composer.lock).
+pkg:
+  include-dev-deps: true
+
 scan:
   scanners:
     - vuln
