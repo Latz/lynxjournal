@@ -89,6 +89,37 @@ function buildRenderedHtml() {
 }
 
 /**
+ * Recursively wraps a `<ul>`/`<ol>` node in `wp:list`/`wp:list-item` block
+ * comments. If an `<li>` contains a nested `<ul>`/`<ol>` (a genuine
+ * sub-list — see `convertIndentedLines()`'s nesting fix), that nested list
+ * is wrapped as its own inner `wp:list` block too, matching how real
+ * Gutenberg represents nested lists, instead of leaving it as unblocked
+ * raw HTML inside the parent list-item.
+ * @param {HTMLUListElement|HTMLOListElement} node
+ * @returns {string}
+ */
+function wrapListBlock( node ) {
+	const tag = node.tagName.toLowerCase();
+	node.classList.add( 'wp-block-list' );
+	const start     = tag === 'ol' ? node.getAttribute( 'start' ) : null;
+	const startAttr = start ? `,"start":${ start }` : '';
+	const attrs     = tag === 'ol' ? ` {"ordered":true${ startAttr }}` : '';
+	const startHtml = start ? ` start="${ start }"` : '';
+
+	const items = [ ...node.children ].map( li => {
+		const nested = li.querySelector( ':scope > ul, :scope > ol' );
+		if ( !nested ) {
+			return `<!-- wp:list-item -->\n${ li.outerHTML }\n<!-- /wp:list-item -->`;
+		}
+		const nestedBlock = wrapListBlock( nested );
+		nested.remove();
+		return `<!-- wp:list-item -->\n<li>${ li.innerHTML }\n${ nestedBlock }</li>\n<!-- /wp:list-item -->`;
+	} ).join( '\n' );
+
+	return `<!-- wp:list${ attrs } -->\n<${ tag }${ startHtml } class="wp-block-list">\n${ items }\n</${ tag }>\n<!-- /wp:list -->`;
+}
+
+/**
  * Wraps top-level headings, lists, and paragraphs from the rendered preview
  * HTML in Gutenberg block comments, mirroring the block markup the real
  * publish-content builders (Batch.php/Publishing.php) now produce. Other
@@ -120,15 +151,7 @@ function wrapAsGutenbergBlocks( renderedHtml ) {
 			const attrs = level === 2 ? '' : ` {"level":${ level }}`;
 			parts.push( `<!-- wp:heading${ attrs } -->\n${ node.outerHTML }\n<!-- /wp:heading -->` );
 		} else if ( tag === 'ul' || tag === 'ol' ) {
-			node.classList.add( 'wp-block-list' );
-			const start      = tag === 'ol' ? node.getAttribute( 'start' ) : null;
-			const startAttr  = start ? `,"start":${ start }` : '';
-			const attrs      = tag === 'ol' ? ` {"ordered":true${ startAttr }}` : '';
-			const startHtml  = start ? ` start="${ start }"` : '';
-			const items = [ ...node.children ].map( li =>
-				`<!-- wp:list-item -->\n${ li.outerHTML }\n<!-- /wp:list-item -->`
-			).join( '\n' );
-			parts.push( `<!-- wp:list${ attrs } -->\n<${ tag }${ startHtml } class="wp-block-list">\n${ items }\n</${ tag }>\n<!-- /wp:list -->` );
+			parts.push( wrapListBlock( node ) );
 		} else if ( tag === 'p' ) {
 			parts.push( `<!-- wp:paragraph -->\n${ node.outerHTML }\n<!-- /wp:paragraph -->` );
 		} else {
@@ -137,6 +160,20 @@ function wrapAsGutenbergBlocks( renderedHtml ) {
 	}
 
 	return parts.join( '\n\n' );
+}
+
+/**
+ * Derives a distinguishable draft title from the first heading in the
+ * rendered preview, prefixed so it's never mistaken for real content in
+ * the Posts list.
+ * @param {string} renderedHtml
+ * @returns {string}
+ */
+function extractPostTitle( renderedHtml ) {
+	const container = document.createElement( 'div' );
+	container.innerHTML = renderedHtml;
+	const heading = container.querySelector( 'h1, h2, h3, h4, h5, h6' );
+	return heading ? `[Test] ${ heading.textContent.trim() }` : '';
 }
 
 function updateTemplatePreview() {
@@ -468,6 +505,44 @@ function initTemplateEditor() {
 		const url = URL.createObjectURL( new Blob( [ doc ], { type: 'text/html' } ) );
 		window.open( url, '_blank' );
 		setTimeout( () => URL.revokeObjectURL( url ), 30000 );
+	} );
+
+	/**
+	 * Creates a real draft WordPress post from the current template preview,
+	 * so the admin can review it in the actual block editor. Always a draft —
+	 * never published directly from here.
+	 * @listens click
+	 */
+	document.getElementById( 'lynxjournal-test-post-btn' )?.addEventListener( 'click', async ( event ) => {
+		const btn = event.currentTarget;
+		const html = buildRenderedHtml();
+		if ( !html ) { return; }
+
+		const content = wrapAsGutenbergBlocks( html );
+		const title   = extractPostTitle( html );
+
+		const originalLabel = btn.textContent;
+		btn.disabled    = true;
+		btn.textContent = 'Creating…';
+
+		try {
+			const res = await fetch( window.lynxjournalTemplate.restUrl, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': window.lynxjournalTemplate.nonce },
+				body: JSON.stringify( { content, title } ),
+			} );
+			const data = await res.json();
+			if ( !res.ok || !data.success ) {
+				throw new Error( ( data && data.message ) || 'Failed to create test post.' );
+			}
+			window.open( data.edit_url, '_blank' );
+		} catch ( err ) {
+			alert( err.message || 'Failed to create test post.' );
+		} finally {
+			btn.disabled    = false;
+			btn.textContent = originalLabel;
+		}
 	} );
 
 	document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( btn => {

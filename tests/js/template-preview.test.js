@@ -104,6 +104,20 @@ describe( 'convertIndentedLines()', () => {
     it( 'returns an empty string unchanged', () => {
         expect( convertIndentedLines( '', stubParseInline ) ).toBe( '' );
     } );
+
+    it( 'leaves an indented list untouched when it directly follows a top-level list item, for marked.js to nest natively', () => {
+        const input  = '- Category A\n  - Sub item';
+        const result = convertIndentedLines( input, stubParseInline );
+        expect( result ).toBe( input );
+    } );
+
+    it( 'still flattens an indented list into a <ul> when NOT preceded by a top-level list item', () => {
+        const input  = '### Heading\n  - Sub item';
+        const result = convertIndentedLines( input, stubParseInline );
+        expect( result ).toBe(
+            '### Heading\n<ul style="padding-left:1.5em"><li>Sub item</li></ul>'
+        );
+    } );
 } );
 
 // ---------------------------------------------------------------------------

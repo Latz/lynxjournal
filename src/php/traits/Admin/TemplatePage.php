@@ -100,6 +100,7 @@ trait LynxJournal_Admin_TemplatePage {
                         <div class="lynxjournal-preview-header">
                             <span class="lynxjournal-preview-label"><?php esc_html_e('Preview', 'lynx-journal'); ?></span>
                             <button type="button" id="lynxjournal-test-publish-btn" class="button lynxjournal-test-publish-btn"><?php esc_html_e('Test publish', 'lynx-journal'); ?></button>
+                            <button type="button" id="lynxjournal-test-post-btn" class="button lynxjournal-test-post-btn"><?php esc_html_e('Test post', 'lynx-journal'); ?></button>
                             <div class="lynxjournal-preview-width-toggle" role="group" aria-label="<?php esc_attr_e('Preview width', 'lynx-journal'); ?>">
                                 <button type="button" class="button lynxjournal-preview-width-btn is-active" data-width="desktop"><?php esc_html_e('Desktop', 'lynx-journal'); ?></button>
                                 <button type="button" class="button lynxjournal-preview-width-btn" data-width="mobile"><?php esc_html_e('Mobile', 'lynx-journal'); ?></button>

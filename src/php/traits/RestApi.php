@@ -42,6 +42,24 @@ trait LynxJournal_RestApi {
             ),
         ));
 
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/template/test-post', array(
+            'methods' => 'POST',
+            'callback' => [$this, 'restCreateTestPost'],
+            'permission_callback' => fn() => current_user_can('edit_posts'),
+            'args' => array(
+                'content' => array(
+                    'required' => true,
+                    'type' => 'string',
+                    'sanitize_callback' => 'wp_kses_post',
+                ),
+                'title' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+            ),
+        ));
+
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/categories', array(
             'methods' => 'GET',
             'callback' => [$this, 'restGetCategories'],
@@ -347,6 +365,42 @@ trait LynxJournal_RestApi {
             'success' => true,
             'post_id' => $post_id,
             'message' => __('Link added successfully!', 'lynx-journal'),
+        ));
+    }
+
+    /**
+     * Creates a real draft post from the Post Template preview's rendered
+     * Gutenberg content, so an admin can review it in the block editor.
+     * Always drafts — never publishes — regardless of input.
+     *
+     * @since 1.0.0
+     * @param \WP_REST_Request $request The REST request with the rendered content/title.
+     * @return mixed REST response with the new post's id and edit URL.
+     */
+    public function restCreateTestPost(\WP_REST_Request $request): mixed {
+        $content = $request->get_param('content');
+        $title   = $request->get_param('title');
+
+        if (empty($content)) {
+            return new \WP_Error('missing_content', __('No content provided.', 'lynx-journal'), array('status' => 400));
+        }
+
+        $post_data = apply_filters('lynxjournal_test_post_args', array(
+            'post_title'   => !empty($title) ? $title : __('Test Post', 'lynx-journal'),
+            'post_content' => $content,
+            'post_type'    => 'post',
+            'post_status'  => 'draft',
+        ));
+
+        $post_id = wp_insert_post($post_data);
+        if (is_wp_error($post_id) || !$post_id) {
+            return new \WP_Error('insert_failed', __('Failed to create test post.', 'lynx-journal'), array('status' => 500));
+        }
+
+        return rest_ensure_response(array(
+            'success'  => true,
+            'post_id'  => $post_id,
+            'edit_url' => get_edit_post_link($post_id, 'raw'),
         ));
     }
 

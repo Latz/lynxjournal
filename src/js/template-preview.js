@@ -91,13 +91,19 @@ export function buildTemplateText( rawText, categoryVariants, scalarData, utils 
 	return text;
 }
 
+const TOP_LEVEL_LIST_RE = /^(-|\d+\.)\s/;
+
 /**
  * Converts indented lines (2+ leading spaces) into padded `<div>` wrappers so
  * indentation survives Markdown rendering, which otherwise discards leading
  * whitespace on plain paragraph text. Lines marked with `- ` or `N. ` are
  * real list items instead: consecutive same-level, same-type ("-" vs
  * numbered) list lines are grouped into one `<ul>`/`<ol>` with a `<li>` per
- * item, rather than one `<div>` per line. Batches each contiguous run of
+ * item, rather than one `<div>` per line. An indented list that directly
+ * continues a preceding *unindented* list item (no blank line between them)
+ * is left completely untouched instead — that's a genuine sub-list, and
+ * `marked.js` already parses real nested `<ul>`/`<ol>` natively, so
+ * flattening it here would lose the nesting. Batches each contiguous run of
  * indented lines into a single `parseInline()` call (joined/split on `\n`,
  * which `marked.parseInline()` preserves verbatim) instead of calling it
  * once per line, since each call carries its own lexer/tokenizer setup cost.
@@ -117,6 +123,15 @@ export function convertIndentedLines( text, parseInline ) {
 		if ( !match ) {
 			result.push( lines[ i ] );
 			i++;
+			continue;
+		}
+
+		const prevRawLine = i > 0 ? lines[ i - 1 ] : '';
+		if ( TOP_LEVEL_LIST_RE.test( prevRawLine ) ) {
+			while ( i < lines.length && lines[ i ].match( INDENT_RE ) ) {
+				result.push( lines[ i ] );
+				i++;
+			}
 			continue;
 		}
 
