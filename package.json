@@ -40,6 +40,13 @@
     "shell-quote": "^1.8.4",
     "fast-xml-builder": "^1.1.7",
     "form-data": "^4.0.6",
-    "linkify-it": "^5.0.1"
+    "linkify-it": "^5.0.1",
+    "minimatch@3.0.8": "^3.1.4",
+    "minimatch@9.0.3": "^9.0.7",
+    "serialize-javascript": "^7.0.3",
+    "tmp": "^0.2.6",
+    "ws@7.5.10": "^7.5.11",
+    "ws@8.18.3": "^8.21.0",
+    "ws@8.20.0": "^8.21.0"
   }
 }
