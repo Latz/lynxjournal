@@ -94,17 +94,20 @@ export function buildTemplateText( rawText, categoryVariants, scalarData, utils 
 /**
  * Converts indented lines (2+ leading spaces) into padded `<div>` wrappers so
  * indentation survives Markdown rendering, which otherwise discards leading
- * whitespace on plain paragraph text. Batches each contiguous run of indented
- * lines into a single `parseInline()` call (joined/split on `\n`, which
- * `marked.parseInline()` preserves verbatim) instead of calling it once per
- * line, since each call carries its own lexer/tokenizer setup cost.
+ * whitespace on plain paragraph text. Lines marked with `- ` or `N. ` are
+ * real list items instead: consecutive same-level, same-type ("-" vs
+ * numbered) list lines are grouped into one `<ul>`/`<ol>` with a `<li>` per
+ * item, rather than one `<div>` per line. Batches each contiguous run of
+ * indented lines into a single `parseInline()` call (joined/split on `\n`,
+ * which `marked.parseInline()` preserves verbatim) instead of calling it
+ * once per line, since each call carries its own lexer/tokenizer setup cost.
  *
  * @param {string} text
  * @param {(markdown: string) => string} parseInline
  * @returns {string}
  */
 export function convertIndentedLines( text, parseInline ) {
-	const INDENT_RE = /^( {2,})(- )?(.+)/;
+	const INDENT_RE = /^( {2,})(?:(-|\d+\.) )?(.+)/;
 	const lines     = text.split( '\n' );
 	const result    = [];
 	let i = 0;
@@ -126,12 +129,43 @@ export function convertIndentedLines( text, parseInline ) {
 		}
 
 		const rendered = parseInline( group.map( g => g[ 3 ] ).join( '\n' ) ).split( '\n' );
+		let listBuffer = null; // { type: 'ul'|'ol', level, items, start }
+
+		const flushList = () => {
+			if ( !listBuffer ) { return; }
+			const { type, level, items, start } = listBuffer;
+			const startAttr = type === 'ol' && start !== 1 ? ` start="${ start }"` : '';
+			result.push(
+				`<${ type } style="padding-left:${ level * 1.5 }em"${ startAttr }>` +
+				items.map( item => `<li>${ item }</li>` ).join( '' ) +
+				`</${ type }>`
+			);
+			listBuffer = null;
+		};
+
 		group.forEach( ( g, idx ) => {
 			const level   = Math.floor( g[ 1 ].length / 2 );
-			const isList  = !!g[ 2 ];
+			const marker  = g[ 2 ];
 			const content = rendered[ idx ] ?? '';
-			result.push( `<div style="padding-left:${ level * 1.5 }em">${ isList ? '• ' : '' }${ content }</div>` );
+
+			if ( !marker ) {
+				flushList();
+				result.push( `<div style="padding-left:${ level * 1.5 }em">${ content }</div>` );
+				return;
+			}
+
+			const type = marker === '-' ? 'ul' : 'ol';
+			const num  = type === 'ol' ? parseInt( marker, 10 ) : 1;
+
+			if ( listBuffer && listBuffer.type === type && listBuffer.level === level ) {
+				listBuffer.items.push( content );
+			} else {
+				flushList();
+				listBuffer = { type, level, items: [ content ], start: num };
+			}
 		} );
+
+		flushList();
 	}
 
 	return result.join( '\n' );

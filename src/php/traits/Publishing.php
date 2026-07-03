@@ -53,12 +53,12 @@ trait LynxJournal_Publishing {
      * @return string The formatted post content HTML.
      */
     public function buildPostContent(string $title, int $link_id, string $url, string $description): string {
-        $post_content = '<h2>' . esc_html($title) . '</h2>';
+        $post_content = "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">" . esc_html($title) . "</h2>\n<!-- /wp:heading -->";
         if (!empty($description)) {
             $post_content .= "\n\n" . wp_kses_post($description);
         }
         if (!empty($url)) {
-            $post_content .= "\n\n" . '<p>Read more: <a href="' . esc_url($url) . '">' . esc_html($url) . '</a></p>';
+            $post_content .= "\n\n<!-- wp:paragraph -->\n<p>Read more: <a href=\"" . esc_url($url) . '" target="_blank" rel="noopener">' . esc_html($url) . "</a></p>\n<!-- /wp:paragraph -->";
         }
         // Allows themes/plugins to override or extend the generated post HTML.
         return apply_filters('lynxjournal_blog_post_content', $post_content, $link_id, $url, $description);

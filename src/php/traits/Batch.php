@@ -177,37 +177,106 @@ trait LynxJournal_Batch {
      * @return string The formatted roundup content HTML.
      */
     private function buildRoundupContent(array $links_by_category, array $uncategorized_links): string {
-        $content = '';
+        $content       = '';
+        $schema_items  = [];
+        $heading_level = $this->getCategoryHeadingLevel();
 
-        $render_list = function(array $ids) use (&$content) {
-            $content .= "<ul>\n";
+        $render_list = function(array $ids) use (&$content, &$schema_items) {
+            $items = [];
             foreach ($ids as $link_id) {
                 $link = get_post($link_id);
+                if (!$link) {
+                    continue;
+                }
                 $url  = get_post_meta($link_id, '_lynxjournal_url', true);
                 $desc = trim($link->post_content);
-                $content .= '<li>';
-                $content .= !empty($url)
-                    ? '<a href="' . esc_url($url) . '" target="_blank" rel="noopener">' . esc_html($link->post_title) . '</a>'
-                    : esc_html($link->post_title);
+                $title = '<strong>' . esc_html($link->post_title) . '</strong>';
+                $item = !empty($url)
+                    ? '<a href="' . esc_url($url) . '" target="_blank" rel="noopener">' . $title . '</a>'
+                    : $title;
                 if (!empty($desc)) {
-                    $content .= '<br>' . wp_kses_post($desc);
+                    $item .= ' — ' . wp_kses_post($desc);
                 }
-                $content .= "</li>\n";
+                $items[] = "<!-- wp:list-item -->\n<li>{$item}</li>\n<!-- /wp:list-item -->";
+
+                $schema_item = [
+                    '@type'    => 'ListItem',
+                    'position' => count($schema_items) + 1,
+                    'name'     => $link->post_title,
+                ];
+                if (!empty($url)) {
+                    $schema_item['url'] = esc_url_raw($url);
+                }
+                $schema_items[] = $schema_item;
             }
-            $content .= "</ul>\n\n";
+            $content .= "<!-- wp:list -->\n<ul class=\"wp-block-list\">\n" . implode("\n", $items) . "\n</ul>\n<!-- /wp:list -->\n\n";
         };
 
         foreach ($links_by_category as $group) {
-            $content .= '<h2>' . esc_html($group['term']->name) . "</h2>\n\n";
+            $content .= $this->buildHeadingBlock(esc_html($group['term']->name), $heading_level);
             $render_list($group['links']);
         }
 
         if (!empty($uncategorized_links)) {
-            $content .= '<h2>' . esc_html__('Other', 'lynx-journal') . "</h2>\n\n";
+            $content .= $this->buildHeadingBlock(esc_html__('Other', 'lynx-journal'), $heading_level);
             $render_list($uncategorized_links);
         }
 
+        if (!empty($schema_items)) {
+            $schema = [
+                '@context'        => 'https://schema.org',
+                '@type'           => 'ItemList',
+                'itemListElement' => $schema_items,
+            ];
+            $json = wp_json_encode($schema, JSON_UNESCAPED_SLASHES);
+            // Defends against a title/URL containing a literal "</script>" sequence,
+            // which would otherwise terminate the script tag early.
+            $json = str_replace('</', '<\/', $json);
+            $content .= "<!-- wp:html -->\n<script type=\"application/ld+json\">{$json}</script>\n<!-- /wp:html -->\n";
+        }
+
         return $content;
+    }
+
+    /**
+     * Determines the Gutenberg heading level to use for roundup category
+     * headings, based on the Markdown heading marker (if any) on the
+     * [category_name] line inside the admin's configured Post Template.
+     * Falls back to level 3 (today's fixed behavior) when no template is
+     * configured or no heading marker is found.
+     *
+     * @return int
+     */
+    private function getCategoryHeadingLevel(): int {
+        $template = get_option('lynxjournal_post_template', '');
+        if (!preg_match('/\[category_start\]([\s\S]*?)\[category_end\]/', $template, $block)) {
+            return 3;
+        }
+        foreach (explode("\n", $block[1]) as $line) {
+            if (strpos($line, '[category_name]') === false) {
+                continue;
+            }
+            if (preg_match('/^(#{1,6})\s/', ltrim($line), $heading)) {
+                return strlen($heading[1]);
+            }
+            break;
+        }
+        return 3;
+    }
+
+    /**
+     * Builds a Gutenberg heading block at the given level, omitting the
+     * {"level":N} attribute for the default level 2 (matches real WP
+     * serialization, and assets/js/template-page.js's wrapAsGutenbergBlocks()).
+     *
+     * @param string $text Already-escaped heading text.
+     * @param int $level
+     * @return string
+     */
+    private function buildHeadingBlock(string $text, int $level): string {
+        $tag   = "h{$level}";
+        $attrs = $level === 2 ? '' : " {\"level\":{$level}}";
+        return "<!-- wp:heading{$attrs} -->\n<{$tag} class=\"wp-block-heading\">{$text}</{$tag}>\n<!-- /wp:heading -->\n\n";
     }
 
     /**

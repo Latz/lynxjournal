@@ -48,19 +48,98 @@ function getEditorValue() {
 	return editor ? editor.getValue() : ( textarea ? textarea.value : '' );
 }
 
+/**
+ * Wraps tag names, attribute names/values, and comments in `<span>`s for
+ * lightweight syntax highlighting, given an already HTML-escaped string
+ * (i.e. `<`/`>`/`&` replaced with entities). Not a full HTML parser —
+ * good enough for a read-only source preview.
+ * @param {string} escapedHtml
+ * @returns {string} Markup with `hl-*` spans, safe to inject as HTML.
+ */
+function highlightHtmlSource( escapedHtml ) {
+	return escapedHtml.replace(
+		/(&lt;!--[\s\S]*?--&gt;)|(&lt;\/?)([a-zA-Z][a-zA-Z0-9:-]*)((?:\s+[a-zA-Z_:][a-zA-Z0-9_:.-]*(?:=(?:"[^"]*"|'[^']*'))?)*)(\s*\/?&gt;)/g,
+		( match, comment, open, tagName, attrs, close ) => {
+			if ( comment ) {
+				return `<span class="hl-comment">${ comment }</span>`;
+			}
+			const attrsHtml = attrs.replace(
+				/([a-zA-Z_:][a-zA-Z0-9_:.-]*)(=)("[^"]*"|'[^']*')?/g,
+				( m, name, eq, val ) => val
+					? `<span class="hl-attr">${ name }</span>${ eq }<span class="hl-value">${ val }</span>`
+					: `<span class="hl-attr">${ name }</span>`
+			);
+			return `${ open }<span class="hl-tag">${ tagName }</span>${ attrsHtml }${ close }`;
+		}
+	);
+}
+
+/**
+ * Builds the final rendered HTML string for the current editor contents,
+ * using the same token-substitution + Markdown pipeline as the live preview.
+ * @returns {string} Rendered HTML, or '' if the template is empty.
+ */
+function buildRenderedHtml() {
+	const rawText = getEditorValue();
+	let text = buildTemplateText( rawText, categoryVariants, scalarData, {
+		replaceTokens, expandLinkBlocks, expandLinkLines, preserveBlankLines,
+	} );
+	text = convertIndentedLines( text, window.marked.parseInline );
+	return text.trim() ? window.marked.parse( text ) : '';
+}
+
+/**
+ * Wraps top-level headings, lists, and paragraphs from the rendered preview
+ * HTML in Gutenberg block comments, mirroring the block markup the real
+ * publish-content builders (Batch.php/Publishing.php) now produce. Other
+ * elements (e.g. the padding-div lines from convertIndentedLines()) pass
+ * through unwrapped, same as Gutenberg treats freeform content. The
+ * `.lynxjournal-blank-line` markers (`preserveBlankLines()` in
+ * template-utils.js, only meant to make blank lines visible in the live
+ * in-page preview) are dropped entirely rather than becoming empty
+ * `<!-- wp:paragraph -->` blocks — real Gutenberg content relies on the
+ * theme's block margins for spacing, not empty `&nbsp;` paragraphs.
+ * @param {string} renderedHtml
+ * @returns {string}
+ */
+function wrapAsGutenbergBlocks( renderedHtml ) {
+	const container = document.createElement( 'div' );
+	container.innerHTML = renderedHtml;
+	const parts = [];
+
+	for ( const node of container.children ) {
+		const tag = node.tagName.toLowerCase();
+		if ( tag === 'p' && node.classList.contains( 'lynxjournal-blank-line' ) ) {
+			continue;
+		}
+		if ( /^h[1-6]$/.test( tag ) ) {
+			const level = Number( tag[ 1 ] );
+			node.classList.add( 'wp-block-heading' );
+			const attrs = level === 2 ? '' : ` {"level":${ level }}`;
+			parts.push( `<!-- wp:heading${ attrs } -->\n${ node.outerHTML }\n<!-- /wp:heading -->` );
+		} else if ( tag === 'ul' || tag === 'ol' ) {
+			node.classList.add( 'wp-block-list' );
+			const attrs = tag === 'ol' ? ' {"ordered":true}' : '';
+			const items = [ ...node.children ].map( li =>
+				`<!-- wp:list-item -->\n${ li.outerHTML }\n<!-- /wp:list-item -->`
+			).join( '\n' );
+			parts.push( `<!-- wp:list${ attrs } -->\n<${ tag } class="wp-block-list">\n${ items }\n</${ tag }>\n<!-- /wp:list -->` );
+		} else if ( tag === 'p' ) {
+			parts.push( `<!-- wp:paragraph -->\n${ node.outerHTML }\n<!-- /wp:paragraph -->` );
+		} else {
+			parts.push( node.outerHTML );
+		}
+	}
+
+	return parts.join( '\n\n' );
+}
+
 function updateTemplatePreview() {
 	const rawText = getEditorValue();
 	renderValidation( previewValidation, validateTemplate( rawText ) );
 
-	let text = buildTemplateText( rawText, categoryVariants, scalarData, {
-		replaceTokens, expandLinkBlocks, expandLinkLines, preserveBlankLines,
-	} );
-
-	text = convertIndentedLines( text, window.marked.parseInline );
-
-	preview.innerHTML = text.trim()
-		? window.marked.parse( text )
-		: '<span class="lynxjournal-preview-empty">—</span>';
+	const html = buildRenderedHtml();
+	preview.innerHTML = html || '<span class="lynxjournal-preview-empty">—</span>';
 	setPreviewLive( previewStatus );
 }
 
@@ -347,6 +426,43 @@ function initTemplateEditor() {
 			updateTemplatePreview();
 			updateToolbarActiveState();
 		} );
+	} );
+
+	/**
+	 * Opens a new tab showing the current template's rendered HTML as
+	 * escaped, readable source text (not rendered markup), so the HTML
+	 * output can be inspected without opening devtools.
+	 * @listens click
+	 */
+	document.getElementById( 'lynxjournal-test-publish-btn' )?.addEventListener( 'click', () => {
+		const html = buildRenderedHtml();
+		const blocked = html ? wrapAsGutenbergBlocks( html ) : '';
+		const escaped = blocked
+			.replace( /&/g, '&amp;' )
+			.replace( /</g, '&lt;' )
+			.replace( />/g, '&gt;' );
+		const highlighted = highlightHtmlSource( escaped );
+		const doc = `<!DOCTYPE html><html><head><meta charset="utf-8">
+			<title>Test publish – rendered HTML</title>
+			<style>
+				:root { color-scheme: light dark; }
+				body {
+					font: 13px/1.6 Consolas, Menlo, monospace;
+					white-space: pre-wrap;
+					word-break: break-word;
+					padding: 20px;
+					color: light-dark(#1e1e1e, #e0e0e0);
+					background: light-dark(#fff, #1e1e1e);
+				}
+				.hl-tag { color: light-dark(#0b6fab, #6cb6ff); font-weight: 600; }
+				.hl-attr { color: light-dark(#8250df, #d2a8ff); }
+				.hl-value { color: light-dark(#116329, #7ee787); }
+				.hl-comment { color: light-dark(#6e7781, #8b949e); font-style: italic; }
+			</style>
+			</head><body>${ highlighted || '(empty)' }</body></html>`;
+		const url = URL.createObjectURL( new Blob( [ doc ], { type: 'text/html' } ) );
+		window.open( url, '_blank' );
+		setTimeout( () => URL.revokeObjectURL( url ), 30000 );
 	} );
 
 	document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( btn => {

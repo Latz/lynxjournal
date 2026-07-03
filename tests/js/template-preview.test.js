@@ -34,9 +34,42 @@ describe( 'convertIndentedLines()', () => {
         expect( result ).toBe( '<div style="padding-left:3em">double indent</div>' );
     } );
 
-    it( 'prefixes list markers with a bullet character', () => {
+    it( 'renders a "- " marked line as a real <ul><li>', () => {
         const result = convertIndentedLines( '  - list item', stubParseInline );
-        expect( result ).toBe( '<div style="padding-left:1.5em">• list item</div>' );
+        expect( result ).toBe( '<ul style="padding-left:1.5em"><li>list item</li></ul>' );
+    } );
+
+    it( 'groups consecutive same-level "- " lines into one <ul>', () => {
+        const input  = '  - first\n  - second\n  - third';
+        const result = convertIndentedLines( input, stubParseInline );
+        expect( result ).toBe(
+            '<ul style="padding-left:1.5em"><li>first</li><li>second</li><li>third</li></ul>'
+        );
+    } );
+
+    it( 'renders "N. " marked lines as a real <ol><li>', () => {
+        const input  = '  1. first\n  2. second';
+        const result = convertIndentedLines( input, stubParseInline );
+        expect( result ).toBe(
+            '<ol style="padding-left:1.5em"><li>first</li><li>second</li></ol>'
+        );
+    } );
+
+    it( 'adds a start attribute when an ordered list does not begin at 1', () => {
+        const input  = '  3. third\n  4. fourth';
+        const result = convertIndentedLines( input, stubParseInline );
+        expect( result ).toBe(
+            '<ol style="padding-left:1.5em" start="3"><li>third</li><li>fourth</li></ol>'
+        );
+    } );
+
+    it( 'closes a list and falls back to a div for a plain line that follows it', () => {
+        const input  = '  - item\n  plain text';
+        const result = convertIndentedLines( input, stubParseInline );
+        expect( result ).toBe(
+            '<ul style="padding-left:1.5em"><li>item</li></ul>\n' +
+            '<div style="padding-left:1.5em">plain text</div>'
+        );
     } );
 
     it( 'renders inline markdown within an indented line', () => {
