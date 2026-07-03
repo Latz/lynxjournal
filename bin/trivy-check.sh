@@ -11,4 +11,6 @@ if ! command -v trivy >/dev/null 2>&1; then
 fi
 
 echo "Running Trivy filesystem scan..."
-trivy fs --config "$PROJECT_DIR/trivy.yaml" "$PROJECT_DIR"
+trivy fs --config "$PROJECT_DIR/trivy.yaml" \
+    --format template --template "@$SCRIPT_DIR/trivy-compact.tpl" \
+    "$PROJECT_DIR"
