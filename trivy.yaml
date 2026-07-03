@@ -6,6 +6,12 @@
 # Note: --include-dev-deps only supports npm/yarn/gradle in Trivy, not
 # composer — composer.json's require-dev packages are scanned regardless
 # (Trivy has no prod/dev split for composer.lock).
+#
+# Run manually via bin/trivy-check.sh. Not wired into the pre-commit gate
+# or GitHub Actions — with dev deps in scope, findings in tooling that
+# never ships (vite, vitest, wp-playground, etc.) would otherwise block
+# every commit/push on issues that aren't fixable without breaking the
+# dev toolchain.
 pkg:
   include-dev-deps: true
 
