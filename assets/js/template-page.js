@@ -112,18 +112,23 @@ function wrapAsGutenbergBlocks( renderedHtml ) {
 		if ( tag === 'p' && node.classList.contains( 'lynxjournal-blank-line' ) ) {
 			continue;
 		}
-		if ( /^h[1-6]$/.test( tag ) ) {
+		if ( tag === 'hr' ) {
+			parts.push( '<!-- wp:separator -->\n<hr class="wp-block-separator has-alpha-channel-opacity"/>\n<!-- /wp:separator -->' );
+		} else if ( /^h[1-6]$/.test( tag ) ) {
 			const level = Number( tag[ 1 ] );
 			node.classList.add( 'wp-block-heading' );
 			const attrs = level === 2 ? '' : ` {"level":${ level }}`;
 			parts.push( `<!-- wp:heading${ attrs } -->\n${ node.outerHTML }\n<!-- /wp:heading -->` );
 		} else if ( tag === 'ul' || tag === 'ol' ) {
 			node.classList.add( 'wp-block-list' );
-			const attrs = tag === 'ol' ? ' {"ordered":true}' : '';
+			const start      = tag === 'ol' ? node.getAttribute( 'start' ) : null;
+			const startAttr  = start ? `,"start":${ start }` : '';
+			const attrs      = tag === 'ol' ? ` {"ordered":true${ startAttr }}` : '';
+			const startHtml  = start ? ` start="${ start }"` : '';
 			const items = [ ...node.children ].map( li =>
 				`<!-- wp:list-item -->\n${ li.outerHTML }\n<!-- /wp:list-item -->`
 			).join( '\n' );
-			parts.push( `<!-- wp:list${ attrs } -->\n<${ tag } class="wp-block-list">\n${ items }\n</${ tag }>\n<!-- /wp:list -->` );
+			parts.push( `<!-- wp:list${ attrs } -->\n<${ tag }${ startHtml } class="wp-block-list">\n${ items }\n</${ tag }>\n<!-- /wp:list -->` );
 		} else if ( tag === 'p' ) {
 			parts.push( `<!-- wp:paragraph -->\n${ node.outerHTML }\n<!-- /wp:paragraph -->` );
 		} else {
