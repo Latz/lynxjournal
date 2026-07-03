@@ -31,5 +31,9 @@
   },
   "dependencies": {
     "rrule": "^2.8.1"
+  },
+  "overrides": {
+    "axios": "^1.16.0",
+    "@babel/plugin-transform-modules-systemjs": "^7.29.4"
   }
 }
