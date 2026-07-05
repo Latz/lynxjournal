@@ -24,6 +24,7 @@ const DEFAULT_FORM = {
     slackChannelEnabled: false, slackChannelId: '',
     slackDmEnabled: false, slackUserId: '',
     telegramEnabled: false, telegramBotToken: '', telegramChatId: '',
+    mastodonEnabled: false, mastodonInstanceUrl: '', mastodonAccessToken: '', mastodonRecipient: '',
   },
   post_status: 'publish',
 };
@@ -315,6 +316,41 @@ export default function App() {
                 value={form.notify?.telegramChatId ?? ''}
                 placeholder={__('-1001234567890', 'lynx-journal')}
                 onChange={telegramChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramChatId } }))}
+                __nextHasNoMarginBottom
+              />
+            </AccordionItem>
+
+            <AccordionItem
+              title={__('Mastodon', 'lynx-journal')}
+              enabled={form.notify?.mastodonEnabled ?? false}
+              defaultOpen={form.notify?.mastodonEnabled ?? false}
+            >
+              <CheckboxControl
+                label={__('Send a Mastodon direct message after each run', 'lynx-journal')}
+                checked={form.notify?.mastodonEnabled ?? false}
+                onChange={mastodonEnabled => setForm(f => ({ ...f, notify: { ...f.notify, mastodonEnabled } }))}
+              />
+              <TextControl
+                label={__('Mastodon instance URL', 'lynx-journal')}
+                type="url"
+                value={form.notify?.mastodonInstanceUrl ?? ''}
+                placeholder={__('https://mastodon.social', 'lynx-journal')}
+                onChange={mastodonInstanceUrl => setForm(f => ({ ...f, notify: { ...f.notify, mastodonInstanceUrl } }))}
+                __nextHasNoMarginBottom
+              />
+              <TextControl
+                label={__('Mastodon access token', 'lynx-journal')}
+                type="password"
+                value={form.notify?.mastodonAccessToken ?? ''}
+                placeholder={__('Access token from your Mastodon app', 'lynx-journal')}
+                onChange={mastodonAccessToken => setForm(f => ({ ...f, notify: { ...f.notify, mastodonAccessToken } }))}
+                __nextHasNoMarginBottom
+              />
+              <TextControl
+                label={__('Recipient handle', 'lynx-journal')}
+                value={form.notify?.mastodonRecipient ?? ''}
+                placeholder={__('@you@mastodon.social', 'lynx-journal')}
+                onChange={mastodonRecipient => setForm(f => ({ ...f, notify: { ...f.notify, mastodonRecipient } }))}
                 __nextHasNoMarginBottom
               />
             </AccordionItem>

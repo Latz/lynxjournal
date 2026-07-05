@@ -23,6 +23,7 @@ trait LynxJournal_Scheduler {
         add_action('lynxjournal_after_run', [$this, 'maybeSendSlackChannelNotification'], 10, 3);
         add_action('lynxjournal_after_run', [$this, 'maybeSendSlackDmNotification'], 10, 3);
         add_action('lynxjournal_after_run', [$this, 'maybeSendTelegramNotification'], 10, 3);
+        add_action('lynxjournal_after_run', [$this, 'maybeSendMastodonNotification'], 10, 3);
     }
 
     /**
@@ -609,6 +610,66 @@ trait LynxJournal_Scheduler {
 
         /* translators: %s: schedule mode */
         return sprintf(__('Schedule ran in %s mode but no post was published.', 'lynx-journal'), $mode);
+    }
+
+    /**
+     * Send a Mastodon direct message after schedule runs, if enabled.
+     *
+     * @since 1.0.0
+     * @param int|null $post_id The published post ID, or null if nothing was published.
+     * @param array $link_ids Array of link post IDs that were published.
+     * @param string $mode The schedule mode that ran.
+     * @return void
+     */
+    public function maybeSendMastodonNotification(int|null $post_id, array $link_ids, string $mode): void {
+        $config = get_option('lynxjournal_schedule', []);
+        $notify = $config['notify'] ?? [];
+        if (empty($notify['mastodonEnabled']) || empty($notify['mastodonInstanceUrl']) || empty($notify['mastodonAccessToken']) || empty($notify['mastodonRecipient'])) {
+            return;
+        }
+
+        $message = $this->buildMastodonMessage($notify['mastodonRecipient'], $post_id, count($link_ids), $mode);
+        $url = rtrim($notify['mastodonInstanceUrl'], '/') . '/api/v1/statuses';
+
+        $response = wp_remote_post($url, [
+            'timeout' => 8,
+            'headers' => [
+                'Content-Type'  => 'application/json',
+                'Authorization' => 'Bearer ' . $notify['mastodonAccessToken'],
+            ],
+            'body' => wp_json_encode(['status' => $message, 'visibility' => 'direct']),
+        ]);
+
+        if (is_wp_error($response) || wp_remote_retrieve_response_code($response) >= 300) {
+            return; // No logging convention exists in this codebase; fail silently.
+        }
+    }
+
+    /**
+     * Build the Mastodon status text for a run notification.
+     *
+     * The recipient handle must appear in the status text for Mastodon to
+     * treat this as a direct message rather than a public post.
+     *
+     * @since 1.0.0
+     * @param string $recipient Mastodon handle to address, e.g. @user@instance.social.
+     * @param int|null $post_id The published post ID, or null if nothing was published.
+     * @param int $link_count Number of links included in the run.
+     * @param string $mode The schedule mode that ran.
+     * @return string Status text.
+     */
+    private function buildMastodonMessage(string $recipient, int|null $post_id, int $link_count, string $mode): string {
+        if ($post_id) {
+            $title = esc_html(get_the_title($post_id));
+            $url   = esc_url(get_permalink($post_id));
+            /* translators: %d: number of links published */
+            $body  = sprintf(__('A new roundup was published with %d links.', 'lynx-journal'), $link_count);
+            return "{$recipient}\n{$title}\n{$body}\n{$url}";
+        }
+
+        /* translators: %s: schedule mode */
+        $body = sprintf(__('Schedule ran in %s mode but no post was published.', 'lynx-journal'), $mode);
+        return "{$recipient}\n{$body}";
     }
 
     /**

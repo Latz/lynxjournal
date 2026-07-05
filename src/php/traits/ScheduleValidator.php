@@ -183,6 +183,40 @@ trait LynxJournal_ScheduleValidator {
             }
         }
 
+        $data['notify']['mastodonEnabled'] = (bool) ($data['notify']['mastodonEnabled'] ?? false);
+        $data['notify']['mastodonAccessToken'] = !empty($data['notify']['mastodonAccessToken'])
+            ? sanitize_text_field(trim((string) $data['notify']['mastodonAccessToken']))
+            : '';
+        $data['notify']['mastodonRecipient'] = !empty($data['notify']['mastodonRecipient'])
+            ? sanitize_text_field(trim((string) $data['notify']['mastodonRecipient']))
+            : '';
+
+        if (!empty($data['notify']['mastodonInstanceUrl'])) {
+            $instanceUrl = esc_url_raw(trim((string) $data['notify']['mastodonInstanceUrl']));
+            if (!$this->isValidMastodonInstanceUrl($instanceUrl)) {
+                return new \WP_Error('invalid_notify_mastodon_instance', __('notify.mastodonInstanceUrl must be a valid https:// URL', 'lynx-journal'), ['status' => 400]);
+            }
+            $data['notify']['mastodonInstanceUrl'] = $instanceUrl;
+        } else {
+            $data['notify']['mastodonInstanceUrl'] = '';
+        }
+
+        if ($data['notify']['mastodonRecipient'] !== '' && !preg_match('/^@[\w.]+@[\w.-]+\.[a-z]{2,}$/i', $data['notify']['mastodonRecipient'])) {
+            return new \WP_Error('invalid_notify_mastodon_recipient', __('notify.mastodonRecipient must be a valid handle, e.g. @user@instance.social', 'lynx-journal'), ['status' => 400]);
+        }
+
+        if (!empty($data['notify']['mastodonEnabled'])) {
+            if ($data['notify']['mastodonInstanceUrl'] === '') {
+                return new \WP_Error('invalid_notify_mastodon_instance', __('notify.mastodonInstanceUrl is required when Mastodon notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            }
+            if ($data['notify']['mastodonAccessToken'] === '') {
+                return new \WP_Error('invalid_notify_mastodon_token', __('notify.mastodonAccessToken is required when Mastodon notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            }
+            if ($data['notify']['mastodonRecipient'] === '') {
+                return new \WP_Error('invalid_notify_mastodon_recipient', __('notify.mastodonRecipient is required when Mastodon notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            }
+        }
+
         return null;
     }
 
@@ -207,5 +241,23 @@ trait LynxJournal_ScheduleValidator {
         }
         $path = $parts['path'] ?? '';
         return (bool) preg_match('#^/api(?:/v\d+)?/webhooks/\d+/[\w-]+$#', $path);
+    }
+
+    /**
+     * Check whether a URL looks like a valid Mastodon instance URL.
+     *
+     * Mastodon is federated, so any HTTPS host is potentially valid — this
+     * only checks the URL is well-formed, not a specific host allowlist.
+     *
+     * @since 1.0.0
+     * @param string $url Sanitized URL to check.
+     * @return bool True if it's a well-formed https:// URL.
+     */
+    private function isValidMastodonInstanceUrl(string $url): bool {
+        if ($url === '') {
+            return false;
+        }
+        $parts = wp_parse_url($url);
+        return !empty($parts['scheme']) && $parts['scheme'] === 'https' && !empty($parts['host']);
     }
 }

@@ -460,4 +460,76 @@ describe('LynxJournal::validateScheduleConfig()', function (): void {
 
         expect($result)->toBeArray();
     });
+
+    it('returns 400 invalid_notify_mastodon_instance when mastodonEnabled is true but no instance url is given', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['mastodonEnabled' => true, 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_mastodon_instance');
+        expect($result->get_error_data()['status'])->toBe(400);
+    });
+
+    it('returns 400 invalid_notify_mastodon_token when mastodonEnabled is true but no access token is given', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonRecipient' => '@you@mastodon.social'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_mastodon_token');
+    });
+
+    it('returns 400 invalid_notify_mastodon_recipient when mastodonEnabled is true but no recipient is given', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_mastodon_recipient');
+    });
+
+    it('returns 400 invalid_notify_mastodon_instance for a non-https instance url', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['mastodonInstanceUrl' => 'http://mastodon.social'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_mastodon_instance');
+        expect($result->get_error_data()['status'])->toBe(400);
+    });
+
+    it('returns 400 invalid_notify_mastodon_recipient for a malformed handle', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['mastodonRecipient' => 'not-a-handle'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_mastodon_recipient');
+    });
+
+    it('accepts valid Mastodon settings', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social'],
+        ]);
+
+        expect($result)->toBeArray();
+        expect($result['notify']['mastodonInstanceUrl'])->toBe('https://mastodon.social');
+        expect($result['notify']['mastodonRecipient'])->toBe('@you@mastodon.social');
+    });
+
+    it('allows all Mastodon fields to be empty/false when mastodonEnabled is false', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['mastodonEnabled' => false],
+        ]);
+
+        expect($result)->toBeArray();
+    });
 });
