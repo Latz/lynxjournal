@@ -381,6 +381,9 @@ if (!function_exists('wp_remote_post')) {
 if (!function_exists('wp_remote_retrieve_response_code')) {
     function wp_remote_retrieve_response_code(array|\WP_Error $response): int|string { return 200; }
 }
+if (!function_exists('wp_remote_retrieve_body')) {
+    function wp_remote_retrieve_body(array|\WP_Error $response): string { return ''; }
+}
 if (!function_exists('wp_verify_nonce')) {
     function wp_verify_nonce(string $nonce, string|int $action = -1): int|false { return false; }
 }

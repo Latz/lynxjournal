@@ -126,6 +126,39 @@ trait LynxJournal_ScheduleValidator {
             return new \WP_Error('invalid_notify_discord_url', __('notify.discordWebhookUrl is required when Discord notifications are enabled', 'lynx-journal'), ['status' => 400]);
         }
 
+        $data['notify']['slackBotToken'] = !empty($data['notify']['slackBotToken'])
+            ? sanitize_text_field((string) $data['notify']['slackBotToken'])
+            : '';
+        if ($data['notify']['slackBotToken'] !== '' && !preg_match('/^xoxb-[\w-]+$/', $data['notify']['slackBotToken'])) {
+            return new \WP_Error('invalid_notify_slack_token', __('notify.slackBotToken must be a valid Slack bot token (starting with xoxb-)', 'lynx-journal'), ['status' => 400]);
+        }
+
+        $data['notify']['slackChannelEnabled'] = (bool) ($data['notify']['slackChannelEnabled'] ?? false);
+        $data['notify']['slackChannelId'] = !empty($data['notify']['slackChannelId'])
+            ? strtoupper(sanitize_text_field(trim((string) $data['notify']['slackChannelId'])))
+            : '';
+        if (!empty($data['notify']['slackChannelEnabled'])) {
+            if ($data['notify']['slackBotToken'] === '') {
+                return new \WP_Error('invalid_notify_slack_token', __('notify.slackBotToken is required when Slack channel notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            }
+            if (!preg_match('/^[CG][A-Z0-9]+$/', $data['notify']['slackChannelId'])) {
+                return new \WP_Error('invalid_notify_slack_channel', __('notify.slackChannelId must be a valid Slack channel ID', 'lynx-journal'), ['status' => 400]);
+            }
+        }
+
+        $data['notify']['slackDmEnabled'] = (bool) ($data['notify']['slackDmEnabled'] ?? false);
+        $data['notify']['slackUserId'] = !empty($data['notify']['slackUserId'])
+            ? strtoupper(sanitize_text_field(trim((string) $data['notify']['slackUserId'])))
+            : '';
+        if (!empty($data['notify']['slackDmEnabled'])) {
+            if ($data['notify']['slackBotToken'] === '') {
+                return new \WP_Error('invalid_notify_slack_token', __('notify.slackBotToken is required when Slack DM notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            }
+            if (!preg_match('/^U[A-Z0-9]+$/', $data['notify']['slackUserId'])) {
+                return new \WP_Error('invalid_notify_slack_user', __('notify.slackUserId must be a valid Slack user ID', 'lynx-journal'), ['status' => 400]);
+            }
+        }
+
         return null;
     }
 

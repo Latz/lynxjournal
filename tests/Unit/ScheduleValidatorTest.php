@@ -288,4 +288,105 @@ describe('LynxJournal::validateScheduleConfig()', function (): void {
 
         expect($result)->toBeArray();
     });
+
+    it('accepts a valid Slack bot token format', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['slackBotToken' => 'xoxb-123456789-abcDEF'],
+        ]);
+
+        expect($result)->toBeArray();
+        expect($result['notify']['slackBotToken'])->toBe('xoxb-123456789-abcDEF');
+    });
+
+    it('returns 400 invalid_notify_slack_token for a malformed bot token', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['slackBotToken' => 'not-a-token'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_slack_token');
+        expect($result->get_error_data()['status'])->toBe(400);
+    });
+
+    it('returns 400 invalid_notify_slack_token when slackChannelEnabled is true but no token is given', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['slackChannelEnabled' => true, 'slackChannelId' => 'C0123456789'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_slack_token');
+    });
+
+    it('returns 400 invalid_notify_slack_channel when slackChannelEnabled is true but the channel id is malformed', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['slackChannelEnabled' => true, 'slackBotToken' => 'xoxb-123', 'slackChannelId' => 'not-a-channel'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_slack_channel');
+        expect($result->get_error_data()['status'])->toBe(400);
+    });
+
+    it('accepts a valid slack channel id starting with C', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['slackChannelEnabled' => true, 'slackBotToken' => 'xoxb-123', 'slackChannelId' => 'C0123456789'],
+        ]);
+
+        expect($result)->toBeArray();
+        expect($result['notify']['slackChannelId'])->toBe('C0123456789');
+    });
+
+    it('accepts a valid slack channel id starting with G (private channel)', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['slackChannelEnabled' => true, 'slackBotToken' => 'xoxb-123', 'slackChannelId' => 'G0123456789'],
+        ]);
+
+        expect($result)->toBeArray();
+    });
+
+    it('returns 400 invalid_notify_slack_token when slackDmEnabled is true but no token is given', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['slackDmEnabled' => true, 'slackUserId' => 'U0123456789'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_slack_token');
+    });
+
+    it('returns 400 invalid_notify_slack_user when slackDmEnabled is true but the user id is malformed', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['slackDmEnabled' => true, 'slackBotToken' => 'xoxb-123', 'slackUserId' => 'not-a-user'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_slack_user');
+        expect($result->get_error_data()['status'])->toBe(400);
+    });
+
+    it('accepts a valid slack user id', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['slackDmEnabled' => true, 'slackBotToken' => 'xoxb-123', 'slackUserId' => 'U0123456789'],
+        ]);
+
+        expect($result)->toBeArray();
+        expect($result['notify']['slackUserId'])->toBe('U0123456789');
+    });
+
+    it('allows all Slack fields to be empty/false when neither toggle is enabled', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['slackChannelEnabled' => false, 'slackDmEnabled' => false],
+        ]);
+
+        expect($result)->toBeArray();
+    });
 });

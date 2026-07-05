@@ -10,13 +10,20 @@ import TriggerCondition from './components/TriggerCondition';
 import TimePicker from './components/TimePicker';
 import NextSchedules from './components/NextSchedules';
 import DiagnosticsPanel from './components/DiagnosticsPanel';
+import AccordionItem from './components/AccordionItem';
 
 const DEFAULT_FORM = {
   mode: 'daily',
   recurrence: { interval: 1, weekdays: [], monthDays: [{ type: 'day', value: 1, nth: 1, weekday: 'MO' }], nthWeek: null },
   trigger: { count: 10, tag_id: null, days: 7 },
   times: [],
-  notify: { enabled: false, email: '', discordEnabled: false, discordWebhookUrl: '' },
+  notify: {
+    enabled: false, email: '',
+    discordEnabled: false, discordWebhookUrl: '',
+    slackBotToken: '',
+    slackChannelEnabled: false, slackChannelId: '',
+    slackDmEnabled: false, slackUserId: '',
+  },
   post_status: 'publish',
 };
 
@@ -65,6 +72,10 @@ export default function App() {
   useEffect(refreshDiag, [refreshDiag]);
 
   const isDirty = savedForm !== null && JSON.stringify(form) !== JSON.stringify(savedForm);
+  // Forces the notification accordion items to remount (and re-read their
+  // defaultOpen prop) once the real schedule config has loaded, since
+  // useState's initializer only runs on a component's first mount.
+  const configLoaded = savedForm !== null;
 
   useEffect(() => {
     if (!isDirty) return;
@@ -198,37 +209,98 @@ export default function App() {
         </Section>
 
         <Section title={__('Notifications', 'lynx-journal')}>
-          <CheckboxControl
-            label={__('Email me after each run', 'lynx-journal')}
-            checked={form.notify?.enabled ?? false}
-            onChange={enabled => setForm(f => ({ ...f, notify: { ...f.notify, enabled } }))}
-          />
-          {form.notify?.enabled && (
-            <TextControl
-              label={__('Email address', 'lynx-journal')}
-              type="email"
-              value={form.notify?.email ?? ''}
-              placeholder={__('Leave blank to use admin email', 'lynx-journal')}
-              onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
-              __nextHasNoMarginBottom
-            />
-          )}
+          <div className="lynxjournal-accordion" key={configLoaded ? 'loaded' : 'loading'}>
+            <AccordionItem
+              title={__('Email', 'lynx-journal')}
+              enabled={form.notify?.enabled ?? false}
+              defaultOpen={form.notify?.enabled ?? false}
+            >
+              <CheckboxControl
+                label={__('Email me after each run', 'lynx-journal')}
+                checked={form.notify?.enabled ?? false}
+                onChange={enabled => setForm(f => ({ ...f, notify: { ...f.notify, enabled } }))}
+              />
+              {form.notify?.enabled && (
+                <TextControl
+                  label={__('Email address', 'lynx-journal')}
+                  type="email"
+                  value={form.notify?.email ?? ''}
+                  placeholder={__('Leave blank to use admin email', 'lynx-journal')}
+                  onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
+                  __nextHasNoMarginBottom
+                />
+              )}
+            </AccordionItem>
 
-          <CheckboxControl
-            label={__('Send a Discord notification after each run', 'lynx-journal')}
-            checked={form.notify?.discordEnabled ?? false}
-            onChange={discordEnabled => setForm(f => ({ ...f, notify: { ...f.notify, discordEnabled } }))}
-          />
-          {form.notify?.discordEnabled && (
-            <TextControl
-              label={__('Discord webhook URL', 'lynx-journal')}
-              type="url"
-              value={form.notify?.discordWebhookUrl ?? ''}
-              placeholder={__('https://discord.com/api/webhooks/...', 'lynx-journal')}
-              onChange={discordWebhookUrl => setForm(f => ({ ...f, notify: { ...f.notify, discordWebhookUrl } }))}
-              __nextHasNoMarginBottom
-            />
-          )}
+            <AccordionItem
+              title={__('Discord', 'lynx-journal')}
+              enabled={form.notify?.discordEnabled ?? false}
+              defaultOpen={form.notify?.discordEnabled ?? false}
+            >
+              <CheckboxControl
+                label={__('Send a Discord notification after each run', 'lynx-journal')}
+                checked={form.notify?.discordEnabled ?? false}
+                onChange={discordEnabled => setForm(f => ({ ...f, notify: { ...f.notify, discordEnabled } }))}
+              />
+              {form.notify?.discordEnabled && (
+                <TextControl
+                  label={__('Discord webhook URL', 'lynx-journal')}
+                  type="url"
+                  value={form.notify?.discordWebhookUrl ?? ''}
+                  placeholder={__('https://discord.com/api/webhooks/...', 'lynx-journal')}
+                  onChange={discordWebhookUrl => setForm(f => ({ ...f, notify: { ...f.notify, discordWebhookUrl } }))}
+                  __nextHasNoMarginBottom
+                />
+              )}
+            </AccordionItem>
+
+            <AccordionItem
+              title={__('Slack', 'lynx-journal')}
+              enabled={(form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) ?? false}
+              defaultOpen={(form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) ?? false}
+            >
+              {(form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) && (
+                <TextControl
+                  label={__('Slack Bot Token', 'lynx-journal')}
+                  type="password"
+                  value={form.notify?.slackBotToken ?? ''}
+                  placeholder={__('xoxb-...', 'lynx-journal')}
+                  onChange={slackBotToken => setForm(f => ({ ...f, notify: { ...f.notify, slackBotToken } }))}
+                  __nextHasNoMarginBottom
+                />
+              )}
+
+              <CheckboxControl
+                label={__('Post to a Slack channel after each run', 'lynx-journal')}
+                checked={form.notify?.slackChannelEnabled ?? false}
+                onChange={slackChannelEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelEnabled } }))}
+              />
+              {form.notify?.slackChannelEnabled && (
+                <TextControl
+                  label={__('Slack channel ID', 'lynx-journal')}
+                  value={form.notify?.slackChannelId ?? ''}
+                  placeholder={__('C0123456789', 'lynx-journal')}
+                  onChange={slackChannelId => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelId } }))}
+                  __nextHasNoMarginBottom
+                />
+              )}
+
+              <CheckboxControl
+                label={__('Send me a Slack DM after each run', 'lynx-journal')}
+                checked={form.notify?.slackDmEnabled ?? false}
+                onChange={slackDmEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackDmEnabled } }))}
+              />
+              {form.notify?.slackDmEnabled && (
+                <TextControl
+                  label={__('Slack user ID', 'lynx-journal')}
+                  value={form.notify?.slackUserId ?? ''}
+                  placeholder={__('U0123456789', 'lynx-journal')}
+                  onChange={slackUserId => setForm(f => ({ ...f, notify: { ...f.notify, slackUserId } }))}
+                  __nextHasNoMarginBottom
+                />
+              )}
+            </AccordionItem>
+          </div>
         </Section>
 
         <div className="lynxjournal-schedule-actions">

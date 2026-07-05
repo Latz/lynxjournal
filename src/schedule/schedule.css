@@ -58,6 +58,83 @@
   padding: 16px;
 }
 
+/* Notification channel accordion (nested one level inside .lynxjournal-section) */
+.lynxjournal-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lynxjournal-accordion-item {
+  border: 1px solid #c3c4c7;
+  border-radius: 2px;
+}
+
+.lynxjournal-accordion-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: #f6f7f7;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e1e1e;
+  cursor: pointer;
+  text-align: start;
+}
+
+.lynxjournal-accordion-header:hover {
+  background: #f0f0f1;
+}
+
+.lynxjournal-accordion-title {
+  flex-grow: 1;
+}
+
+.lynxjournal-accordion-badge {
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.lynxjournal-accordion-badge.is-on {
+  background: var(--lynxjournal-color-success-bg);
+  color: var(--lynxjournal-color-success-text);
+}
+
+.lynxjournal-accordion-badge.is-off {
+  background: var(--lynxjournal-color-neutral-bg);
+  color: var(--lynxjournal-color-neutral-text);
+}
+
+.lynxjournal-accordion-chevron {
+  width: 8px;
+  height: 8px;
+  border-inline-end: 2px solid #787c82;
+  border-block-end: 2px solid #787c82;
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+  flex-shrink: 0;
+}
+
+.lynxjournal-accordion-header[aria-expanded="true"] .lynxjournal-accordion-chevron {
+  transform: rotate(45deg);
+}
+
+.lynxjournal-accordion-body {
+  padding: 12px;
+  border-block-start: 1px solid #c3c4c7;
+}
+
+.lynxjournal-accordion-body[hidden] {
+  display: none;
+}
+
 /* Mode picker */
 .lynxjournal-mode-picker {
   display: flex;

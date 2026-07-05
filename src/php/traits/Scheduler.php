@@ -20,6 +20,8 @@ trait LynxJournal_Scheduler {
         add_action('lynxjournal_execute_schedule', [$this, 'executeSchedule']);
         add_action('lynxjournal_after_run', [$this, 'maybeSendRunNotification'], 10, 3);
         add_action('lynxjournal_after_run', [$this, 'maybeSendDiscordNotification'], 10, 3);
+        add_action('lynxjournal_after_run', [$this, 'maybeSendSlackChannelNotification'], 10, 3);
+        add_action('lynxjournal_after_run', [$this, 'maybeSendSlackDmNotification'], 10, 3);
     }
 
     /**
@@ -427,6 +429,121 @@ trait LynxJournal_Scheduler {
             'description' => sprintf(__('Schedule ran in %s mode but no post was published.', 'lynx-journal'), $mode),
             'color'       => 0x99AAB5, // neutral grey
             'timestamp'   => gmdate('c'),
+        ];
+    }
+
+    /**
+     * Send a Slack channel notification after schedule runs, if enabled.
+     *
+     * @since 1.0.0
+     * @param int|null $post_id The published post ID, or null if nothing was published.
+     * @param array $link_ids Array of link post IDs that were published.
+     * @param string $mode The schedule mode that ran.
+     * @return void
+     */
+    public function maybeSendSlackChannelNotification(int|null $post_id, array $link_ids, string $mode): void {
+        $config = get_option('lynxjournal_schedule', []);
+        $notify = $config['notify'] ?? [];
+        if (empty($notify['slackChannelEnabled']) || empty($notify['slackBotToken']) || empty($notify['slackChannelId'])) {
+            return;
+        }
+        $blocks = $this->buildSlackBlocks($post_id, count($link_ids), $mode);
+        $this->postToSlack($notify['slackChannelId'], $blocks, $notify['slackBotToken']);
+    }
+
+    /**
+     * Send a Slack direct message notification after schedule runs, if enabled.
+     *
+     * @since 1.0.0
+     * @param int|null $post_id The published post ID, or null if nothing was published.
+     * @param array $link_ids Array of link post IDs that were published.
+     * @param string $mode The schedule mode that ran.
+     * @return void
+     */
+    public function maybeSendSlackDmNotification(int|null $post_id, array $link_ids, string $mode): void {
+        $config = get_option('lynxjournal_schedule', []);
+        $notify = $config['notify'] ?? [];
+        if (empty($notify['slackDmEnabled']) || empty($notify['slackBotToken']) || empty($notify['slackUserId'])) {
+            return;
+        }
+        $blocks = $this->buildSlackBlocks($post_id, count($link_ids), $mode);
+        $this->postToSlack($notify['slackUserId'], $blocks, $notify['slackBotToken']);
+    }
+
+    /**
+     * Post a Block Kit message to a Slack channel or user via the Web API.
+     *
+     * @since 1.0.0
+     * @param string $channel Slack channel ID or user ID (DM target).
+     * @param array $blocks Slack Block Kit blocks.
+     * @param string $token Slack bot token (xoxb-...).
+     * @return void
+     */
+    private function postToSlack(string $channel, array $blocks, string $token): void {
+        $response = wp_remote_post('https://slack.com/api/chat.postMessage', [
+            'timeout' => 8,
+            'headers' => [
+                'Content-Type'  => 'application/json',
+                'Authorization' => 'Bearer ' . $token,
+            ],
+            'body' => wp_json_encode(['channel' => $channel, 'blocks' => $blocks]),
+        ]);
+
+        if (is_wp_error($response) || wp_remote_retrieve_response_code($response) >= 300) {
+            return; // No logging convention exists in this codebase; fail silently.
+        }
+
+        // Slack's chat.postMessage returns HTTP 200 even on failure; the real
+        // success/failure signal is the "ok" boolean in the JSON body.
+        $body = json_decode(wp_remote_retrieve_body($response), true);
+        if (empty($body['ok'])) {
+            return;
+        }
+    }
+
+    /**
+     * Build the Slack Block Kit payload for a run notification.
+     *
+     * @since 1.0.0
+     * @param int|null $post_id The published post ID, or null if nothing was published.
+     * @param int $link_count Number of links included in the run.
+     * @param string $mode The schedule mode that ran.
+     * @return array Slack Block Kit blocks array.
+     */
+    private function buildSlackBlocks(int|null $post_id, int $link_count, string $mode): array {
+        if ($post_id) {
+            return [
+                ['type' => 'header', 'text' => ['type' => 'plain_text', 'text' => get_the_title($post_id), 'emoji' => true]],
+                [
+                    'type' => 'section',
+                    'text' => [
+                        'type' => 'mrkdwn',
+                        /* translators: %s: post URL */
+                        'text' => sprintf(__("A new roundup was published.\n<%s|View post>", 'lynx-journal'), get_permalink($post_id)),
+                    ],
+                ],
+                [
+                    'type'     => 'context',
+                    'elements' => [
+                        /* translators: %d: number of links published */
+                        ['type' => 'mrkdwn', 'text' => sprintf(__('*Links:* %d', 'lynx-journal'), $link_count)],
+                        /* translators: %s: schedule mode */
+                        ['type' => 'mrkdwn', 'text' => sprintf(__('*Mode:* %s', 'lynx-journal'), $mode)],
+                    ],
+                ],
+            ];
+        }
+
+        return [
+            ['type' => 'header', 'text' => ['type' => 'plain_text', 'text' => __('LynxJournal schedule ran', 'lynx-journal'), 'emoji' => true]],
+            [
+                'type' => 'section',
+                'text' => [
+                    'type' => 'mrkdwn',
+                    /* translators: %s: schedule mode */
+                    'text' => sprintf(__('Schedule ran in %s mode but no post was published.', 'lynx-journal'), $mode),
+                ],
+            ],
         ];
     }
 
