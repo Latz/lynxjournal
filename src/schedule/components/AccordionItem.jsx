@@ -26,11 +26,11 @@ export default function AccordionItem({ title, enabled, defaultOpen, children })
         aria-controls={panelId}
         onClick={() => setIsOpen(open => !open)}
       >
-        <span className="lynxjournal-accordion-title">{title}</span>
+        <span className="lynxjournal-accordion-chevron dashicons dashicons-arrow-down" aria-hidden="true" />
         <span className={`lynxjournal-accordion-badge ${enabled ? 'is-on' : 'is-off'}`}>
           {enabled ? __('On', 'lynx-journal') : __('Off', 'lynx-journal')}
         </span>
-        <span className="lynxjournal-accordion-chevron" aria-hidden="true" />
+        <span className="lynxjournal-accordion-title">{title}</span>
       </button>
       <div id={panelId} className="lynxjournal-accordion-body" hidden={!isOpen}>
         {children}

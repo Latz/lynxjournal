@@ -67,7 +67,8 @@
 
 .lynxjournal-accordion-item {
   border: 1px solid #c3c4c7;
-  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 }
 
 .lynxjournal-accordion-header {
@@ -78,9 +79,10 @@
   padding: 8px 12px;
   border: none;
   background: #f6f7f7;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  color: #1e1e1e;
+  line-height: 1.4;
+  color: #1d2327;
   cursor: pointer;
   text-align: start;
 }
@@ -89,45 +91,45 @@
   background: #f0f0f1;
 }
 
-.lynxjournal-accordion-title {
-  flex-grow: 1;
+.lynxjournal-accordion-header:focus-visible {
+  outline: 2px solid var(--wp-admin-theme-color, #3858e9);
+  outline-offset: -2px;
 }
 
 .lynxjournal-accordion-badge {
-  padding: 1px 6px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  font-size: 12px;
+  font-weight: 400;
+  color: #646970;
 }
 
 .lynxjournal-accordion-badge.is-on {
-  background: var(--lynxjournal-color-success-bg);
   color: var(--lynxjournal-color-success-text);
 }
 
 .lynxjournal-accordion-badge.is-off {
-  background: var(--lynxjournal-color-neutral-bg);
   color: var(--lynxjournal-color-neutral-text);
 }
 
 .lynxjournal-accordion-chevron {
-  width: 8px;
-  height: 8px;
-  border-inline-end: 2px solid #787c82;
-  border-block-end: 2px solid #787c82;
-  transform: rotate(-45deg);
-  transition: transform 0.15s ease;
   flex-shrink: 0;
+  color: #787c82;
+  transition: transform 0.15s ease;
+}
+
+.lynxjournal-accordion-header:hover .lynxjournal-accordion-chevron {
+  color: #1d2327;
 }
 
 .lynxjournal-accordion-header[aria-expanded="true"] .lynxjournal-accordion-chevron {
-  transform: rotate(45deg);
+  transform: rotate(180deg);
 }
 
 .lynxjournal-accordion-body {
-  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 12px 12px;
+  padding-block-start: 12px;
   border-block-start: 1px solid #c3c4c7;
 }
 

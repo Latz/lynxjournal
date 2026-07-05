@@ -220,16 +220,14 @@ export default function App() {
                 checked={form.notify?.enabled ?? false}
                 onChange={enabled => setForm(f => ({ ...f, notify: { ...f.notify, enabled } }))}
               />
-              {form.notify?.enabled && (
-                <TextControl
-                  label={__('Email address', 'lynx-journal')}
-                  type="email"
-                  value={form.notify?.email ?? ''}
-                  placeholder={__('Leave blank to use admin email', 'lynx-journal')}
-                  onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
-                  __nextHasNoMarginBottom
-                />
-              )}
+              <TextControl
+                label={__('Email address', 'lynx-journal')}
+                type="email"
+                value={form.notify?.email ?? ''}
+                placeholder={__('Leave blank to use admin email', 'lynx-journal')}
+                onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
+                __nextHasNoMarginBottom
+              />
             </AccordionItem>
 
             <AccordionItem
@@ -242,16 +240,14 @@ export default function App() {
                 checked={form.notify?.discordEnabled ?? false}
                 onChange={discordEnabled => setForm(f => ({ ...f, notify: { ...f.notify, discordEnabled } }))}
               />
-              {form.notify?.discordEnabled && (
-                <TextControl
-                  label={__('Discord webhook URL', 'lynx-journal')}
-                  type="url"
-                  value={form.notify?.discordWebhookUrl ?? ''}
-                  placeholder={__('https://discord.com/api/webhooks/...', 'lynx-journal')}
-                  onChange={discordWebhookUrl => setForm(f => ({ ...f, notify: { ...f.notify, discordWebhookUrl } }))}
-                  __nextHasNoMarginBottom
-                />
-              )}
+              <TextControl
+                label={__('Discord webhook URL', 'lynx-journal')}
+                type="url"
+                value={form.notify?.discordWebhookUrl ?? ''}
+                placeholder={__('https://discord.com/api/webhooks/...', 'lynx-journal')}
+                onChange={discordWebhookUrl => setForm(f => ({ ...f, notify: { ...f.notify, discordWebhookUrl } }))}
+                __nextHasNoMarginBottom
+              />
             </AccordionItem>
 
             <AccordionItem
@@ -259,46 +255,40 @@ export default function App() {
               enabled={(form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) ?? false}
               defaultOpen={(form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) ?? false}
             >
-              {(form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) && (
-                <TextControl
-                  label={__('Slack Bot Token', 'lynx-journal')}
-                  type="password"
-                  value={form.notify?.slackBotToken ?? ''}
-                  placeholder={__('xoxb-...', 'lynx-journal')}
-                  onChange={slackBotToken => setForm(f => ({ ...f, notify: { ...f.notify, slackBotToken } }))}
-                  __nextHasNoMarginBottom
-                />
-              )}
+              <TextControl
+                label={__('Slack Bot Token', 'lynx-journal')}
+                type="password"
+                value={form.notify?.slackBotToken ?? ''}
+                placeholder={__('xoxb-...', 'lynx-journal')}
+                onChange={slackBotToken => setForm(f => ({ ...f, notify: { ...f.notify, slackBotToken } }))}
+                __nextHasNoMarginBottom
+              />
 
               <CheckboxControl
                 label={__('Post to a Slack channel after each run', 'lynx-journal')}
                 checked={form.notify?.slackChannelEnabled ?? false}
                 onChange={slackChannelEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelEnabled } }))}
               />
-              {form.notify?.slackChannelEnabled && (
-                <TextControl
-                  label={__('Slack channel ID', 'lynx-journal')}
-                  value={form.notify?.slackChannelId ?? ''}
-                  placeholder={__('C0123456789', 'lynx-journal')}
-                  onChange={slackChannelId => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelId } }))}
-                  __nextHasNoMarginBottom
-                />
-              )}
+              <TextControl
+                label={__('Slack channel ID', 'lynx-journal')}
+                value={form.notify?.slackChannelId ?? ''}
+                placeholder={__('C0123456789', 'lynx-journal')}
+                onChange={slackChannelId => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelId } }))}
+                __nextHasNoMarginBottom
+              />
 
               <CheckboxControl
                 label={__('Send me a Slack DM after each run', 'lynx-journal')}
                 checked={form.notify?.slackDmEnabled ?? false}
                 onChange={slackDmEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackDmEnabled } }))}
               />
-              {form.notify?.slackDmEnabled && (
-                <TextControl
-                  label={__('Slack user ID', 'lynx-journal')}
-                  value={form.notify?.slackUserId ?? ''}
-                  placeholder={__('U0123456789', 'lynx-journal')}
-                  onChange={slackUserId => setForm(f => ({ ...f, notify: { ...f.notify, slackUserId } }))}
-                  __nextHasNoMarginBottom
-                />
-              )}
+              <TextControl
+                label={__('Slack user ID', 'lynx-journal')}
+                value={form.notify?.slackUserId ?? ''}
+                placeholder={__('U0123456789', 'lynx-journal')}
+                onChange={slackUserId => setForm(f => ({ ...f, notify: { ...f.notify, slackUserId } }))}
+                __nextHasNoMarginBottom
+              />
             </AccordionItem>
           </div>
         </Section>
