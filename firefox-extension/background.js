@@ -14,7 +14,7 @@ const MENU_ID_REFRESH = 'lynxjournal-refresh-categories';
  * @async
  * @returns {Promise<void>}
  */
-async function refreshCategories() {
+export async function refreshCategories() {
     const { apiEndpoint, apiKey } = await browser.storage.sync.get(['apiEndpoint', 'apiKey']);
     if (!apiEndpoint || !apiKey) return;
 
@@ -65,7 +65,7 @@ browser.runtime.onInstalled.addListener(() => {
  * @param {browser.menus.OnClickData} info - Context menu click info.
  * @returns {Promise<void>}
  */
-async function handleContextMenuClick(info) {
+export async function handleContextMenuClick(info) {
     if (info.menuItemId === MENU_ID_REFRESH) {
         refreshCategories();
         return;

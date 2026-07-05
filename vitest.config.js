@@ -22,12 +22,12 @@ export default defineConfig({
         globals:     true,
         environment: 'jsdom',
         include:     ['tests/js/**/*.test.{js,jsx,ts}'],
-        setupFiles:  ['tests/js/chrome-mock.js', 'tests/js/react-setup.js'],
+        setupFiles:  ['tests/js/chrome-mock.js', 'tests/js/browser-mock.js', 'tests/js/react-setup.js'],
         coverage: {
             provider:          'v8',
             reportsDirectory:  'bin/reports/coverage-js',
             reporter:          ['text', 'lcov'],
-            include:           ['src/**', 'chrome-extension/**'],
+            include:           ['src/**', 'chrome-extension/**', 'firefox-extension/**'],
             exclude:           ['**/*.min.js', '**/tagify*'],
         },
         // rest-routes.test.js uses createRequire (Node APIs) — keep it in node env
