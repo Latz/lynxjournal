@@ -16,7 +16,7 @@ const DEFAULT_FORM = {
   recurrence: { interval: 1, weekdays: [], monthDays: [{ type: 'day', value: 1, nth: 1, weekday: 'MO' }], nthWeek: null },
   trigger: { count: 10, tag_id: null, days: 7 },
   times: [],
-  notify: { enabled: false, email: '' },
+  notify: { enabled: false, email: '', discordEnabled: false, discordWebhookUrl: '' },
   post_status: 'publish',
 };
 
@@ -210,6 +210,22 @@ export default function App() {
               value={form.notify?.email ?? ''}
               placeholder={__('Leave blank to use admin email', 'lynx-journal')}
               onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
+              __nextHasNoMarginBottom
+            />
+          )}
+
+          <CheckboxControl
+            label={__('Send a Discord notification after each run', 'lynx-journal')}
+            checked={form.notify?.discordEnabled ?? false}
+            onChange={discordEnabled => setForm(f => ({ ...f, notify: { ...f.notify, discordEnabled } }))}
+          />
+          {form.notify?.discordEnabled && (
+            <TextControl
+              label={__('Discord webhook URL', 'lynx-journal')}
+              type="url"
+              value={form.notify?.discordWebhookUrl ?? ''}
+              placeholder={__('https://discord.com/api/webhooks/...', 'lynx-journal')}
+              onChange={discordWebhookUrl => setForm(f => ({ ...f, notify: { ...f.notify, discordWebhookUrl } }))}
               __nextHasNoMarginBottom
             />
           )}

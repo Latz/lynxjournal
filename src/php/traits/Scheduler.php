@@ -19,6 +19,7 @@ trait LynxJournal_Scheduler {
     public function registerSchedulerHooks(): void {
         add_action('lynxjournal_execute_schedule', [$this, 'executeSchedule']);
         add_action('lynxjournal_after_run', [$this, 'maybeSendRunNotification'], 10, 3);
+        add_action('lynxjournal_after_run', [$this, 'maybeSendDiscordNotification'], 10, 3);
     }
 
     /**
@@ -364,6 +365,69 @@ trait LynxJournal_Scheduler {
             );
         }
         wp_mail($to, $subject, $message);
+    }
+
+    /**
+     * Send a Discord webhook notification after schedule runs, if enabled.
+     *
+     * @since 1.0.0
+     * @param int|null $post_id The published post ID, or null if nothing was published.
+     * @param array $link_ids Array of link post IDs that were published.
+     * @param string $mode The schedule mode that ran.
+     * @return void
+     */
+    public function maybeSendDiscordNotification(int|null $post_id, array $link_ids, string $mode): void {
+        $config = get_option('lynxjournal_schedule', []);
+        $notify = $config['notify'] ?? [];
+        if (empty($notify['discordEnabled']) || empty($notify['discordWebhookUrl'])) {
+            return;
+        }
+
+        $embed = $this->buildDiscordEmbed($post_id, count($link_ids), $mode);
+
+        $response = wp_remote_post($notify['discordWebhookUrl'], [
+            'timeout' => 8,
+            'headers' => ['Content-Type' => 'application/json'],
+            'body'    => wp_json_encode(['embeds' => [$embed]]),
+        ]);
+
+        if (is_wp_error($response) || wp_remote_retrieve_response_code($response) >= 300) {
+            return; // No logging convention exists in this codebase; fail silently.
+        }
+    }
+
+    /**
+     * Build the Discord embed payload for a run notification.
+     *
+     * @since 1.0.0
+     * @param int|null $post_id The published post ID, or null if nothing was published.
+     * @param int $link_count Number of links included in the run.
+     * @param string $mode The schedule mode that ran.
+     * @return array Discord embed object.
+     */
+    private function buildDiscordEmbed(int|null $post_id, int $link_count, string $mode): array {
+        if ($post_id) {
+            return [
+                'title'       => get_the_title($post_id),
+                'url'         => get_permalink($post_id),
+                /* translators: %d: number of links published */
+                'description' => sprintf(__('A new roundup was published with %d links.', 'lynx-journal'), $link_count),
+                'color'       => 0x5865F2, // Discord blurple
+                'fields'      => [
+                    ['name' => __('Links', 'lynx-journal'), 'value' => (string) $link_count, 'inline' => true],
+                    ['name' => __('Mode', 'lynx-journal'), 'value' => $mode, 'inline' => true],
+                ],
+                'timestamp'   => gmdate('c'),
+            ];
+        }
+
+        return [
+            'title'       => __('LynxJournal schedule ran', 'lynx-journal'),
+            /* translators: %s: schedule mode */
+            'description' => sprintf(__('Schedule ran in %s mode but no post was published.', 'lynx-journal'), $mode),
+            'color'       => 0x99AAB5, // neutral grey
+            'timestamp'   => gmdate('c'),
+        ];
     }
 
     /**

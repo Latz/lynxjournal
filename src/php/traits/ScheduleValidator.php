@@ -114,6 +114,41 @@ trait LynxJournal_ScheduleValidator {
                 return new \WP_Error('invalid_notify_email', __('notify.email is not a valid email address', 'lynx-journal'), ['status' => 400]);
             }
         }
+
+        $data['notify']['discordEnabled'] = (bool) ($data['notify']['discordEnabled'] ?? false);
+        if (!empty($data['notify']['discordWebhookUrl'])) {
+            $url = esc_url_raw(trim((string) $data['notify']['discordWebhookUrl']));
+            if (!$this->isValidDiscordWebhookUrl($url)) {
+                return new \WP_Error('invalid_notify_discord_url', __('notify.discordWebhookUrl must be a valid Discord webhook URL', 'lynx-journal'), ['status' => 400]);
+            }
+            $data['notify']['discordWebhookUrl'] = $url;
+        } elseif (!empty($data['notify']['discordEnabled'])) {
+            return new \WP_Error('invalid_notify_discord_url', __('notify.discordWebhookUrl is required when Discord notifications are enabled', 'lynx-journal'), ['status' => 400]);
+        }
+
         return null;
+    }
+
+    /**
+     * Check whether a URL looks like a genuine Discord webhook endpoint.
+     *
+     * @since 1.0.0
+     * @param string $url Sanitized URL to check.
+     * @return bool True if it matches Discord's webhook host/path convention.
+     */
+    private function isValidDiscordWebhookUrl(string $url): bool {
+        if ($url === '') {
+            return false;
+        }
+        $parts = wp_parse_url($url);
+        if (empty($parts['scheme']) || $parts['scheme'] !== 'https' || empty($parts['host'])) {
+            return false;
+        }
+        $host = strtolower($parts['host']);
+        if (!in_array($host, ['discord.com', 'discordapp.com', 'ptb.discord.com', 'canary.discord.com'], true)) {
+            return false;
+        }
+        $path = $parts['path'] ?? '';
+        return (bool) preg_match('#^/api(?:/v\d+)?/webhooks/\d+/[\w-]+$#', $path);
     }
 }

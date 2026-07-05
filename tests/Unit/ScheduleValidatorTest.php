@@ -209,4 +209,83 @@ describe('LynxJournal::validateScheduleConfig()', function (): void {
 
         expect($result)->toBeArray();
     });
+
+    it('returns 400 invalid_notify_discord_url when discordEnabled is truthy but no URL is given', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['discordEnabled' => 1],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_discord_url');
+    });
+
+    it('accepts a valid discord.com webhook URL', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/123456789/abcDEF_-token'],
+        ]);
+
+        expect($result)->toBeArray();
+        expect($result['notify']['discordEnabled'])->toBeTrue();
+        expect($result['notify']['discordWebhookUrl'])->toBe('https://discord.com/api/webhooks/123456789/abcDEF_-token');
+    });
+
+    it('accepts a valid webhook URL with an API version segment', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/v10/webhooks/123456789/abcDEF'],
+        ]);
+
+        expect($result)->toBeArray();
+    });
+
+    it('accepts a valid webhook URL on the legacy discordapp.com host', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discordapp.com/api/webhooks/123456789/abcDEF'],
+        ]);
+
+        expect($result)->toBeArray();
+    });
+
+    it('returns 400 invalid_notify_discord_url for a non-Discord host', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['discordEnabled' => true, 'discordWebhookUrl' => 'https://evil.example.com/api/webhooks/123/abc'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_discord_url');
+        expect($result->get_error_data()['status'])->toBe(400);
+    });
+
+    it('returns 400 invalid_notify_discord_url for a malformed webhook path', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/not-a-webhook'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_discord_url');
+    });
+
+    it('returns 400 invalid_notify_discord_url when discordEnabled is true but the URL is empty', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['discordEnabled' => true, 'discordWebhookUrl' => ''],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_discord_url');
+    });
+
+    it('allows discordWebhookUrl to be empty when discordEnabled is false', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['discordEnabled' => false, 'discordWebhookUrl' => ''],
+        ]);
+
+        expect($result)->toBeArray();
+    });
 });
