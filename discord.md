@@ -50,10 +50,14 @@ Anything else is rejected when you try to save.
 ## When it fires
 
 The Discord message fires at the same point as the email notification:
-right after a scheduled run finishes, regardless of which schedule mode is
-active (daily, weekly, monthly, count-based, age-based, or a manually
-triggered run). It's a separate, independent toggle — you can have email
-only, Discord only, both, or neither enabled at the same time.
+right after a scheduled run **actually creates or attempts to create a
+roundup post**. This only happens when the schedule's trigger condition is
+met (e.g. daily mode with at least one pending link, or count/age mode once
+enough links have accumulated). If a run happens but there's nothing to
+publish yet (no pending links, or a count/age trigger not yet reached),
+**no notification is sent at all** — there's simply nothing to report. It's
+a separate, independent toggle — you can have email only, Discord only,
+both, or neither enabled at the same time.
 
 ## What the message looks like
 
@@ -63,9 +67,10 @@ LynxJournal posts a rich embed, not a plain text message:
   (linking to the published post), with a description noting how many
   links were included, and fields showing the link count and which
   schedule mode ran. It's colored Discord's "blurple".
-- **If the schedule ran but nothing was published** (e.g. the trigger
-  condition wasn't met): a neutral grey embed explains that the schedule
-  ran in that mode but no post was published.
+- **If a run reached the point of creating a post but that post creation
+  failed**: a neutral grey embed explains that the schedule ran in that
+  mode but no post was published. This is rare and distinct from "no
+  pending links yet", which sends nothing at all (see above).
 
 ## If something goes wrong
 
