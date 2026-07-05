@@ -389,4 +389,75 @@ describe('LynxJournal::validateScheduleConfig()', function (): void {
 
         expect($result)->toBeArray();
     });
+
+    it('returns 400 invalid_notify_telegram_token when telegramEnabled is true but no bot token is given', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['telegramEnabled' => true, 'telegramChatId' => '123456789'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_telegram_token');
+        expect($result->get_error_data()['status'])->toBe(400);
+    });
+
+    it('returns 400 invalid_notify_telegram_chat_id when telegramEnabled is true but no chat id is given', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['telegramEnabled' => true, 'telegramBotToken' => '123456789:AAAbbbCCCdddEEEfffGGGhhh'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_telegram_chat_id');
+    });
+
+    it('returns 400 invalid_notify_telegram_token for a malformed bot token', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['telegramBotToken' => 'not-a-token'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_telegram_token');
+        expect($result->get_error_data()['status'])->toBe(400);
+    });
+
+    it('returns 400 invalid_notify_telegram_chat_id for a malformed chat id', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['telegramChatId' => 'not-a-chat-id'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_telegram_chat_id');
+    });
+
+    it('accepts a valid negative Telegram chat id for a group or channel', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['telegramEnabled' => true, 'telegramBotToken' => '123456789:AAAbbbCCCdddEEEfffGGGhhh', 'telegramChatId' => '-1001234567890'],
+        ]);
+
+        expect($result)->toBeArray();
+        expect($result['notify']['telegramChatId'])->toBe('-1001234567890');
+    });
+
+    it('accepts a valid positive Telegram chat id for a personal chat', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['telegramEnabled' => true, 'telegramBotToken' => '123456789:AAAbbbCCCdddEEEfffGGGhhh', 'telegramChatId' => '123456789'],
+        ]);
+
+        expect($result)->toBeArray();
+        expect($result['notify']['telegramChatId'])->toBe('123456789');
+    });
+
+    it('allows all Telegram fields to be empty/false when telegramEnabled is false', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['telegramEnabled' => false],
+        ]);
+
+        expect($result)->toBeArray();
+    });
 });

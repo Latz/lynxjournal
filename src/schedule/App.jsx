@@ -23,6 +23,7 @@ const DEFAULT_FORM = {
     slackBotToken: '',
     slackChannelEnabled: false, slackChannelId: '',
     slackDmEnabled: false, slackUserId: '',
+    telegramEnabled: false, telegramBotToken: '', telegramChatId: '',
   },
   post_status: 'publish',
 };
@@ -287,6 +288,33 @@ export default function App() {
                 value={form.notify?.slackUserId ?? ''}
                 placeholder={__('U0123456789', 'lynx-journal')}
                 onChange={slackUserId => setForm(f => ({ ...f, notify: { ...f.notify, slackUserId } }))}
+                __nextHasNoMarginBottom
+              />
+            </AccordionItem>
+
+            <AccordionItem
+              title={__('Telegram', 'lynx-journal')}
+              enabled={form.notify?.telegramEnabled ?? false}
+              defaultOpen={form.notify?.telegramEnabled ?? false}
+            >
+              <CheckboxControl
+                label={__('Send a Telegram notification after each run', 'lynx-journal')}
+                checked={form.notify?.telegramEnabled ?? false}
+                onChange={telegramEnabled => setForm(f => ({ ...f, notify: { ...f.notify, telegramEnabled } }))}
+              />
+              <TextControl
+                label={__('Telegram bot token', 'lynx-journal')}
+                type="password"
+                value={form.notify?.telegramBotToken ?? ''}
+                placeholder={__('123456789:AAH...', 'lynx-journal')}
+                onChange={telegramBotToken => setForm(f => ({ ...f, notify: { ...f.notify, telegramBotToken } }))}
+                __nextHasNoMarginBottom
+              />
+              <TextControl
+                label={__('Telegram chat ID', 'lynx-journal')}
+                value={form.notify?.telegramChatId ?? ''}
+                placeholder={__('-1001234567890', 'lynx-journal')}
+                onChange={telegramChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramChatId } }))}
                 __nextHasNoMarginBottom
               />
             </AccordionItem>

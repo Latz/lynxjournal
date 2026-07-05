@@ -159,6 +159,30 @@ trait LynxJournal_ScheduleValidator {
             }
         }
 
+        $data['notify']['telegramEnabled'] = (bool) ($data['notify']['telegramEnabled'] ?? false);
+        $data['notify']['telegramBotToken'] = !empty($data['notify']['telegramBotToken'])
+            ? sanitize_text_field(trim((string) $data['notify']['telegramBotToken']))
+            : '';
+        $data['notify']['telegramChatId'] = !empty($data['notify']['telegramChatId'])
+            ? sanitize_text_field(trim((string) $data['notify']['telegramChatId']))
+            : '';
+
+        if ($data['notify']['telegramBotToken'] !== '' && !preg_match('/^\d+:[\w-]{20,}$/', $data['notify']['telegramBotToken'])) {
+            return new \WP_Error('invalid_notify_telegram_token', __('notify.telegramBotToken must be a valid Telegram bot token', 'lynx-journal'), ['status' => 400]);
+        }
+        if ($data['notify']['telegramChatId'] !== '' && !preg_match('/^-?\d+$/', $data['notify']['telegramChatId'])) {
+            return new \WP_Error('invalid_notify_telegram_chat_id', __('notify.telegramChatId must be a valid Telegram chat ID', 'lynx-journal'), ['status' => 400]);
+        }
+
+        if (!empty($data['notify']['telegramEnabled'])) {
+            if ($data['notify']['telegramBotToken'] === '') {
+                return new \WP_Error('invalid_notify_telegram_token', __('notify.telegramBotToken is required when Telegram notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            }
+            if ($data['notify']['telegramChatId'] === '') {
+                return new \WP_Error('invalid_notify_telegram_chat_id', __('notify.telegramChatId is required when Telegram notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            }
+        }
+
         return null;
     }
 
