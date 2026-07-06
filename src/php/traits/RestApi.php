@@ -99,6 +99,16 @@ trait LynxJournal_RestApi {
             'permission_callback' => fn() => current_user_can('edit_posts'),
         ));
 
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/schedule/test-notification', array(
+            'methods'             => 'POST',
+            'callback'            => [$this, 'restTestNotification'],
+            'permission_callback' => function() { return current_user_can('manage_options'); },
+            'args'                => array(
+                'channel' => array('required' => true, 'type' => 'string'),
+                'notify'  => array('required' => true, 'type' => 'object'),
+            ),
+        ));
+
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/schedule/dismiss-cron-notice', array(
             'methods'             => 'POST',
             'callback'            => function() {
@@ -280,6 +290,32 @@ trait LynxJournal_RestApi {
         }
         $result = $this->executeSchedule(false);
         return rest_ensure_response($result);
+    }
+
+    /**
+     * Send a one-off test notification for a single channel via REST.
+     *
+     * @since 1.0.0
+     * @param \WP_REST_Request $request The REST request with channel and notify settings.
+     * @return \WP_REST_Response|\WP_Error Response or error.
+     */
+    public function restTestNotification(\WP_REST_Request $request): \WP_REST_Response|\WP_Error {
+        $channel = (string) $request->get_param('channel');
+        if (!in_array($channel, ['email', 'discord', 'slack_channel', 'slack_dm', 'telegram', 'mastodon'], true)) {
+            return new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), array('status' => 400));
+        }
+
+        $data = array('notify' => $request->get_param('notify'));
+        $validated = $this->validateNotify($data);
+        if (is_wp_error($validated)) {
+            return $validated;
+        }
+
+        $result = $this->dispatchTestNotification($channel, $data['notify']);
+        if (is_wp_error($result)) {
+            return $result;
+        }
+        return rest_ensure_response(array('success' => true));
     }
 
     /**

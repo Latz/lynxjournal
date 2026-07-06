@@ -56,11 +56,37 @@ function TabTitleWithBadge({ label, enabled }) {
   );
 }
 
+/**
+ * "Send test notification" button + result notice for one notify channel.
+ *
+ * @param {Object}   props
+ * @param {boolean}  props.canTest  Whether the channel's required fields are filled in and enabled.
+ * @param {Object}   [props.state]  This channel's { testing, notice } state, if any.
+ * @param {Function} props.onTest   Called when the button is clicked.
+ * @returns {JSX.Element}
+ */
+function ChannelTestButton({ canTest, state, onTest }) {
+  return (
+    <>
+      <Button variant="secondary" onClick={onTest} isBusy={state?.testing} disabled={state?.testing || !canTest}>
+        {__('Send test notification', 'lynx-journal')}
+      </Button>
+      {state?.notice && (
+        <Notice status={state.notice.status} isDismissible={false}>
+          {state.notice.message}
+        </Notice>
+      )}
+    </>
+  );
+}
+
 export default function App() {
   const [form, setForm]             = useState(DEFAULT_FORM);
   const [savedForm, setSavedForm]   = useState(null);
   const [saving, setSaving]         = useState(false);
   const [notice, setNotice]         = useState(null);
+  // Keyed by channel ('email' | 'discord' | 'slack_channel' | 'slack_dm' | 'telegram' | 'mastodon').
+  const [testState, setTestState]   = useState({});
   // Initialised from diag.cron_notice_dismissed once diagnostics load.
   const [cronNoticeDismissed, setCronNoticeDismissed] = useState(false);
 
@@ -136,6 +162,23 @@ export default function App() {
       setNotice({ status: 'error', message: __('Failed to save schedule.', 'lynx-journal') });
     } finally {
       setSaving(false);
+    }
+  }
+
+  /**
+   * Send a one-off test notification for a single channel using the
+   * currently-entered (possibly unsaved) notify settings.
+   *
+   * @param {string} channel One of email|discord|slack_channel|slack_dm|telegram|mastodon.
+   * @returns {Promise<void>}
+   */
+  async function handleTest(channel) {
+    setTestState(s => ({ ...s, [channel]: { testing: true, notice: null } }));
+    try {
+      await apiFetch({ path: '/lynxjournal/v1/schedule/test-notification', method: 'POST', data: { channel, notify: form.notify } });
+      setTestState(s => ({ ...s, [channel]: { testing: false, notice: { status: 'success', message: __('Test notification sent.', 'lynx-journal') } } }));
+    } catch (err) {
+      setTestState(s => ({ ...s, [channel]: { testing: false, notice: { status: 'error', message: err?.message || __('Failed to send test notification.', 'lynx-journal') } } }));
     }
   }
 
@@ -282,6 +325,11 @@ export default function App() {
                 onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
                 __nextHasNoMarginBottom
               />
+              <ChannelTestButton
+                canTest={!!form.notify?.enabled}
+                state={testState.email}
+                onTest={() => handleTest('email')}
+              />
             </div>
 
             <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'discord' ? '' : undefined}>
@@ -297,6 +345,11 @@ export default function App() {
                 placeholder={__('https://discord.com/api/webhooks/...', 'lynx-journal')}
                 onChange={discordWebhookUrl => setForm(f => ({ ...f, notify: { ...f.notify, discordWebhookUrl } }))}
                 __nextHasNoMarginBottom
+              />
+              <ChannelTestButton
+                canTest={!!form.notify?.discordEnabled && !!form.notify?.discordWebhookUrl}
+                state={testState.discord}
+                onTest={() => handleTest('discord')}
               />
             </div>
 
@@ -322,6 +375,11 @@ export default function App() {
                 onChange={slackChannelId => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelId } }))}
                 __nextHasNoMarginBottom
               />
+              <ChannelTestButton
+                canTest={!!form.notify?.slackChannelEnabled && !!form.notify?.slackBotToken && !!form.notify?.slackChannelId}
+                state={testState.slack_channel}
+                onTest={() => handleTest('slack_channel')}
+              />
 
               <CheckboxControl
                 label={__('Send me a Slack DM after each run', 'lynx-journal')}
@@ -334,6 +392,11 @@ export default function App() {
                 placeholder={__('U0123456789', 'lynx-journal')}
                 onChange={slackUserId => setForm(f => ({ ...f, notify: { ...f.notify, slackUserId } }))}
                 __nextHasNoMarginBottom
+              />
+              <ChannelTestButton
+                canTest={!!form.notify?.slackDmEnabled && !!form.notify?.slackBotToken && !!form.notify?.slackUserId}
+                state={testState.slack_dm}
+                onTest={() => handleTest('slack_dm')}
               />
             </div>
 
@@ -357,6 +420,11 @@ export default function App() {
                 placeholder={__('-1001234567890', 'lynx-journal')}
                 onChange={telegramChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramChatId } }))}
                 __nextHasNoMarginBottom
+              />
+              <ChannelTestButton
+                canTest={!!form.notify?.telegramEnabled && !!form.notify?.telegramBotToken && !!form.notify?.telegramChatId}
+                state={testState.telegram}
+                onTest={() => handleTest('telegram')}
               />
             </div>
 
@@ -388,6 +456,11 @@ export default function App() {
                 placeholder={__('@you@mastodon.social', 'lynx-journal')}
                 onChange={mastodonRecipient => setForm(f => ({ ...f, notify: { ...f.notify, mastodonRecipient } }))}
                 __nextHasNoMarginBottom
+              />
+              <ChannelTestButton
+                canTest={!!form.notify?.mastodonEnabled && !!form.notify?.mastodonInstanceUrl && !!form.notify?.mastodonAccessToken && !!form.notify?.mastodonRecipient}
+                state={testState.mastodon}
+                onTest={() => handleTest('mastodon')}
               />
             </div>
           </div>
