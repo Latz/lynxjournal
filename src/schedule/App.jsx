@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from '@wordpress/element';
+import { useState, useEffect, useMemo, useCallback, useRef } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { Button, Notice, CheckboxControl, TextControl, SelectControl, TabPanel } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -250,6 +250,19 @@ export default function App() {
     }
   }
 
+  const tabsWrapRef = useRef(null);
+
+  /**
+   * Scrolls the notification tab bar left/right by a fixed amount.
+   *
+   * @param {number} direction -1 to scroll left, 1 to scroll right.
+   * @returns {void}
+   */
+  function scrollNotifyTabs(direction) {
+    const el = tabsWrapRef.current?.querySelector('.components-tab-panel__tabs');
+    el?.scrollBy({ left: direction * 150, behavior: 'smooth' });
+  }
+
   function handleModeChange(mode) {
     setForm(f => ({
       ...f,
@@ -366,21 +379,35 @@ export default function App() {
         </Section>
 
         <Section title={<TabTitleWithBadge label={__('Notifications', 'lynx-journal')} enabled={anyNotifyEnabled} />} collapsible defaultCollapsed>
-          <TabPanel
-            key={configLoaded ? 'loaded' : 'loading'}
-            className="lynxjournal-notify-tabs"
-            initialTabName={initialNotifyTab}
-            onSelect={setActiveNotifyTab}
-            tabs={[
-              { name: 'email', title: <TabTitleWithBadge label={__('Email', 'lynx-journal')} enabled={form.notify?.enabled ?? false} incomplete={!!form.notify?.enabled && !form.notify?.email} /> },
-              { name: 'discord', title: <TabTitleWithBadge label={__('Discord', 'lynx-journal')} enabled={form.notify?.discordEnabled ?? false} incomplete={!!form.notify?.discordEnabled && !discordComplete} /> },
-              { name: 'slack', title: <TabTitleWithBadge label={__('Slack', 'lynx-journal')} enabled={slackEnabled} incomplete={slackIncomplete} /> },
-              { name: 'telegram', title: <TabTitleWithBadge label={__('Telegram', 'lynx-journal')} enabled={form.notify?.telegramEnabled ?? false} incomplete={!!form.notify?.telegramEnabled && !telegramComplete} /> },
-              { name: 'mastodon', title: <TabTitleWithBadge label={__('Mastodon', 'lynx-journal')} enabled={form.notify?.mastodonEnabled ?? false} incomplete={!!form.notify?.mastodonEnabled && !mastodonComplete} /> },
-            ]}
-          >
-            {() => null}
-          </TabPanel>
+          <div className="lynxjournal-notify-tabs-row" ref={tabsWrapRef}>
+            <Button
+              className="lynxjournal-notify-tabs-scroll"
+              icon="arrow-left-alt2"
+              label={__('Scroll tabs left', 'lynx-journal')}
+              onClick={() => scrollNotifyTabs(-1)}
+            />
+            <TabPanel
+              key={configLoaded ? 'loaded' : 'loading'}
+              className="lynxjournal-notify-tabs"
+              initialTabName={initialNotifyTab}
+              onSelect={setActiveNotifyTab}
+              tabs={[
+                { name: 'email', title: <TabTitleWithBadge label={__('Email', 'lynx-journal')} enabled={form.notify?.enabled ?? false} incomplete={!!form.notify?.enabled && !form.notify?.email} /> },
+                { name: 'discord', title: <TabTitleWithBadge label={__('Discord', 'lynx-journal')} enabled={form.notify?.discordEnabled ?? false} incomplete={!!form.notify?.discordEnabled && !discordComplete} /> },
+                { name: 'slack', title: <TabTitleWithBadge label={__('Slack', 'lynx-journal')} enabled={slackEnabled} incomplete={slackIncomplete} /> },
+                { name: 'telegram', title: <TabTitleWithBadge label={__('Telegram', 'lynx-journal')} enabled={form.notify?.telegramEnabled ?? false} incomplete={!!form.notify?.telegramEnabled && !telegramComplete} /> },
+                { name: 'mastodon', title: <TabTitleWithBadge label={__('Mastodon', 'lynx-journal')} enabled={form.notify?.mastodonEnabled ?? false} incomplete={!!form.notify?.mastodonEnabled && !mastodonComplete} /> },
+              ]}
+            >
+              {() => null}
+            </TabPanel>
+            <Button
+              className="lynxjournal-notify-tabs-scroll"
+              icon="arrow-right-alt2"
+              label={__('Scroll tabs right', 'lynx-journal')}
+              onClick={() => scrollNotifyTabs(1)}
+            />
+          </div>
 
           {/*
             All channel panels are mounted at once, stacked in the same CSS grid

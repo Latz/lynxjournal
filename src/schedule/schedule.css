@@ -116,9 +116,31 @@
   color: #fff;
 }
 
+.lynxjournal-notify-tabs-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.lynxjournal-notify-tabs-scroll {
+  flex-shrink: 0;
+  padding: 0 4px;
+  min-width: 0;
+}
+
+.lynxjournal-notify-tabs-row .lynxjournal-notify-tabs {
+  flex: 1;
+  min-width: 0;
+}
+
 .lynxjournal-notify-tabs .components-tab-panel__tabs {
-  flex-wrap: wrap;
-  row-gap: 4px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.lynxjournal-notify-tabs .components-tab-panel__tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .lynxjournal-notify-tabs .components-tab-panel__tabs-item {
@@ -126,6 +148,7 @@
   border-radius: 0;
   height: auto;
   padding-block: 6px;
+  flex-shrink: 0;
 }
 
 .lynxjournal-notify-tabs .components-tab-panel__tabs-item:last-child {
