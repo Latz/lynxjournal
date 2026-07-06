@@ -108,13 +108,51 @@ trait LynxJournal_ScheduleValidator {
             return isset($data['notify']) ? new \WP_Error('invalid_notify', __('notify must be an object', 'lynx-journal'), ['status' => 400]) : null;
         }
         $data['notify']['enabled'] = (bool) ($data['notify']['enabled'] ?? false);
+
+        return $this->validateNotifyEmail($data)
+            ?? $this->validateNotifyDiscord($data)
+            ?? $this->validateNotifySlack($data)
+            ?? $this->validateNotifyTelegram($data)
+            ?? $this->validateNotifyMastodon($data);
+    }
+
+    /**
+     * Validate and sanitize only the notification fields for one channel.
+     *
+     * Used by the single-channel test-notification endpoint so that stray
+     * or unfinished input in an unrelated channel's fields doesn't block
+     * testing the channel currently being configured.
+     *
+     * @since 1.0.0
+     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|mastodon.
+     * @param array $data The request data containing a 'notify' key.
+     * @return \WP_Error|null Error if invalid, null if valid.
+     */
+    public function validateNotifyChannel(string $channel, array &$data): ?\WP_Error {
+        if (!isset($data['notify']) || !is_array($data['notify'])) {
+            return isset($data['notify']) ? new \WP_Error('invalid_notify', __('notify must be an object', 'lynx-journal'), ['status' => 400]) : null;
+        }
+        return match ($channel) {
+            'email' => $this->validateNotifyEmail($data),
+            'discord' => $this->validateNotifyDiscord($data),
+            'slack_channel', 'slack_dm' => $this->validateNotifySlack($data),
+            'telegram' => $this->validateNotifyTelegram($data),
+            'mastodon' => $this->validateNotifyMastodon($data),
+            default => new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), ['status' => 400]),
+        };
+    }
+
+    private function validateNotifyEmail(array &$data): ?\WP_Error {
         if (!empty($data['notify']['email'])) {
             $data['notify']['email'] = sanitize_email($data['notify']['email']);
             if (!is_email($data['notify']['email'])) {
                 return new \WP_Error('invalid_notify_email', __('notify.email is not a valid email address', 'lynx-journal'), ['status' => 400]);
             }
         }
+        return null;
+    }
 
+    private function validateNotifyDiscord(array &$data): ?\WP_Error {
         $data['notify']['discordEnabled'] = (bool) ($data['notify']['discordEnabled'] ?? false);
         if (!empty($data['notify']['discordWebhookUrl'])) {
             $url = esc_url_raw(trim((string) $data['notify']['discordWebhookUrl']));
@@ -125,7 +163,10 @@ trait LynxJournal_ScheduleValidator {
         } elseif (!empty($data['notify']['discordEnabled'])) {
             return new \WP_Error('invalid_notify_discord_url', __('notify.discordWebhookUrl is required when Discord notifications are enabled', 'lynx-journal'), ['status' => 400]);
         }
+        return null;
+    }
 
+    private function validateNotifySlack(array &$data): ?\WP_Error {
         $data['notify']['slackBotToken'] = !empty($data['notify']['slackBotToken'])
             ? sanitize_text_field((string) $data['notify']['slackBotToken'])
             : '';
@@ -158,7 +199,10 @@ trait LynxJournal_ScheduleValidator {
                 return new \WP_Error('invalid_notify_slack_user', __('notify.slackUserId must be a valid Slack user ID', 'lynx-journal'), ['status' => 400]);
             }
         }
+        return null;
+    }
 
+    private function validateNotifyTelegram(array &$data): ?\WP_Error {
         $data['notify']['telegramEnabled'] = (bool) ($data['notify']['telegramEnabled'] ?? false);
         $data['notify']['telegramBotToken'] = !empty($data['notify']['telegramBotToken'])
             ? sanitize_text_field(trim((string) $data['notify']['telegramBotToken']))
@@ -182,7 +226,10 @@ trait LynxJournal_ScheduleValidator {
                 return new \WP_Error('invalid_notify_telegram_chat_id', __('notify.telegramChatId is required when Telegram notifications are enabled', 'lynx-journal'), ['status' => 400]);
             }
         }
+        return null;
+    }
 
+    private function validateNotifyMastodon(array &$data): ?\WP_Error {
         $data['notify']['mastodonEnabled'] = (bool) ($data['notify']['mastodonEnabled'] ?? false);
         $data['notify']['mastodonAccessToken'] = !empty($data['notify']['mastodonAccessToken'])
             ? sanitize_text_field(trim((string) $data['notify']['mastodonAccessToken']))
@@ -216,7 +263,6 @@ trait LynxJournal_ScheduleValidator {
                 return new \WP_Error('invalid_notify_mastodon_recipient', __('notify.mastodonRecipient is required when Mastodon notifications are enabled', 'lynx-journal'), ['status' => 400]);
             }
         }
-
         return null;
     }
 

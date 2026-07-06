@@ -9,14 +9,16 @@ notifications.
 ## Where to find it
 
 Go to **LynxJournal → Schedule** in the WordPress admin menu. In the
-**Notifications** section, below the email and Discord options, you'll
-find:
+**Notifications** section, open the **Slack** tab, where you'll find:
 
-- **Slack Bot Token** — appears once either Slack option below is enabled.
-- **Post to a Slack channel after each run** — checkbox, plus a channel ID
-  field when checked.
-- **Send me a Slack DM after each run** — checkbox, plus a user ID field
-  when checked.
+- **Slack Bot Token** — always visible.
+- **Post to a Slack channel after each run** — checkbox, with a **Slack
+  channel ID** field below it.
+- **Send me a Slack DM after each run** — checkbox, with a **Slack user
+  ID** field below it.
+
+The channel ID and user ID fields are always visible too; they're only
+required when their corresponding checkbox is checked.
 
 Both can be enabled at the same time, independently — channel only, DM
 only, both, or neither.
@@ -36,6 +38,11 @@ You need a Slack App with a bot token before you can enable either option:
 1. Go to [api.slack.com/apps](https://api.slack.com/apps) and click
    **Create New App** → **From scratch**. Name it (e.g. "LynxJournal") and
    pick your workspace.
+   - Slack may prompt you to **Generate an app-level token** (under
+     **Basic Information → App-Level Tokens**) with scopes like
+     `connections:write`. That's for Socket Mode/WebSocket features and
+     isn't needed here — skip/close it. LynxJournal only calls Slack's
+     Web API over plain HTTPS.
 2. Under **OAuth & Permissions**, scroll to **Scopes → Bot Token Scopes**
    and add:
    - `chat:write` — required for both channel and DM messages.

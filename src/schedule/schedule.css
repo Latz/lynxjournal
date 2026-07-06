@@ -58,6 +58,35 @@
   padding: 16px;
 }
 
+.lynxjournal-section-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  background: none;
+  border: none;
+  font: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.lynxjournal-section-chevron {
+  display: inline-block;
+  font-size: 16px;
+  transition: transform 0.15s ease;
+}
+
+.lynxjournal-section-chevron.is-collapsed {
+  transform: rotate(-90deg);
+}
+
+.lynxjournal-section.is-collapsed .lynxjournal-section-heading {
+  border-bottom: none;
+}
+
 /* Notification channel tabs (nested one level inside .lynxjournal-section) */
 .lynxjournal-notify-badge {
   display: inline-block;
@@ -126,9 +155,17 @@
   visibility: hidden;
 }
 
-/* Without this, the panel's flex stretch makes the test button fill the
-   full width and look like a text input rather than a button. */
-.lynxjournal-notify-tab-panel .components-button {
+.lynxjournal-channel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Without this, the panel's flex stretch makes the button row fill the
+   full width instead of hugging its two buttons. */
+.lynxjournal-channel-actions-buttons {
+  display: flex;
+  gap: 8px;
   align-self: flex-start;
 }
 

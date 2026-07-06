@@ -28,11 +28,42 @@ const DEFAULT_FORM = {
   post_status: 'publish',
 };
 
-function Section({ title, children }) {
+/**
+ * A titled section box. Optionally collapsible, toggled by clicking the heading.
+ *
+ * @param {Object}   props
+ * @param {string}   props.title             Section heading text.
+ * @param {*}        props.children          Section body content.
+ * @param {boolean}  [props.collapsible]     Whether the section can be collapsed.
+ * @param {boolean}  [props.defaultCollapsed] Initial collapsed state, if collapsible.
+ * @returns {JSX.Element}
+ */
+function Section({ title, children, collapsible, defaultCollapsed }) {
+  const [collapsed, setCollapsed] = useState(!!collapsible && !!defaultCollapsed);
+
+  if (!collapsible) {
+    return (
+      <div className="lynxjournal-section">
+        <h2 className="lynxjournal-section-heading">{title}</h2>
+        <div className="lynxjournal-section-body">{children}</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="lynxjournal-section">
-      <h2 className="lynxjournal-section-heading">{title}</h2>
-      <div className="lynxjournal-section-body">{children}</div>
+    <div className={`lynxjournal-section ${collapsed ? 'is-collapsed' : ''}`}>
+      <h2 className="lynxjournal-section-heading">
+        <button
+          type="button"
+          className="lynxjournal-section-toggle"
+          aria-expanded={!collapsed}
+          onClick={() => setCollapsed(c => !c)}
+        >
+          <span className={`lynxjournal-section-chevron ${collapsed ? 'is-collapsed' : ''}`} aria-hidden="true">▾</span>
+          {title}
+        </button>
+      </h2>
+      {!collapsed && <div className="lynxjournal-section-body">{children}</div>}
     </div>
   );
 }
@@ -59,26 +90,40 @@ function TabTitleWithBadge({ label, enabled, incomplete }) {
 }
 
 /**
- * "Send test notification" button + result notice for one notify channel.
+ * "Send test notification" + "Save" buttons and their result notices for
+ * one notify channel. Save persists just this channel's fields, independent
+ * of any other unsaved changes elsewhere on the page.
  *
  * @param {Object}   props
- * @param {boolean}  props.canTest  Whether the channel's required fields are filled in and enabled.
- * @param {Object}   [props.state]  This channel's { testing, notice } state, if any.
- * @param {Function} props.onTest   Called when the button is clicked.
+ * @param {boolean}  props.canTest    Whether the channel's required fields are filled in and enabled.
+ * @param {Object}   [props.testState] This channel's { testing, notice } state, if any.
+ * @param {Function} props.onTest     Called when the Test button is clicked.
+ * @param {Object}   [props.saveState] This channel's { saving, notice } state, if any.
+ * @param {Function} props.onSave     Called when the Save button is clicked.
  * @returns {JSX.Element}
  */
-function ChannelTestButton({ canTest, state, onTest }) {
+function ChannelActions({ canTest, testState, onTest, saveState, onSave }) {
   return (
-    <>
-      <Button variant="secondary" onClick={onTest} isBusy={state?.testing} disabled={state?.testing || !canTest}>
-        {__('Send test notification', 'lynx-journal')}
-      </Button>
-      {state?.notice && (
-        <Notice status={state.notice.status} isDismissible={false}>
-          {state.notice.message}
+    <div className="lynxjournal-channel-actions">
+      <div className="lynxjournal-channel-actions-buttons">
+        <Button variant="secondary" onClick={onTest} isBusy={testState?.testing} disabled={testState?.testing || !canTest}>
+          {__('Send test notification', 'lynx-journal')}
+        </Button>
+        <Button variant="primary" onClick={onSave} isBusy={saveState?.saving} disabled={saveState?.saving}>
+          {__('Save', 'lynx-journal')}
+        </Button>
+      </div>
+      {testState?.notice && (
+        <Notice status={testState.notice.status} isDismissible={false}>
+          {testState.notice.message}
         </Notice>
       )}
-    </>
+      {saveState?.notice && (
+        <Notice status={saveState.notice.status} isDismissible={false}>
+          {saveState.notice.message}
+        </Notice>
+      )}
+    </div>
   );
 }
 
@@ -89,6 +134,8 @@ export default function App() {
   const [notice, setNotice]         = useState(null);
   // Keyed by channel ('email' | 'discord' | 'slack_channel' | 'slack_dm' | 'telegram' | 'mastodon').
   const [testState, setTestState]   = useState({});
+  // Keyed the same way as testState, but for the per-channel Save button.
+  const [channelSaveState, setChannelSaveState] = useState({});
   // Initialised from diag.cron_notice_dismissed once diagnostics load.
   const [cronNoticeDismissed, setCronNoticeDismissed] = useState(false);
 
@@ -184,6 +231,25 @@ export default function App() {
     }
   }
 
+  /**
+   * Persist just one notification channel's current field values,
+   * independent of any other unsaved changes elsewhere on the page.
+   *
+   * @param {string} channel One of email|discord|slack_channel|slack_dm|telegram|mastodon.
+   * @returns {Promise<void>}
+   */
+  async function handleSaveChannel(channel) {
+    setChannelSaveState(s => ({ ...s, [channel]: { saving: true, notice: null } }));
+    try {
+      const res = await apiFetch({ path: '/lynxjournal/v1/schedule/save-notification', method: 'POST', data: { channel, notify: form.notify } });
+      setForm(f => ({ ...f, notify: { ...f.notify, ...res.notify } }));
+      setSavedForm(f => f && ({ ...f, notify: { ...f.notify, ...res.notify } }));
+      setChannelSaveState(s => ({ ...s, [channel]: { saving: false, notice: { status: 'success', message: __('Saved.', 'lynx-journal') } } }));
+    } catch (err) {
+      setChannelSaveState(s => ({ ...s, [channel]: { saving: false, notice: { status: 'error', message: err?.message || __('Failed to save.', 'lynx-journal') } } }));
+    }
+  }
+
   function handleModeChange(mode) {
     setForm(f => ({
       ...f,
@@ -218,6 +284,7 @@ export default function App() {
   const slackIncomplete = (!!form.notify?.slackChannelEnabled && !slackChannelComplete) || (!!form.notify?.slackDmEnabled && !slackDmComplete);
   const telegramComplete = !!form.notify?.telegramEnabled && !!form.notify?.telegramBotToken && !!form.notify?.telegramChatId;
   const mastodonComplete = !!form.notify?.mastodonEnabled && !!form.notify?.mastodonInstanceUrl && !!form.notify?.mastodonAccessToken && !!form.notify?.mastodonRecipient;
+  const anyNotifyEnabled = !!form.notify?.enabled || !!form.notify?.discordEnabled || slackEnabled || !!form.notify?.telegramEnabled || !!form.notify?.mastodonEnabled;
 
   function renderConditionSection() {
     if (isSchedule) return (
@@ -298,7 +365,7 @@ export default function App() {
           />
         </Section>
 
-        <Section title={__('Notifications', 'lynx-journal')}>
+        <Section title={<TabTitleWithBadge label={__('Notifications', 'lynx-journal')} enabled={anyNotifyEnabled} />} collapsible defaultCollapsed>
           <TabPanel
             key={configLoaded ? 'loaded' : 'loading'}
             className="lynxjournal-notify-tabs"
@@ -337,10 +404,12 @@ export default function App() {
                 onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
                 __nextHasNoMarginBottom
               />
-              <ChannelTestButton
+              <ChannelActions
                 canTest={!!form.notify?.enabled}
-                state={testState.email}
+                testState={testState.email}
                 onTest={() => handleTest('email')}
+                saveState={channelSaveState.email}
+                onSave={() => handleSaveChannel('email')}
               />
             </div>
 
@@ -358,10 +427,12 @@ export default function App() {
                 onChange={discordWebhookUrl => setForm(f => ({ ...f, notify: { ...f.notify, discordWebhookUrl } }))}
                 __nextHasNoMarginBottom
               />
-              <ChannelTestButton
+              <ChannelActions
                 canTest={discordComplete}
-                state={testState.discord}
+                testState={testState.discord}
                 onTest={() => handleTest('discord')}
+                saveState={channelSaveState.discord}
+                onSave={() => handleSaveChannel('discord')}
               />
             </div>
 
@@ -387,10 +458,12 @@ export default function App() {
                 onChange={slackChannelId => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelId } }))}
                 __nextHasNoMarginBottom
               />
-              <ChannelTestButton
+              <ChannelActions
                 canTest={slackChannelComplete}
-                state={testState.slack_channel}
+                testState={testState.slack_channel}
                 onTest={() => handleTest('slack_channel')}
+                saveState={channelSaveState.slack_channel}
+                onSave={() => handleSaveChannel('slack_channel')}
               />
 
               <CheckboxControl
@@ -405,10 +478,12 @@ export default function App() {
                 onChange={slackUserId => setForm(f => ({ ...f, notify: { ...f.notify, slackUserId } }))}
                 __nextHasNoMarginBottom
               />
-              <ChannelTestButton
+              <ChannelActions
                 canTest={slackDmComplete}
-                state={testState.slack_dm}
+                testState={testState.slack_dm}
                 onTest={() => handleTest('slack_dm')}
+                saveState={channelSaveState.slack_dm}
+                onSave={() => handleSaveChannel('slack_dm')}
               />
             </div>
 
@@ -433,10 +508,12 @@ export default function App() {
                 onChange={telegramChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramChatId } }))}
                 __nextHasNoMarginBottom
               />
-              <ChannelTestButton
+              <ChannelActions
                 canTest={telegramComplete}
-                state={testState.telegram}
+                testState={testState.telegram}
                 onTest={() => handleTest('telegram')}
+                saveState={channelSaveState.telegram}
+                onSave={() => handleSaveChannel('telegram')}
               />
             </div>
 
@@ -469,10 +546,12 @@ export default function App() {
                 onChange={mastodonRecipient => setForm(f => ({ ...f, notify: { ...f.notify, mastodonRecipient } }))}
                 __nextHasNoMarginBottom
               />
-              <ChannelTestButton
+              <ChannelActions
                 canTest={mastodonComplete}
-                state={testState.mastodon}
+                testState={testState.mastodon}
                 onTest={() => handleTest('mastodon')}
+                saveState={channelSaveState.mastodon}
+                onSave={() => handleSaveChannel('mastodon')}
               />
             </div>
           </div>
