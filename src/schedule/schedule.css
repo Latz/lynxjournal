@@ -126,6 +126,12 @@
   visibility: hidden;
 }
 
+/* Without this, the panel's flex stretch makes the test button fill the
+   full width and look like a text input rather than a button. */
+.lynxjournal-notify-tab-panel .components-button {
+  align-self: flex-start;
+}
+
 /* Mode picker */
 .lynxjournal-mode-picker {
   display: flex;
