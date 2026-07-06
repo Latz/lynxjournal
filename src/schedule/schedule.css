@@ -58,90 +58,51 @@
   padding: 16px;
 }
 
-/* Notification channel accordion (nested one level inside .lynxjournal-section) */
-.lynxjournal-accordion {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.lynxjournal-accordion-item {
-  border: 1px solid #c3c4c7;
-  background: #fff;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-}
-
-.lynxjournal-accordion-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 8px 12px;
-  border: none;
-  background: #f6f7f7;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.4;
-  color: #1d2327;
-  cursor: pointer;
-  text-align: start;
-}
-
-.lynxjournal-accordion-header:hover {
-  background: #f0f0f1;
-}
-
-.lynxjournal-accordion-header:focus-visible {
-  outline: 2px solid var(--wp-admin-theme-color, #3858e9);
-  outline-offset: -2px;
-}
-
-.lynxjournal-accordion-badge {
+/* Notification channel tabs (nested one level inside .lynxjournal-section) */
+.lynxjournal-notify-badge {
   display: inline-block;
   width: 24px;
+  margin-inline-start: 8px;
   padding: 1px 0;
   border-radius: 10px;
   font-size: 12px;
-  font-weight: 400;
-  color: #646970;
+  font-weight: 600;
   text-align: center;
 }
 
-.lynxjournal-accordion-badge.is-on {
+.lynxjournal-notify-badge.is-on {
   background: #00a32a;
   color: #fff;
+}
+
+.lynxjournal-notify-badge.is-off {
+  background: #a7aaad;
+  color: #fff;
+}
+
+.lynxjournal-notify-tabs .components-tab-panel__tabs-item {
+  border-inline-end: 1px solid #dcdcde;
+  border-radius: 0;
+}
+
+.lynxjournal-notify-tabs .components-tab-panel__tabs-item:last-child {
+  border-inline-end: none;
+}
+
+.lynxjournal-notify-tabs .components-tab-panel__tabs-item:hover {
+  background: #f0f0f1;
+}
+
+.lynxjournal-notify-tabs .components-tab-panel__tabs-item.is-active {
+  background: #fff;
   font-weight: 600;
 }
 
-.lynxjournal-accordion-badge.is-off {
-  color: var(--lynxjournal-color-neutral-text);
-}
-
-.lynxjournal-accordion-chevron {
-  flex-shrink: 0;
-  color: #787c82;
-  transition: transform 0.15s ease;
-}
-
-.lynxjournal-accordion-header:hover .lynxjournal-accordion-chevron {
-  color: #1d2327;
-}
-
-.lynxjournal-accordion-header[aria-expanded="true"] .lynxjournal-accordion-chevron {
-  transform: rotate(180deg);
-}
-
-.lynxjournal-accordion-body {
+.lynxjournal-notify-tab-panel {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 0 12px 12px;
-  padding-block-start: 12px;
-  border-block-start: 1px solid #c3c4c7;
-}
-
-.lynxjournal-accordion-body[hidden] {
-  display: none;
+  padding-block-start: 16px;
 }
 
 /* Mode picker */

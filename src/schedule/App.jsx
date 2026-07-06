@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-import { Button, Notice, CheckboxControl, TextControl, SelectControl } from '@wordpress/components';
+import { Button, Notice, CheckboxControl, TextControl, SelectControl, TabPanel } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { buildRRule } from './lib/rrule';
 import { SCHEDULE_MODES } from './lib/modes';
@@ -10,7 +10,6 @@ import TriggerCondition from './components/TriggerCondition';
 import TimePicker from './components/TimePicker';
 import NextSchedules from './components/NextSchedules';
 import DiagnosticsPanel from './components/DiagnosticsPanel';
-import AccordionItem from './components/AccordionItem';
 
 const DEFAULT_FORM = {
   mode: 'daily',
@@ -35,6 +34,25 @@ function Section({ title, children }) {
       <h3 className="lynxjournal-section-heading">{title}</h3>
       <div className="lynxjournal-section-body">{children}</div>
     </div>
+  );
+}
+
+/**
+ * Tab title for a notification channel, with an inline On/Off status badge.
+ *
+ * @param {Object}  props
+ * @param {string}  props.label   Channel display name.
+ * @param {boolean} props.enabled Whether the channel is currently on.
+ * @returns {JSX.Element}
+ */
+function TabTitleWithBadge({ label, enabled }) {
+  return (
+    <>
+      {label}
+      <span className={`lynxjournal-notify-badge ${enabled ? 'is-on' : 'is-off'}`}>
+        {enabled ? __('On', 'lynx-journal') : __('Off', 'lynx-journal')}
+      </span>
+    </>
   );
 }
 
@@ -74,10 +92,19 @@ export default function App() {
   useEffect(refreshDiag, [refreshDiag]);
 
   const isDirty = savedForm !== null && JSON.stringify(form) !== JSON.stringify(savedForm);
-  // Forces the notification accordion items to remount (and re-read their
-  // defaultOpen prop) once the real schedule config has loaded, since
-  // useState's initializer only runs on a component's first mount.
+  // Forces the notification tab panel to remount (and re-read its
+  // initialTabName) once the real schedule config has loaded, since
+  // TabPanel only reads initialTabName on first mount.
   const configLoaded = savedForm !== null;
+
+  const initialNotifyTab = useMemo(() => {
+    if (form.notify?.discordEnabled) return 'discord';
+    if (form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) return 'slack';
+    if (form.notify?.telegramEnabled) return 'telegram';
+    if (form.notify?.mastodonEnabled) return 'mastodon';
+    return 'email';
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only recompute once config finishes loading, like the remount-on-load trick above
+  }, [configLoaded]);
 
   useEffect(() => {
     if (!isDirty) return;
@@ -211,150 +238,155 @@ export default function App() {
         </Section>
 
         <Section title={__('Notifications', 'lynx-journal')}>
-          <div className="lynxjournal-accordion" key={configLoaded ? 'loaded' : 'loading'}>
-            <AccordionItem
-              title={__('Email', 'lynx-journal')}
-              enabled={form.notify?.enabled ?? false}
-              defaultOpen={form.notify?.enabled ?? false}
-            >
-              <CheckboxControl
-                label={__('Email me after each run', 'lynx-journal')}
-                checked={form.notify?.enabled ?? false}
-                onChange={enabled => setForm(f => ({ ...f, notify: { ...f.notify, enabled } }))}
-              />
-              <TextControl
-                label={__('Email address', 'lynx-journal')}
-                type="email"
-                value={form.notify?.email ?? ''}
-                placeholder={__('Leave blank to use admin email', 'lynx-journal')}
-                onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
-                __nextHasNoMarginBottom
-              />
-            </AccordionItem>
+          <TabPanel
+            key={configLoaded ? 'loaded' : 'loading'}
+            className="lynxjournal-notify-tabs"
+            initialTabName={initialNotifyTab}
+            tabs={[
+              { name: 'email', title: <TabTitleWithBadge label={__('Email', 'lynx-journal')} enabled={form.notify?.enabled ?? false} /> },
+              { name: 'discord', title: <TabTitleWithBadge label={__('Discord', 'lynx-journal')} enabled={form.notify?.discordEnabled ?? false} /> },
+              { name: 'slack', title: <TabTitleWithBadge label={__('Slack', 'lynx-journal')} enabled={(form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) ?? false} /> },
+              { name: 'telegram', title: <TabTitleWithBadge label={__('Telegram', 'lynx-journal')} enabled={form.notify?.telegramEnabled ?? false} /> },
+              { name: 'mastodon', title: <TabTitleWithBadge label={__('Mastodon', 'lynx-journal')} enabled={form.notify?.mastodonEnabled ?? false} /> },
+            ]}
+          >
+            {(tab) => (
+              <div className="lynxjournal-notify-tab-panel">
+                {tab.name === 'email' && (
+                  <>
+                    <CheckboxControl
+                      label={__('Email me after each run', 'lynx-journal')}
+                      checked={form.notify?.enabled ?? false}
+                      onChange={enabled => setForm(f => ({ ...f, notify: { ...f.notify, enabled } }))}
+                    />
+                    <TextControl
+                      label={__('Email address', 'lynx-journal')}
+                      type="email"
+                      value={form.notify?.email ?? ''}
+                      placeholder={__('Leave blank to use admin email', 'lynx-journal')}
+                      onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
+                      __nextHasNoMarginBottom
+                    />
+                  </>
+                )}
 
-            <AccordionItem
-              title={__('Discord', 'lynx-journal')}
-              enabled={form.notify?.discordEnabled ?? false}
-              defaultOpen={form.notify?.discordEnabled ?? false}
-            >
-              <CheckboxControl
-                label={__('Send a Discord notification after each run', 'lynx-journal')}
-                checked={form.notify?.discordEnabled ?? false}
-                onChange={discordEnabled => setForm(f => ({ ...f, notify: { ...f.notify, discordEnabled } }))}
-              />
-              <TextControl
-                label={__('Discord webhook URL', 'lynx-journal')}
-                type="url"
-                value={form.notify?.discordWebhookUrl ?? ''}
-                placeholder={__('https://discord.com/api/webhooks/...', 'lynx-journal')}
-                onChange={discordWebhookUrl => setForm(f => ({ ...f, notify: { ...f.notify, discordWebhookUrl } }))}
-                __nextHasNoMarginBottom
-              />
-            </AccordionItem>
+                {tab.name === 'discord' && (
+                  <>
+                    <CheckboxControl
+                      label={__('Send a Discord notification after each run', 'lynx-journal')}
+                      checked={form.notify?.discordEnabled ?? false}
+                      onChange={discordEnabled => setForm(f => ({ ...f, notify: { ...f.notify, discordEnabled } }))}
+                    />
+                    <TextControl
+                      label={__('Discord webhook URL', 'lynx-journal')}
+                      type="url"
+                      value={form.notify?.discordWebhookUrl ?? ''}
+                      placeholder={__('https://discord.com/api/webhooks/...', 'lynx-journal')}
+                      onChange={discordWebhookUrl => setForm(f => ({ ...f, notify: { ...f.notify, discordWebhookUrl } }))}
+                      __nextHasNoMarginBottom
+                    />
+                  </>
+                )}
 
-            <AccordionItem
-              title={__('Slack', 'lynx-journal')}
-              enabled={(form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) ?? false}
-              defaultOpen={(form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) ?? false}
-            >
-              <TextControl
-                label={__('Slack Bot Token', 'lynx-journal')}
-                type="password"
-                value={form.notify?.slackBotToken ?? ''}
-                placeholder={__('xoxb-...', 'lynx-journal')}
-                onChange={slackBotToken => setForm(f => ({ ...f, notify: { ...f.notify, slackBotToken } }))}
-                __nextHasNoMarginBottom
-              />
+                {tab.name === 'slack' && (
+                  <>
+                    <TextControl
+                      label={__('Slack Bot Token', 'lynx-journal')}
+                      type="password"
+                      value={form.notify?.slackBotToken ?? ''}
+                      placeholder={__('xoxb-...', 'lynx-journal')}
+                      onChange={slackBotToken => setForm(f => ({ ...f, notify: { ...f.notify, slackBotToken } }))}
+                      __nextHasNoMarginBottom
+                    />
 
-              <CheckboxControl
-                label={__('Post to a Slack channel after each run', 'lynx-journal')}
-                checked={form.notify?.slackChannelEnabled ?? false}
-                onChange={slackChannelEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelEnabled } }))}
-              />
-              <TextControl
-                label={__('Slack channel ID', 'lynx-journal')}
-                value={form.notify?.slackChannelId ?? ''}
-                placeholder={__('C0123456789', 'lynx-journal')}
-                onChange={slackChannelId => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelId } }))}
-                __nextHasNoMarginBottom
-              />
+                    <CheckboxControl
+                      label={__('Post to a Slack channel after each run', 'lynx-journal')}
+                      checked={form.notify?.slackChannelEnabled ?? false}
+                      onChange={slackChannelEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelEnabled } }))}
+                    />
+                    <TextControl
+                      label={__('Slack channel ID', 'lynx-journal')}
+                      value={form.notify?.slackChannelId ?? ''}
+                      placeholder={__('C0123456789', 'lynx-journal')}
+                      onChange={slackChannelId => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelId } }))}
+                      __nextHasNoMarginBottom
+                    />
 
-              <CheckboxControl
-                label={__('Send me a Slack DM after each run', 'lynx-journal')}
-                checked={form.notify?.slackDmEnabled ?? false}
-                onChange={slackDmEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackDmEnabled } }))}
-              />
-              <TextControl
-                label={__('Slack user ID', 'lynx-journal')}
-                value={form.notify?.slackUserId ?? ''}
-                placeholder={__('U0123456789', 'lynx-journal')}
-                onChange={slackUserId => setForm(f => ({ ...f, notify: { ...f.notify, slackUserId } }))}
-                __nextHasNoMarginBottom
-              />
-            </AccordionItem>
+                    <CheckboxControl
+                      label={__('Send me a Slack DM after each run', 'lynx-journal')}
+                      checked={form.notify?.slackDmEnabled ?? false}
+                      onChange={slackDmEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackDmEnabled } }))}
+                    />
+                    <TextControl
+                      label={__('Slack user ID', 'lynx-journal')}
+                      value={form.notify?.slackUserId ?? ''}
+                      placeholder={__('U0123456789', 'lynx-journal')}
+                      onChange={slackUserId => setForm(f => ({ ...f, notify: { ...f.notify, slackUserId } }))}
+                      __nextHasNoMarginBottom
+                    />
+                  </>
+                )}
 
-            <AccordionItem
-              title={__('Telegram', 'lynx-journal')}
-              enabled={form.notify?.telegramEnabled ?? false}
-              defaultOpen={form.notify?.telegramEnabled ?? false}
-            >
-              <CheckboxControl
-                label={__('Send a Telegram notification after each run', 'lynx-journal')}
-                checked={form.notify?.telegramEnabled ?? false}
-                onChange={telegramEnabled => setForm(f => ({ ...f, notify: { ...f.notify, telegramEnabled } }))}
-              />
-              <TextControl
-                label={__('Telegram bot token', 'lynx-journal')}
-                type="password"
-                value={form.notify?.telegramBotToken ?? ''}
-                placeholder={__('123456789:AAH...', 'lynx-journal')}
-                onChange={telegramBotToken => setForm(f => ({ ...f, notify: { ...f.notify, telegramBotToken } }))}
-                __nextHasNoMarginBottom
-              />
-              <TextControl
-                label={__('Telegram chat ID', 'lynx-journal')}
-                value={form.notify?.telegramChatId ?? ''}
-                placeholder={__('-1001234567890', 'lynx-journal')}
-                onChange={telegramChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramChatId } }))}
-                __nextHasNoMarginBottom
-              />
-            </AccordionItem>
+                {tab.name === 'telegram' && (
+                  <>
+                    <CheckboxControl
+                      label={__('Send a Telegram notification after each run', 'lynx-journal')}
+                      checked={form.notify?.telegramEnabled ?? false}
+                      onChange={telegramEnabled => setForm(f => ({ ...f, notify: { ...f.notify, telegramEnabled } }))}
+                    />
+                    <TextControl
+                      label={__('Telegram bot token', 'lynx-journal')}
+                      type="password"
+                      value={form.notify?.telegramBotToken ?? ''}
+                      placeholder={__('123456789:AAH...', 'lynx-journal')}
+                      onChange={telegramBotToken => setForm(f => ({ ...f, notify: { ...f.notify, telegramBotToken } }))}
+                      __nextHasNoMarginBottom
+                    />
+                    <TextControl
+                      label={__('Telegram chat ID', 'lynx-journal')}
+                      value={form.notify?.telegramChatId ?? ''}
+                      placeholder={__('-1001234567890', 'lynx-journal')}
+                      onChange={telegramChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramChatId } }))}
+                      __nextHasNoMarginBottom
+                    />
+                  </>
+                )}
 
-            <AccordionItem
-              title={__('Mastodon', 'lynx-journal')}
-              enabled={form.notify?.mastodonEnabled ?? false}
-              defaultOpen={form.notify?.mastodonEnabled ?? false}
-            >
-              <CheckboxControl
-                label={__('Send a Mastodon direct message after each run', 'lynx-journal')}
-                checked={form.notify?.mastodonEnabled ?? false}
-                onChange={mastodonEnabled => setForm(f => ({ ...f, notify: { ...f.notify, mastodonEnabled } }))}
-              />
-              <TextControl
-                label={__('Mastodon instance URL', 'lynx-journal')}
-                type="url"
-                value={form.notify?.mastodonInstanceUrl ?? ''}
-                placeholder={__('https://mastodon.social', 'lynx-journal')}
-                onChange={mastodonInstanceUrl => setForm(f => ({ ...f, notify: { ...f.notify, mastodonInstanceUrl } }))}
-                __nextHasNoMarginBottom
-              />
-              <TextControl
-                label={__('Mastodon access token', 'lynx-journal')}
-                type="password"
-                value={form.notify?.mastodonAccessToken ?? ''}
-                placeholder={__('Access token from your Mastodon app', 'lynx-journal')}
-                onChange={mastodonAccessToken => setForm(f => ({ ...f, notify: { ...f.notify, mastodonAccessToken } }))}
-                __nextHasNoMarginBottom
-              />
-              <TextControl
-                label={__('Recipient handle', 'lynx-journal')}
-                value={form.notify?.mastodonRecipient ?? ''}
-                placeholder={__('@you@mastodon.social', 'lynx-journal')}
-                onChange={mastodonRecipient => setForm(f => ({ ...f, notify: { ...f.notify, mastodonRecipient } }))}
-                __nextHasNoMarginBottom
-              />
-            </AccordionItem>
-          </div>
+                {tab.name === 'mastodon' && (
+                  <>
+                    <CheckboxControl
+                      label={__('Send a Mastodon direct message after each run', 'lynx-journal')}
+                      checked={form.notify?.mastodonEnabled ?? false}
+                      onChange={mastodonEnabled => setForm(f => ({ ...f, notify: { ...f.notify, mastodonEnabled } }))}
+                    />
+                    <TextControl
+                      label={__('Mastodon instance URL', 'lynx-journal')}
+                      type="url"
+                      value={form.notify?.mastodonInstanceUrl ?? ''}
+                      placeholder={__('https://mastodon.social', 'lynx-journal')}
+                      onChange={mastodonInstanceUrl => setForm(f => ({ ...f, notify: { ...f.notify, mastodonInstanceUrl } }))}
+                      __nextHasNoMarginBottom
+                    />
+                    <TextControl
+                      label={__('Mastodon access token', 'lynx-journal')}
+                      type="password"
+                      value={form.notify?.mastodonAccessToken ?? ''}
+                      placeholder={__('Access token from your Mastodon app', 'lynx-journal')}
+                      onChange={mastodonAccessToken => setForm(f => ({ ...f, notify: { ...f.notify, mastodonAccessToken } }))}
+                      __nextHasNoMarginBottom
+                    />
+                    <TextControl
+                      label={__('Recipient handle', 'lynx-journal')}
+                      value={form.notify?.mastodonRecipient ?? ''}
+                      placeholder={__('@you@mastodon.social', 'lynx-journal')}
+                      onChange={mastodonRecipient => setForm(f => ({ ...f, notify: { ...f.notify, mastodonRecipient } }))}
+                      __nextHasNoMarginBottom
+                    />
+                  </>
+                )}
+              </div>
+            )}
+          </TabPanel>
         </Section>
 
         <div className="lynxjournal-schedule-actions">
