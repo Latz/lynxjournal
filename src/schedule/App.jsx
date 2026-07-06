@@ -41,15 +41,17 @@ function Section({ title, children }) {
  * Tab title for a notification channel, with an inline On/Off status badge.
  *
  * @param {Object}  props
- * @param {string}  props.label   Channel display name.
- * @param {boolean} props.enabled Whether the channel is currently on.
+ * @param {string}  props.label       Channel display name.
+ * @param {boolean} props.enabled     Whether the channel is currently on.
+ * @param {boolean} [props.incomplete] Whether the channel is on but missing required fields.
  * @returns {JSX.Element}
  */
-function TabTitleWithBadge({ label, enabled }) {
+function TabTitleWithBadge({ label, enabled, incomplete }) {
+  const badgeClass = !enabled ? 'is-off' : incomplete ? 'is-incomplete' : 'is-on';
   return (
     <>
       {label}
-      <span className={`lynxjournal-notify-badge ${enabled ? 'is-on' : 'is-off'}`}>
+      <span className={`lynxjournal-notify-badge ${badgeClass}`}>
         {enabled ? __('On', 'lynx-journal') : __('Off', 'lynx-journal')}
       </span>
     </>
@@ -207,6 +209,16 @@ export default function App() {
 
   const section02Label = isSchedule ? __('Recurrence', 'lynx-journal') : __('Condition', 'lynx-journal');
 
+  // Whether each notify target has its required fields filled in (used for both
+  // the tab badges' "on but incomplete" yellow state and the test-button gating).
+  const discordComplete = !!form.notify?.discordEnabled && !!form.notify?.discordWebhookUrl;
+  const slackChannelComplete = !!form.notify?.slackChannelEnabled && !!form.notify?.slackBotToken && !!form.notify?.slackChannelId;
+  const slackDmComplete = !!form.notify?.slackDmEnabled && !!form.notify?.slackBotToken && !!form.notify?.slackUserId;
+  const slackEnabled = !!form.notify?.slackChannelEnabled || !!form.notify?.slackDmEnabled;
+  const slackIncomplete = (!!form.notify?.slackChannelEnabled && !slackChannelComplete) || (!!form.notify?.slackDmEnabled && !slackDmComplete);
+  const telegramComplete = !!form.notify?.telegramEnabled && !!form.notify?.telegramBotToken && !!form.notify?.telegramChatId;
+  const mastodonComplete = !!form.notify?.mastodonEnabled && !!form.notify?.mastodonInstanceUrl && !!form.notify?.mastodonAccessToken && !!form.notify?.mastodonRecipient;
+
   function renderConditionSection() {
     if (isSchedule) return (
       <RecurrenceConfig
@@ -294,10 +306,10 @@ export default function App() {
             onSelect={setActiveNotifyTab}
             tabs={[
               { name: 'email', title: <TabTitleWithBadge label={__('Email', 'lynx-journal')} enabled={form.notify?.enabled ?? false} /> },
-              { name: 'discord', title: <TabTitleWithBadge label={__('Discord', 'lynx-journal')} enabled={form.notify?.discordEnabled ?? false} /> },
-              { name: 'slack', title: <TabTitleWithBadge label={__('Slack', 'lynx-journal')} enabled={(form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) ?? false} /> },
-              { name: 'telegram', title: <TabTitleWithBadge label={__('Telegram', 'lynx-journal')} enabled={form.notify?.telegramEnabled ?? false} /> },
-              { name: 'mastodon', title: <TabTitleWithBadge label={__('Mastodon', 'lynx-journal')} enabled={form.notify?.mastodonEnabled ?? false} /> },
+              { name: 'discord', title: <TabTitleWithBadge label={__('Discord', 'lynx-journal')} enabled={form.notify?.discordEnabled ?? false} incomplete={!!form.notify?.discordEnabled && !discordComplete} /> },
+              { name: 'slack', title: <TabTitleWithBadge label={__('Slack', 'lynx-journal')} enabled={slackEnabled} incomplete={slackIncomplete} /> },
+              { name: 'telegram', title: <TabTitleWithBadge label={__('Telegram', 'lynx-journal')} enabled={form.notify?.telegramEnabled ?? false} incomplete={!!form.notify?.telegramEnabled && !telegramComplete} /> },
+              { name: 'mastodon', title: <TabTitleWithBadge label={__('Mastodon', 'lynx-journal')} enabled={form.notify?.mastodonEnabled ?? false} incomplete={!!form.notify?.mastodonEnabled && !mastodonComplete} /> },
             ]}
           >
             {() => null}
@@ -347,7 +359,7 @@ export default function App() {
                 __nextHasNoMarginBottom
               />
               <ChannelTestButton
-                canTest={!!form.notify?.discordEnabled && !!form.notify?.discordWebhookUrl}
+                canTest={discordComplete}
                 state={testState.discord}
                 onTest={() => handleTest('discord')}
               />
@@ -376,7 +388,7 @@ export default function App() {
                 __nextHasNoMarginBottom
               />
               <ChannelTestButton
-                canTest={!!form.notify?.slackChannelEnabled && !!form.notify?.slackBotToken && !!form.notify?.slackChannelId}
+                canTest={slackChannelComplete}
                 state={testState.slack_channel}
                 onTest={() => handleTest('slack_channel')}
               />
@@ -394,7 +406,7 @@ export default function App() {
                 __nextHasNoMarginBottom
               />
               <ChannelTestButton
-                canTest={!!form.notify?.slackDmEnabled && !!form.notify?.slackBotToken && !!form.notify?.slackUserId}
+                canTest={slackDmComplete}
                 state={testState.slack_dm}
                 onTest={() => handleTest('slack_dm')}
               />
@@ -422,7 +434,7 @@ export default function App() {
                 __nextHasNoMarginBottom
               />
               <ChannelTestButton
-                canTest={!!form.notify?.telegramEnabled && !!form.notify?.telegramBotToken && !!form.notify?.telegramChatId}
+                canTest={telegramComplete}
                 state={testState.telegram}
                 onTest={() => handleTest('telegram')}
               />
@@ -458,7 +470,7 @@ export default function App() {
                 __nextHasNoMarginBottom
               />
               <ChannelTestButton
-                canTest={!!form.notify?.mastodonEnabled && !!form.notify?.mastodonInstanceUrl && !!form.notify?.mastodonAccessToken && !!form.notify?.mastodonRecipient}
+                canTest={mastodonComplete}
                 state={testState.mastodon}
                 onTest={() => handleTest('mastodon')}
               />

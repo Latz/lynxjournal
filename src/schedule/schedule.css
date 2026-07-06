@@ -81,6 +81,12 @@
   color: #fff;
 }
 
+/* On but missing required fields; ~8.9:1 contrast against white (WCAG AA) */
+.lynxjournal-notify-badge.is-incomplete {
+  background: var(--lynxjournal-color-warning-text);
+  color: #fff;
+}
+
 .lynxjournal-notify-tabs .components-tab-panel__tabs-item {
   border-inline-end: 1px solid #dcdcde;
   border-radius: 0;
