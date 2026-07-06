@@ -97,13 +97,20 @@
 }
 
 .lynxjournal-accordion-badge {
+  display: inline-block;
+  width: 24px;
+  padding: 1px 0;
+  border-radius: 10px;
   font-size: 12px;
   font-weight: 400;
   color: #646970;
+  text-align: center;
 }
 
 .lynxjournal-accordion-badge.is-on {
-  color: var(--lynxjournal-color-success-text);
+  background: #00a32a;
+  color: #fff;
+  font-weight: 600;
 }
 
 .lynxjournal-accordion-badge.is-off {
