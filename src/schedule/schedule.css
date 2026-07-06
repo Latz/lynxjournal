@@ -99,11 +99,25 @@
   font-weight: 600;
 }
 
+/*
+ * All 5 channel panels are mounted at once, stacked in this shared grid cell,
+ * so the row auto-sizes to the tallest one and switching tabs never shifts
+ * the layout below. Inactive panels are hidden (not unmounted) via [inert].
+ */
+.lynxjournal-notify-tab-panel-stack {
+  display: grid;
+  padding-block-start: 16px;
+}
+
 .lynxjournal-notify-tab-panel {
+  grid-area: 1 / 1;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding-block-start: 16px;
+}
+
+.lynxjournal-notify-tab-panel[inert] {
+  visibility: hidden;
 }
 
 /* Mode picker */
