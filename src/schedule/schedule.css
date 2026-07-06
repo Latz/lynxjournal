@@ -116,9 +116,16 @@
   color: #fff;
 }
 
+.lynxjournal-notify-tabs .components-tab-panel__tabs {
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+
 .lynxjournal-notify-tabs .components-tab-panel__tabs-item {
   border-inline-end: 1px solid #dcdcde;
   border-radius: 0;
+  height: auto;
+  padding-block: 6px;
 }
 
 .lynxjournal-notify-tabs .components-tab-panel__tabs-item:last-child {
