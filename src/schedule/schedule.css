@@ -61,22 +61,23 @@
 /* Notification channel tabs (nested one level inside .lynxjournal-section) */
 .lynxjournal-notify-badge {
   display: inline-block;
-  width: 24px;
+  min-width: 24px;
   margin-inline-start: 8px;
-  padding: 1px 0;
+  padding: 1px 6px;
   border-radius: 10px;
   font-size: 12px;
   font-weight: 600;
   text-align: center;
 }
 
+/* Darkened to meet 4.5:1 contrast against white badge text (WCAG AA) */
 .lynxjournal-notify-badge.is-on {
-  background: #00a32a;
+  background: var(--lynxjournal-color-success-text);
   color: #fff;
 }
 
 .lynxjournal-notify-badge.is-off {
-  background: #a7aaad;
+  background: var(--lynxjournal-color-neutral-text);
   color: #fff;
 }
 
@@ -124,7 +125,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #787c82;
+  color: #646970;
   padding-inline-start: 2px;
 }
 
@@ -192,7 +193,7 @@
 
 .lynxjournal-day-index {
   font-size: 11px;
-  color: #787c82;
+  color: #646970;
   width: 18px;
   text-align: end;
   flex-shrink: 0;
@@ -212,16 +213,11 @@
 
 .lynxjournal-opt--off {
   opacity: 0.3;
-  cursor: pointer;
-}
-
-.lynxjournal-opt--off * {
-  pointer-events: none;
 }
 
 .lynxjournal-opt-sep {
   font-size: 12px;
-  color: #787c82;
+  color: #646970;
 }
 
 /* TimePicker */
@@ -313,7 +309,7 @@
 }
 
 .lynxjournal-diag-row dt {
-  color: #787c82;
+  color: #646970;
   flex-shrink: 0;
 }
 
@@ -350,7 +346,7 @@
 
 .lynxjournal-diag-meta {
   font-size: 11px;
-  color: #787c82;
+  color: #646970;
 }
 
 .lynxjournal-diag-refresh {
@@ -411,14 +407,14 @@
 .lynxjournal-next-tz {
   margin: 8px 0 0;
   font-size: 11px;
-  color: #787c82;
+  color: #646970;
   text-align: end;
 }
 
 /* Diagnostics: reason note next to Not scheduled */
 .lynxjournal-diag-reason {
   font-size: 11px;
-  color: #787c82;
+  color: #646970;
 }
 
 /* Radio card picker */
@@ -440,7 +436,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #787c82;
+  color: #646970;
   padding-inline-start: 2px;
 }
 
@@ -448,7 +444,7 @@
 .lynxjournal-run-reason {
   display: block;
   font-size: 11px;
-  color: #787c82;
+  color: #646970;
   margin-top: 2px;
 }
 
@@ -526,6 +522,6 @@
 
 .lynxjournal-mode-card__desc {
   font-size: 11px;
-  color: #787c82;
+  color: #646970;
   line-height: 1.4;
 }

@@ -31,7 +31,7 @@ const DEFAULT_FORM = {
 function Section({ title, children }) {
   return (
     <div className="lynxjournal-section">
-      <h3 className="lynxjournal-section-heading">{title}</h3>
+      <h2 className="lynxjournal-section-heading">{title}</h2>
       <div className="lynxjournal-section-body">{children}</div>
     </div>
   );
