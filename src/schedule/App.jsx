@@ -305,7 +305,7 @@ export default function App() {
             initialTabName={initialNotifyTab}
             onSelect={setActiveNotifyTab}
             tabs={[
-              { name: 'email', title: <TabTitleWithBadge label={__('Email', 'lynx-journal')} enabled={form.notify?.enabled ?? false} /> },
+              { name: 'email', title: <TabTitleWithBadge label={__('Email', 'lynx-journal')} enabled={form.notify?.enabled ?? false} incomplete={!!form.notify?.enabled && !form.notify?.email} /> },
               { name: 'discord', title: <TabTitleWithBadge label={__('Discord', 'lynx-journal')} enabled={form.notify?.discordEnabled ?? false} incomplete={!!form.notify?.discordEnabled && !discordComplete} /> },
               { name: 'slack', title: <TabTitleWithBadge label={__('Slack', 'lynx-journal')} enabled={slackEnabled} incomplete={slackIncomplete} /> },
               { name: 'telegram', title: <TabTitleWithBadge label={__('Telegram', 'lynx-journal')} enabled={form.notify?.telegramEnabled ?? false} incomplete={!!form.notify?.telegramEnabled && !telegramComplete} /> },
