@@ -24,6 +24,9 @@ define('LYNXJOURNAL_POST_TYPE',      'lynxjournal');
 
 define('LYNXJOURNAL_PLUGIN_FILE', __FILE__);
 
+// Composer dependencies (league/commonmark, used by TemplateRenderer.php).
+require_once __DIR__ . '/vendor/autoload.php';
+
 require_once __DIR__ . '/src/php/ScheduleMode.php';
 
 // Traits (must be required before the class)
@@ -31,6 +34,7 @@ require_once __DIR__ . '/src/php/traits/trait-post-type.php';
 require_once __DIR__ . '/src/php/traits/MetaBoxes.php';
 require_once __DIR__ . '/src/php/traits/Publishing.php';
 require_once __DIR__ . '/src/php/traits/Batch.php';
+require_once __DIR__ . '/src/php/traits/TemplateRenderer.php';
 require_once __DIR__ . '/src/php/traits/Queries.php';
 require_once __DIR__ . '/src/php/traits/ScheduleValidator.php';
 require_once __DIR__ . '/src/php/traits/RestApi.php';

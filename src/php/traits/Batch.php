@@ -110,7 +110,7 @@ trait LynxJournal_Batch {
         // post_type 'post': the roundup is a normal blog post, not a lynxjournal CPT entry.
         $post_args = array(
             'post_title'   => $post_title,
-            'post_content' => $this->buildRoundupContent($links_by_category, $uncategorized_links),
+            'post_content' => $this->buildRoundupContent($links_by_category, $uncategorized_links, $post_title, $author_id),
             'post_status'  => $as_draft ? 'draft' : 'publish',
             'post_type'    => 'post',
         );
@@ -169,14 +169,32 @@ trait LynxJournal_Batch {
     }
 
     /**
-     * Build HTML content for a roundup post.
+     * Build HTML content for a roundup post. Uses the saved Post Template
+     * (lynxjournal_post_template option) when one is configured, via the
+     * PHP-ported rendering pipeline in TemplateRenderer.php — falling back
+     * to the fixed builder below when no template is set, or when a
+     * configured template renders to effectively empty content.
      *
      * @since 1.0.0
      * @param array $links_by_category Links grouped by category.
      * @param array $uncategorized_links Links without a category.
+     * @param string $post_title Already-resolved roundup post title, used for the template's [title] token.
+     * @param int $author_id Resolved post author user ID, used for the template's [author] token.
      * @return string The formatted roundup content HTML.
      */
-    private function buildRoundupContent(array $links_by_category, array $uncategorized_links): string {
+    private function buildRoundupContent(array $links_by_category, array $uncategorized_links, string $post_title = '', int $author_id = 0): string {
+        $template = get_option('lynxjournal_post_template', self::DEFAULT_POST_TEMPLATE);
+        if (trim((string) $template) !== '') {
+            $rendered = $this->buildRoundupContentFromTemplate(
+                (string) $template, $links_by_category, $uncategorized_links, $post_title, $author_id
+            );
+            if (trim($rendered) !== '') {
+                return $rendered;
+            }
+            // Falls through to the fixed builder below if the template
+            // rendered to effectively empty content (e.g. every token unmatched).
+        }
+
         $content       = '';
         $schema_items  = [];
         $heading_level = $this->getCategoryHeadingLevel();
@@ -239,16 +257,49 @@ trait LynxJournal_Batch {
     }
 
     /**
+     * Renders the roundup post content from the saved Post Template, using
+     * the PHP port of the admin Test Publish/Test Post preview pipeline.
+     *
+     * @since 1.0.0
+     * @param string $template Raw Post Template markdown+tokens text.
+     * @param array $links_by_category Links grouped by category.
+     * @param array $uncategorized_links Links without a category.
+     * @param string $post_title Already-resolved roundup post title.
+     * @param int $author_id Resolved post author user ID.
+     * @return string Rendered Gutenberg block markup, or '' if the template rendered empty.
+     */
+    private function buildRoundupContentFromTemplate(
+        string $template,
+        array $links_by_category,
+        array $uncategorized_links,
+        string $post_title,
+        int $author_id
+    ): string {
+        [$scalar_data, $category_variants, $all_link_token_maps] =
+            $this->buildTemplateTokenData($links_by_category, $uncategorized_links, $post_title, $author_id);
+
+        $text = $this->buildTemplateTextPhp($template, $category_variants, $scalar_data, $all_link_token_maps);
+        $text = $this->convertIndentedLinesPhp($text);
+        $html = $this->renderMarkdownPhp($text);
+
+        return $html !== '' ? $this->wrapAsGutenbergBlocksPhp($html) : '';
+    }
+
+    /**
      * Determines the Gutenberg heading level to use for roundup category
      * headings, based on the Markdown heading marker (if any) on the
      * [category_name] line inside the admin's configured Post Template.
      * Falls back to level 3 (today's fixed behavior) when no template is
      * configured or no heading marker is found.
      *
+     * Only used by the fixed (no-template) builder above; templates set via
+     * the Post Template editor get their heading levels from real Markdown
+     * parsing instead — see buildRoundupContentFromTemplate().
+     *
      * @return int
      */
     private function getCategoryHeadingLevel(): int {
-        $template = get_option('lynxjournal_post_template', '');
+        $template = get_option('lynxjournal_post_template', self::DEFAULT_POST_TEMPLATE);
         if (!preg_match('/\[category_start\]([\s\S]*?)\[category_end\]/', $template, $block)) {
             return 3;
         }

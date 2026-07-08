@@ -27,6 +27,12 @@ beforeEach(function (): void {
     Functions\when('wp_json_encode')->alias(fn($value, $flags = 0) => json_encode($value, $flags));
     // Default: no template configured, matching the real get_option() default.
     Functions\when('get_option')->justReturn('');
+    // Needed by the templated-rendering path (buildTemplateTokenData()) that
+    // now runs whenever get_option('lynxjournal_post_template') is non-empty.
+    Functions\when('get_the_date')->justReturn('2026-01-01');
+    Functions\when('wp_parse_url')->alias(fn($url, $component = -1) => parse_url($url, $component));
+    Functions\when('get_userdata')->justReturn(false);
+    Functions\when('get_bloginfo')->justReturn('Test Site');
     $this->plugin = new LynxJournal();
 });
 
@@ -175,7 +181,10 @@ describe('LynxJournal::buildRoundupContent()', function (): void {
             ->toContain('<h1 class="wp-block-heading">Travel</h1>');
     });
 
-    it('falls back to level 3 when the [category_name] line has no heading marker', function (): void {
+    it('renders the [category_name] line as a plain paragraph, not a forced heading, when the template has no heading marker', function (): void {
+        // Once a template is configured, heading levels come from real Markdown
+        // parsing of what the user actually typed — there's no more fallback-to-3
+        // scraping (that only applies to the fixed, no-template builder).
         Functions\when('get_post')->alias(fn($id) => lynxjournal_make_post($id, "Link $id"));
         Functions\when('get_post_meta')->justReturn('');
         Functions\when('get_option')->justReturn("[category_start]\n[category_name]\n[category_end]");
@@ -183,7 +192,9 @@ describe('LynxJournal::buildRoundupContent()', function (): void {
         $term = (object) ['name' => 'Travel'];
         $result = invokeBuildRoundupContent($this->plugin, ['travel' => ['term' => $term, 'links' => [1]]], []);
 
-        expect($result)->toContain('<h3 class="wp-block-heading">Travel</h3>');
+        expect($result)->toContain('<!-- wp:paragraph -->')
+            ->toContain('<p>Travel</p>')
+            ->not->toContain('<h3');
     });
 
     it('applies the same detected heading level to the "Other" heading', function (): void {

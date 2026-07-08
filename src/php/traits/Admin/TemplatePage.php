@@ -25,7 +25,7 @@ trait LynxJournal_Admin_TemplatePage {
             echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('Template saved.', 'lynx-journal') . '</p></div>';
         }
 
-        $template = get_option('lynxjournal_post_template', '');
+        $template = get_option('lynxjournal_post_template', self::DEFAULT_POST_TEMPLATE);
 
         $token_groups = [
             __('Structure', 'lynx-journal') => [
