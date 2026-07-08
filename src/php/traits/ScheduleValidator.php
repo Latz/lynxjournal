@@ -36,7 +36,7 @@ trait LynxJournal_ScheduleValidator {
                 ['status' => 400]
             );
         }
-        $valid_modes = array_column(ScheduleMode::cases(), 'value');
+        $valid_modes = array_column(LynxJournal_ScheduleMode::cases(), 'value');
         if (!isset($data['mode']) || !in_array($data['mode'], $valid_modes, true)) {
             return new \WP_Error('invalid_mode', __('Invalid schedule mode', 'lynx-journal'), ['status' => 400]);
         }

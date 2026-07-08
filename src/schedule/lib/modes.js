@@ -1,4 +1,4 @@
-// PHP source of truth: ScheduleMode enum in src/php/ScheduleMode.php.
+// PHP source of truth: LynxJournal_ScheduleMode enum in src/php/schedule-mode.php.
 // Values are localized to globalThis.lynxjournalSchedule at runtime by Admin/Menu.php.
 const loc = ( typeof globalThis !== 'undefined' && globalThis.lynxjournalSchedule ) || {};
 

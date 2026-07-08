@@ -27,7 +27,7 @@ define('LYNXJOURNAL_PLUGIN_FILE', __FILE__);
 // Composer dependencies (league/commonmark, used by TemplateRenderer.php).
 require_once __DIR__ . '/vendor/autoload.php';
 
-require_once __DIR__ . '/src/php/ScheduleMode.php';
+require_once __DIR__ . '/src/php/schedule-mode.php';
 
 // Traits (must be required before the class)
 require_once __DIR__ . '/src/php/traits/trait-post-type.php';
