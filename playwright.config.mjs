@@ -9,6 +9,9 @@ const baseURL = process.env.WP_BASE_URL ?? WP_ENV.BASE_URL;
 export default defineConfig({
     testDir:    'tests/e2e',
     fullyParallel: true,
+    // Both projects hit the same single wp-env WordPress/MySQL container;
+    // concurrent workers overload it and cause request/navigation timeouts.
+    workers:    1,
     retries:    process.env.CI ? 2 : 0,
     reporter:   process.env.CI ? 'github' : 'list',
     timeout:    30_000,
