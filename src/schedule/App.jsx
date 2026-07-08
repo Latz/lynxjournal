@@ -36,9 +36,10 @@ const DEFAULT_FORM = {
  * @param {*}        props.children          Section body content.
  * @param {boolean}  [props.collapsible]     Whether the section can be collapsed.
  * @param {boolean}  [props.defaultCollapsed] Initial collapsed state, if collapsible.
+ * @param {Function} [props.onToggle]        Called with the new collapsed state after each toggle.
  * @returns {JSX.Element}
  */
-function Section({ title, children, collapsible, defaultCollapsed }) {
+function Section({ title, children, collapsible, defaultCollapsed, onToggle }) {
   const [collapsed, setCollapsed] = useState(!!collapsible && !!defaultCollapsed);
 
   if (!collapsible) {
@@ -57,7 +58,11 @@ function Section({ title, children, collapsible, defaultCollapsed }) {
           type="button"
           className="lynxjournal-section-toggle"
           aria-expanded={!collapsed}
-          onClick={() => setCollapsed(c => !c)}
+          onClick={() => {
+            const next = !collapsed;
+            setCollapsed(next);
+            onToggle?.(next);
+          }}
         >
           <span className={`lynxjournal-section-chevron ${collapsed ? 'is-collapsed' : ''}`} aria-hidden="true">▾</span>
           {title}
@@ -251,6 +256,7 @@ export default function App() {
   }
 
   const tabsWrapRef = useRef(null);
+  const [tabsOverflow, setTabsOverflow] = useState(false);
 
   /**
    * Scrolls the notification tab bar left/right by a fixed amount.
@@ -261,6 +267,35 @@ export default function App() {
   function scrollNotifyTabs(direction) {
     const el = tabsWrapRef.current?.querySelector('.components-tab-panel__tabs');
     el?.scrollBy({ left: direction * 150, behavior: 'smooth' });
+  }
+
+  /**
+   * Measures whether the notification tab bar currently overflows its
+   * container, so the scroll buttons only render when actually needed.
+   *
+   * @returns {void}
+   */
+  const measureTabsOverflow = useCallback(() => {
+    const el = tabsWrapRef.current?.querySelector('.components-tab-panel__tabs');
+    if (el) setTabsOverflow(el.scrollWidth > el.clientWidth + 1);
+  }, []);
+
+  useEffect(() => {
+    measureTabsOverflow();
+    window.addEventListener('resize', measureTabsOverflow);
+    return () => window.removeEventListener('resize', measureTabsOverflow);
+  }, [configLoaded, measureTabsOverflow]);
+
+  /**
+   * Re-measures tab bar overflow after the Notifications section is
+   * expanded, since its content (and the tab bar) isn't in the DOM at
+   * all while collapsed.
+   *
+   * @param {boolean} collapsed The section's new collapsed state.
+   * @returns {void}
+   */
+  function handleNotifySectionToggle(collapsed) {
+    if (!collapsed) requestAnimationFrame(measureTabsOverflow);
   }
 
   function handleModeChange(mode) {
@@ -378,14 +413,16 @@ export default function App() {
           />
         </Section>
 
-        <Section title={<TabTitleWithBadge label={__('Notifications', 'lynx-journal')} enabled={anyNotifyEnabled} />} collapsible defaultCollapsed>
+        <Section title={<TabTitleWithBadge label={__('Notifications', 'lynx-journal')} enabled={anyNotifyEnabled} />} collapsible defaultCollapsed onToggle={handleNotifySectionToggle}>
           <div className="lynxjournal-notify-tabs-row" ref={tabsWrapRef}>
-            <Button
-              className="lynxjournal-notify-tabs-scroll"
-              icon="arrow-left-alt2"
-              label={__('Scroll tabs left', 'lynx-journal')}
-              onClick={() => scrollNotifyTabs(-1)}
-            />
+            {tabsOverflow && (
+              <Button
+                className="lynxjournal-notify-tabs-scroll"
+                icon="arrow-left-alt2"
+                label={__('Scroll tabs left', 'lynx-journal')}
+                onClick={() => scrollNotifyTabs(-1)}
+              />
+            )}
             <TabPanel
               key={configLoaded ? 'loaded' : 'loading'}
               className="lynxjournal-notify-tabs"
@@ -401,12 +438,14 @@ export default function App() {
             >
               {() => null}
             </TabPanel>
-            <Button
-              className="lynxjournal-notify-tabs-scroll"
-              icon="arrow-right-alt2"
-              label={__('Scroll tabs right', 'lynx-journal')}
-              onClick={() => scrollNotifyTabs(1)}
-            />
+            {tabsOverflow && (
+              <Button
+                className="lynxjournal-notify-tabs-scroll"
+                icon="arrow-right-alt2"
+                label={__('Scroll tabs right', 'lynx-journal')}
+                onClick={() => scrollNotifyTabs(1)}
+              />
+            )}
           </div>
 
           {/*
