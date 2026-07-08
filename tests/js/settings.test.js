@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import { server } from './server.js';
 import {
     loadSettings,
     showMessage,
@@ -60,23 +62,13 @@ describe('showMessage', () => {
 
 describe('testConnection', () => {
     it('returns categories array when API responds ok', async () => {
-        const cats = [{ id: 1, name: 'Tech' }];
-        global.fetch = vi.fn().mockResolvedValue({
-            ok:   true,
-            json: async () => cats,
-        });
-
         const result = await testConnection(ENDPOINT, API_KEY);
 
-        expect(result).toEqual(cats);
-        expect(fetch).toHaveBeenCalledWith(
-            `${ENDPOINT}/categories`,
-            expect.objectContaining({ method: 'GET' })
-        );
+        expect(result).toEqual([{ id: 1, name: 'Tech' }]);
     });
 
     it('returns null when API responds with non-ok status', async () => {
-        global.fetch = vi.fn().mockResolvedValue({ ok: false });
+        server.use(http.get(`${ENDPOINT}/categories`, () => new HttpResponse(null, { status: 500 })));
 
         const result = await testConnection(ENDPOINT, API_KEY);
 
@@ -84,7 +76,7 @@ describe('testConnection', () => {
     });
 
     it('returns null when fetch throws', async () => {
-        global.fetch = vi.fn().mockRejectedValue(new Error('network'));
+        server.use(http.get(`${ENDPOINT}/categories`, () => HttpResponse.error()));
 
         const result = await testConnection(ENDPOINT, API_KEY);
 
@@ -98,10 +90,6 @@ describe('handleSubmit', () => {
     it('saves settings and shows success when connection succeeds', async () => {
         document.getElementById('apiEndpoint').value = ENDPOINT;
         document.getElementById('apiKey').value = API_KEY;
-        global.fetch = vi.fn().mockResolvedValue({
-            ok:   true,
-            json: async () => [{ id: 1, name: 'Tech' }],
-        });
 
         const event = { preventDefault: vi.fn() };
         await handleSubmit(event);
@@ -115,7 +103,7 @@ describe('handleSubmit', () => {
     it('shows error and does not save when connection fails', async () => {
         document.getElementById('apiEndpoint').value = ENDPOINT;
         document.getElementById('apiKey').value = API_KEY;
-        global.fetch = vi.fn().mockResolvedValue({ ok: false });
+        server.use(http.get(`${ENDPOINT}/categories`, () => new HttpResponse(null, { status: 500 })));
 
         const event = { preventDefault: vi.fn() };
         await handleSubmit(event);
@@ -138,7 +126,7 @@ describe('checkWpLogin', () => {
     });
 
     it('shows not-WordPress error when wp-json check fails', async () => {
-        global.fetch = vi.fn().mockRejectedValue(new Error('network'));
+        server.use(http.get('https://notwordpress.com/wp-json/', () => HttpResponse.error()));
 
         await checkWpLogin('https://notwordpress.com');
 
@@ -147,13 +135,7 @@ describe('checkWpLogin', () => {
     });
 
     it('recognises wordpress_sec_ cookie as logged-in', async () => {
-        global.fetch = vi.fn()
-            .mockResolvedValueOnce({
-                ok:   true,
-                url:  'https://example.com/wp-json/',
-                json: async () => ({ namespaces: ['lynxjournal/v1'] }),
-            })
-            .mockRejectedValue(new Error('nonce fetch not mocked'));
+        // wp-json check succeeds via default handler; nonce fetch fails via default handler
         chrome.cookies.getAll.mockResolvedValueOnce([{ name: 'wordpress_sec_abc123' }]);
 
         await checkWpLogin('https://example.com');
@@ -163,11 +145,6 @@ describe('checkWpLogin', () => {
     });
 
     it('shows logged-out message when no WP cookies are found', async () => {
-        global.fetch = vi.fn().mockResolvedValue({
-            ok:   true,
-            url:  'https://example.com/wp-json/',
-            json: async () => ({ namespaces: ['lynxjournal/v1'] }),
-        });
         chrome.cookies.getAll.mockResolvedValueOnce([]);
 
         await checkWpLogin('https://example.com');

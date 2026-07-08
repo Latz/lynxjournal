@@ -237,11 +237,12 @@ trait LynxJournal_Scheduler {
      * @param array $rec The recurrence settings with weekdays.
      * @return bool True if date is on a scheduled weekday.
      */
+    private const WEEKDAY_MAP = ['MO' => 1, 'TU' => 2, 'WE' => 3, 'TH' => 4, 'FR' => 5, 'SA' => 6, 'SU' => 7];
+
     private function matchesWeeklySchedule(\DateTime $date, array $rec): bool {
-        $map = ['MO' => 1, 'TU' => 2, 'WE' => 3, 'TH' => 4, 'FR' => 5, 'SA' => 6, 'SU' => 7];
         $dow = (int) $date->format('N');
         foreach ($rec['weekdays'] ?? [] as $wd) {
-            if (($map[$wd] ?? 0) === $dow) {
+            if ((self::WEEKDAY_MAP[$wd] ?? 0) === $dow) {
                 return true;
             }
         }
@@ -258,14 +259,13 @@ trait LynxJournal_Scheduler {
      */
     private function matchesMonthlySchedule(\DateTime $date, array $rec): bool {
         $dom = (int) $date->format('j');
-        $map = ['MO' => 1, 'TU' => 2, 'WE' => 3, 'TH' => 4, 'FR' => 5, 'SA' => 6, 'SU' => 7];
         foreach ($rec['monthDays'] ?? [] as $md) {
             $type = $md['type'] ?? '';
             if ($type === 'day' && (int) ($md['value'] ?? 0) === $dom) {
                 return true;
             }
             if ($type === 'weekday') {
-                $target_dow = $map[$md['weekday'] ?? ''] ?? 0;
+                $target_dow = self::WEEKDAY_MAP[$md['weekday'] ?? ''] ?? 0;
                 $nth        = (int) ($md['nth'] ?? 0);
                 if ($target_dow === 0 || $nth === 0) {
                     continue;
@@ -345,14 +345,15 @@ trait LynxJournal_Scheduler {
         if (empty($notify['enabled'])) {
             return;
         }
-        $to = !empty($notify['email']) ? $notify['email'] : get_option('admin_email');
+        $to        = !empty($notify['email']) ? $notify['email'] : get_option('admin_email');
+        $link_count = count($link_ids);
         /* translators: %d: number of links published */
-        $subject = sprintf(__('[LynxJournal] Roundup published: %d links', 'lynx-journal'), count($link_ids));
+        $subject = sprintf(__('[LynxJournal] Roundup published: %d links', 'lynx-journal'), $link_count);
         if ($post_id) {
             $message = sprintf(
                 /* translators: 1: link count, 2: post URL */
                 __("A new roundup was published.\n\nLinks: %1\$d\nView: %2\$s", 'lynx-journal'),
-                count($link_ids),
+                $link_count,
                 get_permalink($post_id)
             );
         } else {

@@ -7,6 +7,8 @@ docs/
 vendor/
 node_modules/
 svn/
+firefox-extension/
+chrome-extension/
 .wp-env.json
 .scannerwork/
 .claude/
@@ -17,6 +19,7 @@ svn/
 .github/
 .gitignore
 .npmrc
+.eslintrc.json
 .distignore
 .env
 .env~
@@ -34,8 +37,16 @@ webpack.config.js
 vitest.config.js
 playwright.config.mjs
 playwright.config.js
+playwright.extension.config.mjs
+*.diff
 test-results/
 dist/
+chrome-extension.rar
+popup.png
+# Planning docs (project-root)
+wpcli-plan.md
+fixed.md
+2.x-diff.plan.md
 # Personal / workspace files
 BeforeTabs.tar.zst
 resume.txt

@@ -94,7 +94,7 @@ describe('LynxJournal_Publishing Trait', function () {
             $html = $this->plugin->buildPostContent($title, 123, $url, $desc);
 
             expect($applied)->toBeTrue();
-            expect($html)->toContain('<h2>My Link</h2>');
+            expect($html)->toContain('<h2 class="wp-block-heading">My Link</h2>');
             expect($html)->toContain('A search engine');
             expect($html)->toContain('href="https://google.com"');
         });

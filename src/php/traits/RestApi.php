@@ -42,6 +42,24 @@ trait LynxJournal_RestApi {
             ),
         ));
 
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/template/test-post', array(
+            'methods' => 'POST',
+            'callback' => [$this, 'restCreateTestPost'],
+            'permission_callback' => fn() => current_user_can('edit_posts'),
+            'args' => array(
+                'content' => array(
+                    'required' => true,
+                    'type' => 'string',
+                    'sanitize_callback' => 'wp_kses_post',
+                ),
+                'title' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+            ),
+        ));
+
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/categories', array(
             'methods' => 'GET',
             'callback' => [$this, 'restGetCategories'],
@@ -351,83 +369,39 @@ trait LynxJournal_RestApi {
     }
 
     /**
-     * Validate link data for REST submission.
+     * Creates a real draft post from the Post Template preview's rendered
+     * Gutenberg content, so an admin can review it in the block editor.
+     * Always drafts — never publishes — regardless of input.
      *
      * @since 1.0.0
-     * @param string $title The link title.
-     * @param string|null $url The link URL.
-     * @return bool|\WP_Error True if valid, WP_Error otherwise.
+     * @param \WP_REST_Request $request The REST request with the rendered content/title.
+     * @return mixed REST response with the new post's id and edit URL.
      */
-    private function validateRestLink(string $title, ?string $url): bool|\WP_Error {
-        if (empty($title)) {
-            return new \WP_Error('missing_title', __('Title is required.', 'lynx-journal'), array('status' => 400));
+    public function restCreateTestPost(\WP_REST_Request $request): mixed {
+        $content = $request->get_param('content');
+        $title   = $request->get_param('title');
+
+        if (empty($content)) {
+            return new \WP_Error('missing_content', __('No content provided.', 'lynx-journal'), array('status' => 400));
         }
 
-        if (!empty($url)) {
-            $existing = get_posts(array(
-                'post_type'   => 'lynx-journal',
-                'post_status' => 'any',
-                // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-                'meta_query'  => array(
-                    array(
-                        'key'   => '_lynxjournal_url',
-                        'value' => $url,
-                    ),
-                ),
-                'numberposts' => 1,
-                'fields'      => 'ids',
-            ));
-            if (!empty($existing)) {
-                return new \WP_Error('duplicate_url', __('This URL has already been saved.', 'lynx-journal'), array('status' => 409));
-            }
+        $post_data = apply_filters('lynxjournal_test_post_args', array(
+            'post_title'   => !empty($title) ? $title : __('Test Post', 'lynx-journal'),
+            'post_content' => $content,
+            'post_type'    => 'post',
+            'post_status'  => 'draft',
+        ));
+
+        $post_id = wp_insert_post($post_data, true);
+        if (is_wp_error($post_id)) {
+            return new \WP_Error('insert_failed', __('Failed to create test post.', 'lynx-journal'), array('status' => 500));
         }
 
-        return true;
-    }
-
-    /**
-     * Resolve or create lynxjournal categories from names.
-     *
-     * @since 1.0.0
-     * @param array $categories Array of category names.
-     * @return array Array of category term IDs.
-     */
-    private function resolveOrCreateCategories(array $categories): array {
-        $ids = array();
-        foreach ($categories as $cat_name) {
-            $term = get_term_by('name', $cat_name, 'lynxjournal_category');
-            if (!$term) {
-                $result = wp_insert_term($cat_name, 'lynxjournal_category');
-                if (!is_wp_error($result)) {
-                    $ids[] = $result['term_id'];
-                }
-            } else {
-                $ids[] = $term->term_id;
-            }
-        }
-        return $ids;
-    }
-
-    /**
-     * Apply categories and tags to a link post.
-     *
-     * @since 1.0.0
-     * @param int $post_id The link post ID.
-     * @param mixed $categories Array of category names or IDs.
-     * @param mixed $tags Comma-separated tag names or array.
-     * @return void
-     */
-    private function applyLinkTaxonomies(int $post_id, mixed $categories, mixed $tags): void {
-        if (!empty($categories) && is_array($categories)) {
-            $ids = $this->resolveOrCreateCategories($categories);
-            if (!empty($ids)) {
-                wp_set_object_terms($post_id, $ids, 'lynxjournal_category');
-            }
-        }
-        if (!empty($tags)) {
-            $tag_names = array_map('trim', explode(',', $tags));
-            wp_set_object_terms($post_id, $tag_names, 'lynxjournal_tag');
-        }
+        return rest_ensure_response(array(
+            'success'  => true,
+            'post_id'  => $post_id,
+            'edit_url' => get_edit_post_link($post_id, 'raw'),
+        ));
     }
 
     /**
@@ -504,66 +478,4 @@ trait LynxJournal_RestApi {
         delete_transient('lynxjournal_categories_terms');
     }
 
-    /**
-     * Add CORS headers for Chrome extension requests.
-     *
-     * @since 1.0.0
-     * @param bool $served Whether the request was served.
-     * @return bool The served status.
-     */
-    public function addCorsHeaders(bool $served): bool {
-        $origin = get_http_origin();
-        if ($this->isFromChromeExtension($origin)) {
-            $this->setCorsOriginHeaders($origin);
-            header('Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE');
-            header('Access-Control-Allow-Headers: Content-Type, X-LynxJournal-API-Key, X-WP-Nonce, Authorization');
-        }
-        return $served;
-    }
-
-    /**
-     * Handle preflight OPTIONS requests from the Chrome extension.
-     *
-     * @since 1.0.0
-     * @return void
-     */
-    public function handlePreflight(): void {
-        $request_uri = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '';
-        if (!$request_uri || strpos($request_uri, '/wp-json/') === false) {
-            return;
-        }
-        if (isset($_SERVER['REQUEST_METHOD']) && sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'])) === 'OPTIONS') {
-            $origin = get_http_origin();
-            if ($this->isFromChromeExtension($origin)) {
-                $this->setCorsOriginHeaders($origin);
-                header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-                header('Access-Control-Allow-Headers: Content-Type, X-LynxJournal-API-Key, X-WP-Nonce, Authorization');
-                header('Access-Control-Max-Age: 86400');
-                exit;
-            }
-        }
-    }
-
-    /**
-     * Check if a request origin is from the Chrome extension.
-     *
-     * @since 1.0.0
-     * @param string $origin The request origin.
-     * @return bool True if from Chrome extension.
-     */
-    private function isFromChromeExtension( string $origin ): bool {
-        return strpos( $origin, 'chrome-extension://' ) === 0;
-    }
-
-    /**
-     * Set CORS origin headers for a specific origin.
-     *
-     * @since 1.0.0
-     * @param string $origin The request origin.
-     * @return void
-     */
-    private function setCorsOriginHeaders( string $origin ): void {
-        header( 'Access-Control-Allow-Origin: ' . $origin );
-        header( 'Access-Control-Allow-Credentials: true' );
-    }
 }

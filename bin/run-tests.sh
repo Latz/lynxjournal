@@ -11,6 +11,12 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 cd "$PROJECT_DIR"
 
+# composer.phar emits PHP deprecation notices to stdout on PHP 8.5+; strip them.
+composer_run() {
+  composer run "$@" 2>&1 | grep -v "^Deprecation Notice:"
+  return "${PIPESTATUS[0]}"
+}
+
 EXIT_CODES=()
 ENV_STARTED=0
 
@@ -28,7 +34,7 @@ trap cleanup EXIT
 # Run PHP Unit Tests
 echo "Running PHP Unit Tests (Pest)..."
 echo ""
-composer run test:unit || EXIT_CODES+=(1)
+composer_run test:unit || EXIT_CODES+=(1)
 
 echo ""
 echo "=========================================="
@@ -36,7 +42,19 @@ echo "=========================================="
 # Run PHP Integration Tests
 echo "Running PHP Integration Tests (Pest)..."
 echo ""
-composer run test:integration || EXIT_CODES+=(1)
+composer_run test:integration || EXIT_CODES+=(1)
+
+echo ""
+echo "=========================================="
+
+# Run PHP Integration Tests (Multisite)
+echo "Running PHP Integration Tests (Multisite)..."
+echo ""
+if [ -z "${WP_TESTS_DIR:-}" ] || [ ! -d "${WP_TESTS_DIR}" ]; then
+  echo "⚠ Skipping multisite integration tests: WP_TESTS_DIR not set or not found."
+else
+  composer_run test:integration:multisite || EXIT_CODES+=(1)
+fi
 
 echo ""
 echo "=========================================="

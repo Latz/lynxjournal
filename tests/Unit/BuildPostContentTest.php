@@ -27,10 +27,12 @@ beforeEach(function (): void {
 
 describe('LynxJournal::buildPostContent()', function (): void {
 
-    it('wraps title in an <h2> tag', function (): void {
+    it('wraps title in a Gutenberg heading block', function (): void {
         $result = $this->plugin->buildPostContent('My Title', 1, '', '');
 
-        expect($result)->toContain('<h2>My Title</h2>');
+        expect($result)->toContain('<!-- wp:heading -->')
+            ->toContain('<h2 class="wp-block-heading">My Title</h2>')
+            ->toContain('<!-- /wp:heading -->');
     });
 
     it('does not include a URL link when url is empty', function (): void {
@@ -44,15 +46,15 @@ describe('LynxJournal::buildPostContent()', function (): void {
         $result = $this->plugin->buildPostContent('Title', 1, LYNXJOURNAL_URL_EXAMPLE, '');
 
         expect($result)
-            ->toContain('<a href="https://example.com">')
+            ->toContain('<a href="https://example.com" target="_blank" rel="noopener">')
             ->toContain('Read more');
     });
 
     it('does not include description markup when description is empty', function (): void {
         $result = $this->plugin->buildPostContent('Title', 1, '', '');
 
-        // The only content should be the h2
-        expect(trim($result))->toBe('<h2>Title</h2>');
+        // The only content should be the heading block
+        expect(trim($result))->toBe("<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Title</h2>\n<!-- /wp:heading -->");
     });
 
     it('appends description when provided', function (): void {

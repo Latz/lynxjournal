@@ -1,4 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import { server } from './server.js';
 import { refreshCategories, handleContextMenuClick } from '../../chrome-extension/background.js';
 
 const ENDPOINT = 'https://example.com/wp-json/lynxjournal/v1';
@@ -6,33 +8,26 @@ const API_KEY  = 'test-key';
 
 describe('refreshCategories', () => {
     it('fetches categories and stores them when credentials are set', async () => {
-        const categories = [{ id: 1, name: 'Tech' }];
         chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
-        global.fetch = vi.fn().mockResolvedValue({
-            ok:   true,
-            json: async () => categories,
-        });
 
         await refreshCategories();
 
-        expect(fetch).toHaveBeenCalledWith(`${ENDPOINT}/categories`, expect.objectContaining({ method: 'GET' }));
         expect(chrome.storage.local.set).toHaveBeenCalledWith(
-            expect.objectContaining({ categories })
+            expect.objectContaining({ categories: [{ id: 1, name: 'Tech' }] })
         );
     });
 
     it('returns early without fetching when credentials are missing', async () => {
         chrome.storage.sync.get.mockResolvedValue({});
-        global.fetch = vi.fn();
 
         await refreshCategories();
 
-        expect(fetch).not.toHaveBeenCalled();
+        expect(chrome.storage.local.set).not.toHaveBeenCalled();
     });
 
     it('fails silently when fetch throws', async () => {
         chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
-        global.fetch = vi.fn().mockRejectedValue(new Error('network error'));
+        server.use(http.get(`${ENDPOINT}/categories`, () => HttpResponse.error()));
 
         await expect(refreshCategories()).resolves.toBeUndefined();
         expect(chrome.storage.local.set).not.toHaveBeenCalled();
@@ -40,7 +35,7 @@ describe('refreshCategories', () => {
 
     it('does not store categories when response is not ok', async () => {
         chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
-        global.fetch = vi.fn().mockResolvedValue({ ok: false });
+        server.use(http.get(`${ENDPOINT}/categories`, () => new HttpResponse(null, { status: 500 })));
 
         await refreshCategories();
 
@@ -70,11 +65,11 @@ describe('handleContextMenuClick', () => {
 
     it('calls refreshCategories on refresh menu item click', async () => {
         chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
-        global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => [] });
 
         await handleContextMenuClick({ menuItemId: 'lynxjournal-refresh-categories' });
 
-        expect(fetch).toHaveBeenCalled();
+        // refreshCategories is called fire-and-forget; wait for the async side effect
+        await vi.waitFor(() => expect(chrome.storage.local.set).toHaveBeenCalled());
         expect(chrome.tabs.create).not.toHaveBeenCalled();
     });
 

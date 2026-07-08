@@ -20,20 +20,25 @@ class LynxJournal {
     public const RESCHEDULE_DELAY      = 60;
     public const SEARCH_HORIZON_DAYS   = 366;
     public const DEFAULT_TIME          = '09:00';
+    public const DEFAULT_POST_TEMPLATE = "[category_start]\n### [category_name]\n  - [link] [link_description]\n  \n[category_end]";
 
     use LynxJournal_PostType;
     use LynxJournal_MetaBoxes;
     use LynxJournal_Publishing;
     use LynxJournal_Batch;
+    use LynxJournal_TemplateRenderer;
     use LynxJournal_Queries;
     use LynxJournal_RestApi;
+    use LynxJournal_RestApi_Support;
     use LynxJournal_ScheduleValidator;
     use LynxJournal_Scheduler;
     use LynxJournal_Admin_Menu;
     use LynxJournal_Admin_Dashboard;
+    use LynxJournal_Admin_Dashboard_Actions;
     use LynxJournal_Admin_LinksPage;
     use LynxJournal_Admin_AddLink;
     use LynxJournal_Admin_Categories;
+    use LynxJournal_Admin_TemplatePage;
 
     /**
      * Register hooks and initialize plugin.
