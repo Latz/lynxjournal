@@ -15,5 +15,5 @@ export function _n(single, plural, number) {
 
 export function sprintf(format, ...args) {
     let i = 0;
-    return format.replace(/%[sd]/g, () => args[i++]);
+    return format.replace(/%[sd]/g, () => String(args[i++] ?? ''));
 }

@@ -1,0 +1,392 @@
+/* ── Post Template page: token accordion ────────────────────── */
+#lynxjournal-token-accordion {
+	margin-block-start: 12px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+}
+
+.lynxjournal-accordion-toggle {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	align-items: center;
+	width: 100%;
+	padding-block: 8px;
+	padding-inline: 12px;
+	font-weight: 600;
+	font-size: 13px;
+	text-align: left;
+	background: #f6f7f7;
+	border: none;
+	border-radius: 4px;
+	color: var(--lj-color-text-ui);
+	cursor: pointer;
+	transition: background .12s ease, color .12s ease;
+	height: auto;
+	line-height: 1.4;
+	box-shadow: none;
+}
+
+.lynxjournal-accordion-toggle::after {
+	content: '';
+	flex-shrink: 0;
+	display: block;
+	width: 7px;
+	height: 7px;
+	border-right: 2px solid currentColor;
+	border-bottom: 2px solid currentColor;
+	transform: rotate(45deg) translateY(-2px);
+	transition: transform .2s ease;
+}
+
+.lynxjournal-accordion-toggle[aria-expanded="true"] {
+	border-radius: 4px 4px 0 0;
+	border-bottom: 1px solid #c3c4c7;
+}
+
+.lynxjournal-accordion-toggle[aria-expanded="true"]::after {
+	transform: rotate(-135deg) translateY(2px);
+}
+
+.lynxjournal-accordion-toggle:hover,
+.lynxjournal-accordion-toggle:focus {
+	background: #f0f0f1;
+	color: var(--wp-admin-theme-color, #2271b1);
+	box-shadow: none;
+}
+
+#lynxjournal-token-panel {
+	interpolate-size: allow-keywords;
+	height: 0;
+	padding-block: 0;
+	overflow: hidden;
+	transition: height .2s ease, padding-block .2s ease;
+}
+
+#lynxjournal-token-panel.is-open {
+	height: auto;
+	padding-block: 12px;
+}
+
+.lynxjournal-token-grid {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 12px;
+}
+
+
+.lynxjournal-token-group h4 {
+	width: 100%;
+	margin-block: 0 3px;
+	margin-inline: 0;
+	font-size: 10px;
+	text-transform: uppercase;
+	letter-spacing: .05em;
+	color: #a7aaad;
+	font-weight: 600;
+	text-wrap: balance;
+}
+
+.lynxjournal-token-group {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 5px;
+}
+
+.lynxjournal-insert-token {
+	position: relative;
+	display: inline flex;
+	align-items: center;
+	width: auto;
+	height: auto;
+	padding-block: 2px;
+	padding-inline: 10px;
+	border-radius: 20px;
+	border: 1px solid color-mix(in oklch, var(--wp-admin-theme-color, #2271b1) 25%, white);
+	background: color-mix(in oklch, var(--wp-admin-theme-color, #2271b1) 8%, white);
+	color: var(--wp-admin-theme-color, #2271b1);
+	cursor: pointer;
+	font-family: Consolas, Monaco, 'Courier New', monospace;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.6;
+	transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.lynxjournal-insert-token .token-code {
+	display: inline;
+	font-family: inherit;
+	font-weight: inherit;
+	font-size: inherit;
+	color: inherit;
+	line-height: inherit;
+}
+
+.lynxjournal-insert-token .token-desc {
+	display: none;
+	position: absolute;
+	bottom: calc(100% + 7px);
+	left: 50%;
+	transform: translateX(-50%);
+	background: #1d2327;
+	color: #fff;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 11px;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	font-weight: 400;
+	white-space: nowrap;
+	z-index: 9999;
+	pointer-events: none;
+}
+
+.lynxjournal-insert-token .token-desc::after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	border: 4px solid transparent;
+	border-top-color: #1d2327;
+}
+
+.lynxjournal-insert-token:hover,
+.lynxjournal-insert-token:focus {
+	background: var(--wp-admin-theme-color, #2271b1);
+	border-color: var(--wp-admin-theme-color, #2271b1);
+	color: #fff;
+	outline: none;
+}
+
+.lynxjournal-insert-token:hover .token-desc,
+.lynxjournal-insert-token:focus .token-desc {
+	display: block;
+}
+
+/* ── Post Template page: format toolbar ─────────────────────── */
+.lynxjournal-format-toolbar {
+	display: flex;
+	gap: 4px;
+	margin-block-end: 6px;
+}
+
+.lynxjournal-format-btn {
+	min-width: 28px;
+	padding: 0 6px;
+	line-height: 28px;
+	height: 28px;
+}
+
+.lynxjournal-format-btn svg {
+	width: 16px;
+	height: 16px;
+	fill: currentColor;
+	vertical-align: middle;
+	pointer-events: none;
+}
+
+.lynxjournal-heading-select {
+	height: 28px;
+	line-height: 28px;
+	font-size: 13px;
+	padding: 0 4px;
+}
+
+.lynxjournal-format-btn:hover,
+.lynxjournal-format-btn:focus,
+.lynxjournal-format-btn.is-active {
+	background: var(--wp-admin-theme-color, #2271b1);
+	border-color: var(--wp-admin-theme-color, #2271b1);
+	color: #fff;
+}
+
+/* ── CodeMirror template editor ─────────────────────────────── */
+.lynxjournal-settings-field .CodeMirror {
+	font-family: Consolas, Monaco, 'Courier New', monospace;
+	font-size: 13px;
+	line-height: 1.6;
+	border: 1px solid #8c8f94;
+	border-top: none;
+	border-radius: 0 0 3px 3px;
+	min-height: 220px;
+}
+
+.lynxjournal-settings-field .CodeMirror-scroll {
+	min-height: 220px;
+}
+
+.cm-lynxjournal-token {
+	color: #7c3aed;
+	font-weight: 600;
+}
+
+.lynxjournal-blank-line-marker {
+	color: #c3c4c7;
+	font-size: 13px;
+}
+
+/* ── Post Template page: Markdown preview output ─────────────── */
+#lynxjournal-template-preview h2,
+#lynxjournal-template-preview h3 {
+	margin-block: .3em .15em;
+	margin-inline: 0;
+}
+
+#lynxjournal-template-preview ul {
+	margin-block: .15em;
+	margin-inline: 0;
+	padding-inline-start: 1.4em;
+	list-style: disc;
+}
+
+#lynxjournal-template-preview ul ul {
+	list-style: circle;
+}
+
+#lynxjournal-template-preview ul ul ul {
+	list-style: square;
+}
+
+#lynxjournal-template-preview ol {
+	margin-block: .15em;
+	margin-inline: 0;
+	padding-inline-start: 1.4em;
+}
+
+#lynxjournal-template-preview hr {
+	border: none;
+	border-top: 1px solid #c3c4c7;
+	margin-block: .4em;
+	margin-inline: 0;
+}
+
+#lynxjournal-template-preview p {
+	margin-block: .1em;
+	margin-inline: 0;
+}
+
+/* Injected by preserveBlankLines() for each blank line in the source —
+   a left border + reserved height marks the row as a blank line so a
+   trailing/leading blank run reads as intentional and not just background
+   padding, without showing any visible character in the row itself. */
+#lynxjournal-template-preview p.lynxjournal-blank-line {
+	margin-block: 0.25em;
+	min-height: 1.5em;
+	padding-inline-start: 6px;
+	border-inline-start: 3px solid #c3c4c7;
+}
+
+/* ── Post Template page: live preview container ─────────────── */
+#lynxjournal-template-preview-wrap {
+	margin-block: 10px;
+	margin-inline: 0;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, .07);
+	overflow: hidden;
+}
+
+.lynxjournal-preview-header {
+	display: grid;
+	grid-template-columns: 1fr auto auto auto auto;
+	align-items: center;
+	gap: 10px;
+	padding-block: 5px;
+	padding-inline: 10px;
+	background: #fff;
+	border-bottom: 1px solid #dcdcde;
+}
+
+.lynxjournal-preview-width-toggle {
+	display: flex;
+	gap: 2px;
+}
+
+.lynxjournal-preview-width-btn,
+.lynxjournal-test-publish-btn,
+.lynxjournal-test-post-btn {
+	height: 22px;
+	line-height: 20px;
+	padding: 0 8px;
+	font-size: 11px;
+}
+
+.lynxjournal-preview-width-btn.is-active {
+	background: var(--wp-admin-theme-color, #2271b1);
+	border-color: var(--wp-admin-theme-color, #2271b1);
+	color: #fff;
+}
+
+#lynxjournal-template-preview.is-width-mobile {
+	max-width: 375px;
+	margin-inline: auto;
+}
+
+.lynxjournal-preview-label {
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--lj-color-text-ui);
+	text-transform: uppercase;
+	letter-spacing: .04em;
+}
+
+#lynxjournal-preview-status {
+	display: inline flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .05em;
+	color: #00a32a;
+	background: #edfaef;
+	border: 1px solid #a3d9a5;
+	border-radius: 20px;
+	padding-block: 1px;
+	padding-inline: 8px;
+	transition: color .15s ease, background .15s ease, border-color .15s ease;
+}
+
+#lynxjournal-preview-status.is-updating {
+	color: #646970;
+	background: #f0f0f1;
+	border-color: #c3c4c7;
+}
+
+.lynxjournal-preview-warning {
+	display: flex;
+	align-items: flex-start;
+	gap: 6px;
+	padding-block: 6px;
+	padding-inline: 10px;
+	background: #fff8e5;
+	border-bottom: 1px solid #f0d78b;
+	font-size: 11px;
+	color: #614200;
+	line-height: 1.4;
+}
+
+.lynxjournal-preview-warning svg {
+	flex-shrink: 0;
+	width: 13px;
+	height: 13px;
+	margin-block-start: 1px;
+}
+
+#lynxjournal-template-preview {
+	min-height: 60px;
+	padding-block: 12px;
+	padding-inline: 14px;
+	background: #f6f7f7;
+	font-size: 12px;
+	line-height: 1.5;
+	color: var(--lj-color-text);
+	word-break: break-word;
+}
+
+.lynxjournal-preview-empty {
+	color: #a7aaad;
+	font-style: italic;
+}

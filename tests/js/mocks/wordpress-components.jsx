@@ -9,16 +9,19 @@
  * component tests can interact with them via @testing-library/react.
  */
 
-export function Button({ children, onClick, disabled, isBusy, className, 'aria-label': ariaLabel, title, ...rest }) {
+export function Button({ children, onClick, disabled, isBusy, className, variant, size, 'aria-label': ariaLabel, title, type = 'button', ...rest }) {
     return (
         <button
-            type="button"
+            type={type}
             onClick={onClick}
             disabled={disabled}
             className={className}
             aria-label={ariaLabel}
             aria-busy={isBusy || undefined}
             title={title}
+            data-variant={variant}
+            data-size={size}
+            {...rest}
         >
             {children}
         </button>
@@ -47,7 +50,7 @@ export function CheckboxControl({ label, checked, onChange }) {
     );
 }
 
-export function TextControl({ label, value, onChange, type = 'text', placeholder }) {
+export function TextControl({ label, value, onChange, type = 'text', placeholder, ...rest }) {
     return (
         <label>
             {label}
@@ -56,6 +59,7 @@ export function TextControl({ label, value, onChange, type = 'text', placeholder
                 value={value}
                 placeholder={placeholder}
                 onChange={e => onChange(e.target.value)}
+                {...rest}
             />
         </label>
     );
@@ -65,7 +69,7 @@ export function SelectControl({ label, value, options = [], onChange }) {
     return (
         <label>
             {label}
-            <select value={value} onChange={e => onChange(e.target.value)}>
+            <select value={value} aria-label={label} onChange={e => onChange(e.target.value)}>
                 {options.map(o => (
                     <option key={o.value} value={o.value}>{o.label}</option>
                 ))}
@@ -74,16 +78,24 @@ export function SelectControl({ label, value, options = [], onChange }) {
     );
 }
 
-export function __experimentalNumberControl({ value, onChange, min, max, style, autoFocus }) {
+let _ncId = 0;
+export function __experimentalNumberControl({ value, onChange, min, max, style, autoFocus, label }) {
+    const id = `nc-${++_ncId}`;
     return (
-        <input
-            type="number"
-            value={value}
-            min={min}
-            max={max}
-            style={style}
-            autoFocus={autoFocus}
-            onChange={e => onChange(e.target.value)}
-        />
+        <>
+            <label htmlFor={id} style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden' }}>
+                {label ?? 'Value'}
+            </label>
+            <input
+                id={id}
+                type="number"
+                value={value}
+                min={min}
+                max={max}
+                style={style}
+                autoFocus={autoFocus}
+                onChange={e => onChange(e.target.value)}
+            />
+        </>
     );
 }

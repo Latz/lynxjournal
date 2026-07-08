@@ -3,7 +3,7 @@
  * Plugin Name: LynxJournal
  * Description: Save and publish links to your blog
  * Version: 1.0.2
- * Author: latz
+ * Author: Latz
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: lynx-journal
@@ -24,21 +24,28 @@ define('LYNXJOURNAL_POST_TYPE',      'lynxjournal');
 
 define('LYNXJOURNAL_PLUGIN_FILE', __FILE__);
 
-require_once __DIR__ . '/src/php/schedule-mode.php';
+// Composer dependencies (league/commonmark, used by TemplateRenderer.php).
+require_once __DIR__ . '/vendor/autoload.php';
+
+require_once __DIR__ . '/src/php/ScheduleMode.php';
 
 // Traits (must be required before the class)
 require_once __DIR__ . '/src/php/traits/trait-post-type.php';
 require_once __DIR__ . '/src/php/traits/MetaBoxes.php';
 require_once __DIR__ . '/src/php/traits/Publishing.php';
 require_once __DIR__ . '/src/php/traits/Batch.php';
+require_once __DIR__ . '/src/php/traits/TemplateRenderer.php';
 require_once __DIR__ . '/src/php/traits/Queries.php';
 require_once __DIR__ . '/src/php/traits/ScheduleValidator.php';
 require_once __DIR__ . '/src/php/traits/RestApi.php';
+require_once __DIR__ . '/src/php/traits/RestApiSupport.php';
 require_once __DIR__ . '/src/php/traits/Admin/Menu.php';
 require_once __DIR__ . '/src/php/traits/Admin/Dashboard.php';
+require_once __DIR__ . '/src/php/traits/Admin/DashboardActions.php';
 require_once __DIR__ . '/src/php/traits/Admin/LinksPage.php';
 require_once __DIR__ . '/src/php/traits/Admin/AddLink.php';
 require_once __DIR__ . '/src/php/traits/Admin/Categories.php';
+require_once __DIR__ . '/src/php/traits/Admin/TemplatePage.php';
 require_once __DIR__ . '/src/php/traits/Scheduler.php';
 require_once __DIR__ . '/src/php/class-lynxjournal.php';
 

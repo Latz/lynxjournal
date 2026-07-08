@@ -14,7 +14,8 @@
         }
     },
     "require": {
-        "php": ">=8.2"
+        "php": ">=8.2",
+        "league/commonmark": "^2.6"
     },
     "require-dev": {
         "pestphp/pest": "^4.0",
@@ -35,8 +36,10 @@
     },
     "scripts": {
         "test": "pest --testsuite=Unit",
+        "phpstan": "phpstan analyse",
         "test:unit": "pest --testsuite=Unit",
         "test:integration": "pest --testsuite=Integration --bootstrap tests/bootstrap-integration.php",
+        "test:integration:multisite": "pest -c tests/phpunit/multisite.xml",
         "i18n:pot": "wp i18n make-pot . languages/lynxjournal.pot --domain=lynxjournal --exclude=vendor,node_modules,tests,bin,dist,chrome-extension,memory",
         "check-compatibility": [
             "vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility",

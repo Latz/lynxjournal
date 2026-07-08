@@ -25,6 +25,24 @@ beforeEach(function (): void {
     Functions\when('update_meta_cache')->justReturn(true);
     Functions\when('update_object_term_cache')->justReturn(true);
     Functions\when('current_time')->justReturn('2026-04-13 10:00:00');
+    // Needed by the templated-rendering path (buildTemplateTokenData()) that
+    // now runs whenever get_option('lynxjournal_post_template') is non-empty
+    // (the default DEFAULT_POST_TEMPLATE constant, unless a test overrides it).
+    Functions\when('get_the_date')->justReturn('2026-01-01');
+    Functions\when('wp_parse_url')->alias(fn($url, $component = -1) => parse_url($url, $component));
+    Functions\when('get_userdata')->justReturn(false);
+    Functions\when('get_bloginfo')->justReturn('Test Site');
+    Functions\when('wp_date')->justReturn('April 13, 2026');
+
+    // Minimal $wpdb mock — markLinksAsPublished() issues a single batched
+    // UPDATE via $wpdb->prepare()+query() instead of per-link wp_update_post().
+    global $wpdb;
+    $wpdb        = new class {
+        public string $posts = 'wp_posts';
+        public function prepare(string $sql, mixed ...$args): string { return $sql; }
+        public function query(string $sql): int { return 1; }
+    };
+
     $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 
@@ -77,12 +95,6 @@ describe('LynxJournal::createRoundupPost()', function (): void {
             return $cats;
         });
         Functions\when('wp_set_post_tags')->justReturn([]);
-
-        $updated_posts = [];
-        Functions\when('wp_update_post')->alias(function (array $args) use (&$updated_posts) {
-            $updated_posts[] = $args;
-            return $args['ID'];
-        });
         Functions\when('update_post_meta')->justReturn(true);
         Functions\when('delete_transient')->justReturn(true);
 
@@ -92,7 +104,8 @@ describe('LynxJournal::createRoundupPost()', function (): void {
         expect($result['post_id'])->toBe(99);
         expect($result['link_count'])->toBe(2);
         expect($set_cats)->toBe([50]);
-        expect($updated_posts)->toHaveCount(2);
+        // markLinksAsPublished() issues a single batched $wpdb UPDATE (see
+        // beforeEach's $wpdb mock) instead of per-link wp_update_post() calls.
     });
 
     it('generates a default title from the current date when post_title is empty', function (): void {

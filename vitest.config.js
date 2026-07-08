@@ -10,9 +10,11 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            // @wordpress/i18n, @wordpress/api-fetch, and @wordpress/components are
-            // externalized in production (provided by WP core as wp.i18n etc.) and
-            // aren't installed as dependencies, so Vite can't resolve them directly.
+            // @wordpress/element, @wordpress/i18n, @wordpress/api-fetch, and
+            // @wordpress/components are externalized in production (provided
+            // by WP core as wp.element etc.) and aren't installed as
+            // dependencies, so Vite can't resolve them directly.
+            '@wordpress/element':     'react',
             '@wordpress/i18n':        path.resolve(__dirname, 'tests/js/mocks/wordpress-i18n.js'),
             '@wordpress/api-fetch':   path.resolve(__dirname, 'tests/js/mocks/wordpress-api-fetch.js'),
             '@wordpress/components':  path.resolve(__dirname, 'tests/js/mocks/wordpress-components.jsx'),
@@ -21,7 +23,7 @@ export default defineConfig({
     test: {
         globals:     true,
         environment: 'jsdom',
-        include:     ['tests/js/**/*.test.{js,jsx,ts}'],
+        include:     ['tests/js/**/*.test.{js,ts,jsx,tsx}'],
         setupFiles:  ['tests/js/chrome-mock.js', 'tests/js/browser-mock.js', 'tests/js/react-setup.js'],
         coverage: {
             provider:          'v8',

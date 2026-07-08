@@ -83,13 +83,13 @@ trait LynxJournal_Batch {
             $post_title = sprintf(__('Links Roundup - %s', 'lynx-journal'), gmdate('F j, Y'));
         }
 
-        $grouped = $this->groupLinksByCategory($link_ids);
+        [$links_by_category, $uncategorized_links, $published_count] = $this->groupLinksByCategory($link_ids);
 
-        if ($grouped['count'] === 0) {
+        if ($published_count === 0) {
             return array('success' => false, 'post_id' => 0, 'message' => __('No valid links to publish.', 'lynx-journal'), 'error_code' => 'no_valid_links');
         }
 
-        return $this->executeRoundupInsertion($post_title, $as_draft, $grouped, $link_ids, $mode, $author_id);
+        return $this->executeRoundupInsertion($post_title, $as_draft, $links_by_category, $uncategorized_links, $published_count, $link_ids, $mode, $author_id);
     }
 
     /**
@@ -98,17 +98,19 @@ trait LynxJournal_Batch {
      * @since 1.0.0
      * @param string $post_title The roundup post title.
      * @param bool $as_draft Whether to create as draft.
-     * @param array $grouped Result of groupLinksByCategory(): by_category, uncategorized, count.
+     * @param array $links_by_category Links grouped by category.
+     * @param array $uncategorized_links Links without a category.
+     * @param int $count Total count of links.
      * @param array $link_ids All link post IDs.
      * @param string $mode The scheduling mode that triggered this.
      * @param int $author_id Optional post author user ID.
      * @return array Result array with success status, post_id, link_count, and message.
      */
-    private function executeRoundupInsertion(string $post_title, bool $as_draft, array $grouped, array $link_ids, string $mode = 'manual', int $author_id = 0): array {
+    private function executeRoundupInsertion(string $post_title, bool $as_draft, array $links_by_category, array $uncategorized_links, int $count, array $link_ids, string $mode = 'manual', int $author_id = 0): array {
         // post_type 'post': the roundup is a normal blog post, not a lynxjournal CPT entry.
         $post_args = array(
             'post_title'   => $post_title,
-            'post_content' => $this->buildRoundupContent($grouped['by_category'], $grouped['uncategorized']),
+            'post_content' => $this->buildRoundupContent($links_by_category, $uncategorized_links, $post_title, $author_id),
             'post_status'  => $as_draft ? 'draft' : 'publish',
             'post_type'    => 'post',
         );
@@ -122,11 +124,14 @@ trait LynxJournal_Batch {
             return array('success' => false, 'post_id' => 0, 'message' => __('Failed to create roundup post.', 'lynx-journal'), 'error_code' => 'insert_failed');
         }
 
-        $this->assignRoundupCategories($post_id, $grouped['by_category']);
+        $this->assignRoundupCategories($post_id, $links_by_category);
         $this->assignRoundupTags($post_id, $link_ids);
         $this->markLinksAsPublished($link_ids, $post_id, $as_draft);
 
-        $count = $grouped['count'];
+        if (!$as_draft) {
+            update_option('lynxjournal_roundup_count', (int) get_option('lynxjournal_roundup_count', 0) + 1);
+        }
+
         return array(
             'success'    => true,
             'post_id'    => $post_id,
@@ -137,13 +142,6 @@ trait LynxJournal_Batch {
         );
     }
 
-    /**
-     * Group publishable links by their primary category.
-     *
-     * @since 1.0.0
-     * @param array $link_ids Array of link post IDs.
-     * @return array{by_category: array, uncategorized: array, count: int}
-     */
     private function groupLinksByCategory(array $link_ids): array {
         $links_by_category  = array();
         $uncategorized_links = array();
@@ -167,53 +165,169 @@ trait LynxJournal_Batch {
             $count++;
         }
 
-        return [
-            'by_category'   => $links_by_category,
-            'uncategorized' => $uncategorized_links,
-            'count'         => $count,
-        ];
+        return [$links_by_category, $uncategorized_links, $count];
     }
 
     /**
-     * Build HTML content for a roundup post.
+     * Build HTML content for a roundup post. Uses the saved Post Template
+     * (lynxjournal_post_template option) when one is configured, via the
+     * PHP-ported rendering pipeline in TemplateRenderer.php — falling back
+     * to the fixed builder below when no template is set, or when a
+     * configured template renders to effectively empty content.
      *
      * @since 1.0.0
      * @param array $links_by_category Links grouped by category.
      * @param array $uncategorized_links Links without a category.
+     * @param string $post_title Already-resolved roundup post title, used for the template's [title] token.
+     * @param int $author_id Resolved post author user ID, used for the template's [author] token.
      * @return string The formatted roundup content HTML.
      */
-    private function buildRoundupContent(array $links_by_category, array $uncategorized_links): string {
-        $content = '';
+    private function buildRoundupContent(array $links_by_category, array $uncategorized_links, string $post_title = '', int $author_id = 0): string {
+        $template = get_option('lynxjournal_post_template', self::DEFAULT_POST_TEMPLATE);
+        if (trim((string) $template) !== '') {
+            $rendered = $this->buildRoundupContentFromTemplate(
+                (string) $template, $links_by_category, $uncategorized_links, $post_title, $author_id
+            );
+            if (trim($rendered) !== '') {
+                return $rendered;
+            }
+            // Falls through to the fixed builder below if the template
+            // rendered to effectively empty content (e.g. every token unmatched).
+        }
 
-        $render_list = function(array $ids) use (&$content) {
-            $content .= "<ul>\n";
+        $content       = '';
+        $schema_items  = [];
+        $heading_level = $this->getCategoryHeadingLevel();
+
+        $render_list = function(array $ids) use (&$content, &$schema_items) {
+            $items = [];
             foreach ($ids as $link_id) {
                 $link = get_post($link_id);
+                if (!$link) {
+                    continue;
+                }
                 $url  = get_post_meta($link_id, '_lynxjournal_url', true);
                 $desc = trim($link->post_content);
-                $content .= '<li>';
-                $content .= !empty($url)
-                    ? '<a href="' . esc_url($url) . '" target="_blank" rel="noopener">' . esc_html($link->post_title) . '</a>'
-                    : esc_html($link->post_title);
+                $title = '<strong>' . esc_html($link->post_title) . '</strong>';
+                $item = !empty($url)
+                    ? '<a href="' . esc_url($url) . '" target="_blank" rel="noopener">' . $title . '</a>'
+                    : $title;
                 if (!empty($desc)) {
-                    $content .= '<br>' . wp_kses_post($desc);
+                    $item .= ' — ' . wp_kses_post($desc);
                 }
-                $content .= "</li>\n";
+                $items[] = "<!-- wp:list-item -->\n<li>{$item}</li>\n<!-- /wp:list-item -->";
+
+                $schema_item = [
+                    '@type'    => 'ListItem',
+                    'position' => count($schema_items) + 1,
+                    'name'     => $link->post_title,
+                ];
+                if (!empty($url)) {
+                    $schema_item['url'] = esc_url_raw($url);
+                }
+                $schema_items[] = $schema_item;
             }
-            $content .= "</ul>\n\n";
+            $content .= "<!-- wp:list -->\n<ul class=\"wp-block-list\">\n" . implode("\n", $items) . "\n</ul>\n<!-- /wp:list -->\n\n";
         };
 
         foreach ($links_by_category as $group) {
-            $content .= '<h2>' . esc_html($group['term']->name) . "</h2>\n\n";
+            $content .= $this->buildHeadingBlock(esc_html($group['term']->name), $heading_level);
             $render_list($group['links']);
         }
 
         if (!empty($uncategorized_links)) {
-            $content .= '<h2>' . esc_html__('Other', 'lynx-journal') . "</h2>\n\n";
+            $content .= $this->buildHeadingBlock(esc_html__('Other', 'lynx-journal'), $heading_level);
             $render_list($uncategorized_links);
         }
 
+        if (!empty($schema_items)) {
+            $schema = [
+                '@context'        => 'https://schema.org',
+                '@type'           => 'ItemList',
+                'itemListElement' => $schema_items,
+            ];
+            $json = wp_json_encode($schema, JSON_UNESCAPED_SLASHES);
+            // Defends against a title/URL containing a literal "</script>" sequence,
+            // which would otherwise terminate the script tag early.
+            $json = str_replace('</', '<\/', $json);
+            $content .= "<!-- wp:html -->\n<script type=\"application/ld+json\">{$json}</script>\n<!-- /wp:html -->\n";
+        }
+
         return $content;
+    }
+
+    /**
+     * Renders the roundup post content from the saved Post Template, using
+     * the PHP port of the admin Test Publish/Test Post preview pipeline.
+     *
+     * @since 1.0.0
+     * @param string $template Raw Post Template markdown+tokens text.
+     * @param array $links_by_category Links grouped by category.
+     * @param array $uncategorized_links Links without a category.
+     * @param string $post_title Already-resolved roundup post title.
+     * @param int $author_id Resolved post author user ID.
+     * @return string Rendered Gutenberg block markup, or '' if the template rendered empty.
+     */
+    private function buildRoundupContentFromTemplate(
+        string $template,
+        array $links_by_category,
+        array $uncategorized_links,
+        string $post_title,
+        int $author_id
+    ): string {
+        [$scalar_data, $category_variants, $all_link_token_maps] =
+            $this->buildTemplateTokenData($links_by_category, $uncategorized_links, $post_title, $author_id);
+
+        $text = $this->buildTemplateTextPhp($template, $category_variants, $scalar_data, $all_link_token_maps);
+        $text = $this->convertIndentedLinesPhp($text);
+        $html = $this->renderMarkdownPhp($text);
+
+        return $html !== '' ? $this->wrapAsGutenbergBlocksPhp($html) : '';
+    }
+
+    /**
+     * Determines the Gutenberg heading level to use for roundup category
+     * headings, based on the Markdown heading marker (if any) on the
+     * [category_name] line inside the admin's configured Post Template.
+     * Falls back to level 3 (today's fixed behavior) when no template is
+     * configured or no heading marker is found.
+     *
+     * Only used by the fixed (no-template) builder above; templates set via
+     * the Post Template editor get their heading levels from real Markdown
+     * parsing instead — see buildRoundupContentFromTemplate().
+     *
+     * @return int
+     */
+    private function getCategoryHeadingLevel(): int {
+        $template = get_option('lynxjournal_post_template', self::DEFAULT_POST_TEMPLATE);
+        if (!preg_match('/\[category_start\]([\s\S]*?)\[category_end\]/', $template, $block)) {
+            return 3;
+        }
+        foreach (explode("\n", $block[1]) as $line) {
+            if (strpos($line, '[category_name]') === false) {
+                continue;
+            }
+            if (preg_match('/^(#{1,6})\s/', ltrim($line), $heading)) {
+                return strlen($heading[1]);
+            }
+            break;
+        }
+        return 3;
+    }
+
+    /**
+     * Builds a Gutenberg heading block at the given level, omitting the
+     * {"level":N} attribute for the default level 2 (matches real WP
+     * serialization, and assets/js/template-page.js's wrapAsGutenbergBlocks()).
+     *
+     * @param string $text Already-escaped heading text.
+     * @param int $level
+     * @return string
+     */
+    private function buildHeadingBlock(string $text, int $level): string {
+        $tag   = "h{$level}";
+        $attrs = $level === 2 ? '' : " {\"level\":{$level}}";
+        return "<!-- wp:heading{$attrs} -->\n<{$tag} class=\"wp-block-heading\">{$text}</{$tag}>\n<!-- /wp:heading -->\n\n";
     }
 
     /**
@@ -306,17 +420,24 @@ trait LynxJournal_Batch {
      * @return void
      */
     private function markLinksAsPublished(array $link_ids, int $post_id, bool $as_draft): void {
+        global $wpdb;
+
         $meta_status = $as_draft ? 'draft' : 'published';
         $wp_status   = $as_draft ? 'lynxjournal_draft' : 'lynxjournal_pub';
         $date        = current_time('mysql');
+
+        $placeholders = implode(',', array_fill(0, count($link_ids), '%d'));
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $wpdb->query( $wpdb->prepare(
+            "UPDATE {$wpdb->posts} SET post_status = %s WHERE ID IN ({$placeholders}) AND post_type = 'lynx-journal'",
+            array_merge([$wp_status], $link_ids)
+        ) );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
         foreach ($link_ids as $link_id) {
-            $link = get_post($link_id);
-            if ($link && $link->post_type === 'lynx-journal') {
-                wp_update_post(['ID' => $link_id, 'post_status' => $wp_status]);
-                update_post_meta($link_id, '_lynxjournal_published_post_id', $post_id);
-                update_post_meta($link_id, '_lynxjournal_publish_status', $meta_status);
-                update_post_meta($link_id, '_lynxjournal_published_date', $date);
-            }
+            update_post_meta($link_id, '_lynxjournal_published_post_id', $post_id);
+            update_post_meta($link_id, '_lynxjournal_publish_status', $meta_status);
+            update_post_meta($link_id, '_lynxjournal_published_date', $date);
         }
         delete_transient('lynxjournal_publish_stats');
     }

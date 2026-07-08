@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 trait LynxJournal_Admin_Menu {
 
     /**
@@ -28,6 +32,7 @@ trait LynxJournal_Admin_Menu {
         $this->addSubmenu(__('Tags',             'lynx-journal'), __('Tags',             'lynx-journal'), 'edit_posts', 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal');
         $this->addSubmenu(__('Chrome Extension', 'lynx-journal'), __('Chrome Extension', 'lynx-journal'), 'edit_posts', 'lynxjournal-settings',                                     'settingsPage');
         $this->addSubmenu(__('Schedule',         'lynx-journal'), __('Schedule',         'lynx-journal'), 'edit_posts', 'lynxjournal-schedule',                                     'schedulePage');
+        $this->addSubmenu(__('Post Template',    'lynx-journal'), __('Post Template',    'lynx-journal'), 'edit_posts', 'lynxjournal-template',                                     'templatePage');
     }
 
     /**
@@ -282,6 +287,70 @@ trait LynxJournal_Admin_Menu {
             ));
         }
 
+        if (strpos($hook, 'lynxjournal-template') !== false) {
+            $this->enqueuePageStyle('lynxjournal-template-css', 'template-page.css', ['lynxjournal-dashboard']);
+            wp_enqueue_script(
+                'marked',
+                plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'assets/js/marked.min.js',
+                [],
+                '15.0.12',
+                true
+            );
+            $editor_settings = wp_enqueue_code_editor([
+                'type'       => 'text/plain',
+                'codemirror' => [
+                    'mode'           => 'null',
+                    'lineWrapping'   => true,
+                    'lineNumbers'    => false,
+                    'tabSize'        => 2,
+                    'indentWithTabs' => false,
+                ],
+            ]);
+            add_filter('script_loader_tag', function (string $tag, string $handle): string {
+                if ($handle === 'lynxjournal-template-js') {
+                    return str_replace(' src=', ' type="module" src=', $tag);
+                }
+                return $tag;
+            }, 10, 2);
+            $this->enqueuePageScript('lynxjournal-template-js', 'template-page.js', ['marked', 'code-editor']);
+            // template-page.js appends this version to the dynamic import() URL of every
+            // module below — take the newest mtime across all of them so editing any one
+            // busts the shared cache-buster, not just template-utils.js.
+            $template_js_modules = [
+                'src/js/template-utils.js',
+                'src/js/template-preview.js',
+                'src/js/template-toolbar-fallback.js',
+            ];
+            $template_utils_version = (string) max(array_map(
+                static fn (string $file): int => (int) filemtime(plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . $file),
+                $template_js_modules
+            ));
+            wp_add_inline_script(
+                'lynxjournal-template-js',
+                'var lynxjournalTemplateUtilsVersion = ' . wp_json_encode($template_utils_version) . ';',
+                'before'
+            );
+            if (false !== $editor_settings) {
+                wp_add_inline_script(
+                    'lynxjournal-template-js',
+                    'var lynxjournalEditorSettings = ' . wp_json_encode($editor_settings) . ';',
+                    'before'
+                );
+            }
+            $data_file = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'assets/js/template-preview-data.json';
+            if (file_exists($data_file)) {
+                $preview_data = json_decode((string) file_get_contents($data_file), true);
+                if (is_array($preview_data) && isset($preview_data['scalar'])) {
+                    $preview_data['scalar']['[roundup_count]'] = (string) get_option('lynxjournal_roundup_count', 0);
+                }
+                wp_localize_script('lynxjournal-template-js', 'lynxjournalPreviewData', $preview_data);
+            }
+            wp_localize_script('lynxjournal-template-js', 'lynxjournalTemplate', array(
+                'restUrl' => rest_url(LYNXJOURNAL_REST_NAMESPACE . '/template/test-post'),
+                'nonce'   => wp_create_nonce('wp_rest'),
+            ));
+        }
+
         if (strpos($hook, 'lynxjournal-schedule') !== false) {
             $asset_file = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'build/schedule.asset.php';
             if (file_exists($asset_file)) {
@@ -299,9 +368,9 @@ trait LynxJournal_Admin_Menu {
             );
 
             wp_localize_script('lynxjournal-schedule', 'lynxjournalSchedule', array(
-                'allModes'     => array_column(\LynxJournal_ScheduleMode::cases(), 'value'),
-                'timeModes'    => array_column(\LynxJournal_ScheduleMode::time_based(), 'value'),
-                'triggerModes' => array_column(\LynxJournal_ScheduleMode::trigger_based(), 'value'),
+                'allModes'     => array_column(ScheduleMode::cases(), 'value'),
+                'timeModes'    => array_column(ScheduleMode::timeBased(), 'value'),
+                'triggerModes' => array_column(ScheduleMode::triggerBased(), 'value'),
                 'timezone'     => wp_timezone_string(),
             ));
 
@@ -374,6 +443,21 @@ trait LynxJournal_Admin_Menu {
         $js_dir = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'assets/js/';
         $js_url = plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'assets/js/';
         wp_enqueue_script($handle, $js_url . $file, $deps, (string) filemtime($js_dir . $file), true);
+    }
+
+    /**
+     * Enqueue a versioned CSS asset from the assets/css/ directory.
+     *
+     * @since 1.0.0
+     * @param string   $handle Style handle.
+     * @param string   $file   Filename inside assets/css/.
+     * @param string[] $deps   Style dependencies.
+     * @return void
+     */
+    private function enqueuePageStyle(string $handle, string $file, array $deps = []): void {
+        $css_dir = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'assets/css/';
+        $css_url = plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'assets/css/';
+        wp_enqueue_style($handle, $css_url . $file, $deps, (string) filemtime($css_dir . $file));
     }
 
     /**

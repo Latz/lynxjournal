@@ -39,7 +39,7 @@ afterEach(function (): void {
 
 describe('LynxJournal::adminMenu()', function (): void { // NOSONAR
 
-    it('registers the top-level menu page and all seven submenus', function (): void {
+    it('registers the top-level menu page and all eight submenus', function (): void {
         Functions\when('add_menu_page')->justReturn('lynxjournal-dashboard');
         $submenu_calls = [];
         Functions\when('add_submenu_page')->alias(function (...$args) use (&$submenu_calls) {
@@ -49,7 +49,7 @@ describe('LynxJournal::adminMenu()', function (): void { // NOSONAR
 
         $this->plugin->adminMenu();
 
-        expect($submenu_calls)->toHaveCount(7);
+        expect($submenu_calls)->toHaveCount(8);
         expect(array_column($submenu_calls, 4))->toBe([
             'lynxjournal-dashboard',
             'lynxjournal-admin',
@@ -58,6 +58,7 @@ describe('LynxJournal::adminMenu()', function (): void { // NOSONAR
             'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal',
             'lynxjournal-settings',
             'lynxjournal-schedule',
+            'lynxjournal-template',
         ]);
         expect($submenu_calls[0][0])->toBe('lynxjournal-dashboard');
     });

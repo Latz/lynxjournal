@@ -1,5 +1,6 @@
-import { vi, afterEach, beforeEach } from 'vitest';
+import { vi, afterEach, beforeEach, beforeAll, afterAll } from 'vitest';
 import enMessages from '../../chrome-extension/_locales/en/messages.json';
+import { server } from './server.js';
 
 function getMessage(key, substitutions) {
     const entry = enMessages[key];
@@ -57,12 +58,16 @@ global.chrome = {
 
 global.Tagify = vi.fn(() => ({ value: [] }));
 
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterAll(() => server.close());
+
 // Prevent window.close() from destroying the jsdom window between tests
 beforeEach(() => {
     vi.spyOn(window, 'close').mockImplementation(() => {});
 });
 
 afterEach(() => {
+    server.resetHandlers();
     vi.clearAllMocks();
     // Restore default resolved values after clearing
     chrome.storage.sync.get.mockResolvedValue({});

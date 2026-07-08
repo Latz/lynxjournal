@@ -39,6 +39,17 @@ mkdir -p "$STAGE_DIR"
 echo "Building JavaScript assets..."
 npm --prefix "$PROJECT_DIR" run build
 
+# Production-only Composer dependencies (league/commonmark, required at
+# runtime by TemplateRenderer.php) must ship in the dist package. Prune dev
+# deps for the build, then always restore them afterward for local testing.
+echo "Installing production Composer dependencies..."
+composer install --no-dev --optimize-autoloader --working-dir="$PROJECT_DIR" --quiet
+restore_dev_deps() {
+    echo "Restoring development Composer dependencies..."
+    composer install --working-dir="$PROJECT_DIR" --quiet
+}
+trap restore_dev_deps EXIT
+
 # Copy files into staging directory, honouring .distignore
 echo "Copying plugin files..."
 rsync -a \
@@ -65,6 +76,12 @@ rsync -a \
 echo "Copying languages/..."
 rsync -a "$PROJECT_DIR/languages/" "$STAGE_DIR/languages/"
 
+echo "Copying vendor/ (production dependencies)..."
+rsync -a "$PROJECT_DIR/vendor/" "$STAGE_DIR/vendor/"
+# plugin-check expects composer.json alongside a real vendor/ directory, for
+# transparency about what's bundled (WordPress.org "unneeded folders" check).
+cp "$PROJECT_DIR/composer.json" "$STAGE_DIR/composer.json"
+
 # Flatten PHP into includes/ (src/ is excluded by .distignore above)
 echo "Flattening PHP into includes/..."
 mkdir -p "$STAGE_DIR/includes"
@@ -85,9 +102,13 @@ sed -i \
     -e "s|src/php/traits/MetaBoxes\.php|includes/MetaBoxes.php|g" \
     -e "s|src/php/traits/Publishing\.php|includes/Publishing.php|g" \
     -e "s|src/php/traits/Batch\.php|includes/Batch.php|g" \
+    -e "s|src/php/traits/TemplateRenderer\.php|includes/TemplateRenderer.php|g" \
     -e "s|src/php/traits/Queries\.php|includes/Queries.php|g" \
     -e "s|src/php/traits/ScheduleValidator\.php|includes/ScheduleValidator.php|g" \
     -e "s|src/php/traits/RestApi\.php|includes/RestApi.php|g" \
+    -e "s|src/php/traits/RestApiSupport\.php|includes/RestApiSupport.php|g" \
+    -e "s|src/php/traits/Admin/DashboardActions\.php|includes/DashboardActions.php|g" \
+    -e "s|src/php/traits/Admin/TemplatePage\.php|includes/TemplatePage.php|g" \
     -e "s|src/php/traits/Scheduler\.php|includes/Scheduler.php|g" \
     -e "s|src/php/class-lynxjournal\.php|includes/class-lynxjournal.php|g" \
     "$STAGE_DIR/lynxjournal.php"
