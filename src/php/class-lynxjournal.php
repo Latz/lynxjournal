@@ -28,7 +28,9 @@ class LynxJournal {
     use LynxJournal_Queries;
     use LynxJournal_RestApi;
     use LynxJournal_ScheduleValidator;
+    use LynxJournal_NotificationValidator;
     use LynxJournal_Scheduler;
+    use LynxJournal_Notifications;
     use LynxJournal_Admin_Menu;
     use LynxJournal_Admin_Dashboard;
     use LynxJournal_Admin_LinksPage;
@@ -49,6 +51,7 @@ class LynxJournal {
         add_action('init', [$instance, 'register_taxonomies'],   0);
         add_action('init', [$instance, 'maybeRunMigration'],     5);
         add_action('init', [$instance, 'registerSchedulerHooks'], 0);
+        add_action('init', [$instance, 'registerNotificationHooks'], 0);
         add_action('created_lynxjournal_category', [$instance, 'invalidateCategoriesCache']);
         add_action('edited_lynxjournal_category',  [$instance, 'invalidateCategoriesCache']);
         add_action('delete_lynxjournal_category',  [$instance, 'invalidateCategoriesCache']);

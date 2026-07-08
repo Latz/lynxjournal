@@ -33,6 +33,7 @@ require_once __DIR__ . '/src/php/traits/Publishing.php';
 require_once __DIR__ . '/src/php/traits/Batch.php';
 require_once __DIR__ . '/src/php/traits/Queries.php';
 require_once __DIR__ . '/src/php/traits/ScheduleValidator.php';
+require_once __DIR__ . '/src/php/traits/NotificationValidator.php';
 require_once __DIR__ . '/src/php/traits/RestApi.php';
 require_once __DIR__ . '/src/php/traits/Admin/Menu.php';
 require_once __DIR__ . '/src/php/traits/Admin/Dashboard.php';
@@ -40,6 +41,7 @@ require_once __DIR__ . '/src/php/traits/Admin/LinksPage.php';
 require_once __DIR__ . '/src/php/traits/Admin/AddLink.php';
 require_once __DIR__ . '/src/php/traits/Admin/Categories.php';
 require_once __DIR__ . '/src/php/traits/Scheduler.php';
+require_once __DIR__ . '/src/php/traits/Notifications.php';
 require_once __DIR__ . '/src/php/class-lynxjournal.php';
 
 register_deactivation_hook(LYNXJOURNAL_PLUGIN_FILE, function() {
