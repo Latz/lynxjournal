@@ -12,7 +12,11 @@ export default defineConfig({
     // Both projects hit the same single wp-env WordPress/MySQL container;
     // concurrent workers overload it and cause request/navigation timeouts.
     workers:    1,
-    retries:    process.env.CI ? 2 : 0,
+    // This WSL2 dev VM runs low on memory (~250MB free under load), causing
+    // bursty I/O stalls in the wp-env Docker containers (e.g. wp-admin login
+    // exceeding 30s); 2 retries absorbs multi-request bursts without masking
+    // real failures.
+    retries:    2,
     reporter:   process.env.CI ? 'github' : 'list',
     timeout:    30_000,
 
