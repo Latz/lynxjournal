@@ -12,10 +12,22 @@ const API_KEY_PATH = '/lynxjournal/v1/api-key';
  * @return {Promise<boolean>} Resolves true on success, false on failure.
  */
 function copyInputValue(input) {
-  if (!navigator.clipboard || !navigator.clipboard.writeText) {
+  if (!navigator.clipboard?.writeText) {
     return Promise.resolve(false);
   }
   return navigator.clipboard.writeText(input.value).then(() => true).catch(() => false);
+}
+
+/**
+ * Maps a connection test result to its status-color.
+ *
+ * @param {boolean|null} ok True on success, false on failure, null while pending.
+ * @return {string} CSS color value.
+ */
+function testStatusColor(ok) {
+  if (ok === false) return '#d63638';
+  if (ok === true) return '#00a32a';
+  return '#666';
 }
 
 /**
@@ -189,7 +201,7 @@ export default function App() {
                 {__('Test Connection', 'lynx-journal')}
               </Button>
               {testStatus && (
-                <span style={{ color: testStatus.ok === false ? '#d63638' : testStatus.ok === true ? '#00a32a' : '#666' }}>
+                <span style={{ color: testStatusColor(testStatus.ok) }}>
                   {testStatus.message}
                 </span>
               )}
