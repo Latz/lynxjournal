@@ -337,6 +337,28 @@ function warnOnUnsavedChanges( event ) {
 	event.preventDefault();
 }
 
+// ── Collapsible panel state persistence ────────────────────────
+
+const PANEL_STATE_KEY = 'lynxjournalTemplatePanelState';
+
+/** @returns {Record<string, boolean>} Persisted open/closed state, keyed by panel id. */
+function loadPanelState() {
+	try {
+		return JSON.parse( localStorage.getItem( PANEL_STATE_KEY ) || '{}' );
+	} catch {
+		return {};
+	}
+}
+
+/** @param {Record<string, boolean>} state */
+function savePanelState( state ) {
+	try {
+		localStorage.setItem( PANEL_STATE_KEY, JSON.stringify( state ) );
+	} catch {
+		// Ignore quota/availability errors — persistence is a non-critical enhancement.
+	}
+}
+
 // ── Init ────────────────────────────────────────────────────
 
 /**
@@ -490,12 +512,25 @@ function initTemplateEditor() {
 		} );
 	} );
 
-	document.querySelectorAll( '.lynxjournal-accordion-toggle' ).forEach( btn => {
+	const panelState = loadPanelState();
+	document.querySelectorAll( '.lynxjournal-accordion-toggle, .lynxjournal-preview-collapse-btn' ).forEach( btn => {
+		const panelId = btn.getAttribute( 'aria-controls' );
+		const panel   = panelId ? document.getElementById( panelId ) : null;
+
+		if ( panel && typeof panelState[ panelId ] === 'boolean' ) {
+			btn.setAttribute( 'aria-expanded', String( panelState[ panelId ] ) );
+			panel.classList.toggle( 'is-open', panelState[ panelId ] );
+		}
+
 		btn.addEventListener( 'click', () => {
 			const expanded = btn.getAttribute( 'aria-expanded' ) === 'true';
-			btn.setAttribute( 'aria-expanded', String( !expanded ) );
-			const panel = document.getElementById( btn.getAttribute( 'aria-controls' ) );
-			panel?.classList.toggle( 'is-open', !expanded );
+			const nowOpen  = !expanded;
+			btn.setAttribute( 'aria-expanded', String( nowOpen ) );
+			panel?.classList.toggle( 'is-open', nowOpen );
+			if ( panelId ) {
+				panelState[ panelId ] = nowOpen;
+				savePanelState( panelState );
+			}
 		} );
 	} );
 }

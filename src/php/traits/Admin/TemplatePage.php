@@ -105,9 +105,18 @@ trait LynxJournal_Admin_TemplatePage {
                                 <button type="button" class="button lynxjournal-preview-width-btn" data-width="mobile"><?php esc_html_e('Mobile', 'lynx-journal'); ?></button>
                             </div>
                             <span id="lynxjournal-preview-status">Live</span>
+                            <button
+                                type="button"
+                                class="lynxjournal-preview-collapse-btn"
+                                aria-expanded="true"
+                                aria-controls="lynxjournal-preview-body"
+                                aria-label="<?php esc_attr_e('Toggle preview visibility', 'lynx-journal'); ?>"
+                            ></button>
                         </div>
-                        <div id="lynxjournal-preview-validation"></div>
-                        <div id="lynxjournal-template-preview"></div>
+                        <div id="lynxjournal-preview-body" class="is-open">
+                            <div id="lynxjournal-preview-validation"></div>
+                            <div id="lynxjournal-template-preview"></div>
+                        </div>
                     </div>
 
                     <div id="lynxjournal-token-accordion">
