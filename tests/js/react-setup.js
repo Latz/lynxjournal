@@ -15,6 +15,13 @@ HTMLCanvasElement.prototype.getContext = () => ({
     getImageData: () => ({ data: new Uint8ClampedArray(4) }),
 });
 
+// jsdom doesn't implement the two-argument (pseudo-element) form of
+// getComputedStyle, which axe's color-contrast rule calls on every run —
+// it logs a "Not implemented" error to stderr for every element checked.
+// Drop the pseudo-element argument so jsdom takes its supported path.
+const { getComputedStyle } = window;
+window.getComputedStyle = (elt, pseudoElt) => getComputedStyle(elt, pseudoElt ? undefined : pseudoElt);
+
 afterEach(() => {
     cleanup();
 });
