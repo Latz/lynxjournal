@@ -118,7 +118,7 @@ export function convertIndentedLines( text, parseInline ) {
 	let i = 0;
 
 	while ( i < lines.length ) {
-		const match = lines[ i ].match( INDENT_RE );
+		const match = INDENT_RE.exec( lines[ i ] );
 		if ( !match ) {
 			result.push( lines[ i ] );
 			i++;
@@ -154,7 +154,7 @@ function collectIndentedRun( lines, start ) {
 	const matches = [];
 	let i = start;
 	while ( i < lines.length ) {
-		const m = lines[ i ].match( INDENT_RE );
+		const m = INDENT_RE.exec( lines[ i ] );
 		if ( !m ) { break; }
 		matches.push( m );
 		i++;
