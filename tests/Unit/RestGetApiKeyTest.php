@@ -35,6 +35,24 @@ describe('LynxJournal::restGetApiKey()', function (): void {
     });
 });
 
+describe('LynxJournal::restGenerateApiKey()', function (): void {
+
+    it('generates and persists a new API key, returning it in the response', function (): void {
+        Functions\when('wp_generate_password')->justReturn('freshly-generated-key');
+
+        $updated = null;
+        Functions\when('update_option')->alias(function (string $opt, $val) use (&$updated): bool {
+            $updated = [$opt, $val];
+            return true;
+        });
+
+        $result = $this->plugin->restGenerateApiKey();
+
+        expect($result['key'])->toBe('freshly-generated-key');
+        expect($updated)->toBe(['lynxjournal_api_key', 'freshly-generated-key']);
+    });
+});
+
 describe('LynxJournal::restGetNonce() cookie auth fallback', function (): void {
 
     it('returns a nonce when user is already logged in', function (): void {

@@ -113,89 +113,12 @@ describe('LynxJournal::parentFileFilter() / submenuFileFilter()', function (): v
 
 describe('LynxJournal::settingsPage()', function (): void { // NOSONAR
 
-    beforeEach(function (): void {
-        Functions\when('sanitize_text_field')->returnArg();
-        Functions\when('wp_unslash')->returnArg();
-        Functions\when('rest_url')->justReturn('https://example.com/wp-json/lynxjournal/v1');
-        Functions\when('wp_nonce_field')->justReturn('');
-    });
-
-    it('does not show API key fields when none exists yet', function (): void {
-        Functions\when('get_option')->justReturn(false);
-
+    it('renders the settings root container', function (): void {
         ob_start();
         $this->plugin->settingsPage();
         $html = ob_get_clean();
 
-        expect($html)->not->toContain('lynxjournal-api-key');
-        expect($html)->toContain('Generate API Key');
-    });
-
-    it('shows the API key fields when a key exists', function (): void {
-        Functions\when('get_option')->justReturn('secret-key-123');
-
-        ob_start();
-        $this->plugin->settingsPage();
-        $html = ob_get_clean();
-
-        expect($html)->toContain('lynxjournal-api-key');
-        expect($html)->toContain('secret-key-123');
-        expect($html)->toContain('Generate New API Key');
-    });
-
-    it('generates a new API key on valid submission and shows a success notice', function (): void {
-        $_POST = [
-            'lynxjournal_generate_api_key' => '1',
-            'lynxjournal_settings_nonce'   => 'valid',
-        ];
-        Functions\when('wp_verify_nonce')->justReturn(1);
-        Functions\when('current_user_can')->justReturn(true);
-        Functions\when('wp_generate_password')->justReturn('newly-generated-key');
-        Functions\when('get_option')->justReturn(false);
-
-        $updated = null;
-        Functions\when('update_option')->alias(function (string $opt, $val) use (&$updated) {
-            $updated = [$opt, $val];
-            return true;
-        });
-
-        ob_start();
-        $this->plugin->settingsPage();
-        $html = ob_get_clean();
-
-        expect($html)->toContain('New API key generated successfully!');
-        expect($updated)->toBe(['lynxjournal_api_key', 'newly-generated-key']);
-    });
-
-    it('does not generate a key when the nonce is invalid', function (): void {
-        $_POST = [
-            'lynxjournal_generate_api_key' => '1',
-            'lynxjournal_settings_nonce'   => 'bad',
-        ];
-        Functions\when('wp_verify_nonce')->justReturn(false);
-        Functions\when('get_option')->justReturn(false);
-
-        ob_start();
-        $this->plugin->settingsPage();
-        $html = ob_get_clean();
-
-        expect($html)->not->toContain('New API key generated successfully!');
-    });
-
-    it('does not generate a key when the user lacks edit_posts capability', function (): void {
-        $_POST = [
-            'lynxjournal_generate_api_key' => '1',
-            'lynxjournal_settings_nonce'   => 'valid',
-        ];
-        Functions\when('wp_verify_nonce')->justReturn(1);
-        Functions\when('current_user_can')->justReturn(false);
-        Functions\when('get_option')->justReturn(false);
-
-        ob_start();
-        $this->plugin->settingsPage();
-        $html = ob_get_clean();
-
-        expect($html)->not->toContain('New API key generated successfully!');
+        expect($html)->toContain('lynxjournal-settings-root');
     });
 });
 
@@ -207,17 +130,6 @@ describe('LynxJournal::schedulePage()', function (): void { // NOSONAR
         $html = ob_get_clean();
 
         expect($html)->toContain('lynxjournal-schedule-root');
-    });
-});
-
-describe('LynxJournal::settingXPage()', function (): void { // NOSONAR
-
-    it('renders the settings wrap', function (): void {
-        ob_start();
-        $this->plugin->settingXPage();
-        $html = ob_get_clean();
-
-        expect($html)->toContain('class="wrap"');
     });
 });
 

@@ -127,9 +127,16 @@ trait LynxJournal_RestApi {
         ));
 
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/api-key', array(
-            'methods'             => 'GET',
-            'callback'            => [$this, 'restGetApiKey'],
-            'permission_callback' => function() { return current_user_can('manage_options'); },
+            array(
+                'methods'             => 'GET',
+                'callback'            => [$this, 'restGetApiKey'],
+                'permission_callback' => function() { return current_user_can('manage_options'); },
+            ),
+            array(
+                'methods'             => 'POST',
+                'callback'            => [$this, 'restGenerateApiKey'],
+                'permission_callback' => function() { return current_user_can('manage_options'); },
+            ),
         ));
 
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/nonce', array(
@@ -150,6 +157,18 @@ trait LynxJournal_RestApi {
         if (empty($key)) {
             return new \WP_Error('no_key', __('No API key configured.', 'lynx-journal'), ['status' => 404]);
         }
+        return rest_ensure_response(['key' => $key]);
+    }
+
+    /**
+     * Generate a new API key via REST, replacing any existing key.
+     *
+     * @since 1.0.0
+     * @return mixed REST response with the newly generated API key.
+     */
+    public function restGenerateApiKey(): mixed {
+        $key = wp_generate_password(32, false);
+        update_option('lynxjournal_api_key', $key);
         return rest_ensure_response(['key' => $key]);
     }
 

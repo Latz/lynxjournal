@@ -4,5 +4,6 @@ module.exports = {
   ...defaultConfig,
   entry: {
     schedule: './src/schedule/index.js',
+    settings: './src/settings/index.js',
   },
 };
