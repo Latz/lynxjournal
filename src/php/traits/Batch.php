@@ -199,61 +199,81 @@ trait LynxJournal_Batch {
         $schema_items  = [];
         $heading_level = $this->getCategoryHeadingLevel();
 
-        $render_list = function(array $ids) use (&$content, &$schema_items) {
-            $items = [];
-            foreach ($ids as $link_id) {
-                $link = get_post($link_id);
-                if (!$link) {
-                    continue;
-                }
-                $url  = get_post_meta($link_id, '_lynxjournal_url', true);
-                $desc = trim($link->post_content);
-                $title = '<strong>' . esc_html($link->post_title) . '</strong>';
-                $item = !empty($url)
-                    ? '<a href="' . esc_url($url) . '" target="_blank" rel="noopener">' . $title . '</a>'
-                    : $title;
-                if (!empty($desc)) {
-                    $item .= ' — ' . wp_kses_post($desc);
-                }
-                $items[] = "<!-- wp:list-item -->\n<li>{$item}</li>\n<!-- /wp:list-item -->";
-
-                $schema_item = [
-                    '@type'    => 'ListItem',
-                    'position' => count($schema_items) + 1,
-                    'name'     => $link->post_title,
-                ];
-                if (!empty($url)) {
-                    $schema_item['url'] = esc_url_raw($url);
-                }
-                $schema_items[] = $schema_item;
-            }
-            $content .= "<!-- wp:list -->\n<ul class=\"wp-block-list\">\n" . implode("\n", $items) . "\n</ul>\n<!-- /wp:list -->\n\n";
-        };
-
         foreach ($links_by_category as $group) {
             $content .= $this->buildHeadingBlock(esc_html($group['term']->name), $heading_level);
-            $render_list($group['links']);
+            $content .= $this->renderLinkListBlock($group['links'], $schema_items);
         }
 
         if (!empty($uncategorized_links)) {
             $content .= $this->buildHeadingBlock(esc_html__('Other', 'lynx-journal'), $heading_level);
-            $render_list($uncategorized_links);
+            $content .= $this->renderLinkListBlock($uncategorized_links, $schema_items);
         }
 
         if (!empty($schema_items)) {
-            $schema = [
-                '@context'        => 'https://schema.org',
-                '@type'           => 'ItemList',
-                'itemListElement' => $schema_items,
-            ];
-            $json = wp_json_encode($schema, JSON_UNESCAPED_SLASHES);
-            // Defends against a title/URL containing a literal "</script>" sequence,
-            // which would otherwise terminate the script tag early.
-            $json = str_replace('</', '<\/', $json);
-            $content .= "<!-- wp:html -->\n<script type=\"application/ld+json\">{$json}</script>\n<!-- /wp:html -->\n";
+            $content .= $this->buildItemListSchemaScript($schema_items);
         }
 
         return $content;
+    }
+
+    /**
+     * Renders a Gutenberg list block for a set of links, appending a
+     * schema.org ListItem entry for each rendered link into $schema_items.
+     *
+     * @since 1.0.0
+     * @param array $ids Link post IDs to render.
+     * @param array $schema_items Accumulator of schema.org ListItem entries, passed by reference.
+     * @return string The rendered wp:list block markup.
+     */
+    private function renderLinkListBlock(array $ids, array &$schema_items): string {
+        $items = [];
+        foreach ($ids as $link_id) {
+            $link = get_post($link_id);
+            if (!$link) {
+                continue;
+            }
+            $url  = get_post_meta($link_id, '_lynxjournal_url', true);
+            $desc = trim($link->post_content);
+            $title = '<strong>' . esc_html($link->post_title) . '</strong>';
+            $item = !empty($url)
+                ? '<a href="' . esc_url($url) . '" target="_blank" rel="noopener">' . $title . '</a>'
+                : $title;
+            if (!empty($desc)) {
+                $item .= ' — ' . wp_kses_post($desc);
+            }
+            $items[] = "<!-- wp:list-item -->\n<li>{$item}</li>\n<!-- /wp:list-item -->";
+
+            $schema_item = [
+                '@type'    => 'ListItem',
+                'position' => count($schema_items) + 1,
+                'name'     => $link->post_title,
+            ];
+            if (!empty($url)) {
+                $schema_item['url'] = esc_url_raw($url);
+            }
+            $schema_items[] = $schema_item;
+        }
+        return "<!-- wp:list -->\n<ul class=\"wp-block-list\">\n" . implode("\n", $items) . "\n</ul>\n<!-- /wp:list -->\n\n";
+    }
+
+    /**
+     * Builds the ItemList JSON-LD schema.org script block for the roundup's links.
+     *
+     * @since 1.0.0
+     * @param array $schema_items Schema.org ListItem entries collected while rendering link lists.
+     * @return string The rendered wp:html block containing the JSON-LD script tag.
+     */
+    private function buildItemListSchemaScript(array $schema_items): string {
+        $schema = [
+            '@context'        => 'https://schema.org',
+            '@type'           => 'ItemList',
+            'itemListElement' => $schema_items,
+        ];
+        $json = wp_json_encode($schema, JSON_UNESCAPED_SLASHES);
+        // Defends against a title/URL containing a literal "</script>" sequence,
+        // which would otherwise terminate the script tag early.
+        $json = str_replace('</', '<\/', $json);
+        return "<!-- wp:html -->\n<script type=\"application/ld+json\">{$json}</script>\n<!-- /wp:html -->\n";
     }
 
     /**
