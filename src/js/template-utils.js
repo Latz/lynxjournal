@@ -103,7 +103,7 @@ export function getLineStart( value, pos ) {
 export function getActiveFormatsAtCursor( line, ch ) {
 	const active = new Set();
 
-	const heading = line.match( /^(#{1,6})\s/ );
+	const heading = /^(#{1,6})\s/.exec( line );
 	if ( heading ) { active.add( 'h' + heading[ 1 ].length ); }
 	if ( /^-\s/.test( line ) ) { active.add( 'list' ); }
 	if ( /^\d+\.\s/.test( line ) ) { active.add( 'ol' ); }
@@ -154,8 +154,7 @@ export function preserveBlankLines( text ) {
 		const blankCount = j - i;
 		result.push( '' );
 		for ( let k = 0; k < blankCount; k++ ) {
-			result.push( '<p class="lynxjournal-blank-line">&nbsp;</p>' );
-			result.push( '' );
+			result.push( '<p class="lynxjournal-blank-line">&nbsp;</p>', '' );
 		}
 		i = j;
 	}
