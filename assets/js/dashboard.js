@@ -3,11 +3,49 @@
  *
  * @since 1.0.0
  */
-/* global lynxjournalDash */
+/* global lynxjournalDash, postboxes, pagenow, jQuery */
+
+var POSTBOX_STATE_KEY = 'lynxjournalDashboardPostboxState';
+
+/** @returns {Object<string, boolean>} Persisted collapsed state, keyed by postbox id. */
+function loadPostboxState() {
+    try {
+        return JSON.parse(localStorage.getItem(POSTBOX_STATE_KEY) || '{}');
+    } catch {
+        return {};
+    }
+}
+
+/** @param {Object<string, boolean>} state */
+function savePostboxState(state) {
+    try {
+        localStorage.setItem(POSTBOX_STATE_KEY, JSON.stringify(state));
+    } catch {
+        // Ignore quota/availability errors — persistence is a non-critical enhancement.
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof postboxes !== 'undefined') {
         postboxes.add_postbox_toggles(pagenow);
+    }
+
+    var postboxState = loadPostboxState();
+    document.querySelectorAll('.postbox[id]').forEach(function(box) {
+        if (postboxState[box.id] !== true) { return; }
+        box.classList.add('closed');
+        var handle = box.querySelector('.handlediv');
+        if (handle) { handle.setAttribute('aria-expanded', 'false'); }
+    });
+
+    if (typeof jQuery !== 'undefined') {
+        /** @listens postbox-toggled Persists a postbox's collapsed state after WP core toggles it. */
+        jQuery(document).on('postbox-toggled', function(event, postbox) {
+            var box = postbox && postbox.jquery ? postbox[0] : postbox;
+            if (!box || !box.id) { return; }
+            postboxState[box.id] = box.classList.contains('closed');
+            savePostboxState(postboxState);
+        });
     }
 
     document.querySelectorAll('.lynxjournal-date-time').forEach(function(element) {

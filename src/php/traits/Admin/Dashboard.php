@@ -175,7 +175,7 @@ trait LynxJournal_Admin_Dashboard {
     public function renderUnpublishedLinksBox( array $recent_links ): void {
         $subtitle = $this->unpublishedLinksSubtitle();
         ?>
-        <div class="postbox">
+        <div class="postbox" id="lynxjournal-postbox-unpublished">
             <div class="postbox-header">
                 <h2 class="hndle">
                     <?php esc_html_e( 'Recent Unpublished Links', 'lynx-journal' ); ?>
@@ -254,7 +254,7 @@ trait LynxJournal_Admin_Dashboard {
      */
     public function renderRecentlyPublishedBox( array $recently_published ): void {
         ?>
-        <div class="postbox">
+        <div class="postbox" id="lynxjournal-postbox-published">
             <div class="postbox-header">
                 <h2 class="hndle"><?php esc_html_e( 'Recently Published', 'lynx-journal' ); ?></h2>
                 <button type="button" class="handlediv" aria-expanded="true"><span class="toggle-indicator" aria-hidden="true"></span></button>
@@ -284,7 +284,7 @@ trait LynxJournal_Admin_Dashboard {
      */
     public function renderPublishBox( int $unpublished_count ): void {
         ?>
-        <div class="postbox">
+        <div class="postbox" id="lynxjournal-postbox-publish">
             <div class="postbox-header">
                 <h2 class="hndle"><?php esc_html_e( 'Publish Now', 'lynx-journal' ); ?></h2>
                 <button type="button" class="handlediv" aria-expanded="true"><span class="toggle-indicator" aria-hidden="true"></span></button>
@@ -406,7 +406,7 @@ trait LynxJournal_Admin_Dashboard {
         $categories = $this->getCachedCategories();
         $has_categories = ! empty( $categories );
         ?>
-        <div class="postbox">
+        <div class="postbox" id="lynxjournal-postbox-quickadd">
             <div class="postbox-header">
                 <h2 class="hndle"><?php esc_html_e( 'Quick Add', 'lynx-journal' ); ?></h2>
                 <button type="button" class="handlediv" aria-expanded="true"><span class="toggle-indicator" aria-hidden="true"></span></button>

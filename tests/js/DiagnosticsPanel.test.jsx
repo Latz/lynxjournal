@@ -1,9 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import DiagnosticsPanel from '../../src/schedule/components/DiagnosticsPanel.jsx';
 
 describe('DiagnosticsPanel', () => {
+    beforeEach(() => {
+        localStorage.clear();
+    });
+
     it('shows a loading message while loading', () => {
         render(<DiagnosticsPanel data={null} loading={true} onRefresh={() => {}} mode="daily" />);
 
