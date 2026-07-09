@@ -60,13 +60,7 @@ trait LynxJournal_Admin_AddLink {
                             <label for="lynxjournal_content"><?php esc_html_e('Text/Description', 'lynx-journal'); ?></label>
                         </th>
                         <td>
-                            <?php
-                            wp_editor($current_content, 'lynxjournal_content', array(
-                                'textarea_name' => 'lynxjournal_content',
-                                'textarea_rows' => 10,
-                                'media_buttons' => false,
-                            ));
-                            ?>
+                            <textarea name="lynxjournal_content" id="lynxjournal_content" class="large-text" rows="10"><?php echo esc_textarea($current_content); ?></textarea>
                         </td>
                     </tr>
 
