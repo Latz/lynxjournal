@@ -6,32 +6,16 @@ import { __ } from '@wordpress/i18n';
 const API_KEY_PATH = '/lynxjournal/v1/api-key';
 
 /**
- * Copy a value to the clipboard, falling back to document.execCommand
- * on non-secure contexts or browsers without the Clipboard API.
+ * Copy a value to the clipboard using the Clipboard API.
  *
  * @param {HTMLInputElement} input The input element holding the value to copy.
  * @return {Promise<boolean>} Resolves true on success, false on failure.
  */
 function copyInputValue(input) {
-  const value = input.value;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    return navigator.clipboard.writeText(value).then(() => true).catch(() => false);
+  if (!navigator.clipboard || !navigator.clipboard.writeText) {
+    return Promise.resolve(false);
   }
-  const prevType = input.type;
-  const wasDisabled = input.disabled;
-  input.type = 'text';
-  input.disabled = false;
-  input.select();
-  input.setSelectionRange(0, 99999);
-  let success = false;
-  try {
-    success = document.execCommand('copy');
-  } catch {
-    success = false;
-  }
-  input.disabled = wasDisabled;
-  input.type = prevType;
-  return Promise.resolve(success);
+  return navigator.clipboard.writeText(input.value).then(() => true).catch(() => false);
 }
 
 /**
