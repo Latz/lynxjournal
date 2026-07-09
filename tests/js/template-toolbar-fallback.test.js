@@ -66,6 +66,15 @@ describe( 'fallbackApplyFormat()', () => {
         expect( textarea.value ).toBe( 'hello *world*' );
     } );
 
+    it( 'wraps the selection in <u></u> for underline', async () => {
+        const { fallbackApplyFormat } = await freshModule();
+        const textarea = makeTextarea( 'hello world', 0, 5 );
+
+        fallbackApplyFormat( textarea, 'underline', getLineStart, vi.fn() );
+
+        expect( textarea.value ).toBe( '<u>hello</u> world' );
+    } );
+
     it( 'prefixes the current line with a heading marker', async () => {
         const { fallbackApplyFormat } = await freshModule();
         const textarea = makeTextarea( 'a line', 3, 3 );
@@ -84,6 +93,33 @@ describe( 'fallbackApplyFormat()', () => {
         expect( textarea.value ).toBe( '- item' );
     } );
 
+    it( 'prefixes the current line with "1. " for ol', async () => {
+        const { fallbackApplyFormat } = await freshModule();
+        const textarea = makeTextarea( 'item', 0, 0 );
+
+        fallbackApplyFormat( textarea, 'ol', getLineStart, vi.fn() );
+
+        expect( textarea.value ).toBe( '1. item' );
+    } );
+
+    it( 'replaces an existing line prefix instead of stacking a new one', async () => {
+        const { fallbackApplyFormat } = await freshModule();
+        const textarea = makeTextarea( '- item', 0, 0 );
+
+        fallbackApplyFormat( textarea, 'h2', getLineStart, vi.fn() );
+
+        expect( textarea.value ).toBe( '## item' );
+    } );
+
+    it( 'inserts a horizontal rule at the cursor', async () => {
+        const { fallbackApplyFormat } = await freshModule();
+        const textarea = makeTextarea( 'before after', 6, 6 );
+
+        fallbackApplyFormat( textarea, 'hr', getLineStart, vi.fn() );
+
+        expect( textarea.value ).toBe( 'before\n---\n after' );
+    } );
+
     it( 'indents the current line by two spaces', async () => {
         const { fallbackApplyFormat } = await freshModule();
         const textarea = makeTextarea( 'item', 0, 0 );
@@ -100,6 +136,27 @@ describe( 'fallbackApplyFormat()', () => {
         fallbackApplyFormat( textarea, 'outdent', getLineStart, vi.fn() );
 
         expect( textarea.value ).toBe( 'item' );
+    } );
+
+    it( 'outdent is a no-op on a line with no leading spaces', async () => {
+        const { fallbackApplyFormat } = await freshModule();
+        const textarea = makeTextarea( 'item', 0, 0 );
+
+        fallbackApplyFormat( textarea, 'outdent', getLineStart, vi.fn() );
+
+        expect( textarea.value ).toBe( 'item' );
+    } );
+
+    it( 'is a no-op and does not corrupt undo history for an unrecognized action', async () => {
+        const { fallbackApplyFormat } = await freshModule();
+        const textarea = makeTextarea( 'hello world', 0, 5 );
+
+        fallbackApplyFormat( textarea, 'not-a-real-action', getLineStart, vi.fn() );
+        expect( textarea.value ).toBe( 'hello world' );
+
+        // The bogus action must not have left a stray undo entry.
+        fallbackApplyFormat( textarea, 'undo', getLineStart, vi.fn() );
+        expect( textarea.value ).toBe( 'hello world' );
     } );
 
     it( 'undo restores the value from before the last format action', async () => {
