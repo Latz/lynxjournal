@@ -113,9 +113,8 @@ const TOP_LEVEL_LIST_RE = /^(-|\d+\.)\s/;
  * @returns {string}
  */
 export function convertIndentedLines( text, parseInline ) {
-	const INDENT_RE = /^( {2,})(?:(-|\d+\.) )?(.+)/;
-	const lines     = text.split( '\n' );
-	const result    = [];
+	const lines  = text.split( '\n' );
+	const result = [];
 	let i = 0;
 
 	while ( i < lines.length ) {
@@ -127,61 +126,90 @@ export function convertIndentedLines( text, parseInline ) {
 		}
 
 		const prevRawLine = i > 0 ? lines[ i - 1 ] : '';
+		const { matches, nextIndex } = collectIndentedRun( lines, i );
+		i = nextIndex;
+
 		if ( TOP_LEVEL_LIST_RE.test( prevRawLine ) ) {
-			while ( i < lines.length && lines[ i ].match( INDENT_RE ) ) {
-				result.push( lines[ i ] );
-				i++;
-			}
+			matches.forEach( m => result.push( m.input ) );
 			continue;
 		}
 
-		const group = [];
-		while ( i < lines.length ) {
-			const groupMatch = lines[ i ].match( INDENT_RE );
-			if ( !groupMatch ) { break; }
-			group.push( groupMatch );
-			i++;
-		}
-
-		const rendered = parseInline( group.map( g => g[ 3 ] ).join( '\n' ) ).split( '\n' );
-		let listBuffer = null; // { type: 'ul'|'ol', level, items, start }
-
-		const flushList = () => {
-			if ( !listBuffer ) { return; }
-			const { type, level, items, start } = listBuffer;
-			const startAttr = type === 'ol' && start !== 1 ? ` start="${ start }"` : '';
-			result.push(
-				`<${ type } style="padding-left:${ level * 1.5 }em"${ startAttr }>` +
-				items.map( item => `<li>${ item }</li>` ).join( '' ) +
-				`</${ type }>`
-			);
-			listBuffer = null;
-		};
-
-		group.forEach( ( g, idx ) => {
-			const level   = Math.floor( g[ 1 ].length / 2 );
-			const marker  = g[ 2 ];
-			const content = rendered[ idx ] ?? '';
-
-			if ( !marker ) {
-				flushList();
-				result.push( `<div style="padding-left:${ level * 1.5 }em">${ content }</div>` );
-				return;
-			}
-
-			const type = marker === '-' ? 'ul' : 'ol';
-			const num  = type === 'ol' ? parseInt( marker, 10 ) : 1;
-
-			if ( listBuffer && listBuffer.type === type && listBuffer.level === level ) {
-				listBuffer.items.push( content );
-			} else {
-				flushList();
-				listBuffer = { type, level, items: [ content ], start: num };
-			}
-		} );
-
-		flushList();
+		result.push( ...renderIndentedGroup( matches, parseInline ) );
 	}
 
 	return result.join( '\n' );
+}
+
+const INDENT_RE = /^( {2,})(?:(-|\d+\.) )?(.+)/;
+
+/**
+ * Collects the contiguous run of lines starting at `start` that match
+ * INDENT_RE, stopping at the first non-matching (or missing) line.
+ *
+ * @param {string[]} lines
+ * @param {number} start
+ * @returns {{ matches: RegExpMatchArray[], nextIndex: number }}
+ */
+function collectIndentedRun( lines, start ) {
+	const matches = [];
+	let i = start;
+	while ( i < lines.length ) {
+		const m = lines[ i ].match( INDENT_RE );
+		if ( !m ) { break; }
+		matches.push( m );
+		i++;
+	}
+	return { matches, nextIndex: i };
+}
+
+/**
+ * Renders one contiguous group of indented-line matches into `<div>`
+ * wrappers and grouped `<ul>`/`<ol>` list blocks, per the rules described
+ * on convertIndentedLines() above.
+ *
+ * @param {RegExpMatchArray[]} group
+ * @param {(markdown: string) => string} parseInline
+ * @returns {string[]}
+ */
+function renderIndentedGroup( group, parseInline ) {
+	const rendered = parseInline( group.map( g => g[ 3 ] ).join( '\n' ) ).split( '\n' );
+	const output   = [];
+	let listBuffer = null; // { type: 'ul'|'ol', level, items, start }
+
+	const flushList = () => {
+		if ( !listBuffer ) { return; }
+		const { type, level, items, start } = listBuffer;
+		const startAttr = type === 'ol' && start !== 1 ? ` start="${ start }"` : '';
+		output.push(
+			`<${ type } style="padding-left:${ level * 1.5 }em"${ startAttr }>` +
+			items.map( item => `<li>${ item }</li>` ).join( '' ) +
+			`</${ type }>`
+		);
+		listBuffer = null;
+	};
+
+	group.forEach( ( g, idx ) => {
+		const level   = Math.floor( g[ 1 ].length / 2 );
+		const marker  = g[ 2 ];
+		const content = rendered[ idx ] ?? '';
+
+		if ( !marker ) {
+			flushList();
+			output.push( `<div style="padding-left:${ level * 1.5 }em">${ content }</div>` );
+			return;
+		}
+
+		const type = marker === '-' ? 'ul' : 'ol';
+		const num  = type === 'ol' ? parseInt( marker, 10 ) : 1;
+
+		if ( listBuffer && listBuffer.type === type && listBuffer.level === level ) {
+			listBuffer.items.push( content );
+		} else {
+			flushList();
+			listBuffer = { type, level, items: [ content ], start: num };
+		}
+	} );
+
+	flushList();
+	return output;
 }
