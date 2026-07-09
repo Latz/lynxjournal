@@ -260,26 +260,13 @@ trait LynxJournal_TemplateRenderer {
         $i = 0;
         $n = count($lines);
 
-        $has_link_token = function (string $line): bool {
-            foreach (self::LINK_TOKENS as $token) {
-                if (str_contains($line, $token)) {
-                    return true;
-                }
-            }
-            return false;
-        };
-
         while ($i < $n) {
-            if (!$has_link_token($lines[$i])) {
+            if (!$this->lineHasLinkToken($lines[$i])) {
                 $result[] = $lines[$i];
                 $i++;
                 continue;
             }
-            $group = [];
-            while ($i < $n && $has_link_token($lines[$i])) {
-                $group[] = $lines[$i];
-                $i++;
-            }
+            [$group, $i] = $this->collectLinkTokenRun($lines, $i, $n);
             foreach ($links as $link) {
                 foreach ($group as $group_line) {
                     $result[] = $this->replaceTokensPhp($group_line, $link);
@@ -288,6 +275,38 @@ trait LynxJournal_TemplateRenderer {
         }
 
         return implode("\n", $result);
+    }
+
+    /**
+     * @param string $line
+     * @return bool
+     */
+    private function lineHasLinkToken(string $line): bool {
+        foreach (self::LINK_TOKENS as $token) {
+            if (str_contains($line, $token)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Collects the contiguous run of lines starting at $start that contain
+     * a link token, stopping at the first line that doesn't.
+     *
+     * @param list<string> $lines
+     * @param int $start
+     * @param int $n
+     * @return array{0: list<string>, 1: int} The collected group and the index just past it.
+     */
+    private function collectLinkTokenRun(array $lines, int $start, int $n): array {
+        $group = [];
+        $i = $start;
+        while ($i < $n && $this->lineHasLinkToken($lines[$i])) {
+            $group[] = $lines[$i];
+            $i++;
+        }
+        return [$group, $i];
     }
 
     /**
@@ -326,59 +345,89 @@ trait LynxJournal_TemplateRenderer {
         $n = count($lines);
 
         while ($i < $n) {
-            if (!preg_match(self::INDENT_RE, $lines[$i], $match)) {
+            if (!preg_match(self::INDENT_RE, $lines[$i])) {
                 $result[] = $lines[$i];
                 $i++;
                 continue;
             }
 
             $prev_raw_line = $i > 0 ? $lines[$i - 1] : '';
+            [$group, $i] = $this->collectIndentedRun($lines, $i, $n);
+
             if (preg_match(self::TOP_LEVEL_LIST_RE, $prev_raw_line)) {
-                while ($i < $n && preg_match(self::INDENT_RE, $lines[$i])) {
-                    $result[] = $lines[$i];
-                    $i++;
+                foreach ($group as $g) {
+                    $result[] = $g[0];
                 }
                 continue;
             }
 
-            $group = [];
-            while ($i < $n && preg_match(self::INDENT_RE, $lines[$i], $group_match)) {
-                $group[] = $group_match;
-                $i++;
+            foreach ($this->renderIndentedGroup($group) as $line) {
+                $result[] = $line;
             }
-
-            $rendered = explode("\n", $this->renderInlineMarkdownPhp(
-                implode("\n", array_map(static fn($g) => $g[3], $group))
-            ));
-
-            $list_buffer = null; // ['type' => 'ul'|'ol', 'level' => int, 'items' => [], 'start' => int]
-
-            foreach ($group as $idx => $g) {
-                $level   = intdiv(strlen($g[1]), 2);
-                $marker  = $g[2];
-                $content = $rendered[$idx] ?? '';
-
-                if ($marker === '') {
-                    $this->flushIndentedListBuffer($list_buffer, $result);
-                    $result[] = "<div style=\"padding-left:" . ($level * 1.5) . "em\">{$content}</div>";
-                    continue;
-                }
-
-                $type = $marker === '-' ? 'ul' : 'ol';
-                $num  = $type === 'ol' ? (int) $marker : 1;
-
-                if ($list_buffer !== null && $list_buffer['type'] === $type && $list_buffer['level'] === $level) {
-                    $list_buffer['items'][] = $content;
-                } else {
-                    $this->flushIndentedListBuffer($list_buffer, $result);
-                    $list_buffer = ['type' => $type, 'level' => $level, 'items' => [$content], 'start' => $num];
-                }
-            }
-
-            $this->flushIndentedListBuffer($list_buffer, $result);
         }
 
         return implode("\n", $result);
+    }
+
+    /**
+     * Collects the contiguous run of lines starting at $start that match
+     * INDENT_RE, stopping at the first non-matching (or missing) line.
+     *
+     * @param list<string> $lines
+     * @param int $start
+     * @param int $n
+     * @return array{0: list<array<int,string>>, 1: int} The collected matches and the index just past them.
+     */
+    private function collectIndentedRun(array $lines, int $start, int $n): array {
+        $matches = [];
+        $i = $start;
+        while ($i < $n && preg_match(self::INDENT_RE, $lines[$i], $m)) {
+            $matches[] = $m;
+            $i++;
+        }
+        return [$matches, $i];
+    }
+
+    /**
+     * Renders one contiguous group of indented-line matches into <div>
+     * wrappers and grouped <ul>/<ol> list blocks, per the rules described
+     * on convertIndentedLinesPhp() / convertIndentedLines() (src/js/template-preview.js).
+     *
+     * @param list<array<int,string>> $group
+     * @return list<string>
+     */
+    private function renderIndentedGroup(array $group): array {
+        $rendered = explode("\n", $this->renderInlineMarkdownPhp(
+            implode("\n", array_map(static fn($g) => $g[3], $group))
+        ));
+
+        $result      = [];
+        $list_buffer = null; // ['type' => 'ul'|'ol', 'level' => int, 'items' => [], 'start' => int]
+
+        foreach ($group as $idx => $g) {
+            $level   = intdiv(strlen($g[1]), 2);
+            $marker  = $g[2];
+            $content = $rendered[$idx] ?? '';
+
+            if ($marker === '') {
+                $this->flushIndentedListBuffer($list_buffer, $result);
+                $result[] = "<div style=\"padding-left:" . ($level * 1.5) . "em\">{$content}</div>";
+                continue;
+            }
+
+            $type = $marker === '-' ? 'ul' : 'ol';
+            $num  = $type === 'ol' ? (int) $marker : 1;
+
+            if ($list_buffer !== null && $list_buffer['type'] === $type && $list_buffer['level'] === $level) {
+                $list_buffer['items'][] = $content;
+            } else {
+                $this->flushIndentedListBuffer($list_buffer, $result);
+                $list_buffer = ['type' => $type, 'level' => $level, 'items' => [$content], 'start' => $num];
+            }
+        }
+
+        $this->flushIndentedListBuffer($list_buffer, $result);
+        return $result;
     }
 
     /**
