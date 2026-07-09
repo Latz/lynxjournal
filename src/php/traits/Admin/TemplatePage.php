@@ -119,15 +119,10 @@ trait LynxJournal_Admin_TemplatePage {
                         </div>
                     </div>
 
-                    <div id="lynxjournal-token-accordion">
-                        <button
-                            type="button"
-                            class="lynxjournal-accordion-toggle"
-                            aria-expanded="false"
-                            aria-controls="lynxjournal-token-panel"
-                        >
+                    <details id="lynxjournal-token-accordion">
+                        <summary class="lynxjournal-accordion-toggle">
                             <span><?php esc_html_e('Available tokens', 'lynx-journal'); ?></span>
-                        </button>
+                        </summary>
                         <div id="lynxjournal-token-panel" class="lynxjournal-token-grid">
                             <?php foreach ($token_groups as $group_label => $tokens) : ?>
                                 <div class="lynxjournal-token-group">
@@ -145,7 +140,7 @@ trait LynxJournal_Admin_TemplatePage {
                                 </div>
                             <?php endforeach; ?>
                         </div>
-                    </div>
+                    </details>
 
                     <p class="submit">
                         <button type="submit" class="button button-primary button-large">

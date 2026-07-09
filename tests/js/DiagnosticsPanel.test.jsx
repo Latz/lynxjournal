@@ -143,17 +143,17 @@ describe('DiagnosticsPanel', () => {
         ];
         render(<DiagnosticsPanel data={{ run_history }} loading={false} onRefresh={() => {}} mode="daily" />);
 
-        const toggle = screen.getByRole('button', { name: 'History (2)' });
-        expect(screen.queryByText('Run was locked')).not.toBeInTheDocument();
+        const toggle = screen.getByText('History (2)');
+        const details = toggle.closest('details');
+        expect(details.open).toBe(false);
 
         await user.click(toggle);
 
-        expect(screen.getByText('Hide history')).toBeInTheDocument();
-        expect(screen.getByText('Run was locked')).toBeInTheDocument();
+        expect(details.open).toBe(true);
 
-        await user.click(screen.getByRole('button', { name: 'Hide history' }));
+        await user.click(toggle);
 
-        expect(screen.queryByText('Run was locked')).not.toBeInTheDocument();
+        expect(details.open).toBe(false);
     });
 
     it('calls onRefresh when the refresh button is clicked', async () => {

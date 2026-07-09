@@ -16,7 +16,7 @@
   display: flex;
   gap: 24px;
   align-items: flex-start;
-  margin-top: 16px;
+  margin-block-start: 16px;
 }
 
 .lynxjournal-schedule-main {
@@ -33,14 +33,14 @@
 }
 
 .lynxjournal-schedule-actions {
-  margin-top: 16px;
+  margin-block-start: 16px;
 }
 
 /* Flat sections (replaces PanelBody accordion) */
 .lynxjournal-section {
   border: 1px solid #c3c4c7;
   border-radius: 2px;
-  margin-bottom: 12px;
+  margin-block-end: 12px;
   background: #fff;
 }
 
@@ -50,7 +50,7 @@
   font-size: 13px;
   font-weight: 600;
   color: #1e1e1e;
-  border-bottom: 1px solid #c3c4c7;
+  border-block-end: 1px solid #c3c4c7;
   background: #f6f7f7;
 }
 
@@ -206,7 +206,7 @@
 /* Next schedules */
 .lynxjournal-next-heading {
   padding: 10px 12px;
-  border-bottom: 1px solid #c3c4c7;
+  border-block-end: 1px solid #c3c4c7;
   background: #f6f7f7;
   font-size: 16px;
   font-weight: 600;
@@ -229,12 +229,12 @@
   display: flex;
   justify-content: space-between;
   padding: 4px 0;
-  border-bottom: 1px solid #dcdcde;
+  border-block-end: 1px solid #dcdcde;
   font-size: 13px;
 }
 
 .lynxjournal-next-schedule-row:last-child {
-  border-bottom: none;
+  border-block-end: none;
 }
 
 .lynxjournal-next-schedule-row:first-child {
@@ -257,12 +257,12 @@
   align-items: flex-start;
   gap: 8px;
   padding: 5px 0;
-  border-bottom: 1px solid #dcdcde;
+  border-block-end: 1px solid #dcdcde;
   font-size: 12px;
 }
 
 .lynxjournal-diag-row:last-of-type {
-  border-bottom: none;
+  border-block-end: none;
 }
 
 .lynxjournal-diag-row dt {
@@ -307,13 +307,13 @@
 }
 
 .lynxjournal-diag-refresh {
-  margin-top: 8px;
+  margin-block-start: 8px;
   font-size: 12px;
 }
 
 /* Run now / preview results */
 .lynxjournal-run-result {
-  margin: 8px 0 0;
+  margin-block-start: 8px;
   font-size: 13px;
   padding: 6px 10px;
   border-radius: 3px;
@@ -335,7 +335,7 @@
 }
 
 .lynxjournal-preview-result {
-  margin-top: 8px;
+  margin-block-start: 8px;
   font-size: 13px;
   background: var(--lynxjournal-color-info-bg);
   border: 1px solid var(--lynxjournal-color-info-border);
@@ -344,7 +344,7 @@
 }
 
 .lynxjournal-preview-result__summary {
-  margin: 0 0 4px;
+  margin-block-end: 4px;
   font-weight: 600;
   color: var(--wp-admin-theme-color-darker-10, #135e96);
 }
@@ -357,12 +357,12 @@
 
 /* WP-Cron warning banner */
 .lynxjournal-wpcron-notice {
-  margin-bottom: 12px;
+  margin-block-end: 12px;
 }
 
 /* Next schedules timezone label */
 .lynxjournal-next-tz {
-  margin: 8px 0 0;
+  margin-block-start: 8px;
   font-size: 11px;
   color: #787c82;
   text-align: end;
@@ -402,31 +402,33 @@
   display: block;
   font-size: 11px;
   color: #787c82;
-  margin-top: 2px;
+  margin-block-start: 2px;
 }
 
 .lynxjournal-history-toggle {
   display: block;
-  margin-top: 8px;
+  margin-block-start: 8px;
   font-size: 11px;
   color: var(--wp-admin-theme-color, #2271b1);
-  background: none;
-  border: none;
-  padding: 0;
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
+  list-style: none;
+}
+
+.lynxjournal-history-toggle::-webkit-details-marker {
+  display: none;
 }
 
 .lynxjournal-history-list {
-  margin: 8px 0 0;
+  margin-block-start: 8px;
   padding: 0;
   list-style: none;
 }
 
 .lynxjournal-history-row {
   padding: 5px 0;
-  border-top: 1px solid #dcdcde;
+  border-block-start: 1px solid #dcdcde;
   font-size: 11px;
 }
 
@@ -439,7 +441,7 @@
 .lynxjournal-history-date {
   font-size: 11px;
   color: #646970;
-  margin-top: 1px;
+  margin-block-start: 1px;
 }
 
 .lynxjournal-mode-cards {
@@ -474,7 +476,7 @@
   font-size: 13px;
   font-weight: 600;
   color: #1e1e1e;
-  margin-bottom: 3px;
+  margin-block-end: 3px;
 }
 
 .lynxjournal-mode-card__desc {

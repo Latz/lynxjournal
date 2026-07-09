@@ -49,17 +49,15 @@ export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
     () => localStorage.getItem(DIAG_HISTORY_STATE_KEY) === 'true'
   );
 
-  /** @listens click Toggles the run-history list and persists the new state. */
-  function toggleHistory() {
-    setShowHistory((open) => {
-      const next = !open;
-      try {
-        localStorage.setItem(DIAG_HISTORY_STATE_KEY, String(next));
-      } catch {
-        // Ignore quota/availability errors — persistence is a non-critical enhancement.
-      }
-      return next;
-    });
+  /** @listens toggle Persists the native <details> open/closed state. */
+  function handleHistoryToggle(event) {
+    const open = event.target.open;
+    setShowHistory(open);
+    try {
+      localStorage.setItem(DIAG_HISTORY_STATE_KEY, String(open));
+    } catch {
+      // Ignore quota/availability errors — persistence is a non-critical enhancement.
+    }
   }
 
   const lastRun = data?.last_run;
@@ -138,35 +136,26 @@ export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
             </dl>
 
             {history.length > 0 && (
-              <>
-                <button
-                  className="lynxjournal-history-toggle"
-                  aria-expanded={showHistory}
-                  aria-controls="lynxjournal-diag-history-list"
-                  onClick={toggleHistory}
-                >
-                  {showHistory
-                    ? __('Hide history', 'lynx-journal')
-                    /* translators: %d: number of stored run records */
-                    : sprintf(__('History (%d)', 'lynx-journal'), history.length)}
-                </button>
-                {showHistory && (
-                  <ol id="lynxjournal-diag-history-list" className="lynxjournal-history-list">
-                    {history.map((run) => (
-                      <li key={run.ts} className="lynxjournal-history-row">
-                        <div className="lynxjournal-history-row-main">
-                          <RunBadge status={run.status} />
-                          <PostLink postId={run.post_id} linkCount={run.link_count} />
-                        </div>
-                        <div className="lynxjournal-history-date">{fmtTs(run.ts)}</div>
-                        {run.reason && (
-                          <div className="lynxjournal-run-reason">{formatReason(run.reason)}</div>
-                        )}
-                      </li>
-                    ))}
-                  </ol>
-                )}
-              </>
+              <details open={showHistory} onToggle={handleHistoryToggle}>
+                <summary className="lynxjournal-history-toggle">
+                  {/* translators: %d: number of stored run records */}
+                  {sprintf(__('History (%d)', 'lynx-journal'), history.length)}
+                </summary>
+                <ol className="lynxjournal-history-list">
+                  {history.map((run) => (
+                    <li key={run.ts} className="lynxjournal-history-row">
+                      <div className="lynxjournal-history-row-main">
+                        <RunBadge status={run.status} />
+                        <PostLink postId={run.post_id} linkCount={run.link_count} />
+                      </div>
+                      <div className="lynxjournal-history-date">{fmtTs(run.ts)}</div>
+                      {run.reason && (
+                        <div className="lynxjournal-run-reason">{formatReason(run.reason)}</div>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              </details>
             )}
           </>
         )}

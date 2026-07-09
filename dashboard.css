@@ -65,7 +65,7 @@
 .lynxjournal-widget-item {
 	margin-block-end: 8px;
 	padding-block-end: 8px;
-	border-bottom: 1px solid #f0f0f1;
+	border-block-end: 1px solid #f0f0f1;
 }
 
 .lynxjournal-widget-link-title {
@@ -85,7 +85,7 @@
 .lynxjournal-widget-footer {
 	text-align: center;
 	padding-block-start: 8px;
-	border-top: 1px solid #f0f0f1;
+	border-block-start: 1px solid #f0f0f1;
 }
 
 /* ── Stats Grid ──────────────────────────────────────────── */
@@ -206,6 +206,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 
 .lynxjournal-schedule-status-text {
 	flex: 1;
+	text-wrap: pretty;
 }
 
 .lynxjournal-schedule-status-text--muted {
@@ -266,11 +267,11 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	align-items: center;
 	padding-block: 5px;
 	padding-inline: 12px;
-	border-bottom: 1px solid #f0f0f1;
+	border-block-end: 1px solid #f0f0f1;
 }
 
 .lynxjournal-link-item:last-child {
-	border-bottom: none;
+	border-block-end: none;
 }
 
 .lynxjournal-link-item-header,
@@ -401,42 +402,6 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	color: #fff;
 }
 
-/* ── Category distribution bar ───────────────────────────── */
-.lynxjournal-category-item {
-	padding-block: 8px;
-	padding-inline: 0;
-	border-bottom: 1px solid #f0f0f1;
-}
-
-.lynxjournal-category-item:last-child {
-	border-bottom: none;
-}
-
-
-.lynxjournal-category-name {
-	font-size: 13px;
-	color: var(--lj-color-text);
-}
-
-.lynxjournal-category-count {
-	font-size: 13px;
-	font-weight: 600;
-	color: var(--wp-admin-theme-color, #2271b1);
-}
-
-.lynxjournal-category-bar-container {
-	height: 4px;
-	background: #f0f0f1;
-	border-radius: 2px;
-	overflow: hidden;
-}
-
-.lynxjournal-category-bar {
-	height: 100%;
-	background: var(--wp-admin-theme-color, #2271b1);
-	border-radius: 2px;
-}
-
 /* ── Category heading (roundup post preview) ─────────────── */
 .lynxjournal-category-heading {
 	font-size: 16px;
@@ -469,7 +434,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	align-items: center;
 	gap: 0.5rem;
 	height: auto;
-	padding-top: 0;
+	padding-block-start: 0;
 	flex-wrap: wrap;
 }
 
@@ -575,154 +540,6 @@ textarea.lynxjournal-cat-inline-input {
 	min-width: 120px;
 }
 
-/* === Setting X: Expansion Layout === */
-.lynxjournal-x-badge {
-	font-size: 11px;
-	font-weight: 400;
-	background: var(--lj-color-warning);
-	color: var(--lj-color-text);
-	padding-block: 2px;
-	padding-inline: 8px;
-	border-radius: 10px;
-	vertical-align: middle;
-	margin-inline-start: 8px;
-}
-
-.lynxjournal-x-controls {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	margin-block: 16px;
-	margin-inline: 0;
-}
-
-.lynxjournal-expansion-list {
-	padding-bottom: 80px;
-}
-
-.lynxjournal-category-block {
-	background: #fff;
-	border: 1px solid #ccd0d4;
-	border-radius: 8px;
-	margin-block-end: 24px;
-	overflow: hidden;
-}
-
-.lynxjournal-category-header {
-	background: #f6f7f7;
-	padding-block: 12px;
-	padding-inline: 20px;
-	border-bottom: 1px solid #ccd0d4;
-	display: flex;
-	align-items: center;
-	gap: 10px;
-}
-
-.lynxjournal-category-header h2 {
-	margin: 0;
-	font-size: 1rem;
-	text-wrap: balance;
-}
-
-.lynxjournal-category-header .dashicons {
-	color: var(--wp-admin-theme-color, #2271b1);
-}
-
-.lynxjournal-expansion-row {
-	border-bottom: 1px solid #f0f0f1;
-	border-inline-start: 0 solid var(--wp-admin-theme-color, #2271b1);
-	transition: border-inline-start-width .2s;
-}
-
-.lynxjournal-expansion-row:last-child {
-	border-bottom: 0;
-}
-
-.lynxjournal-expansion-row.is-open {
-	border-inline-start: 4px solid var(--wp-admin-theme-color, #2271b1);
-}
-
-.lynxjournal-expansion-trigger {
-	width: 100%;
-	padding-block: 16px;
-	padding-inline: 20px;
-	background: none;
-	border: none;
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	cursor: pointer;
-	font-size: 13px;
-}
-
-.lynxjournal-expansion-trigger:hover {
-	background: #f9f9f9;
-}
-
-.lynxjournal-setting-title {
-	flex: 1;
-	font-weight: 600;
-	text-align: start;
-	text-wrap: balance;
-}
-
-.lynxjournal-setting-summary {
-	color: #646970;
-	font-size: 12px;
-	text-wrap: pretty;
-}
-
-.lynxjournal-expansion-trigger .dashicons {
-	transition: transform .2s;
-	color: #646970;
-}
-
-.lynxjournal-expansion-row.is-open .lynxjournal-expansion-trigger .dashicons {
-	transform: rotate(180deg);
-}
-
-.lynxjournal-expansion-content {
-	interpolate-size: allow-keywords;
-	height: 0;
-	padding-block: 0;
-	overflow: hidden;
-	transition: height .3s ease-out, padding-block .3s ease-out;
-	background: #fafafa;
-}
-
-.lynxjournal-expansion-row.is-open .lynxjournal-expansion-content {
-	height: auto;
-	padding-block: 20px;
-	padding-inline: 20px;
-	border-top: 1px solid #f0f0f1;
-}
-
-.lynxjournal-x-sticky-bar {
-	position: fixed;
-	bottom: 0;
-	inset-inline-start: 160px; /* WordPress admin sidebar width */
-	inset-inline-end: 0;
-	padding-block: 14px;
-	padding-inline: 30px;
-	background: rgba(255,255,255,.88);
-	backdrop-filter: blur(8px);
-	border-top: 1px solid #ddd;
-	z-index: 100;
-	box-shadow: 0 -4px 14px rgba(0,0,0,.06);
-}
-
-.lynxjournal-x-sticky-bar .bar-inner {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	max-width: 900px;
-}
-
-@media (max-width: 782px) {
-	.lynxjournal-x-sticky-bar {
-		inset-inline-start: 0;
-	}
-}
 
 .lynxjournal-box-subtitle {
 	font-size: 12px;

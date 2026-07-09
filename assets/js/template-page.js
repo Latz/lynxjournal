@@ -513,7 +513,20 @@ function initTemplateEditor() {
 	} );
 
 	const panelState = loadPanelState();
-	document.querySelectorAll( '.lynxjournal-accordion-toggle, .lynxjournal-preview-collapse-btn' ).forEach( btn => {
+
+	const tokenAccordion = document.getElementById( 'lynxjournal-token-accordion' );
+	if ( tokenAccordion ) {
+		if ( panelState[ 'lynxjournal-token-accordion' ] === true ) {
+			tokenAccordion.open = true;
+		}
+		/** @listens toggle Persists the token accordion's native open/closed state. */
+		tokenAccordion.addEventListener( 'toggle', () => {
+			panelState[ 'lynxjournal-token-accordion' ] = tokenAccordion.open;
+			savePanelState( panelState );
+		} );
+	}
+
+	document.querySelectorAll( '.lynxjournal-preview-collapse-btn' ).forEach( btn => {
 		const panelId = btn.getAttribute( 'aria-controls' );
 		const panel   = panelId ? document.getElementById( panelId ) : null;
 

@@ -16,14 +16,16 @@
 	font-size: 13px;
 	text-align: left;
 	background: #f6f7f7;
-	border: none;
 	border-radius: 4px;
 	color: var(--lj-color-text-ui);
 	cursor: pointer;
 	transition: background .12s ease, color .12s ease;
-	height: auto;
 	line-height: 1.4;
-	box-shadow: none;
+	list-style: none;
+}
+
+.lynxjournal-accordion-toggle::-webkit-details-marker {
+	display: none;
 }
 
 .lynxjournal-accordion-toggle::after {
@@ -38,12 +40,12 @@
 	transition: transform .2s ease;
 }
 
-.lynxjournal-accordion-toggle[aria-expanded="true"] {
+#lynxjournal-token-accordion[open] .lynxjournal-accordion-toggle {
 	border-radius: 4px 4px 0 0;
-	border-bottom: 1px solid #c3c4c7;
+	border-block-end: 1px solid #c3c4c7;
 }
 
-.lynxjournal-accordion-toggle[aria-expanded="true"]::after {
+#lynxjournal-token-accordion[open] .lynxjournal-accordion-toggle::after {
 	transform: rotate(-135deg) translateY(2px);
 }
 
@@ -51,7 +53,6 @@
 .lynxjournal-accordion-toggle:focus {
 	background: #f0f0f1;
 	color: var(--wp-admin-theme-color, #2271b1);
-	box-shadow: none;
 }
 
 #lynxjournal-token-panel {
@@ -62,7 +63,7 @@
 	transition: height .2s ease, padding-block .2s ease;
 }
 
-#lynxjournal-token-panel.is-open {
+#lynxjournal-token-accordion[open] #lynxjournal-token-panel {
 	height: auto;
 	padding-block: 12px;
 }
@@ -127,15 +128,15 @@
 .lynxjournal-insert-token .token-desc {
 	display: none;
 	position: absolute;
-	bottom: calc(100% + 7px);
-	left: 50%;
+	inset-block-end: calc(100% + 7px);
+	inset-inline-start: 50%;
 	transform: translateX(-50%);
 	background: #1d2327;
 	color: #fff;
 	padding: 4px 8px;
 	border-radius: 4px;
 	font-size: 11px;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	font-family: system-ui, sans-serif;
 	font-weight: 400;
 	white-space: nowrap;
 	z-index: 9999;
@@ -145,8 +146,8 @@
 .lynxjournal-insert-token .token-desc::after {
 	content: '';
 	position: absolute;
-	top: 100%;
-	left: 50%;
+	inset-block-start: 100%;
+	inset-inline-start: 50%;
 	transform: translateX(-50%);
 	border: 4px solid transparent;
 	border-top-color: #1d2327;
@@ -208,7 +209,7 @@
 	font-size: 13px;
 	line-height: 1.6;
 	border: 1px solid #8c8f94;
-	border-top: none;
+	border-block-start: none;
 	border-radius: 0 0 3px 3px;
 	min-height: 220px;
 }
@@ -257,7 +258,7 @@
 
 #lynxjournal-template-preview hr {
 	border: none;
-	border-top: 1px solid #c3c4c7;
+	border-block-start: 1px solid #c3c4c7;
 	margin-block: .4em;
 	margin-inline: 0;
 }
@@ -296,7 +297,7 @@
 	padding-block: 5px;
 	padding-inline: 10px;
 	background: #fff;
-	border-bottom: 1px solid #dcdcde;
+	border-block-end: 1px solid #dcdcde;
 }
 
 .lynxjournal-preview-width-toggle {
@@ -319,7 +320,7 @@
 }
 
 .lynxjournal-preview-collapse-btn {
-	display: inline-flex;
+	display: inline flex;
 	align-items: center;
 	justify-content: center;
 	width: 22px;
@@ -406,7 +407,7 @@
 	padding-block: 6px;
 	padding-inline: 10px;
 	background: #fff8e5;
-	border-bottom: 1px solid #f0d78b;
+	border-block-end: 1px solid #f0d78b;
 	font-size: 11px;
 	color: #614200;
 	line-height: 1.4;
