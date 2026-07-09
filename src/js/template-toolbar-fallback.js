@@ -26,6 +26,111 @@ function restoreSnapshot( textarea, snap, onChange ) {
 }
 
 /**
+ * Wraps the selection (or a placeholder) in an inline marker pair, e.g. `**bold**`.
+ *
+ * @param {string} value
+ * @param {number} start
+ * @param {number} end
+ * @param {string} sel Current selection text, or '' if none.
+ * @param {string} openTag
+ * @param {string} closeTag
+ * @param {string} placeholder Text inserted when there is no selection.
+ * @returns {{ newVal: string, cursor: number }}
+ */
+function applyInlineWrap( value, start, end, sel, openTag, closeTag, placeholder ) {
+	const inner  = sel || placeholder;
+	const newVal = value.slice( 0, start ) + openTag + inner + closeTag + value.slice( end );
+	const cursor = sel ? end + openTag.length + closeTag.length : start + openTag.length + inner.length;
+	return { newVal, cursor };
+}
+
+/**
+ * Replaces the current line's existing block prefix (heading/list/quote marker,
+ * if any) with `prefix`. Shared by the heading, bullet-list, and ordered-list actions.
+ *
+ * @param {string} value
+ * @param {number} start
+ * @param {(value: string, pos: number) => number} getLineStart
+ * @param {string} prefix
+ * @returns {{ newVal: string, cursor: number }}
+ */
+function applyLinePrefix( value, start, getLineStart, prefix ) {
+	const lineStart = getLineStart( value, start );
+	const rest       = value.slice( lineStart );
+	const stripped   = rest.replace( /^(#{1,6} |- |\d+\. |> )/, '' );
+	const removed    = rest.length - stripped.length;
+	const newVal     = value.slice( 0, lineStart ) + prefix + stripped;
+	const cursor     = Math.max( lineStart + prefix.length, start - removed + prefix.length );
+	return { newVal, cursor };
+}
+
+/**
+ * @param {string} value
+ * @param {number} start
+ * @param {(value: string, pos: number) => number} getLineStart
+ * @returns {{ newVal: string, cursor: number }}
+ */
+function applyIndent( value, start, getLineStart ) {
+	const lineStart = getLineStart( value, start );
+	const newVal    = value.slice( 0, lineStart ) + '  ' + value.slice( lineStart );
+	return { newVal, cursor: start + 2 };
+}
+
+/**
+ * @param {string} value
+ * @param {number} start
+ * @param {(value: string, pos: number) => number} getLineStart
+ * @returns {{ newVal: string, cursor: number }}
+ */
+function applyOutdent( value, start, getLineStart ) {
+	const lineStart = getLineStart( value, start );
+	const lineText   = value.slice( lineStart );
+	const spaces     = /^ {1,2}/.exec( lineText );
+	const removed    = spaces ? spaces[ 0 ].length : 0;
+	const newVal     = value.slice( 0, lineStart ) + value.slice( lineStart + removed );
+	return { newVal, cursor: Math.max( lineStart, start - removed ) };
+}
+
+/**
+ * @param {string} value
+ * @param {number} start
+ * @param {number} end
+ * @returns {{ newVal: string, cursor: number }}
+ */
+function applyHorizontalRule( value, start, end ) {
+	const insert = '\n---\n';
+	const newVal = value.slice( 0, start ) + insert + value.slice( end );
+	return { newVal, cursor: start + insert.length };
+}
+
+/**
+ * Computes the resulting textarea value and cursor position for a toolbar
+ * format action, or null if the action is unrecognized.
+ *
+ * @param {string} action
+ * @param {string} value
+ * @param {number} start
+ * @param {number} end
+ * @param {string} sel
+ * @param {(value: string, pos: number) => number} getLineStart
+ * @returns {{ newVal: string, cursor: number }|null}
+ */
+function computeFormatResult( action, value, start, end, sel, getLineStart ) {
+	if ( action === 'bold' ) { return applyInlineWrap( value, start, end, sel, '**', '**', 'bold text' ); }
+	if ( action === 'italic' ) { return applyInlineWrap( value, start, end, sel, '*', '*', 'italic text' ); }
+	if ( action === 'underline' ) { return applyInlineWrap( value, start, end, sel, '<u>', '</u>', 'underlined text' ); }
+	if ( /^h[1-6]$/.test( action ) ) {
+		return applyLinePrefix( value, start, getLineStart, '#'.repeat( Number.parseInt( action[ 1 ], 10 ) ) + ' ' );
+	}
+	if ( action === 'list' ) { return applyLinePrefix( value, start, getLineStart, '- ' ); }
+	if ( action === 'ol' ) { return applyLinePrefix( value, start, getLineStart, '1. ' ); }
+	if ( action === 'indent' ) { return applyIndent( value, start, getLineStart ); }
+	if ( action === 'outdent' ) { return applyOutdent( value, start, getLineStart ); }
+	if ( action === 'hr' ) { return applyHorizontalRule( value, start, end ); }
+	return null;
+}
+
+/**
  * Applies a toolbar format action to the plain-textarea fallback editor.
  *
  * @param {HTMLTextAreaElement} textarea
@@ -37,7 +142,6 @@ export function fallbackApplyFormat( textarea, action, getLineStart, onChange ) 
 	const start = textarea.selectionStart;
 	const end   = textarea.selectionEnd;
 	const value = textarea.value;
-	let newVal, cursor;
 
 	if ( action === 'undo' ) {
 		if ( !undoStack.length ) { return; }
@@ -53,58 +157,16 @@ export function fallbackApplyFormat( textarea, action, getLineStart, onChange ) 
 	}
 
 	saveSnapshot( textarea );
-	const sel = value.slice( start, end );
+	const sel    = value.slice( start, end );
+	const result = computeFormatResult( action, value, start, end, sel, getLineStart );
 
-	if ( action === 'bold' ) {
-		const inner = sel || 'bold text';
-		newVal = value.slice( 0, start ) + `**${ inner }**` + value.slice( end );
-		cursor = sel ? end + 4 : start + 2 + inner.length;
-	} else if ( action === 'italic' ) {
-		const inner = sel || 'italic text';
-		newVal = value.slice( 0, start ) + `*${ inner }*` + value.slice( end );
-		cursor = sel ? end + 2 : start + 1 + inner.length;
-	} else if ( action === 'underline' ) {
-		const inner = sel || 'underlined text';
-		newVal = value.slice( 0, start ) + `<u>${ inner }</u>` + value.slice( end );
-		cursor = sel ? end + 7 : start + 3 + inner.length;
-	} else if ( /^h[1-6]$/.test( action ) || action === 'list' ) {
-		const prefix    = action === 'list' ? '- ' : '#'.repeat( parseInt( action[ 1 ], 10 ) ) + ' ';
-		const lineStart = getLineStart( value, start );
-		const rest      = value.slice( lineStart );
-		const stripped  = rest.replace( /^(#{1,6} |- |\d+\. |> )/, '' );
-		const removed   = rest.length - stripped.length;
-		newVal  = value.slice( 0, lineStart ) + prefix + stripped;
-		cursor  = Math.max( lineStart + prefix.length, start - removed + prefix.length );
-	} else if ( action === 'indent' ) {
-		const lineStart = getLineStart( value, start );
-		newVal  = value.slice( 0, lineStart ) + '  ' + value.slice( lineStart );
-		cursor  = start + 2;
-	} else if ( action === 'outdent' ) {
-		const lineStart = getLineStart( value, start );
-		const lineText  = value.slice( lineStart );
-		const spaces    = lineText.match( /^ {1,2}/ );
-		const removed   = spaces ? spaces[ 0 ].length : 0;
-		newVal  = value.slice( 0, lineStart ) + value.slice( lineStart + removed );
-		cursor  = Math.max( lineStart, start - removed );
-	} else if ( action === 'hr' ) {
-		const insert = '\n---\n';
-		newVal  = value.slice( 0, start ) + insert + value.slice( end );
-		cursor  = start + insert.length;
-	} else if ( action === 'ol' ) {
-		const prefix    = '1. ';
-		const lineStart = getLineStart( value, start );
-		const rest      = value.slice( lineStart );
-		const stripped  = rest.replace( /^(#{1,6} |- |\d+\. |> )/, '' );
-		const removed   = rest.length - stripped.length;
-		newVal  = value.slice( 0, lineStart ) + prefix + stripped;
-		cursor  = Math.max( lineStart + prefix.length, start - removed + prefix.length );
-	} else {
+	if ( !result ) {
 		undoStack.pop();
 		return;
 	}
 
-	textarea.value = newVal;
-	textarea.setSelectionRange( cursor, cursor );
+	textarea.value = result.newVal;
+	textarea.setSelectionRange( result.cursor, result.cursor );
 	textarea.focus();
 	onChange();
 }
