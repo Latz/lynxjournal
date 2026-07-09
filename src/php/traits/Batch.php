@@ -89,7 +89,14 @@ trait LynxJournal_Batch {
             return array('success' => false, 'post_id' => 0, 'message' => __('No valid links to publish.', 'lynx-journal'), 'error_code' => 'no_valid_links');
         }
 
-        return $this->executeRoundupInsertion($post_title, $as_draft, $links_by_category, $uncategorized_links, $published_count, $link_ids, $mode, $author_id);
+        $grouped_links = array(
+            'by_category'   => $links_by_category,
+            'uncategorized' => $uncategorized_links,
+            'count'         => $published_count,
+            'link_ids'      => $link_ids,
+        );
+
+        return $this->executeRoundupInsertion($post_title, $as_draft, $grouped_links, $mode, $author_id);
     }
 
     /**
@@ -98,15 +105,14 @@ trait LynxJournal_Batch {
      * @since 1.0.0
      * @param string $post_title The roundup post title.
      * @param bool $as_draft Whether to create as draft.
-     * @param array $links_by_category Links grouped by category.
-     * @param array $uncategorized_links Links without a category.
-     * @param int $count Total count of links.
-     * @param array $link_ids All link post IDs.
+     * @param array{by_category: array, uncategorized: array, count: int, link_ids: array} $grouped_links Links grouped by category, per groupLinksByCategory(), plus the original link_ids.
      * @param string $mode The scheduling mode that triggered this.
      * @param int $author_id Optional post author user ID.
      * @return array Result array with success status, post_id, link_count, and message.
      */
-    private function executeRoundupInsertion(string $post_title, bool $as_draft, array $links_by_category, array $uncategorized_links, int $count, array $link_ids, string $mode = 'manual', int $author_id = 0): array {
+    private function executeRoundupInsertion(string $post_title, bool $as_draft, array $grouped_links, string $mode = 'manual', int $author_id = 0): array {
+        ['by_category' => $links_by_category, 'uncategorized' => $uncategorized_links, 'count' => $count, 'link_ids' => $link_ids] = $grouped_links;
+
         // post_type 'post': the roundup is a normal blog post, not a lynxjournal CPT entry.
         $post_args = array(
             'post_title'   => $post_title,
