@@ -62,6 +62,21 @@ describe('LynxJournal::validateScheduleConfig()', function (): void {
         expect($result->get_error_data()['status'])->toBe(400);
     });
 
+    it('accepts recurrence as a valid array', function (): void {
+        $data   = ['mode' => 'weekly', 'recurrence' => ['freq' => 'weekly', 'days' => ['mon']]];
+        $result = $this->plugin->validateScheduleConfig($data);
+
+        expect($result)->toBeArray();
+        expect($result['recurrence'])->toBe(['freq' => 'weekly', 'days' => ['mon']]);
+    });
+
+    it('accepts an empty trigger object with neither count nor days', function (): void {
+        $result = $this->plugin->validateScheduleConfig(['mode' => 'count', 'trigger' => []]);
+
+        expect($result)->toBeArray();
+        expect($result['trigger'])->toBe([]);
+    });
+
     it('returns 400 invalid_trigger when trigger is not an array', function (): void {
         $result = $this->plugin->validateScheduleConfig(['mode' => 'count', 'trigger' => 'bad']);
 
@@ -120,6 +135,15 @@ describe('LynxJournal::validateScheduleConfig()', function (): void {
         $result = $this->plugin->validateScheduleConfig($data);
 
         expect($result['publishAs'])->toBe(3);
+    });
+
+    it('accepts publishAs of exactly 0 without requiring edit_posts capability', function (): void {
+        Functions\when('user_can')->justReturn(false);
+
+        $result = $this->plugin->validateScheduleConfig(['mode' => 'daily', 'publishAs' => 0]);
+
+        expect($result)->toBeArray();
+        expect($result['publishAs'])->toBe(0);
     });
 
     it('returns 400 invalid_publish_as when publishAs is negative', function (): void {
