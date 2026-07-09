@@ -200,9 +200,9 @@ function renderIndentedGroup( group, parseInline ) {
 		}
 
 		const type = marker === '-' ? 'ul' : 'ol';
-		const num  = type === 'ol' ? parseInt( marker, 10 ) : 1;
+		const num  = type === 'ol' ? Number.parseInt( marker, 10 ) : 1;
 
-		if ( listBuffer && listBuffer.type === type && listBuffer.level === level ) {
+		if ( listBuffer?.type === type && listBuffer?.level === level ) {
 			listBuffer.items.push( content );
 		} else {
 			flushList();
