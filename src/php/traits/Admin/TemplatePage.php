@@ -101,13 +101,27 @@ trait LynxJournal_Admin_TemplatePage {
                             <span class="lynxjournal-preview-label"><?php esc_html_e('Preview', 'lynx-journal'); ?></span>
                             <fieldset class="lynxjournal-preview-view-toggle">
                                 <legend class="screen-reader-text"><?php esc_html_e('Preview style', 'lynx-journal'); ?></legend>
-                                <button type="button" class="button lynxjournal-preview-view-btn is-active" data-view="theme"><?php esc_html_e('Theme', 'lynx-journal'); ?></button>
-                                <button type="button" class="button lynxjournal-preview-view-btn" data-view="default"><?php esc_html_e('Default', 'lynx-journal'); ?></button>
+                                <span class="lynxjournal-toggle-thumb" aria-hidden="true"></span>
+                                <button type="button" class="lynxjournal-preview-view-btn is-active" data-view="theme">
+                                    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M512 0C229.25 0 0 229.25 0 512s229.25 512 512 512c46.5 0 84-37.5 84-84 0-22-8.5-42-22-57-14-15.5-22-35.5-22-57 0-46.5 37.5-84 84-84h99c103 0 189-86 189-189C924 187 741 0 512 0zM160 512c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64zm128-256c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64zm256-64c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64zm256 192c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z"/></svg>
+                                    <span><?php esc_html_e('Theme', 'lynx-journal'); ?></span>
+                                </button>
+                                <button type="button" class="lynxjournal-preview-view-btn" data-view="default">
+                                    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M96 96h832v128H96zM96 448h832v128H96zM96 800h832v128H96z"/></svg>
+                                    <span><?php esc_html_e('Default', 'lynx-journal'); ?></span>
+                                </button>
                             </fieldset>
                             <fieldset class="lynxjournal-preview-width-toggle">
                                 <legend class="screen-reader-text"><?php esc_html_e('Preview width', 'lynx-journal'); ?></legend>
-                                <button type="button" class="button lynxjournal-preview-width-btn is-active" data-width="desktop"><?php esc_html_e('Desktop', 'lynx-journal'); ?></button>
-                                <button type="button" class="button lynxjournal-preview-width-btn" data-width="mobile"><?php esc_html_e('Mobile', 'lynx-journal'); ?></button>
+                                <span class="lynxjournal-toggle-thumb" aria-hidden="true"></span>
+                                <button type="button" class="lynxjournal-preview-width-btn is-active" data-width="desktop">
+                                    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M960 768h-896v-576h896v576zM1024 128h-1024v704h416v96h-160v64h512v-64h-160v-96h416v-704z"/></svg>
+                                    <span><?php esc_html_e('Desktop', 'lynx-journal'); ?></span>
+                                </button>
+                                <button type="button" class="lynxjournal-preview-width-btn" data-width="mobile">
+                                    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M736 0h-448c-53 0-96 43-96 96v832c0 53 43 96 96 96h448c53 0 96-43 96-96v-832c0-53-43-96-96-96zM512 960c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64zM800 768h-576v-640h576v640z"/></svg>
+                                    <span><?php esc_html_e('Mobile', 'lynx-journal'); ?></span>
+                                </button>
                             </fieldset>
                             <span id="lynxjournal-preview-status">Live</span>
                             <button

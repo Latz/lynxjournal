@@ -132,6 +132,19 @@ function resizePreviewIframe() {
 	if ( body ) { preview.style.height = `${ body.scrollHeight }px`; }
 }
 
+/**
+ * Slides a pill toggle's highlight thumb under the given button, sized and
+ * positioned to match its actual (text-driven) width.
+ * @param {HTMLElement} toggleEl The `.lynxjournal-preview-*-toggle` fieldset.
+ * @param {HTMLElement} activeBtn The button the thumb should move to.
+ */
+function positionToggleThumb( toggleEl, activeBtn ) {
+	const thumb = toggleEl.querySelector( '.lynxjournal-toggle-thumb' );
+	if ( !thumb ) { return; }
+	thumb.style.transform = `translateX(${ activeBtn.offsetLeft }px)`;
+	thumb.style.width = `${ activeBtn.offsetWidth }px`;
+}
+
 function updateTemplatePreview() {
 	const rawText = getEditorValue();
 	renderValidation( previewValidation, validateTemplate( rawText ) );
@@ -450,11 +463,15 @@ function initTemplateEditor() {
 		} );
 	} );
 
+	const widthToggle = document.querySelector( '.lynxjournal-preview-width-toggle' );
+	const viewToggle  = document.querySelector( '.lynxjournal-preview-view-toggle' );
+
 	document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( btn => {
 		btn.addEventListener( 'click', () => {
 			document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( b => b.classList.remove( 'is-active' ) );
 			btn.classList.add( 'is-active' );
 			preview.classList.toggle( 'is-width-mobile', btn.dataset.width === 'mobile' );
+			if ( widthToggle ) { positionToggleThumb( widthToggle, btn ); }
 			resizePreviewIframe();
 		} );
 	} );
@@ -465,9 +482,13 @@ function initTemplateEditor() {
 			document.querySelectorAll( '.lynxjournal-preview-view-btn' ).forEach( b => b.classList.remove( 'is-active' ) );
 			btn.classList.add( 'is-active' );
 			previewViewMode = btn.dataset.view;
+			if ( viewToggle ) { positionToggleThumb( viewToggle, btn ); }
 			updateTemplatePreview();
 		} );
 	} );
+
+	if ( widthToggle ) { positionToggleThumb( widthToggle, widthToggle.querySelector( '.is-active' ) ); }
+	if ( viewToggle ) { positionToggleThumb( viewToggle, viewToggle.querySelector( '.is-active' ) ); }
 
 	const panelState = loadPanelState();
 
