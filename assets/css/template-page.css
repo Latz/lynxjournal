@@ -418,4 +418,5 @@
 	min-height: 60px;
 	border: none;
 	background: #fff;
+	transition: height .2s ease, opacity .15s ease;
 }

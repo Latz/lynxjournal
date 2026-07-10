@@ -130,6 +130,7 @@ function buildPreviewDocument( bodyHtml ) {
 function resizePreviewIframe() {
 	const body = preview.contentDocument?.body;
 	if ( body ) { preview.style.height = `${ body.scrollHeight }px`; }
+	preview.style.opacity = '1';
 }
 
 /**
@@ -150,6 +151,7 @@ function updateTemplatePreview() {
 	renderValidation( previewValidation, validateTemplate( rawText ) );
 
 	const html = buildRenderedHtml();
+	preview.style.opacity = '0.35';
 	preview.srcdoc = buildPreviewDocument( html || '<span class="lynxjournal-preview-empty">—</span>' );
 	setPreviewLive( previewStatus );
 }
