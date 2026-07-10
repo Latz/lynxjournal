@@ -462,7 +462,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 .fixed .column-status    { width: 10%; }
 .fixed .column-published { width: 10%; }
 .fixed .column-date      { width: 10%; }
-.fixed .column-actions   { white-space: nowrap; }
+.fixed .column-actions   { white-space: normal; }
 
 /* ── Align sortable th content with td padding (WP uses 8px, td uses 10px) */
 .wp-list-table th.sortable a,
