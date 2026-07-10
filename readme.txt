@@ -20,6 +20,7 @@ LynxJournal is a WordPress plugin for managing and publishing curated link diges
 * Organise links by category (inspired by frankysnotes.com)
 * REST API for integration with browser extensions
 * Schedule automatic roundup publishing (daily, weekly, monthly, or by count/age)
+* Customise the layout of roundup posts with a Post Template editor
 * Chrome extension support
 
 == Installation ==
@@ -68,6 +69,24 @@ LynxJournal › All Links shows every saved link in a table:
 **Roundup post:** Click Publish on the Dashboard. All unpublished links are bundled into one post, grouped by category. Enter a custom title or leave the default ("Links Roundup – [date]"). Choose to publish immediately or save as draft.
 
 Both flows support draft mode — use the Draft toggle before confirming.
+
+=== Post Template ===
+
+By default, roundup posts use a fixed look: a heading for each category followed by a bulleted list of that category's links. If you'd like a different layout, LynxJournal › Post Template lets you design your own.
+
+**How it works:** You write your layout as plain text. Special placeholders written in square brackets — such as `[title]`, `[link]`, or `[category_name]` — get swapped for the real post, link, and category information whenever a roundup post is published. A live preview below the editor shows exactly what your layout will look like as you type, with a Desktop/Mobile switch so you can check both.
+
+**Formatting toolbar:** Above the editor is a simple toolbar — Bold, Italic, Underline, headings, bullet and numbered lists, indent, and a horizontal rule — much like a basic word processor. Clicking a button inserts the matching formatting at your cursor.
+
+**Available tokens:** Click **Available tokens** to open a reference panel listing every placeholder you can use, grouped by what it represents (post details, links, categories, tags). Click any one to insert it at the cursor.
+
+**Trying it safely:** Use **Test Publish** to preview the exact output in a new browser tab — nothing is saved. Use **Test Post** to create a real draft post from your current layout, which opens in the block editor for review. Either way, nothing is ever published automatically.
+
+**Saving:** Click **Save Template** to keep your changes. A confirmation message appears once it's saved.
+
+This feature is entirely optional — if you don't set up a template, LynxJournal simply keeps using its original built-in layout.
+
+*Note:* extra blank lines in your template are collapsed to a single blank line in the actual published post. The small `¶` marks you see while editing are just to help you see spacing while you type — they don't represent the final spacing exactly.
 
 === Scheduling ===
 
@@ -154,3 +173,4 @@ https://github.com/Latz/lynxjournal
 
 = 1.0.2 =
 * Initial release.
+* Added a Post Template editor for customising the layout of roundup posts.
