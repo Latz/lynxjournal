@@ -228,57 +228,6 @@
 	font-size: 13px;
 }
 
-/* ── Post Template page: Markdown preview output ─────────────── */
-#lynxjournal-template-preview h2,
-#lynxjournal-template-preview h3 {
-	margin-block: .3em .15em;
-	margin-inline: 0;
-}
-
-#lynxjournal-template-preview ul {
-	margin-block: .15em;
-	margin-inline: 0;
-	padding-inline-start: 1.4em;
-	list-style: disc;
-}
-
-#lynxjournal-template-preview ul ul {
-	list-style: circle;
-}
-
-#lynxjournal-template-preview ul ul ul {
-	list-style: square;
-}
-
-#lynxjournal-template-preview ol {
-	margin-block: .15em;
-	margin-inline: 0;
-	padding-inline-start: 1.4em;
-}
-
-#lynxjournal-template-preview hr {
-	border: none;
-	border-block-start: 1px solid #c3c4c7;
-	margin-block: .4em;
-	margin-inline: 0;
-}
-
-#lynxjournal-template-preview p {
-	margin-block: .1em;
-	margin-inline: 0;
-}
-
-/* Injected by preserveBlankLines() for each blank line in the source —
-   a left border + reserved height marks the row as a blank line so a
-   trailing/leading blank run reads as intentional and not just background
-   padding, without showing any visible character in the row itself. */
-#lynxjournal-template-preview p.lynxjournal-blank-line {
-	margin-block: 0.25em;
-	min-height: 1.5em;
-	padding-inline-start: 6px;
-	border-inline-start: 3px solid #c3c4c7;
-}
-
 /* ── Post Template page: live preview container ─────────────── */
 #lynxjournal-template-preview-wrap {
 	margin-block: 10px;
@@ -425,17 +374,9 @@
 }
 
 #lynxjournal-template-preview {
+	display: block;
+	width: 100%;
 	min-height: 60px;
-	padding-block: 12px;
-	padding-inline: 14px;
-	background: #f6f7f7;
-	font-size: 12px;
-	line-height: 1.5;
-	color: var(--lj-color-text);
-	word-break: break-word;
-}
-
-.lynxjournal-preview-empty {
-	color: #a7aaad;
-	font-style: italic;
+	border: none;
+	background: #fff;
 }

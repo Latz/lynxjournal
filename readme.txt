@@ -74,7 +74,7 @@ Both flows support draft mode — use the Draft toggle before confirming.
 
 By default, roundup posts use a fixed look: a heading for each category followed by a bulleted list of that category's links. If you'd like a different layout, LynxJournal › Post Template lets you design your own.
 
-**How it works:** You write your layout as plain text. Special placeholders written in square brackets — such as `[title]`, `[link]`, or `[category_name]` — get swapped for the real post, link, and category information whenever a roundup post is published. A live preview below the editor shows exactly what your layout will look like as you type, with a Desktop/Mobile switch so you can check both.
+**How it works:** You write your layout as plain text. Special placeholders written in square brackets — such as `[title]`, `[link]`, or `[category_name]` — get swapped for the real post, link, and category information whenever a roundup post is published. A live preview below the editor shows exactly what your layout will look like as you type, styled with your site's active theme so it looks like a real post, with a Desktop/Mobile switch so you can check both. (The preview only themes the post content itself — it doesn't show your site's header, footer, or sidebar.)
 
 **Formatting toolbar:** Above the editor is a simple toolbar — Bold, Italic, Underline, headings, bullet and numbered lists, indent, and a horizontal rule — much like a basic word processor. Clicking a button inserts the matching formatting at your cursor.
 

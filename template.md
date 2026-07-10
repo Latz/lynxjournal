@@ -11,7 +11,10 @@ The template is plain text written in Markdown, with special `[token]`
 placeholders that get replaced with real data (post title, links,
 categories, tags, etc.) when a roundup is generated. As you type, a live
 preview below the editor shows exactly what the rendered post will look
-like, using sample data.
+like, using sample data. The preview is rendered with your active theme's
+fonts, colors, and spacing (via an iframe loading the theme's stylesheet(s))
+so it reads like a real post — though it only themes the content area, not
+the full page (no header, footer, or sidebar).
 
 ## The editor
 

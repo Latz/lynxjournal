@@ -116,7 +116,7 @@ trait LynxJournal_Admin_TemplatePage {
                         </div>
                         <div id="lynxjournal-preview-body" class="is-open">
                             <div id="lynxjournal-preview-validation"></div>
-                            <div id="lynxjournal-template-preview"></div>
+                            <iframe id="lynxjournal-template-preview" title="<?php esc_attr_e('Template preview', 'lynx-journal'); ?>"></iframe>
                         </div>
                     </div>
 

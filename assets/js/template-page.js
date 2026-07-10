@@ -150,12 +150,58 @@ function extractPostTitle( renderedHtml ) {
 	return heading ? `[Test] ${ heading.textContent.trim() }` : '';
 }
 
+const themePreview = window.lynxjournalThemePreview ?? { stylesheets: [], globalStyles: '', contentClass: 'entry-content' };
+
+// Injected by preserveBlankLines() for each blank line in the source — a
+// left border + reserved height marks the row as a blank line so a
+// trailing/leading blank run reads as intentional and not just background
+// padding. This is plugin editor UI, not theme typography, so it's injected
+// directly into the preview iframe rather than relying on the theme's CSS.
+const PREVIEW_OVERRIDE_CSS = `
+	body { padding: 12px 14px; }
+	.lynxjournal-preview-empty { color: #a7aaad; font-style: italic; }
+	p.lynxjournal-blank-line {
+		margin-block: 0.25em;
+		min-height: 1.5em;
+		padding-inline-start: 6px;
+		border-inline-start: 3px solid #c3c4c7;
+	}
+`;
+
+/**
+ * Builds the full HTML document loaded into the preview iframe's `srcdoc`,
+ * linking the active theme's stylesheets so the rendered markup picks up
+ * real theme typography/colors instead of the plugin's own generic CSS.
+ * Only the content area is themed (no header/footer/sidebar) — see the
+ * "Post Template" readme section for that limitation.
+ * @param {string} bodyHtml
+ * @returns {string}
+ */
+function buildPreviewDocument( bodyHtml ) {
+	const links = themePreview.stylesheets
+		.map( href => `<link rel="stylesheet" href="${ href.replace( /"/g, '&quot;' ) }">` )
+		.join( '\n' );
+	return `<!doctype html><html><head><meta charset="utf-8">${ links }` +
+		`<style>${ themePreview.globalStyles }</style><style>${ PREVIEW_OVERRIDE_CSS }</style></head>` +
+		`<body><div class="${ themePreview.contentClass }">${ bodyHtml }</div></body></html>`;
+}
+
+/**
+ * Grows the preview iframe to fit its rendered content height, since an
+ * iframe has no intrinsic height of its own.
+ * @listens load
+ */
+function resizePreviewIframe() {
+	const body = preview.contentDocument?.body;
+	if ( body ) { preview.style.height = `${ body.scrollHeight }px`; }
+}
+
 function updateTemplatePreview() {
 	const rawText = getEditorValue();
 	renderValidation( previewValidation, validateTemplate( rawText ) );
 
 	const html = buildRenderedHtml();
-	preview.innerHTML = html || '<span class="lynxjournal-preview-empty">—</span>';
+	preview.srcdoc = buildPreviewDocument( html || '<span class="lynxjournal-preview-empty">—</span>' );
 	setPreviewLive( previewStatus );
 }
 
@@ -376,6 +422,8 @@ function initTemplateEditor() {
 
 	if ( !textarea || !preview ) { return; }
 
+	preview.addEventListener( 'load', resizePreviewIframe );
+
 	initialTemplateValue = textarea.value;
 	window.addEventListener( 'beforeunload', warnOnUnsavedChanges );
 	textarea.form?.addEventListener( 'submit', () => { isSubmitting = true; } );
@@ -509,6 +557,7 @@ function initTemplateEditor() {
 			document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( b => b.classList.remove( 'is-active' ) );
 			btn.classList.add( 'is-active' );
 			preview.classList.toggle( 'is-width-mobile', btn.dataset.width === 'mobile' );
+			resizePreviewIframe();
 		} );
 	} );
 
