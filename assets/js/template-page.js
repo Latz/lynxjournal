@@ -382,6 +382,22 @@ function initTemplateEditor() {
 
 	preview.addEventListener( 'load', resizePreviewIframe );
 
+	const panelState = loadPanelState();
+
+	if ( panelState.previewViewMode === 'theme' || panelState.previewViewMode === 'default' ) {
+		previewViewMode = panelState.previewViewMode;
+		document.querySelectorAll( '.lynxjournal-preview-view-btn' ).forEach( btn => {
+			btn.classList.toggle( 'is-active', btn.dataset.view === previewViewMode );
+		} );
+	}
+
+	if ( panelState.previewWidthMode === 'desktop' || panelState.previewWidthMode === 'mobile' ) {
+		document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( btn => {
+			btn.classList.toggle( 'is-active', btn.dataset.width === panelState.previewWidthMode );
+		} );
+		preview.classList.toggle( 'is-width-mobile', panelState.previewWidthMode === 'mobile' );
+	}
+
 	initialTemplateValue = textarea.value;
 	window.addEventListener( 'beforeunload', warnOnUnsavedChanges );
 	textarea.form?.addEventListener( 'submit', () => { isSubmitting = true; } );
@@ -482,6 +498,8 @@ function initTemplateEditor() {
 			preview.classList.toggle( 'is-width-mobile', btn.dataset.width === 'mobile' );
 			if ( widthToggle ) { positionToggleThumb( widthToggle, btn ); }
 			resizePreviewIframe();
+			panelState.previewWidthMode = btn.dataset.width;
+			savePanelState( panelState );
 		} );
 	} );
 
@@ -493,13 +511,13 @@ function initTemplateEditor() {
 			previewViewMode = btn.dataset.view;
 			if ( viewToggle ) { positionToggleThumb( viewToggle, btn ); }
 			updateTemplatePreview();
+			panelState.previewViewMode = previewViewMode;
+			savePanelState( panelState );
 		} );
 	} );
 
 	if ( widthToggle ) { positionToggleThumb( widthToggle, widthToggle.querySelector( '.is-active' ) ); }
 	if ( viewToggle ) { positionToggleThumb( viewToggle, viewToggle.querySelector( '.is-active' ) ); }
-
-	const panelState = loadPanelState();
 
 	const tokenAccordion = document.getElementById( 'lynxjournal-token-accordion' );
 	if ( tokenAccordion ) {
