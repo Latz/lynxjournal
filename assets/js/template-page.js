@@ -81,14 +81,20 @@ const DEFAULT_VIEW_CSS = `
 	p { margin-block: .1em; margin-inline: 0; }
 `;
 
+// Plugin editor UI shared by both preview modes, injected directly into the
+// preview iframe rather than relying on the theme's CSS.
+const SHARED_PREVIEW_CSS = `
+	body { padding: 12px 14px; }
+	.lynxjournal-preview-empty { color: #a7aaad; font-style: italic; }
+`;
+
 // Injected by preserveBlankLines() for each blank line in the source — a
 // left border + reserved height marks the row as a blank line so a
 // trailing/leading blank run reads as intentional and not just background
-// padding. This is plugin editor UI, not theme typography, so it's injected
-// directly into the preview iframe rather than relying on the theme's CSS.
-const PREVIEW_OVERRIDE_CSS = `
-	body { padding: 12px 14px; }
-	.lynxjournal-preview-empty { color: #a7aaad; font-style: italic; }
+// padding. Default-view only: in Theme view the preview is meant to show
+// how the post will really look, where this editing aid would just be
+// visual clutter.
+const BLANK_LINE_MARKER_CSS = `
 	p.lynxjournal-blank-line {
 		margin-block: 0.25em;
 		min-height: 1.5em;
@@ -117,8 +123,9 @@ function buildPreviewDocument( bodyHtml ) {
 		: '';
 	const modeStyle = isTheme ? themePreview.globalStyles : DEFAULT_VIEW_CSS;
 	const contentClass = isTheme ? themePreview.contentClass : '';
+	const overrideStyle = isTheme ? SHARED_PREVIEW_CSS : SHARED_PREVIEW_CSS + BLANK_LINE_MARKER_CSS;
 	return `<!doctype html><html><head><meta charset="utf-8">${ links }` +
-		`<style>${ modeStyle }</style><style>${ PREVIEW_OVERRIDE_CSS }</style></head>` +
+		`<style>${ modeStyle }</style><style>${ overrideStyle }</style></head>` +
 		`<body><div class="${ contentClass }">${ bodyHtml }</div></body></html>`;
 }
 
