@@ -6,6 +6,11 @@
 	--lj-color-warning: #dba617;
 	--lj-color-text: #1d2327;
 	--lj-color-text-ui: #3c434a;
+	--lj-color-text-muted: #646970;
+	--lj-color-border: #c3c4c7;
+	--lj-color-border-input: #8c8f94;
+	--lj-color-bg-subtle: #f0f0f1;
+	--lj-color-danger: #b32d2e;
 }
 
 /* ── Dashboard Widget ────────────────────────────────────── */
@@ -19,7 +24,7 @@
 .lynxjournal-widget-stat-cell {
 	text-align: center;
 	padding: 12px;
-	background: #f0f0f1;
+	background: var(--lj-color-bg-subtle, #f0f0f1);
 	border-radius: 4px;
 }
 
@@ -39,7 +44,7 @@
 
 .lynxjournal-widget-stat-label {
 	font-size: 11px;
-	color: #646970;
+	color: var(--lj-color-text-muted, #646970);
 	text-transform: uppercase;
 	margin-block-start: 4px;
 }
@@ -65,7 +70,7 @@
 .lynxjournal-widget-item {
 	margin-block-end: 8px;
 	padding-block-end: 8px;
-	border-block-end: 1px solid #f0f0f1;
+	border-block-end: 1px solid var(--lj-color-bg-subtle, #f0f0f1);
 }
 
 .lynxjournal-widget-link-title {
@@ -76,7 +81,7 @@
 
 .lynxjournal-widget-link-url {
 	font-size: 12px;
-	color: #646970;
+	color: var(--lj-color-text-muted, #646970);
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -85,7 +90,7 @@
 .lynxjournal-widget-footer {
 	text-align: center;
 	padding-block-start: 8px;
-	border-block-start: 1px solid #f0f0f1;
+	border-block-start: 1px solid var(--lj-color-bg-subtle, #f0f0f1);
 }
 
 /* ── Stats Grid ──────────────────────────────────────────── */
@@ -99,7 +104,7 @@
 
 .lynxjournal-stat-card {
 	background: #fff;
-	border: 1px solid #c3c4c7;
+	border: 1px solid var(--lj-color-border, #c3c4c7);
 	border-inline-start: 4px solid var(--wp-admin-theme-color, #2271b1);
 	padding-block: 10px;
 	padding-inline: 14px;
@@ -128,7 +133,7 @@
 .lynxjournal-stat-label {
 	display: block;
 	font-size: 11px;
-	color: #646970;
+	color: var(--lj-color-text-muted, #646970);
 	margin-block-start: 1px;
 }
 
@@ -154,7 +159,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	align-items: center;
 	gap: 12px;
 	background: #fff;
-	border: 1px solid #c3c4c7;
+	border: 1px solid var(--lj-color-border, #c3c4c7);
 	border-inline-start: 4px solid var(--wp-admin-theme-color, #2271b1);
 	padding-block: 16px;
 	padding-inline: 20px;
@@ -184,7 +189,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	align-items: center;
 	gap: 8px;
 	background: #f6f7f7;
-	border: 1px solid #c3c4c7;
+	border: 1px solid var(--lj-color-border, #c3c4c7);
 	border-radius: 2px;
 	padding-block: 7px;
 	padding-inline: 12px;
@@ -210,7 +215,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 }
 
 .lynxjournal-schedule-status-text--muted {
-	color: #646970;
+	color: var(--lj-color-text-muted, #646970);
 }
 
 .lynxjournal-schedule-status-link {
@@ -221,7 +226,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 /* ── Quick Add: optional label ───────────────────────────── */
 .lynxjournal-optional {
 	font-weight: normal;
-	color: #646970;
+	color: var(--lj-color-text-muted, #646970);
 	font-size: 12px;
 	margin-inline-start: 3px;
 }
@@ -267,7 +272,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	align-items: center;
 	padding-block: 5px;
 	padding-inline: 12px;
-	border-block-end: 1px solid #f0f0f1;
+	border-block-end: 1px solid var(--lj-color-bg-subtle, #f0f0f1);
 }
 
 .lynxjournal-link-item:last-child {
@@ -279,7 +284,6 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 .lynxjournal-link-meta {
 	grid-column: 1;
 }
-
 
 .lynxjournal-link-title {
 	display: block;
@@ -306,7 +310,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	display: flex;
 	gap: 10px;
 	font-size: 11px;
-	color: #646970;
+	color: var(--lj-color-text-muted, #646970);
 	flex-wrap: wrap;
 	margin-block-start: 1px;
 }
@@ -324,7 +328,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	border-radius: 3px;
 	opacity: 0;
 	transition: opacity .15s, background .15s;
-	color: #b32d2e;
+	color: var(--lj-color-danger, #b32d2e);
 	display: flex;
 	align-items: center;
 	line-height: 1;
@@ -354,7 +358,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 
 .lynxjournal-delete-confirm-label {
 	font-size: 12px;
-	color: #646970;
+	color: var(--lj-color-text-muted, #646970);
 }
 
 .lynxjournal-delete-confirm-yes {
@@ -365,8 +369,8 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	border-radius: 3px;
 	border: 1px solid;
 	cursor: pointer;
-	background: #b32d2e;
-	border-color: #b32d2e;
+	background: var(--lj-color-danger, #b32d2e);
+	border-color: var(--lj-color-danger, #b32d2e);
 	color: #fff;
 }
 
@@ -379,12 +383,12 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 	border: 1px solid;
 	cursor: pointer;
 	background: #f6f7f7;
-	border-color: #c3c4c7;
+	border-color: var(--lj-color-border, #c3c4c7);
 	color: var(--lj-color-text);
 }
 
 .lynxjournal-delete-cancel:hover {
-	background: #f0f0f1;
+	background: var(--lj-color-bg-subtle, #f0f0f1);
 }
 
 /* ── Status badges ───────────────────────────────────────── */
@@ -398,7 +402,7 @@ a.lynxjournal-stat-card--link .lynxjournal-stat-value {
 }
 
 .lynxjournal-status-draft {
-	background: #646970;
+	background: var(--lj-color-text-muted, #646970);
 	color: #fff;
 }
 
@@ -482,14 +486,14 @@ td.lynxjournal-cat-count-col {
 }
 
 .lynxjournal-cat-desc {
-	color: #646970;
+	color: var(--lj-color-text-muted, #646970);
 	font-size: 12px;
 	max-width: 220px;
 	text-wrap: pretty;
 }
 
 .lynxjournal-cat-delete-btn {
-	color: #b32d2e;
+	color: var(--lj-color-danger, #b32d2e);
 	cursor: pointer;
 	background: none;
 	border: none;
@@ -509,7 +513,7 @@ td.lynxjournal-cat-count-col {
 	font-size: 13px;
 	padding-block: 3px;
 	padding-inline: 6px;
-	border: 1px solid #8c8f94;
+	border: 1px solid var(--lj-color-border-input, #8c8f94);
 	border-radius: 3px;
 }
 
@@ -525,7 +529,7 @@ textarea.lynxjournal-cat-inline-input {
 
 .lynxjournal-cat-inline-error {
 	display: block;
-	color: #b32d2e;
+	color: var(--lj-color-danger, #b32d2e);
 	font-size: 12px;
 	margin-block-start: 4px;
 }
@@ -539,7 +543,6 @@ textarea.lynxjournal-cat-inline-input {
 	white-space: nowrap;
 	min-width: 120px;
 }
-
 
 .lynxjournal-box-subtitle {
 	font-size: 12px;
