@@ -240,7 +240,7 @@
 
 .lynxjournal-preview-header {
 	display: grid;
-	grid-template-columns: 1fr auto auto auto auto auto;
+	grid-template-columns: 1fr auto auto auto auto;
 	align-items: center;
 	gap: 10px;
 	padding-block: 5px;
@@ -249,6 +249,7 @@
 	border-block-end: 1px solid #dcdcde;
 }
 
+.lynxjournal-preview-view-toggle,
 .lynxjournal-preview-width-toggle {
 	display: flex;
 	gap: 2px;
@@ -258,14 +259,15 @@
 	min-width: 0;
 }
 
-.lynxjournal-preview-width-btn,
-.lynxjournal-test-post-btn {
+.lynxjournal-preview-view-btn,
+.lynxjournal-preview-width-btn {
 	height: 22px;
 	line-height: 20px;
 	padding: 0 8px;
 	font-size: 11px;
 }
 
+.lynxjournal-preview-view-btn.is-active,
 .lynxjournal-preview-width-btn.is-active {
 	background: var(--wp-admin-theme-color, #2271b1);
 	border-color: var(--wp-admin-theme-color, #2271b1);

@@ -285,10 +285,6 @@ trait LynxJournal_Admin_Menu {
             }
             wp_localize_script('lynxjournal-template-js', 'lynxjournalPreviewData', $preview_data);
         }
-        wp_localize_script('lynxjournal-template-js', 'lynxjournalTemplate', array(
-            'restUrl' => rest_url(LYNXJOURNAL_REST_NAMESPACE . '/template/test-post'),
-            'nonce'   => wp_create_nonce('wp_rest'),
-        ));
         wp_localize_script('lynxjournal-template-js', 'lynxjournalThemePreview', $this->getThemePreviewAssets());
     }
 

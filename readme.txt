@@ -74,13 +74,11 @@ Both flows support draft mode — use the Draft toggle before confirming.
 
 By default, roundup posts use a fixed look: a heading for each category followed by a bulleted list of that category's links. If you'd like a different layout, LynxJournal › Post Template lets you design your own.
 
-**How it works:** You write your layout as plain text. Special placeholders written in square brackets — such as `[title]`, `[link]`, or `[category_name]` — get swapped for the real post, link, and category information whenever a roundup post is published. A live preview below the editor shows exactly what your layout will look like as you type, styled with your site's active theme so it looks like a real post, with a Desktop/Mobile switch so you can check both. (The preview only themes the post content itself — it doesn't show your site's header, footer, or sidebar.)
+**How it works:** You write your layout as plain text. Special placeholders written in square brackets — such as `[title]`, `[link]`, or `[category_name]` — get swapped for the real post, link, and category information whenever a roundup post is published. A live preview below the editor shows exactly what your layout will look like as you type — nothing is ever saved or published from the preview. Use the Theme/Default switch to see it styled with your site's active theme or with a plain generic look, and the Desktop/Mobile switch to check both widths. (Theme styling only applies to the post content itself — it doesn't show your site's header, footer, or sidebar.)
 
 **Formatting toolbar:** Above the editor is a simple toolbar — Bold, Italic, Underline, headings, bullet and numbered lists, indent, and a horizontal rule — much like a basic word processor. Clicking a button inserts the matching formatting at your cursor.
 
 **Available tokens:** Click **Available tokens** to open a reference panel listing every placeholder you can use, grouped by what it represents (post details, links, categories, tags). Click any one to insert it at the cursor.
-
-**Trying it safely:** Use **Test Publish** to preview the exact output in a new browser tab — nothing is saved. Use **Test Post** to create a real draft post from your current layout, which opens in the block editor for review. Either way, nothing is ever published automatically.
 
 **Saving:** Click **Save Template** to keep your changes. A confirmation message appears once it's saved.
 

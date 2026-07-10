@@ -99,7 +99,11 @@ trait LynxJournal_Admin_TemplatePage {
                     <div id="lynxjournal-template-preview-wrap">
                         <div class="lynxjournal-preview-header">
                             <span class="lynxjournal-preview-label"><?php esc_html_e('Preview', 'lynx-journal'); ?></span>
-                            <button type="button" id="lynxjournal-test-post-btn" class="button lynxjournal-test-post-btn"><?php esc_html_e('Test post', 'lynx-journal'); ?></button>
+                            <fieldset class="lynxjournal-preview-view-toggle">
+                                <legend class="screen-reader-text"><?php esc_html_e('Preview style', 'lynx-journal'); ?></legend>
+                                <button type="button" class="button lynxjournal-preview-view-btn is-active" data-view="theme"><?php esc_html_e('Theme', 'lynx-journal'); ?></button>
+                                <button type="button" class="button lynxjournal-preview-view-btn" data-view="default"><?php esc_html_e('Default', 'lynx-journal'); ?></button>
+                            </fieldset>
                             <fieldset class="lynxjournal-preview-width-toggle">
                                 <legend class="screen-reader-text"><?php esc_html_e('Preview width', 'lynx-journal'); ?></legend>
                                 <button type="button" class="button lynxjournal-preview-width-btn is-active" data-width="desktop"><?php esc_html_e('Desktop', 'lynx-journal'); ?></button>

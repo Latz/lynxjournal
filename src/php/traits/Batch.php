@@ -284,7 +284,7 @@ trait LynxJournal_Batch {
 
     /**
      * Renders the roundup post content from the saved Post Template, using
-     * the PHP port of the admin Test Publish/Test Post preview pipeline.
+     * the PHP port of the admin Post Template live preview pipeline.
      *
      * @since 1.0.0
      * @param string $template Raw Post Template markdown+tokens text.
@@ -344,7 +344,7 @@ trait LynxJournal_Batch {
     /**
      * Builds a Gutenberg heading block at the given level, omitting the
      * {"level":N} attribute for the default level 2 (matches real WP
-     * serialization, and assets/js/template-page.js's wrapAsGutenbergBlocks()).
+     * block serialization).
      *
      * @param string $text Already-escaped heading text.
      * @param int $level
