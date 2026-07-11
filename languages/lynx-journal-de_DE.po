@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LynxJournal 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lynxjournal\n"
-"POT-Creation-Date: 2026-07-11T18:18:53+00:00\n"
+"POT-Creation-Date: 2026-07-11T18:52:13+00:00\n"
 "PO-Revision-Date: 2026-07-11 00:00+0000\n"
 "Last-Translator: Latz\n"
 "Language-Team: German\n"
@@ -1232,13 +1232,58 @@ msgstr "Schlagwortlisten-Navigation"
 msgid "Scheduled"
 msgstr "Geplant"
 
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:9
+msgid "Daily"
+msgstr "Täglich"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:9
+msgid "Every N days"
+msgstr "Alle N Tage"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:10
+msgid "Weekly"
+msgstr "Wöchentlich"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:10
+msgid "Specific weekdays"
+msgstr "Bestimmte Wochentage"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:11
+msgid "Monthly"
+msgstr "Monatlich"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:11
+msgid "Calendar days"
+msgstr "Kalendertage"
+
 #: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:15
 msgid "Trigger-based"
 msgstr "Ereignisbasiert"
 
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:17
+msgid "By Count"
+msgstr "Nach Anzahl"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:17
+msgid "When N links queue"
+msgstr "Wenn N Links warten"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:18
+msgid "By Age"
+msgstr "Nach Alter"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:18
+msgid "When oldest link ages"
+msgstr "Wenn der älteste Link zu alt wird"
+
 #: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:22
+#: src/schedule/components/ScheduleTypePicker.jsx:24
 msgid "Manual"
 msgstr "Manuell"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:24
+msgid "No auto-publish"
+msgstr "Keine automatische Veröffentlichung"
 
 #: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:22
 msgid "first"
@@ -1768,18 +1813,3 @@ msgstr "Jetzt kannst du Links direkt von jeder Webseite speichern!"
 
 #~ msgid "Save All Changes"
 #~ msgstr "Alle Änderungen speichern"
-
-#~ msgid "Daily"
-#~ msgstr "Täglich"
-
-#~ msgid "Weekly"
-#~ msgstr "Wöchentlich"
-
-#~ msgid "Monthly"
-#~ msgstr "Monatlich"
-
-#~ msgid "By Count"
-#~ msgstr "Nach Anzahl"
-
-#~ msgid "By Age"
-#~ msgstr "Nach Alter"

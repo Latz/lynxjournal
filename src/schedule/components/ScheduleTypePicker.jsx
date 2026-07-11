@@ -1,27 +1,27 @@
 import { __ } from '@wordpress/i18n';
 
-const createMode = (value, label, desc) => ({ value, label: __(label, 'lynx-journal'), desc: __(desc, 'lynx-journal') });
+const createMode = (value, label, desc) => ({ value, label, desc });
 
 const GROUPS = [
   {
     label: __('Scheduled', 'lynx-journal'),
     modes: [
-      createMode('daily',   'Daily',   'Every N days'),
-      createMode('weekly',  'Weekly',  'Specific weekdays'),
-      createMode('monthly', 'Monthly', 'Calendar days'),
+      createMode('daily',   __('Daily', 'lynx-journal'),   __('Every N days', 'lynx-journal')),
+      createMode('weekly',  __('Weekly', 'lynx-journal'),  __('Specific weekdays', 'lynx-journal')),
+      createMode('monthly', __('Monthly', 'lynx-journal'), __('Calendar days', 'lynx-journal')),
     ],
   },
   {
     label: __('Trigger-based', 'lynx-journal'),
     modes: [
-      createMode('count', 'By Count', 'When N links queue'),
-      createMode('age',   'By Age',   'When oldest link ages'),
+      createMode('count', __('By Count', 'lynx-journal'), __('When N links queue', 'lynx-journal')),
+      createMode('age',   __('By Age', 'lynx-journal'),   __('When oldest link ages', 'lynx-journal')),
     ],
   },
   {
     label: __('Manual', 'lynx-journal'),
     modes: [
-      createMode('manual', 'Manual', 'No auto-publish'),
+      createMode('manual', __('Manual', 'lynx-journal'), __('No auto-publish', 'lynx-journal')),
     ],
   },
 ];

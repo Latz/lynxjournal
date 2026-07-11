@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-11T18:18:53+00:00\n"
+"POT-Creation-Date: 2026-07-11T18:52:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: lynx-journal\n"
@@ -1239,13 +1239,69 @@ msgid "Scheduled"
 msgstr ""
 
 #: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:9
+msgid "Daily"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:9
+msgid "Every N days"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:10
+msgid "Weekly"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:10
+msgid "Specific weekdays"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:11
+msgid "Monthly"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:11
+msgid "Calendar days"
+msgstr ""
+
+#: build/schedule.js:1
 #: src/schedule/components/ScheduleTypePicker.jsx:15
 msgid "Trigger-based"
 msgstr ""
 
 #: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:17
+msgid "By Count"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:17
+msgid "When N links queue"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:18
+msgid "By Age"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:18
+msgid "When oldest link ages"
+msgstr ""
+
+#: build/schedule.js:1
 #: src/schedule/components/ScheduleTypePicker.jsx:22
+#: src/schedule/components/ScheduleTypePicker.jsx:24
 msgid "Manual"
+msgstr ""
+
+#: build/schedule.js:1
+#: src/schedule/components/ScheduleTypePicker.jsx:24
+msgid "No auto-publish"
 msgstr ""
 
 #: build/schedule.js:1
