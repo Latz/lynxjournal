@@ -44,6 +44,115 @@ function PostLink({ postId, linkCount }) {
   );
 }
 
+/**
+ * Renders the "Next run" row: a scheduled timestamp for time-based modes,
+ * or a "links until post" countdown for count-triggered mode.
+ *
+ * @param {object} data - Diagnostics payload from the schedule/diagnostics endpoint.
+ * @param {string} mode - Current schedule mode.
+ * @returns {JSX.Element|null}
+ */
+function NextRunRow({ data, mode }) {
+  if (mode === 'count') {
+    if (data.links_until_post === undefined) return null;
+    return (
+      <div className="lynxjournal-diag-row">
+        <dt>{__('Next run', 'lynx-journal')}</dt>
+        <dd>
+          {data.links_until_post > 0
+            /* translators: %d: number of links still needed before the next post */
+            ? sprintf(__('%d links until post', 'lynx-journal'), data.links_until_post)
+            : <em>{__('Ready to post', 'lynx-journal')}</em>}
+        </dd>
+      </div>
+    );
+  }
+
+  return (
+    <div className="lynxjournal-diag-row">
+      <dt>{__('Next run', 'lynx-journal')}</dt>
+      <dd>
+        {data.next_scheduled
+          ? fmtTs(data.next_scheduled)
+          : (
+            <>
+              <em>{__('Not scheduled', 'lynx-journal')}</em>
+              {data.wp_cron_disabled && (
+                <span className="lynxjournal-diag-reason">
+                  {' — '}{__('WP-Cron disabled', 'lynx-journal')}
+                </span>
+              )}
+            </>
+          )}
+      </dd>
+    </div>
+  );
+}
+
+/**
+ * Renders the "Last run" row, showing the most recent run's status, timestamp,
+ * published-post link, and skip reason (if any).
+ *
+ * @param {object|undefined} lastRun - Most recent run record, or undefined if none yet.
+ * @returns {JSX.Element}
+ */
+function LastRunRow({ lastRun }) {
+  return (
+    <div className="lynxjournal-diag-row">
+      <dt>{__('Last run', 'lynx-journal')}</dt>
+      <dd>
+        {lastRun ? (
+          <>
+            <RunBadge status={lastRun.status} />
+            {' '}
+            {fmtTs(lastRun.ts)}
+            <PostLink postId={lastRun.post_id} linkCount={lastRun.link_count} />
+            {lastRun.reason && (
+              <span className="lynxjournal-run-reason">{formatReason(lastRun.reason)}</span>
+            )}
+          </>
+        ) : (
+          <em>{__('No runs yet', 'lynx-journal')}</em>
+        )}
+      </dd>
+    </div>
+  );
+}
+
+/**
+ * Renders the collapsible run-history list.
+ *
+ * @param {object[]} history     - Past run records, most recent first.
+ * @param {boolean}  open        - Whether the <details> element is expanded.
+ * @param {Function} onToggle    - Native <details> toggle event handler.
+ * @returns {JSX.Element|null}
+ */
+function HistoryList({ history, open, onToggle }) {
+  if (history.length === 0) return null;
+  return (
+    <details open={open} onToggle={onToggle}>
+      <summary className="lynxjournal-history-toggle">
+        {/* translators: %d: number of stored run records */}
+        {sprintf(__('History (%d)', 'lynx-journal'), history.length)}
+      </summary>
+      <ol className="lynxjournal-history-list">
+        {history.map((run) => (
+          <li key={run.ts} className="lynxjournal-history-row">
+            <div className="lynxjournal-history-row-main">
+              <RunBadge status={run.status} />
+              <PostLink postId={run.post_id} linkCount={run.link_count} />
+            </div>
+            <div className="lynxjournal-history-date">{fmtTs(run.ts)}</div>
+            {run.reason && (
+              <div className="lynxjournal-run-reason">{formatReason(run.reason)}</div>
+            )}
+          </li>
+        ))}
+      </ol>
+    </details>
+  );
+}
+
 export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
   const [showHistory, setShowHistory] = useState(
     () => localStorage.getItem(DIAG_HISTORY_STATE_KEY) === 'true'
@@ -74,56 +183,8 @@ export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
         {!loading && data && (
           <>
             <dl className="lynxjournal-diag-list">
-              {mode !== 'count' && (
-                <div className="lynxjournal-diag-row">
-                  <dt>{__('Next run', 'lynx-journal')}</dt>
-                  <dd>
-                    {data.next_scheduled
-                      ? fmtTs(data.next_scheduled)
-                      : (
-                        <>
-                          <em>{__('Not scheduled', 'lynx-journal')}</em>
-                          {data.wp_cron_disabled && (
-                            <span className="lynxjournal-diag-reason">
-                              {' — '}{__('WP-Cron disabled', 'lynx-journal')}
-                            </span>
-                          )}
-                        </>
-                      )}
-                  </dd>
-                </div>
-              )}
-
-              {mode === 'count' && data.links_until_post !== undefined && (
-                <div className="lynxjournal-diag-row">
-                  <dt>{__('Next run', 'lynx-journal')}</dt>
-                  <dd>
-                    {data.links_until_post > 0
-                      /* translators: %d: number of links still needed before the next post */
-                      ? sprintf(__('%d links until post', 'lynx-journal'), data.links_until_post)
-                      : <em>{__('Ready to post', 'lynx-journal')}</em>}
-                  </dd>
-                </div>
-              )}
-
-              <div className="lynxjournal-diag-row">
-                <dt>{__('Last run', 'lynx-journal')}</dt>
-                <dd>
-                  {lastRun ? (
-                    <>
-                      <RunBadge status={lastRun.status} />
-                      {' '}
-                      {fmtTs(lastRun.ts)}
-                      <PostLink postId={lastRun.post_id} linkCount={lastRun.link_count} />
-                      {lastRun.reason && (
-                        <span className="lynxjournal-run-reason">{formatReason(lastRun.reason)}</span>
-                      )}
-                    </>
-                  ) : (
-                    <em>{__('No runs yet', 'lynx-journal')}</em>
-                  )}
-                </dd>
-              </div>
+              <NextRunRow data={data} mode={mode} />
+              <LastRunRow lastRun={lastRun} />
 
               <div className="lynxjournal-diag-row">
                 <dt>{__('WP-Cron', 'lynx-journal')}</dt>
@@ -135,28 +196,7 @@ export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
               </div>
             </dl>
 
-            {history.length > 0 && (
-              <details open={showHistory} onToggle={handleHistoryToggle}>
-                <summary className="lynxjournal-history-toggle">
-                  {/* translators: %d: number of stored run records */}
-                  {sprintf(__('History (%d)', 'lynx-journal'), history.length)}
-                </summary>
-                <ol className="lynxjournal-history-list">
-                  {history.map((run) => (
-                    <li key={run.ts} className="lynxjournal-history-row">
-                      <div className="lynxjournal-history-row-main">
-                        <RunBadge status={run.status} />
-                        <PostLink postId={run.post_id} linkCount={run.link_count} />
-                      </div>
-                      <div className="lynxjournal-history-date">{fmtTs(run.ts)}</div>
-                      {run.reason && (
-                        <div className="lynxjournal-run-reason">{formatReason(run.reason)}</div>
-                      )}
-                    </li>
-                  ))}
-                </ol>
-              </details>
-            )}
+            <HistoryList history={history} open={showHistory} onToggle={handleHistoryToggle} />
           </>
         )}
 

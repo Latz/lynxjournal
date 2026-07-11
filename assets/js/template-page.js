@@ -366,24 +366,12 @@ function savePanelState( state ) {
 // ── Init ────────────────────────────────────────────────────
 
 /**
- * Runs directly rather than on 'DOMContentLoaded': this module is deferred
- * (type="module"), so the DOM is already parsed by the time it executes —
- * and since the top-level `await import()` above can resolve after the
- * real DOMContentLoaded event has already fired, a listener registered
- * here would otherwise never run.
+ * Restores the preview width/view toggle buttons from persisted panel state,
+ * and wires their click handlers (which re-save that state on change).
+ *
+ * @param {Record<string, boolean|string>} panelState Persisted panel state, mutated in place.
  */
-function initTemplateEditor() {
-	textarea          = document.getElementById( 'lynxjournal-post-template' );
-	preview           = document.getElementById( 'lynxjournal-template-preview' );
-	previewStatus     = document.getElementById( 'lynxjournal-preview-status' );
-	previewValidation = document.getElementById( 'lynxjournal-preview-validation' );
-
-	if ( !textarea || !preview ) { return; }
-
-	preview.addEventListener( 'load', resizePreviewIframe );
-
-	const panelState = loadPanelState();
-
+function initPreviewToggles( panelState ) {
 	if ( panelState.previewViewMode === 'theme' || panelState.previewViewMode === 'default' ) {
 		previewViewMode = panelState.previewViewMode;
 		document.querySelectorAll( '.lynxjournal-preview-view-btn' ).forEach( btn => {
@@ -398,10 +386,52 @@ function initTemplateEditor() {
 		preview.classList.toggle( 'is-width-mobile', panelState.previewWidthMode === 'mobile' );
 	}
 
+	const widthToggle = document.querySelector( '.lynxjournal-preview-width-toggle' );
+	const viewToggle  = document.querySelector( '.lynxjournal-preview-view-toggle' );
+
+	document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( btn => {
+		btn.addEventListener( 'click', () => {
+			document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( b => b.classList.remove( 'is-active' ) );
+			btn.classList.add( 'is-active' );
+			preview.classList.toggle( 'is-width-mobile', btn.dataset.width === 'mobile' );
+			if ( widthToggle ) { positionToggleThumb( widthToggle, btn ); }
+			resizePreviewIframe();
+			panelState.previewWidthMode = btn.dataset.width;
+			savePanelState( panelState );
+		} );
+	} );
+
+	document.querySelectorAll( '.lynxjournal-preview-view-btn' ).forEach( btn => {
+		btn.addEventListener( 'click', () => {
+			if ( btn.dataset.view === previewViewMode ) { return; }
+			document.querySelectorAll( '.lynxjournal-preview-view-btn' ).forEach( b => b.classList.remove( 'is-active' ) );
+			btn.classList.add( 'is-active' );
+			previewViewMode = btn.dataset.view;
+			if ( viewToggle ) { positionToggleThumb( viewToggle, btn ); }
+			updateTemplatePreview();
+			panelState.previewViewMode = previewViewMode;
+			savePanelState( panelState );
+		} );
+	} );
+
+	if ( widthToggle ) { positionToggleThumb( widthToggle, widthToggle.querySelector( '.is-active' ) ); }
+	if ( viewToggle ) { positionToggleThumb( viewToggle, viewToggle.querySelector( '.is-active' ) ); }
+}
+
+/** Records the editor's initial value and wires the unsaved-changes warning. */
+function initDirtyTracking() {
 	initialTemplateValue = textarea.value;
 	window.addEventListener( 'beforeunload', warnOnUnsavedChanges );
 	textarea.form?.addEventListener( 'submit', () => { isSubmitting = true; } );
+}
 
+/**
+ * Sets up the editor backend — CodeMirror (with the custom token overlay and
+ * live-preview debouncing) when available, otherwise a plain-textarea
+ * fallback with manual undo/redo handling. Sets the module-level `editor`
+ * and `btnUndo`/`btnRedo` references.
+ */
+function initEditorBackend() {
 	btnUndo = document.querySelector( '.lynxjournal-format-btn[data-action="undo"]' );
 	btnRedo = document.querySelector( '.lynxjournal-format-btn[data-action="redo"]' );
 
@@ -446,7 +476,14 @@ function initTemplateEditor() {
 			}
 		} );
 	}
+}
 
+/**
+ * Wires the formatting toolbar: format/heading buttons, token-insert
+ * buttons, and the initial preview/undo-redo/active-state render. Must run
+ * after {@link initEditorBackend}, since it reads the module-level `editor`.
+ */
+function initToolbar() {
 	const allFormatButtons = [ ...document.querySelectorAll( '.lynxjournal-format-btn[data-action]' ) ];
 	formatButtons   = allFormatButtons.filter( btn => btn.dataset.action !== 'undo' && btn.dataset.action !== 'redo' );
 	headingSelectEl = document.getElementById( 'lynxjournal-heading-select' );
@@ -487,38 +524,15 @@ function initTemplateEditor() {
 			updateToolbarActiveState();
 		} );
 	} );
+}
 
-	const widthToggle = document.querySelector( '.lynxjournal-preview-width-toggle' );
-	const viewToggle  = document.querySelector( '.lynxjournal-preview-view-toggle' );
-
-	document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( btn => {
-		btn.addEventListener( 'click', () => {
-			document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( b => b.classList.remove( 'is-active' ) );
-			btn.classList.add( 'is-active' );
-			preview.classList.toggle( 'is-width-mobile', btn.dataset.width === 'mobile' );
-			if ( widthToggle ) { positionToggleThumb( widthToggle, btn ); }
-			resizePreviewIframe();
-			panelState.previewWidthMode = btn.dataset.width;
-			savePanelState( panelState );
-		} );
-	} );
-
-	document.querySelectorAll( '.lynxjournal-preview-view-btn' ).forEach( btn => {
-		btn.addEventListener( 'click', () => {
-			if ( btn.dataset.view === previewViewMode ) { return; }
-			document.querySelectorAll( '.lynxjournal-preview-view-btn' ).forEach( b => b.classList.remove( 'is-active' ) );
-			btn.classList.add( 'is-active' );
-			previewViewMode = btn.dataset.view;
-			if ( viewToggle ) { positionToggleThumb( viewToggle, btn ); }
-			updateTemplatePreview();
-			panelState.previewViewMode = previewViewMode;
-			savePanelState( panelState );
-		} );
-	} );
-
-	if ( widthToggle ) { positionToggleThumb( widthToggle, widthToggle.querySelector( '.is-active' ) ); }
-	if ( viewToggle ) { positionToggleThumb( viewToggle, viewToggle.querySelector( '.is-active' ) ); }
-
+/**
+ * Wires the token-list accordion and the preview panel's collapse buttons,
+ * restoring their open/closed state from persisted panel state.
+ *
+ * @param {Record<string, boolean|string>} panelState Persisted panel state, mutated in place.
+ */
+function initCollapsiblePanels( panelState ) {
 	const tokenAccordion = document.getElementById( 'lynxjournal-token-accordion' );
 	if ( tokenAccordion ) {
 		if ( panelState[ 'lynxjournal-token-accordion' ] === true ) {
@@ -551,6 +565,32 @@ function initTemplateEditor() {
 			}
 		} );
 	} );
+}
+
+/**
+ * Runs directly rather than on 'DOMContentLoaded': this module is deferred
+ * (type="module"), so the DOM is already parsed by the time it executes —
+ * and since the top-level `await import()` above can resolve after the
+ * real DOMContentLoaded event has already fired, a listener registered
+ * here would otherwise never run.
+ */
+function initTemplateEditor() {
+	textarea          = document.getElementById( 'lynxjournal-post-template' );
+	preview           = document.getElementById( 'lynxjournal-template-preview' );
+	previewStatus     = document.getElementById( 'lynxjournal-preview-status' );
+	previewValidation = document.getElementById( 'lynxjournal-preview-validation' );
+
+	if ( !textarea || !preview ) { return; }
+
+	preview.addEventListener( 'load', resizePreviewIframe );
+
+	const panelState = loadPanelState();
+
+	initPreviewToggles( panelState );
+	initDirtyTracking();
+	initEditorBackend();
+	initToolbar();
+	initCollapsiblePanels( panelState );
 }
 
 initTemplateEditor();

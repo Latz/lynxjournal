@@ -75,6 +75,115 @@ function CopyableField({ id, value, type = 'text', trailing = null }) {
   );
 }
 
+/**
+ * Renders the API endpoint/key card: endpoint display, key generation,
+ * visibility toggle, and connection test.
+ *
+ * @param {object}   props
+ * @param {string}   props.restUrl            REST API base URL.
+ * @param {string}   props.apiKey             Current API key, or null if none generated yet.
+ * @param {boolean}  props.keyVisible         Whether the API key input shows plaintext.
+ * @param {Function} props.onToggleKeyVisible Toggles keyVisible.
+ * @param {boolean}  props.testing            Whether a connection test is in flight.
+ * @param {object}   props.testStatus         Latest connection test result ({ ok, message }), or null.
+ * @param {Function} props.onTestConnection   Runs a connection test.
+ * @param {boolean}  props.generating         Whether a key-generation request is in flight.
+ * @param {Function} props.onGenerate         Generates (or regenerates) the API key.
+ * @returns {JSX.Element}
+ */
+function AccessDataCard({
+  restUrl, apiKey, keyVisible, onToggleKeyVisible,
+  testing, testStatus, onTestConnection, generating, onGenerate,
+}) {
+  return (
+    <div className="card lynxjournal-settings-card">
+      <h2>{__('Chrome Extension Access Data', 'lynx-journal')}</h2>
+      <p>{__('Use these credentials to connect the LynxJournal Chrome extension to your WordPress site.', 'lynx-journal')}</p>
+
+      <div className="lynxjournal-settings-field">
+        <label className="lynxjournal-settings-label" htmlFor="lynxjournal-api-endpoint">
+          {__('API Endpoint', 'lynx-journal')}
+          {' '}
+          <span className="lynxjournal-settings-note">({__('read-only', 'lynx-journal')})</span>
+        </label>
+        <CopyableField id="lynxjournal-api-endpoint" value={restUrl} />
+        <p className="description">
+          {__('Use this URL in the Chrome extension settings.', 'lynx-journal')}
+          {' '}
+          <a href={restUrl} target="_blank" rel="noreferrer" className="lynxjournal-rest-link">
+            {__('View REST API', 'lynx-journal')} ↗
+          </a>
+        </p>
+      </div>
+
+      {apiKey && (
+        <div className="lynxjournal-settings-field">
+          <label htmlFor="lynxjournal-api-key" className="lynxjournal-settings-label">
+            {__('API Key:', 'lynx-journal')}
+          </label>
+          <CopyableField
+            id="lynxjournal-api-key"
+            value={apiKey}
+            type={keyVisible ? 'text' : 'password'}
+            trailing={(
+              <button
+                type="button"
+                className="button lynxjournal-toggle-key"
+                title={__('Show / hide API key', 'lynx-journal')}
+                onClick={onToggleKeyVisible}
+              >
+                <span className={`dashicons ${keyVisible ? 'dashicons-hidden' : 'dashicons-visibility'} lynxjournal-btn-icon`}></span>
+              </button>
+            )}
+          />
+          <p className="description lynxjournal-settings-desc">
+            {__('Keep this key secure. Use the copy button to transfer it without revealing it.', 'lynx-journal')}
+          </p>
+          <div className="lynxjournal-settings-test-row">
+            <Button variant="secondary" onClick={onTestConnection} isBusy={testing} disabled={testing}>
+              {__('Test Connection', 'lynx-journal')}
+            </Button>
+            {testStatus && (
+              <span style={{ color: testStatusColor(testStatus.ok) }}>
+                {testStatus.message}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {apiKey && (
+        <div className="notice notice-warning inline">
+          <p>{__('Warning: Generating a new key will permanently invalidate the current one. You will need to update the Chrome extension with the new key.', 'lynx-journal')}</p>
+        </div>
+      )}
+      <Button variant="primary" onClick={onGenerate} isBusy={generating} disabled={generating}>
+        {apiKey ? __('Generate New API Key', 'lynx-journal') : __('Generate API Key', 'lynx-journal')}
+      </Button>
+    </div>
+  );
+}
+
+/**
+ * Renders the static Chrome extension setup instructions card.
+ *
+ * @returns {JSX.Element}
+ */
+function SetupCard() {
+  return (
+    <div className="card lynxjournal-setup-card">
+      <h2>{__('Chrome Extension Setup', 'lynx-journal')}</h2>
+      <ol>
+        <li>{__('Download and install the LynxJournal Chrome extension', 'lynx-journal')}</li>
+        <li>{__('Click the extension icon and go to Settings', 'lynx-journal')}</li>
+        <li>{__('Paste your API Endpoint and API Key from above', 'lynx-journal')}</li>
+        <li>{__('Click Save', 'lynx-journal')}</li>
+        <li>{__('Now you can save links directly from any webpage!', 'lynx-journal')}</li>
+      </ol>
+    </div>
+  );
+}
+
 export default function App() {
   const settings = window.lynxjournalSettings || {};
   const restUrl = settings.restUrl || '';
@@ -153,82 +262,19 @@ export default function App() {
         </Notice>
       )}
 
-      <div className="card lynxjournal-settings-card">
-        <h2>{__('Chrome Extension Access Data', 'lynx-journal')}</h2>
-        <p>{__('Use these credentials to connect the LynxJournal Chrome extension to your WordPress site.', 'lynx-journal')}</p>
+      <AccessDataCard
+        restUrl={restUrl}
+        apiKey={apiKey}
+        keyVisible={keyVisible}
+        onToggleKeyVisible={() => setKeyVisible((v) => !v)}
+        testing={testing}
+        testStatus={testStatus}
+        onTestConnection={handleTestConnection}
+        generating={generating}
+        onGenerate={handleGenerate}
+      />
 
-        <div className="lynxjournal-settings-field">
-          <label className="lynxjournal-settings-label" htmlFor="lynxjournal-api-endpoint">
-            {__('API Endpoint', 'lynx-journal')}
-            {' '}
-            <span className="lynxjournal-settings-note">({__('read-only', 'lynx-journal')})</span>
-          </label>
-          <CopyableField id="lynxjournal-api-endpoint" value={restUrl} />
-          <p className="description">
-            {__('Use this URL in the Chrome extension settings.', 'lynx-journal')}
-            {' '}
-            <a href={restUrl} target="_blank" rel="noreferrer" className="lynxjournal-rest-link">
-              {__('View REST API', 'lynx-journal')} ↗
-            </a>
-          </p>
-        </div>
-
-        {apiKey && (
-          <div className="lynxjournal-settings-field">
-            <label htmlFor="lynxjournal-api-key" className="lynxjournal-settings-label">
-              {__('API Key:', 'lynx-journal')}
-            </label>
-            <CopyableField
-              id="lynxjournal-api-key"
-              value={apiKey}
-              type={keyVisible ? 'text' : 'password'}
-              trailing={(
-                <button
-                  type="button"
-                  className="button lynxjournal-toggle-key"
-                  title={__('Show / hide API key', 'lynx-journal')}
-                  onClick={() => setKeyVisible((v) => !v)}
-                >
-                  <span className={`dashicons ${keyVisible ? 'dashicons-hidden' : 'dashicons-visibility'} lynxjournal-btn-icon`}></span>
-                </button>
-              )}
-            />
-            <p className="description lynxjournal-settings-desc">
-              {__('Keep this key secure. Use the copy button to transfer it without revealing it.', 'lynx-journal')}
-            </p>
-            <div className="lynxjournal-settings-test-row">
-              <Button variant="secondary" onClick={handleTestConnection} isBusy={testing} disabled={testing}>
-                {__('Test Connection', 'lynx-journal')}
-              </Button>
-              {testStatus && (
-                <span style={{ color: testStatusColor(testStatus.ok) }}>
-                  {testStatus.message}
-                </span>
-              )}
-            </div>
-          </div>
-        )}
-
-        {apiKey && (
-          <div className="notice notice-warning inline">
-            <p>{__('Warning: Generating a new key will permanently invalidate the current one. You will need to update the Chrome extension with the new key.', 'lynx-journal')}</p>
-          </div>
-        )}
-        <Button variant="primary" onClick={handleGenerate} isBusy={generating} disabled={generating}>
-          {apiKey ? __('Generate New API Key', 'lynx-journal') : __('Generate API Key', 'lynx-journal')}
-        </Button>
-      </div>
-
-      <div className="card lynxjournal-setup-card">
-        <h2>{__('Chrome Extension Setup', 'lynx-journal')}</h2>
-        <ol>
-          <li>{__('Download and install the LynxJournal Chrome extension', 'lynx-journal')}</li>
-          <li>{__('Click the extension icon and go to Settings', 'lynx-journal')}</li>
-          <li>{__('Paste your API Endpoint and API Key from above', 'lynx-journal')}</li>
-          <li>{__('Click Save', 'lynx-journal')}</li>
-          <li>{__('Now you can save links directly from any webpage!', 'lynx-journal')}</li>
-        </ol>
-      </div>
+      <SetupCard />
     </>
   );
 }

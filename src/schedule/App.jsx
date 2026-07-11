@@ -29,6 +29,33 @@ function Section({ title, children }) {
   );
 }
 
+/**
+ * Renders the dismissible "WP-Cron is disabled" warning, when applicable.
+ *
+ * @param {boolean}  cronDisabled - Whether diagnostics reported WP-Cron as disabled.
+ * @param {boolean}  dismissed    - Whether the user has already dismissed this notice.
+ * @param {Function} onDismiss    - Called when the notice is dismissed.
+ * @returns {JSX.Element|null}
+ */
+function WpCronNotice({ cronDisabled, dismissed, onDismiss }) {
+  if (!cronDisabled || dismissed) return null;
+  return (
+    <Notice
+      status="warning"
+      isDismissible
+      onRemove={onDismiss}
+      className="lynxjournal-wpcron-notice"
+    >
+      <strong>{__('WP-Cron is disabled.', 'lynx-journal')}</strong>
+      {' '}
+      {__('Scheduled runs will not fire automatically. Add a real server cron job or remove', 'lynx-journal')}
+      {' '}<code>DISABLE_WP_CRON</code>{' '}
+      {__('from', 'lynx-journal')}
+      {' '}<code>wp-config.php</code>.
+    </Notice>
+  );
+}
+
 export default function App() {
   const [form, setForm]             = useState(DEFAULT_FORM);
   const [savedForm, setSavedForm]   = useState(null);
@@ -143,24 +170,14 @@ export default function App() {
   return (
     <div className="lynxjournal-schedule-wrap">
       <div className="lynxjournal-schedule-main">
-        {diag?.wp_cron_disabled && !cronNoticeDismissed && (
-          <Notice
-            status="warning"
-            isDismissible
-            onRemove={() => {
-              setCronNoticeDismissed(true);
-              apiFetch({ path: '/lynxjournal/v1/schedule/dismiss-cron-notice', method: 'POST' });
-            }}
-            className="lynxjournal-wpcron-notice"
-          >
-            <strong>{__('WP-Cron is disabled.', 'lynx-journal')}</strong>
-            {' '}
-            {__('Scheduled runs will not fire automatically. Add a real server cron job or remove', 'lynx-journal')}
-            {' '}<code>DISABLE_WP_CRON</code>{' '}
-            {__('from', 'lynx-journal')}
-            {' '}<code>wp-config.php</code>.
-          </Notice>
-        )}
+        <WpCronNotice
+          cronDisabled={diag?.wp_cron_disabled}
+          dismissed={cronNoticeDismissed}
+          onDismiss={() => {
+            setCronNoticeDismissed(true);
+            apiFetch({ path: '/lynxjournal/v1/schedule/dismiss-cron-notice', method: 'POST' });
+          }}
+        />
 
         {notice && (
           <Notice status={notice.status} onRemove={() => setNotice(null)} isDismissible>

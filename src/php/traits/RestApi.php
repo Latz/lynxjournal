@@ -11,6 +11,19 @@ trait LynxJournal_RestApi {
      * @return void
      */
     public function registerRestRoutes(): void {
+        $this->registerLinkRoutes();
+        $this->registerCategoryRoutes();
+        $this->registerScheduleRoutes();
+        $this->registerAuthRoutes();
+    }
+
+    /**
+     * Register REST routes for adding and deleting links.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    private function registerLinkRoutes(): void {
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/add-link', array(
             'methods' => 'POST',
             'callback' => [$this, 'restAddLink'],
@@ -42,6 +55,22 @@ trait LynxJournal_RestApi {
             ),
         ));
 
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/links/(?P<id>\d+)', array(
+            'methods'             => 'DELETE',
+            'callback'            => [$this, 'restDeleteLink'],
+            'permission_callback' => function( \WP_REST_Request $request ) {
+                return current_user_can('delete_post', (int) $request->get_param('id'));
+            },
+        ));
+    }
+
+    /**
+     * Register REST routes for listing and updating link categories.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    private function registerCategoryRoutes(): void {
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/categories', array(
             'methods' => 'GET',
             'callback' => [$this, 'restGetCategories'],
@@ -59,15 +88,15 @@ trait LynxJournal_RestApi {
                 'slug'        => array( 'required' => false, 'type' => 'string',  'sanitize_callback' => 'sanitize_title' ),
             ),
         ));
+    }
 
-        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/links/(?P<id>\d+)', array(
-            'methods'             => 'DELETE',
-            'callback'            => [$this, 'restDeleteLink'],
-            'permission_callback' => function( \WP_REST_Request $request ) {
-                return current_user_can('delete_post', (int) $request->get_param('id'));
-            },
-        ));
-
+    /**
+     * Register REST routes for reading, saving, running, and previewing the schedule.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    private function registerScheduleRoutes(): void {
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/schedule', array(
             array(
                 'methods'             => 'GET',
@@ -107,7 +136,15 @@ trait LynxJournal_RestApi {
             },
             'permission_callback' => fn() => current_user_can('manage_options'),
         ));
+    }
 
+    /**
+     * Register REST routes for the Chrome extension API key and nonce.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    private function registerAuthRoutes(): void {
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/api-key', array(
             array(
                 'methods'             => 'GET',

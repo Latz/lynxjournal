@@ -503,15 +503,63 @@ trait LynxJournal_Admin_Dashboard {
      * @return void
      */
     public function dashboardPage(): void {
+        $d = $this->gatherDashboardData();
+        ?>
+        <div class="wrap">
+            <h1><?php esc_html_e( 'Overview', 'lynx-journal' ); ?></h1>
+
+            <?php $this->renderDashboardNotices( $d['batch_result'], $d['roundup_result'] ); ?>
+
+            <?php $this->renderDashboardStatsSection( $d ); ?>
+
+            <!-- Main Content -->
+            <div class="metabox-holder lynxjournal-dashboard">
+                <div id="lynxjournal-postbox-container-1" class="postbox-container meta-box-sortables">
+                    <?php
+                    $this->renderUnpublishedLinksBox( $d['recent_links'] );
+                    $this->renderRecentlyPublishedBox( $d['recently_published'] );
+                    ?>
+                </div><!-- #lynxjournal-postbox-container-1 -->
+
+                <div id="lynxjournal-postbox-container-2" class="postbox-container meta-box-sortables">
+                    <?php
+                    $this->renderQuickAddBox( $d['quick_add_success'] );
+                    $this->renderPublishBox( $d['unpublished_links'] );
+                    ?>
+                </div><!-- #lynxjournal-postbox-container-2 -->
+            </div><!-- .lynxjournal-dashboard -->
+        </div>
+
+        <?php $this->renderDashboardJs(); ?>
+        <?php
+    }
+
+    /**
+     * Gather all data needed to render the dashboard page: pending-request
+     * results, link/category statistics, and recent links.
+     *
+     * @since 1.0.0
+     * @return array{
+     *     batch_result: mixed,
+     *     roundup_result: mixed,
+     *     quick_add_success: mixed,
+     *     total_links: int,
+     *     published_links: int,
+     *     unpublished_links: int,
+     *     total_categories: int,
+     *     recent_links: \WP_Post[],
+     *     recently_published: \WP_Post[],
+     *     all_links_url: string,
+     *     categories_url: string,
+     * }
+     */
+    private function gatherDashboardData(): array {
         $batch_result      = $this->handleBatchPublishRequest();
         $roundup_result    = $this->handleRoundupRequest();
         $quick_add_success = $this->handleQuickAddRequest();
 
-        $publish_stats     = $this->getPublishStatistics();
-        $total_links       = $publish_stats['total_links'];
-        $published_links   = $publish_stats['published_links'];
-        $unpublished_links = $publish_stats['unpublished_links'];
-        $total_categories  = count( $this->getCachedCategories() );
+        $publish_stats    = $this->getPublishStatistics();
+        $total_categories = count( $this->getCachedCategories() );
 
         $recent_links = get_posts( array(
             'post_type'      => 'lynx-journal',
@@ -529,83 +577,79 @@ trait LynxJournal_Admin_Dashboard {
             'order'          => 'DESC',
         ) );
 
-        $all_links_url  = esc_url( admin_url( self::ADMIN_LINKS_PAGE ) );
-        $categories_url = esc_url( admin_url( 'edit-tags.php?taxonomy=lynxjournal_category&post_type=lynx-journal' ) );
+        return array(
+            'batch_result'       => $batch_result,
+            'roundup_result'     => $roundup_result,
+            'quick_add_success'  => $quick_add_success,
+            'total_links'        => $publish_stats['total_links'],
+            'published_links'    => $publish_stats['published_links'],
+            'unpublished_links'  => $publish_stats['unpublished_links'],
+            'total_categories'   => $total_categories,
+            'recent_links'       => $recent_links,
+            'recently_published' => $recently_published,
+            'all_links_url'      => esc_url( admin_url( self::ADMIN_LINKS_PAGE ) ),
+            'categories_url'     => esc_url( admin_url( 'edit-tags.php?taxonomy=lynxjournal_category&post_type=lynx-journal' ) ),
+        );
+    }
+
+    /**
+     * Render the "no categories" warning, onboarding prompt, and stats grid.
+     *
+     * @since 1.0.0
+     * @param array $d Dashboard data, as returned by gatherDashboardData().
+     * @return void
+     */
+    private function renderDashboardStatsSection( array $d ): void {
         ?>
-        <div class="wrap">
-            <h1><?php esc_html_e( 'Overview', 'lynx-journal' ); ?></h1>
-
-            <?php $this->renderDashboardNotices( $batch_result, $roundup_result ); ?>
-
-            <?php if ( $total_categories === 0 ) : ?>
-            <div class="notice notice-warning">
-                <p>
-                    <?php
-                    printf(
-                        /* translators: %s: link to the category admin page */
-                        esc_html__( 'No categories defined yet. %s', 'lynx-journal' ),
-                        '<a href="' . esc_url( admin_url( 'admin.php?page=lynxjournal-categories' ) ) . '">' . esc_html__( 'Add a category', 'lynx-journal' ) . '</a>'
-                    );
-                    ?>
-                </p>
-            </div>
-            <?php endif; ?>
-
-            <?php if ( $total_links === 0 ) : ?>
-            <!-- Onboarding -->
-            <div class="lynxjournal-onboarding">
-                <span class="dashicons dashicons-admin-links lynxjournal-onboarding-icon"></span>
-                <p><strong><?php esc_html_e( 'No links yet.', 'lynx-journal' ); ?></strong>
-                   <?php esc_html_e( 'Start by adding your first link.', 'lynx-journal' ); ?></p>
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=lynxjournal-add' ) ); ?>" class="button button-primary">
-                    <?php esc_html_e( 'Add your first link →', 'lynx-journal' ); ?>
-                </a>
-            </div>
-            <?php else : ?>
-            <!-- Statistics -->
-            <div class="lynxjournal-stats-grid">
-                <a href="<?php echo esc_url( $all_links_url ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
-                    <span class="dashicons dashicons-admin-links lynxjournal-stat-icon"></span>
-                    <div><span class="lynxjournal-stat-value" id="lynxjournal-stat-total"><?php echo esc_html( number_format_i18n( $total_links ) ); ?></span>
-                    <span class="lynxjournal-stat-label"><?php esc_html_e( 'Total Links', 'lynx-journal' ); ?></span></div>
-                </a>
-                <a href="<?php echo esc_url( $categories_url ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
-                    <span class="dashicons dashicons-category lynxjournal-stat-icon"></span>
-                    <div><span class="lynxjournal-stat-value"><?php echo esc_html( number_format_i18n( $total_categories ) ); ?></span>
-                    <span class="lynxjournal-stat-label"><?php echo esc_html( _n( 'Category', 'Categories', $total_categories, 'lynx-journal' ) ); ?></span></div>
-                </a>
-                <a href="<?php echo esc_url( $all_links_url ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
-                    <span class="dashicons dashicons-yes-alt lynxjournal-stat-icon"></span>
-                    <div><span class="lynxjournal-stat-value"><?php echo esc_html( number_format_i18n( $published_links ) ); ?></span>
-                    <span class="lynxjournal-stat-label"><?php esc_html_e( 'Published', 'lynx-journal' ); ?></span></div>
-                </a>
-                <a href="<?php echo esc_url( $all_links_url ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
-                    <span class="dashicons dashicons-clock lynxjournal-stat-icon"></span>
-                    <div><span class="lynxjournal-stat-value" id="lynxjournal-stat-unpublished"><?php echo esc_html( number_format_i18n( $unpublished_links ) ); ?></span>
-                    <span class="lynxjournal-stat-label"><?php esc_html_e( 'Unpublished', 'lynx-journal' ); ?></span></div>
-                </a>
-            </div>
-            <?php endif; ?>
-
-            <!-- Main Content -->
-            <div class="metabox-holder lynxjournal-dashboard">
-                <div id="lynxjournal-postbox-container-1" class="postbox-container meta-box-sortables">
-                    <?php
-                    $this->renderUnpublishedLinksBox( $recent_links );
-                    $this->renderRecentlyPublishedBox( $recently_published );
-                    ?>
-                </div><!-- #lynxjournal-postbox-container-1 -->
-
-                <div id="lynxjournal-postbox-container-2" class="postbox-container meta-box-sortables">
-                    <?php
-                    $this->renderQuickAddBox( $quick_add_success );
-                    $this->renderPublishBox( $unpublished_links );
-                    ?>
-                </div><!-- #lynxjournal-postbox-container-2 -->
-            </div><!-- .lynxjournal-dashboard -->
+        <?php if ( $d['total_categories'] === 0 ) : ?>
+        <div class="notice notice-warning">
+            <p>
+                <?php
+                printf(
+                    /* translators: %s: link to the category admin page */
+                    esc_html__( 'No categories defined yet. %s', 'lynx-journal' ),
+                    '<a href="' . esc_url( admin_url( 'admin.php?page=lynxjournal-categories' ) ) . '">' . esc_html__( 'Add a category', 'lynx-journal' ) . '</a>'
+                );
+                ?>
+            </p>
         </div>
+        <?php endif; ?>
 
-        <?php $this->renderDashboardJs(); ?>
+        <?php if ( $d['total_links'] === 0 ) : ?>
+        <!-- Onboarding -->
+        <div class="lynxjournal-onboarding">
+            <span class="dashicons dashicons-admin-links lynxjournal-onboarding-icon"></span>
+            <p><strong><?php esc_html_e( 'No links yet.', 'lynx-journal' ); ?></strong>
+               <?php esc_html_e( 'Start by adding your first link.', 'lynx-journal' ); ?></p>
+            <a href="<?php echo esc_url( admin_url( 'admin.php?page=lynxjournal-add' ) ); ?>" class="button button-primary">
+                <?php esc_html_e( 'Add your first link →', 'lynx-journal' ); ?>
+            </a>
+        </div>
+        <?php else : ?>
+        <!-- Statistics -->
+        <div class="lynxjournal-stats-grid">
+            <a href="<?php echo esc_url( $d['all_links_url'] ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
+                <span class="dashicons dashicons-admin-links lynxjournal-stat-icon"></span>
+                <div><span class="lynxjournal-stat-value" id="lynxjournal-stat-total"><?php echo esc_html( number_format_i18n( $d['total_links'] ) ); ?></span>
+                <span class="lynxjournal-stat-label"><?php esc_html_e( 'Total Links', 'lynx-journal' ); ?></span></div>
+            </a>
+            <a href="<?php echo esc_url( $d['categories_url'] ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
+                <span class="dashicons dashicons-category lynxjournal-stat-icon"></span>
+                <div><span class="lynxjournal-stat-value"><?php echo esc_html( number_format_i18n( $d['total_categories'] ) ); ?></span>
+                <span class="lynxjournal-stat-label"><?php echo esc_html( _n( 'Category', 'Categories', $d['total_categories'], 'lynx-journal' ) ); ?></span></div>
+            </a>
+            <a href="<?php echo esc_url( $d['all_links_url'] ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
+                <span class="dashicons dashicons-yes-alt lynxjournal-stat-icon"></span>
+                <div><span class="lynxjournal-stat-value"><?php echo esc_html( number_format_i18n( $d['published_links'] ) ); ?></span>
+                <span class="lynxjournal-stat-label"><?php esc_html_e( 'Published', 'lynx-journal' ); ?></span></div>
+            </a>
+            <a href="<?php echo esc_url( $d['all_links_url'] ); ?>" class="lynxjournal-stat-card lynxjournal-stat-card--link">
+                <span class="dashicons dashicons-clock lynxjournal-stat-icon"></span>
+                <div><span class="lynxjournal-stat-value" id="lynxjournal-stat-unpublished"><?php echo esc_html( number_format_i18n( $d['unpublished_links'] ) ); ?></span>
+                <span class="lynxjournal-stat-label"><?php esc_html_e( 'Unpublished', 'lynx-journal' ); ?></span></div>
+            </a>
+        </div>
+        <?php endif; ?>
         <?php
     }
 }
