@@ -217,6 +217,8 @@ trait LynxJournal_Admin_Menu {
                 'slugPlaceholder' => __('Leave blank to keep current', 'lynx-journal'),
                 'deleteOne'       => __('link will become uncategorized.', 'lynx-journal'),
                 'deleteMany'      => __('links will become uncategorized.', 'lynx-journal'),
+                /* translators: %s: category name. */
+                'deleteConfirm'   => __("Delete '%s'?", 'lynx-journal'),
             ),
         ));
     }
