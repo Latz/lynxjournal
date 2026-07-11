@@ -5,5 +5,6 @@ module.exports = {
   entry: {
     schedule: './src/schedule/index.js',
     settings: './src/settings/index.js',
+    categories: './src/categories/index.js',
   },
 };

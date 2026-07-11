@@ -227,16 +227,16 @@ describe('LynxJournal::enqueueAdminAssets()', function (): void { // NOSONAR
         expect($scripts)->toContain('lynxjournal-links-page');
     });
 
-    it('enqueues categories scripts and localizes data for the categories hook', function (): void {
-        $localized = [];
-        Functions\when('wp_localize_script')->alias(function (...$a) use (&$localized) {
-            $localized[] = $a;
+    it('enqueues the categories script using the real asset file', function (): void {
+        $scripts = [];
+        Functions\when('wp_enqueue_script')->alias(function (...$a) use (&$scripts) {
+            $scripts[] = $a;
             return null;
         });
 
         $this->plugin->enqueueAdminAssets('lynxjournal-dashboard_page_lynxjournal-categories');
 
-        expect(array_column($localized, 1))->toContain('lynxjournalCats');
+        expect(array_column($scripts, 0))->toContain('lynxjournal-categories');
     });
 
     it('enqueues the schedule script, style, and localized data using the real asset file', function (): void {

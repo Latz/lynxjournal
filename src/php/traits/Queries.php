@@ -134,6 +134,31 @@ trait LynxJournal_Queries {
     }
 
     /**
+     * Count published/pending links per lynxjournal category.
+     *
+     * @since 1.0.0
+     * @return array<int, int> Map of term_id => link count.
+     */
+    public function getCategoryLinkCounts(): array {
+        global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $rows = $wpdb->get_results(
+            "SELECT tt.term_id, COUNT(p.ID) AS cnt
+             FROM {$wpdb->term_taxonomy} tt
+             LEFT JOIN {$wpdb->term_relationships} tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
+             LEFT JOIN {$wpdb->posts} p ON tr.object_id = p.ID
+                AND p.post_status IN ('lynxjournal_pending','lynxjournal_pub','lynxjournal_draft')
+             WHERE tt.taxonomy = 'lynxjournal_category'
+             GROUP BY tt.term_id",
+            ARRAY_A
+        );
+        if ( ! $rows ) {
+            return array();
+        }
+        return array_column( $rows, 'cnt', 'term_id' );
+    }
+
+    /**
      * Run schema migration to custom post statuses if needed.
      *
      * Migrates existing published lynxjournal posts to custom status values.

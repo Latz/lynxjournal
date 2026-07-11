@@ -72,20 +72,47 @@ trait LynxJournal_RestApi {
      */
     private function registerCategoryRoutes(): void {
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/categories', array(
-            'methods' => 'GET',
-            'callback' => [$this, 'restGetCategories'],
-            'permission_callback' => [$this, 'restPermissionCheck'],
+            array(
+                'methods'             => 'GET',
+                'callback'            => [$this, 'restGetCategories'],
+                'permission_callback' => [$this, 'restPermissionCheck'],
+            ),
+            array(
+                'methods'             => 'POST',
+                'callback'            => [$this, 'restCreateCategory'],
+                'permission_callback' => fn() => current_user_can('edit_posts'),
+                'args'                => array(
+                    'name'        => array( 'required' => true,  'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
+                    'description' => array( 'required' => false, 'type' => 'string', 'sanitize_callback' => 'sanitize_textarea_field' ),
+                ),
+            ),
+        ));
+
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/categories/counts', array(
+            'methods'             => 'GET',
+            'callback'            => [$this, 'restGetCategoryLinkCounts'],
+            'permission_callback' => fn() => current_user_can('edit_posts'),
         ));
 
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/categories/(?P<id>\d+)', array(
-            'methods'             => 'POST',
-            'callback'            => [$this, 'updateCategory'],
-            'permission_callback' => fn() => current_user_can('edit_posts'),
-            'args'                => array(
-                'id'          => array( 'required' => true,  'type' => 'integer' ),
-                'name'        => array( 'required' => true,  'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ),
-                'description' => array( 'required' => false, 'type' => 'string',  'sanitize_callback' => 'sanitize_textarea_field' ),
-                'slug'        => array( 'required' => false, 'type' => 'string',  'sanitize_callback' => 'sanitize_title' ),
+            array(
+                'methods'             => 'POST',
+                'callback'            => [$this, 'updateCategory'],
+                'permission_callback' => fn() => current_user_can('edit_posts'),
+                'args'                => array(
+                    'id'          => array( 'required' => true,  'type' => 'integer' ),
+                    'name'        => array( 'required' => true,  'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ),
+                    'description' => array( 'required' => false, 'type' => 'string',  'sanitize_callback' => 'sanitize_textarea_field' ),
+                    'slug'        => array( 'required' => false, 'type' => 'string',  'sanitize_callback' => 'sanitize_title' ),
+                ),
+            ),
+            array(
+                'methods'             => 'DELETE',
+                'callback'            => [$this, 'restDeleteCategory'],
+                'permission_callback' => fn() => current_user_can('edit_posts'),
+                'args'                => array(
+                    'id' => array( 'required' => true, 'type' => 'integer' ),
+                ),
             ),
         ));
     }
@@ -478,6 +505,59 @@ trait LynxJournal_RestApi {
     public function invalidateCategoriesCache(): void {
         delete_transient('lynxjournal_api_categories_list');
         delete_transient('lynxjournal_categories_terms');
+    }
+
+    /**
+     * Create a lynxjournal category via REST API.
+     *
+     * @since 1.0.0
+     * @param \WP_REST_Request $request The REST request with category data.
+     * @return mixed REST response with the created category, or a WP_Error.
+     */
+    public function restCreateCategory( \WP_REST_Request $request ): mixed {
+        $result = wp_insert_term(
+            $request->get_param('name'),
+            'lynxjournal_category',
+            array( 'description' => $request->get_param('description') ?? '' )
+        );
+        if ( is_wp_error( $result ) ) {
+            return $result;
+        }
+        $this->invalidateCategoriesCache();
+        $term = get_term( $result['term_id'], 'lynxjournal_category' );
+        return rest_ensure_response( array(
+            'id'          => $term->term_id,
+            'name'        => $term->name,
+            'slug'        => $term->slug,
+            'description' => $term->description,
+        ) );
+    }
+
+    /**
+     * Delete a lynxjournal category via REST API.
+     *
+     * @since 1.0.0
+     * @param \WP_REST_Request $request The REST request with the category ID.
+     * @return \WP_REST_Response|\WP_Error 204 on success, or an error.
+     */
+    public function restDeleteCategory( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
+        $term_id = (int) $request['id'];
+        $result  = wp_delete_term( $term_id, 'lynxjournal_category' );
+        if ( is_wp_error( $result ) || $result === false ) {
+            return new \WP_Error( 'delete_failed', __( 'Could not delete category.', 'lynx-journal' ), array( 'status' => 500 ) );
+        }
+        $this->invalidateCategoriesCache();
+        return new \WP_REST_Response( null, 204 );
+    }
+
+    /**
+     * Get per-category link counts via REST API.
+     *
+     * @since 1.0.0
+     * @return mixed REST response with a term_id => count map.
+     */
+    public function restGetCategoryLinkCounts(): mixed {
+        return rest_ensure_response( $this->getCategoryLinkCounts() );
     }
 
 }

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LynxJournal 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lynxjournal\n"
-"POT-Creation-Date: 2026-07-11T18:52:13+00:00\n"
+"POT-Creation-Date: 2026-07-11T22:19:00+00:00\n"
 "PO-Revision-Date: 2026-07-11 00:00+0000\n"
 "Last-Translator: Latz\n"
 "Language-Team: German\n"
@@ -79,7 +79,7 @@ msgid "Add Link"
 msgstr "Link hinzufügen"
 
 #: src/php/traits/Admin/AddLink.php:92 src/php/traits/Admin/Menu.php:157
-#: src/php/traits/Admin/Menu.php:218
+#: build/categories.js:1 src/categories/App.jsx:121
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -90,11 +90,11 @@ msgstr ""
 "Keine Kategorien vorhanden. Erstelle zuerst Kategorien unter LynxJournal > "
 "Kategorien."
 
-#: src/php/traits/Admin/AddLink.php:163 src/php/traits/Admin/Categories.php:88
+#: src/php/traits/Admin/AddLink.php:163
 msgid "Security check failed."
 msgstr "Sicherheitsprüfung fehlgeschlagen."
 
-#: src/php/traits/Admin/AddLink.php:167 src/php/traits/Admin/Categories.php:91
+#: src/php/traits/Admin/AddLink.php:167
 msgid "Insufficient permissions."
 msgstr "Unzureichende Berechtigungen."
 
@@ -107,96 +107,26 @@ msgid "Failed to add link."
 msgstr "Link konnte nicht hinzugefügt werden."
 
 #: src/php/traits/Admin/AddLink.php:213 src/php/traits/Admin/Dashboard.php:416
-#: src/php/traits/RestApi.php:368
+#: src/php/traits/RestApi.php:432
 msgid "Link added successfully!"
 msgstr "Link erfolgreich hinzugefügt!"
 
-#: src/php/traits/Admin/Categories.php:28
+#: src/php/traits/Admin/Categories.php:16
 msgid "Link Categories"
 msgstr "Link-Kategorien"
-
-#: src/php/traits/Admin/Categories.php:58
-msgid "Category added."
-msgstr "Kategorie hinzugefügt."
-
-#: src/php/traits/Admin/Categories.php:66
-msgid "Category deleted."
-msgstr "Kategorie gelöscht."
-
-#: src/php/traits/Admin/Categories.php:67
-msgid "Could not delete category."
-msgstr "Kategorie konnte nicht gelöscht werden."
-
-#: src/php/traits/Admin/Categories.php:101
-msgid "Category name is required."
-msgstr "Kategoriename ist erforderlich."
-
-#: src/php/traits/Admin/Categories.php:176
-msgid "No categories yet. Use the form to add your first category."
-msgstr ""
-"Noch keine Kategorien vorhanden. Nutze das Formular, um deine erste "
-"Kategorie hinzuzufügen."
-
-#: src/php/traits/Admin/Categories.php:183
-#: src/php/traits/Admin/Categories.php:234
-msgid "Name"
-msgstr "Name"
-
-#: src/php/traits/Admin/Categories.php:184
-#: src/php/traits/Admin/Categories.php:239
-msgid "Description"
-msgstr "Beschreibung"
-
-#: src/php/traits/Admin/Categories.php:185
-msgid "Slug"
-msgstr "Slug"
-
-#: src/php/traits/Admin/Categories.php:186
-#: src/php/traits/Admin/TemplatePage.php:44
-msgid "Links"
-msgstr "Links"
-
-#: src/php/traits/Admin/Categories.php:187
-#: src/php/traits/Admin/LinksPage.php:166
-#: src/php/traits/Admin/LinksPage.php:197
-msgid "Actions"
-msgstr "Aktionen"
-
-#: src/php/traits/Admin/Categories.php:205
-#: src/php/traits/Admin/LinksPage.php:360 src/php/traits/Admin/Menu.php:216
-msgid "Edit"
-msgstr "Bearbeiten"
-
-#: src/php/traits/Admin/Categories.php:213
-#: src/php/traits/Admin/LinksPage.php:361
-msgid "Delete"
-msgstr "Löschen"
-
-#: src/php/traits/Admin/Categories.php:228
-#: src/php/traits/trait-post-type.php:170
-msgid "Add New Category"
-msgstr "Neue Kategorie hinzufügen"
-
-#: src/php/traits/Admin/Categories.php:240
-msgid "(optional)"
-msgstr "(optional)"
-
-#: src/php/traits/Admin/Categories.php:246
-msgid "Add Category"
-msgstr "Kategorie hinzufügen"
 
 #: src/php/traits/Admin/Dashboard.php:30
 msgid "Total"
 msgstr "Gesamt"
 
-#: src/php/traits/Admin/Dashboard.php:34 src/php/traits/Admin/Dashboard.php:580
+#: src/php/traits/Admin/Dashboard.php:34 src/php/traits/Admin/Dashboard.php:644
 #: src/php/traits/Admin/LinksPage.php:164
 #: src/php/traits/Admin/LinksPage.php:195
 #: src/php/traits/Admin/LinksPage.php:340
 msgid "Published"
 msgstr "Veröffentlicht"
 
-#: src/php/traits/Admin/Dashboard.php:38 src/php/traits/Admin/Dashboard.php:585
+#: src/php/traits/Admin/Dashboard.php:38 src/php/traits/Admin/Dashboard.php:649
 #: src/php/traits/Admin/LinksPage.php:342
 msgid "Unpublished"
 msgstr "Unveröffentlicht"
@@ -297,7 +227,7 @@ msgid "Links Roundup - %s"
 msgstr "Link-Zusammenfassung – %s"
 
 #: src/php/traits/Admin/Dashboard.php:316 build/schedule.js:3
-#: src/schedule/App.jsx:192
+#: src/schedule/App.jsx:209
 msgid "Publish"
 msgstr "Veröffentlichen"
 
@@ -320,7 +250,7 @@ msgstr "Entwurf ansehen"
 
 #: src/php/traits/Admin/Dashboard.php:375
 #: src/php/traits/Admin/LinksPage.php:341 build/schedule.js:3
-#: src/schedule/App.jsx:193
+#: src/schedule/App.jsx:210
 msgid "Draft"
 msgstr "Entwurf"
 
@@ -333,7 +263,7 @@ msgid "Enter link title"
 msgstr "Linktitel eingeben"
 
 #: src/php/traits/Admin/Dashboard.php:432
-#: src/php/traits/Admin/Dashboard.php:575
+#: src/php/traits/Admin/Dashboard.php:639
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Kategorie"
@@ -357,33 +287,33 @@ msgstr "Kein automatischer Zeitplan aktiv."
 msgid "Schedule settings →"
 msgstr "Zeitplaneinstellungen →"
 
-#: src/php/traits/Admin/Dashboard.php:536
+#: src/php/traits/Admin/Dashboard.php:509
 msgid "Overview"
 msgstr "Übersicht"
 
 #. translators: %s: link to the category admin page
-#: src/php/traits/Admin/Dashboard.php:546
+#: src/php/traits/Admin/Dashboard.php:610
 #, php-format
 msgid "No categories defined yet. %s"
 msgstr "Noch keine Kategorien definiert. %s"
 
-#: src/php/traits/Admin/Dashboard.php:547
+#: src/php/traits/Admin/Dashboard.php:611
 msgid "Add a category"
 msgstr "Kategorie hinzufügen"
 
-#: src/php/traits/Admin/Dashboard.php:558
+#: src/php/traits/Admin/Dashboard.php:622
 msgid "No links yet."
 msgstr "Noch keine Links."
 
-#: src/php/traits/Admin/Dashboard.php:559
+#: src/php/traits/Admin/Dashboard.php:623
 msgid "Start by adding your first link."
 msgstr "Füge deinen ersten Link hinzu, um loszulegen."
 
-#: src/php/traits/Admin/Dashboard.php:561
+#: src/php/traits/Admin/Dashboard.php:625
 msgid "Add your first link →"
 msgstr "Füge deinen ersten Link hinzu →"
 
-#: src/php/traits/Admin/Dashboard.php:570
+#: src/php/traits/Admin/Dashboard.php:634
 msgid "Total Links"
 msgstr "Links gesamt"
 
@@ -446,6 +376,12 @@ msgstr "Status"
 msgid "Date"
 msgstr "Datum"
 
+#: src/php/traits/Admin/LinksPage.php:166
+#: src/php/traits/Admin/LinksPage.php:197 build/categories.js:3
+#: src/categories/App.jsx:171
+msgid "Actions"
+msgstr "Aktionen"
+
 #: src/php/traits/Admin/LinksPage.php:170
 msgid "No links found."
 msgstr "Keine Links gefunden."
@@ -468,9 +404,19 @@ msgstr "Möchtest du diesen Link wirklich unveröffentlichen?"
 msgid "Unpublish"
 msgstr "Unveröffentlichen"
 
+#: src/php/traits/Admin/LinksPage.php:360 build/categories.js:1
+#: src/categories/App.jsx:137
+msgid "Edit"
+msgstr "Bearbeiten"
+
 #: src/php/traits/Admin/LinksPage.php:361
 msgid "Are you sure you want to delete this link?"
 msgstr "Möchtest du diesen Link wirklich löschen?"
+
+#: src/php/traits/Admin/LinksPage.php:361 build/categories.js:3
+#: src/categories/App.jsx:141
+msgid "Delete"
+msgstr "Löschen"
 
 #: src/php/traits/Admin/Menu.php:28
 msgid "Dashboard"
@@ -508,45 +454,7 @@ msgstr "Löschen?"
 msgid "Yes"
 msgstr "Ja"
 
-#: src/php/traits/Admin/Menu.php:217
-msgid "Save"
-msgstr "Speichern"
-
-#: src/php/traits/Admin/Menu.php:219
-msgid "Saving…"
-msgstr "Speichern…"
-
-#: src/php/traits/Admin/Menu.php:220
-msgid "Save failed."
-msgstr "Speichern fehlgeschlagen."
-
-#: src/php/traits/Admin/Menu.php:221
-msgid "Name is required."
-msgstr "Name ist erforderlich."
-
-#: src/php/traits/Admin/Menu.php:222
-msgid "Description (optional)"
-msgstr "Beschreibung (optional)"
-
-#: src/php/traits/Admin/Menu.php:223
-msgid "Leave blank to keep current"
-msgstr "Leer lassen, um aktuellen Wert zu behalten"
-
-#: src/php/traits/Admin/Menu.php:224
-msgid "link will become uncategorized."
-msgstr "Link wird unkategorisiert."
-
-#: src/php/traits/Admin/Menu.php:225
-msgid "links will become uncategorized."
-msgstr "Links werden unkategorisiert."
-
-#. translators: %s: category name.
-#: src/php/traits/Admin/Menu.php:227
-#, php-format
-msgid "Delete '%s'?"
-msgstr "„%s“ löschen?"
-
-#: src/php/traits/Admin/Menu.php:440
+#: src/php/traits/Admin/Menu.php:449
 msgid "LynxJournal Summary"
 msgstr "LynxJournal-Übersicht"
 
@@ -597,6 +505,11 @@ msgstr "Name der Website"
 #: src/php/traits/Admin/TemplatePage.php:42
 msgid "Number of roundups published so far"
 msgstr "Anzahl der bisher veröffentlichten Zusammenfassungen"
+
+#: src/php/traits/Admin/TemplatePage.php:44 build/categories.js:3
+#: src/categories/App.jsx:170
+msgid "Links"
+msgstr "Links"
 
 #: src/php/traits/Admin/TemplatePage.php:45
 msgid "Number of links in the roundup"
@@ -805,49 +718,54 @@ msgstr "Link erfolgreich veröffentlicht."
 msgid "Uncategorized"
 msgstr "Unkategorisiert"
 
-#: src/php/traits/Queries.php:206
+#: src/php/traits/Queries.php:231
 msgid "This link has not been published."
 msgstr "Dieser Link wurde noch nicht veröffentlicht."
 
-#: src/php/traits/Queries.php:216
+#: src/php/traits/Queries.php:241
 msgid "Failed to unpublish link."
 msgstr "Link konnte nicht unveröffentlicht werden."
 
-#: src/php/traits/Queries.php:229
+#: src/php/traits/Queries.php:254
 msgid "Link unpublished successfully."
 msgstr "Link erfolgreich unveröffentlicht."
 
-#: src/php/traits/RestApi.php:140
+#: src/php/traits/RestApi.php:204
 msgid "No API key configured."
 msgstr "Kein API-Schlüssel konfiguriert."
 
-#: src/php/traits/RestApi.php:188
+#: src/php/traits/RestApi.php:252
 msgid "Forbidden"
 msgstr "Verboten"
 
-#: src/php/traits/RestApi.php:203
+#: src/php/traits/RestApi.php:267
 msgid "Link not found"
 msgstr "Link nicht gefunden"
 
-#: src/php/traits/RestApi.php:207
+#: src/php/traits/RestApi.php:271
 msgid "Could not delete link"
 msgstr "Link konnte nicht gelöscht werden"
 
-#: src/php/traits/RestApi.php:245
+#: src/php/traits/RestApi.php:309
 msgid "Invalid schedule data"
 msgstr "Ungültige Zeitplandaten"
 
-#: src/php/traits/RestApi.php:298
+#: src/php/traits/RestApi.php:362
 msgid "A schedule run is already in progress"
 msgstr "Ein Zeitplanlauf läuft bereits"
 
-#: src/php/traits/RestApi.php:354
+#: src/php/traits/RestApi.php:418
 msgid "Failed to create link."
 msgstr "Link konnte nicht erstellt werden."
 
-#: src/php/traits/RestApi.php:389
+#: src/php/traits/RestApi.php:453
 msgid "Failed to fetch categories."
 msgstr "Kategorien konnten nicht abgerufen werden."
+
+#: src/php/traits/RestApi.php:547 build/categories.js:3
+#: src/categories/App.jsx:75
+msgid "Could not delete category."
+msgstr "Kategorie konnte nicht gelöscht werden."
 
 #: src/php/traits/RestApiSupport.php:35
 msgid "This URL has already been saved."
@@ -1112,6 +1030,11 @@ msgstr "Übergeordnete Kategorie:"
 msgid "New Category Name"
 msgstr "Neuer Kategoriename"
 
+#: src/php/traits/trait-post-type.php:170 build/categories.js:3
+#: src/categories/App.jsx:226
+msgid "Add New Category"
+msgstr "Neue Kategorie hinzufügen"
+
 #: src/php/traits/trait-post-type.php:171
 msgid "Edit Category"
 msgstr "Kategorie bearbeiten"
@@ -1228,60 +1151,133 @@ msgstr "Schlagwortliste"
 msgid "Tags list navigation"
 msgstr "Schlagwortlisten-Navigation"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:7
+#: build/categories.js:1 src/categories/App.jsx:96
+msgid "Description (optional)"
+msgstr "Beschreibung (optional)"
+
+#: build/categories.js:1 src/categories/App.jsx:105
+msgid "Leave blank to keep current"
+msgstr "Leer lassen, um aktuellen Wert zu behalten"
+
+#: build/categories.js:1 build/categories.js:3 src/categories/App.jsx:56
+#: src/categories/App.jsx:217
+msgid "Save failed."
+msgstr "Speichern fehlgeschlagen."
+
+#: build/categories.js:1 src/categories/App.jsx:42
+msgid "Name is required."
+msgstr "Name ist erforderlich."
+
+#: build/categories.js:1 src/categories/App.jsx:117
+msgid "Saving…"
+msgstr "Speichern…"
+
+#: build/categories.js:1 src/categories/App.jsx:117
+msgid "Save"
+msgstr "Speichern"
+
+#. translators: %s: category name
+#: build/categories.js:3 src/categories/App.jsx:65
+msgid "Delete '%s'?"
+msgstr "„%s“ löschen?"
+
+#: build/categories.js:3 src/categories/App.jsx:67
+msgid "link will become uncategorized."
+msgstr "Link wird unkategorisiert."
+
+#: build/categories.js:3 src/categories/App.jsx:67
+msgid "links will become uncategorized."
+msgstr "Links werden unkategorisiert."
+
+#: build/categories.js:3 src/categories/App.jsx:161
+msgid "No categories yet. Use the form to add your first category."
+msgstr ""
+"Noch keine Kategorien vorhanden. Nutze das Formular, um deine erste "
+"Kategorie hinzuzufügen."
+
+#: build/categories.js:3 src/categories/App.jsx:167 src/categories/App.jsx:231
+msgid "Name"
+msgstr "Name"
+
+#: build/categories.js:3 src/categories/App.jsx:168 src/categories/App.jsx:243
+msgid "Description"
+msgstr "Beschreibung"
+
+#: build/categories.js:3 src/categories/App.jsx:169
+msgid "Slug"
+msgstr "Slug"
+
+#: build/categories.js:3 src/categories/App.jsx:206
+msgid "Category name is required."
+msgstr "Kategoriename ist erforderlich."
+
+#: build/categories.js:3 src/categories/App.jsx:245
+msgid "(optional)"
+msgstr "(optional)"
+
+#: build/categories.js:3 src/categories/App.jsx:258
+msgid "Add Category"
+msgstr "Kategorie hinzufügen"
+
+#: build/categories.js:3 src/categories/App.jsx:283
+#, fuzzy
+msgid "Failed to load categories."
+msgstr "Kategorien konnten nicht abgerufen werden."
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:5
 msgid "Scheduled"
 msgstr "Geplant"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:9
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:7
 msgid "Daily"
 msgstr "Täglich"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:9
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:7
 msgid "Every N days"
 msgstr "Alle N Tage"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:10
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:8
 msgid "Weekly"
 msgstr "Wöchentlich"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:10
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:8
 msgid "Specific weekdays"
 msgstr "Bestimmte Wochentage"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:11
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:9
 msgid "Monthly"
 msgstr "Monatlich"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:11
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:9
 msgid "Calendar days"
 msgstr "Kalendertage"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:15
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:13
 msgid "Trigger-based"
 msgstr "Ereignisbasiert"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:17
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:15
 msgid "By Count"
 msgstr "Nach Anzahl"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:17
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:15
 msgid "When N links queue"
 msgstr "Wenn N Links warten"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:18
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:16
 msgid "By Age"
 msgstr "Nach Alter"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:18
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:16
 msgid "When oldest link ages"
 msgstr "Wenn der älteste Link zu alt wird"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:22
-#: src/schedule/components/ScheduleTypePicker.jsx:24
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:20
+#: src/schedule/components/ScheduleTypePicker.jsx:22
 msgid "Manual"
 msgstr "Manuell"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:24
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:22
 msgid "No auto-publish"
 msgstr "Keine automatische Veröffentlichung"
 
@@ -1301,47 +1297,47 @@ msgstr "dritte"
 msgid "fourth"
 msgstr "vierte"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:53
-#: src/schedule/components/RecurrenceConfig.jsx:69
-#: src/schedule/components/RecurrenceConfig.jsx:130
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:51
+#: src/schedule/components/RecurrenceConfig.jsx:74
+#: src/schedule/components/RecurrenceConfig.jsx:212
 msgid "Every"
 msgstr "Jeden"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:60
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:58
 #: src/schedule/components/TriggerCondition.jsx:46
 msgid "day"
 msgstr "Tag"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:60
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:58
 #: src/schedule/components/TriggerCondition.jsx:46
 msgid "days"
 msgstr "Tage"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:76
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:81
 msgid "week"
 msgstr "Woche"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:76
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:81
 msgid "weeks"
 msgstr "Wochen"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:137
-msgid "month, on"
-msgstr "Monat, am"
-
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:137
-msgid "months, on"
-msgstr "Monate, am"
-
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:164
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:133
 msgid "or"
 msgstr "oder"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:192
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:161
 msgid "Remove"
 msgstr "Entfernen"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:201
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:219
+msgid "month, on"
+msgstr "Monat, am"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:219
+msgid "months, on"
+msgstr "Monate, am"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:237
 msgid "Add day"
 msgstr "Tag hinzufügen"
 
@@ -1398,76 +1394,69 @@ msgstr "Lauf war gesperrt"
 msgid "%d links"
 msgstr "%d Links"
 
-#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:69
-msgid "Diagnostics"
-msgstr "Diagnose"
-
-#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:72
-msgid "Loading…"
-msgstr "Lädt…"
-
-#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:79
-#: src/schedule/components/DiagnosticsPanel.jsx:99
+#: build/schedule.js:2 build/schedule.js:3
+#: src/schedule/components/DiagnosticsPanel.jsx:60
+#: src/schedule/components/DiagnosticsPanel.jsx:73
 msgid "Next run"
 msgstr "Nächster Lauf"
 
-#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:85
-msgid "Not scheduled"
-msgstr "Nicht geplant"
-
-#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:88
-msgid "WP-Cron disabled"
-msgstr "WP-Cron deaktiviert"
-
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:103
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:64
 msgid "%d links until post"
 msgstr "%d Links bis zum Beitrag"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:104
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:65
 msgid "Ready to post"
 msgstr "Bereit zum Posten"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:110
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:79
+msgid "Not scheduled"
+msgstr "Nicht geplant"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:82
+msgid "WP-Cron disabled"
+msgstr "WP-Cron deaktiviert"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:102
 msgid "Last run"
 msgstr "Letzter Lauf"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:123
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:115
 msgid "No runs yet"
 msgstr "Noch keine Läufe"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:129
-msgid "WP-Cron"
-msgstr "WP-Cron"
-
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:132
-msgid "Disabled"
-msgstr "Deaktiviert"
-
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:133
-msgid "Active"
-msgstr "Aktiv"
-
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:142
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:136
 msgid "History (%d)"
 msgstr "Verlauf (%d)"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:170
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:178
+msgid "Diagnostics"
+msgstr "Diagnose"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:181
+msgid "Loading…"
+msgstr "Lädt…"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:190
+msgid "WP-Cron"
+msgstr "WP-Cron"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:193
+msgid "Disabled"
+msgstr "Deaktiviert"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:194
+msgid "Active"
+msgstr "Aktiv"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:210
 msgid "Refresh"
 msgstr "Aktualisieren"
 
-#: build/schedule.js:3 src/schedule/App.jsx:119
-msgid "Recurrence"
-msgstr "Wiederholung"
-
-#: build/schedule.js:3 src/schedule/App.jsx:119
-msgid "Condition"
-msgstr "Bedingung"
-
-#: build/schedule.js:3 src/schedule/App.jsx:156
+#: build/schedule.js:3 src/schedule/App.jsx:49
 msgid "WP-Cron is disabled."
 msgstr "WP-Cron ist deaktiviert."
 
-#: build/schedule.js:3 src/schedule/App.jsx:158
+#: build/schedule.js:3 src/schedule/App.jsx:51
 msgid ""
 "Scheduled runs will not fire automatically. Add a real server cron job or "
 "remove"
@@ -1475,100 +1464,72 @@ msgstr ""
 "Geplante Läufe werden nicht automatisch ausgelöst. Füge einen echten Server-"
 "Cronjob hinzu oder entferne"
 
-#: build/schedule.js:3 src/schedule/App.jsx:160
+#: build/schedule.js:3 src/schedule/App.jsx:53
 msgid "from"
 msgstr "von"
 
-#: build/schedule.js:3 src/schedule/App.jsx:171
+#: build/schedule.js:3 src/schedule/App.jsx:146
+msgid "Recurrence"
+msgstr "Wiederholung"
+
+#: build/schedule.js:3 src/schedule/App.jsx:146
+msgid "Condition"
+msgstr "Bedingung"
+
+#: build/schedule.js:3 src/schedule/App.jsx:188
 msgid "Mode"
 msgstr "Modus"
 
-#: build/schedule.js:3 src/schedule/App.jsx:131
+#: build/schedule.js:3 src/schedule/App.jsx:158
 msgid "No automatic trigger — posts must be triggered manually."
 msgstr ""
 "Kein automatischer Auslöser – Beiträge müssen manuell ausgelöst werden."
 
-#: build/schedule.js:3 src/schedule/App.jsx:180
+#: build/schedule.js:3 src/schedule/App.jsx:197
 msgid "Execution Times"
 msgstr "Ausführungszeiten"
 
-#: build/schedule.js:3 src/schedule/App.jsx:188
+#: build/schedule.js:3 src/schedule/App.jsx:205
 msgid "Post Status"
 msgstr "Beitragsstatus"
 
-#: build/schedule.js:3 src/schedule/App.jsx:200
+#: build/schedule.js:3 src/schedule/App.jsx:217
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
-#: build/schedule.js:3 src/schedule/App.jsx:202
+#: build/schedule.js:3 src/schedule/App.jsx:219
 msgid "Email me after each run"
 msgstr "Mich nach jedem Lauf per E-Mail benachrichtigen"
 
-#: build/schedule.js:3 src/schedule/App.jsx:208
+#: build/schedule.js:3 src/schedule/App.jsx:225
 msgid "Email address"
 msgstr "E-Mail-Adresse"
 
-#: build/schedule.js:3 src/schedule/App.jsx:211
+#: build/schedule.js:3 src/schedule/App.jsx:228
 msgid "Leave blank to use admin email"
 msgstr "Leer lassen, um die Admin-E-Mail zu verwenden"
 
-#: build/schedule.js:3 src/schedule/App.jsx:80
+#: build/schedule.js:3 src/schedule/App.jsx:107
 msgid "Execution times must be unique."
 msgstr "Ausführungszeiten müssen eindeutig sein."
 
-#: build/schedule.js:3 src/schedule/App.jsx:87
+#: build/schedule.js:3 src/schedule/App.jsx:114
 msgid "Schedule saved."
 msgstr "Zeitplan gespeichert."
 
-#: build/schedule.js:3 src/schedule/App.jsx:90
+#: build/schedule.js:3 src/schedule/App.jsx:117
 msgid "Failed to save schedule."
 msgstr "Zeitplan konnte nicht gespeichert werden."
 
-#: build/schedule.js:3 src/schedule/App.jsx:220
+#: build/schedule.js:3 src/schedule/App.jsx:237
 msgid "Save Schedule"
 msgstr "Zeitplan speichern"
 
-#: build/settings.js:1 src/settings/App.jsx:99
-msgid ""
-"This will permanently invalidate your current API key. You will need to "
-"update the Chrome extension with the new key. Continue?"
-msgstr ""
-"Dadurch wird dein aktueller API-Schlüssel dauerhaft ungültig. Du musst die "
-"Chrome-Erweiterung mit dem neuen Schlüssel aktualisieren. Fortfahren?"
-
-#: build/settings.js:1 src/settings/App.jsx:112
-msgid "New API key generated successfully!"
-msgstr "Neuer API-Schlüssel erfolgreich generiert!"
-
-#: build/settings.js:1 src/settings/App.jsx:115
-msgid "Failed to generate API key."
-msgstr "API-Schlüssel konnte nicht erzeugt werden."
-
-#: build/settings.js:1 src/settings/App.jsx:127
-msgid "Testing…"
-msgstr "Teste…"
-
-#: build/settings.js:1 src/settings/App.jsx:133
-msgid "Connected successfully."
-msgstr "Erfolgreich verbunden."
-
-#: build/settings.js:1 src/settings/App.jsx:135
-msgid "Connection failed"
-msgstr "Verbindung fehlgeschlagen"
-
-#: build/settings.js:1 src/settings/App.jsx:139
-msgid "Could not reach endpoint."
-msgstr "Endpunkt konnte nicht erreicht werden."
-
-#: build/settings.js:1 src/settings/App.jsx:123
-msgid "Missing endpoint or API key."
-msgstr "Endpunkt oder API-Schlüssel fehlt."
-
-#: build/settings.js:1 src/settings/App.jsx:157
+#: build/settings.js:1 src/settings/App.jsx:100
 msgid "Chrome Extension Access Data"
 msgstr "Zugangsdaten für Chrome-Erweiterung"
 
-#: build/settings.js:1 src/settings/App.jsx:158
+#: build/settings.js:1 src/settings/App.jsx:101
 msgid ""
 "Use these credentials to connect the LynxJournal Chrome extension to your "
 "WordPress site."
@@ -1576,31 +1537,31 @@ msgstr ""
 "Verwende diese Zugangsdaten, um die LynxJournal-Chrome-Erweiterung mit "
 "deiner WordPress-Website zu verbinden."
 
-#: build/settings.js:1 src/settings/App.jsx:162
+#: build/settings.js:1 src/settings/App.jsx:105
 msgid "API Endpoint"
 msgstr "API-Endpunkt"
 
-#: build/settings.js:1 src/settings/App.jsx:164
+#: build/settings.js:1 src/settings/App.jsx:107
 msgid "read-only"
 msgstr "schreibgeschützt"
 
-#: build/settings.js:1 src/settings/App.jsx:168
+#: build/settings.js:1 src/settings/App.jsx:111
 msgid "Use this URL in the Chrome extension settings."
 msgstr "Verwende diese URL in den Einstellungen der Chrome-Erweiterung."
 
-#: build/settings.js:1 src/settings/App.jsx:171
+#: build/settings.js:1 src/settings/App.jsx:114
 msgid "View REST API"
 msgstr "REST-API anzeigen"
 
-#: build/settings.js:1 src/settings/App.jsx:179
+#: build/settings.js:1 src/settings/App.jsx:122
 msgid "API Key:"
 msgstr "API-Schlüssel:"
 
-#: build/settings.js:1 src/settings/App.jsx:189
+#: build/settings.js:1 src/settings/App.jsx:132
 msgid "Show / hide API key"
 msgstr "API-Schlüssel anzeigen/verbergen"
 
-#: build/settings.js:1 src/settings/App.jsx:197
+#: build/settings.js:1 src/settings/App.jsx:140
 msgid ""
 "Keep this key secure. Use the copy button to transfer it without revealing "
 "it."
@@ -1608,11 +1569,11 @@ msgstr ""
 "Bewahre diesen Schlüssel sicher auf. Nutze die Kopieren-Schaltfläche, um ihn "
 "zu übertragen, ohne ihn offenzulegen."
 
-#: build/settings.js:1 src/settings/App.jsx:201
+#: build/settings.js:1 src/settings/App.jsx:144
 msgid "Test Connection"
 msgstr "Verbindung testen"
 
-#: build/settings.js:1 src/settings/App.jsx:214
+#: build/settings.js:1 src/settings/App.jsx:157
 msgid ""
 "Warning: Generating a new key will permanently invalidate the current one. "
 "You will need to update the Chrome extension with the new key."
@@ -1621,37 +1582,79 @@ msgstr ""
 "ungültig. Du musst die Chrome-Erweiterung mit dem neuen Schlüssel "
 "aktualisieren."
 
-#: build/settings.js:1 src/settings/App.jsx:218
+#: build/settings.js:1 src/settings/App.jsx:161
 msgid "Generate New API Key"
 msgstr "Neuen API-Schlüssel generieren"
 
-#: build/settings.js:1 src/settings/App.jsx:218
+#: build/settings.js:1 src/settings/App.jsx:161
 msgid "Generate API Key"
 msgstr "API-Schlüssel generieren"
 
-#: build/settings.js:1 src/settings/App.jsx:223
+#: build/settings.js:1 src/settings/App.jsx:175
 msgid "Chrome Extension Setup"
 msgstr "Chrome-Erweiterung einrichten"
 
-#: build/settings.js:1 src/settings/App.jsx:225
+#: build/settings.js:1 src/settings/App.jsx:177
 msgid "Download and install the LynxJournal Chrome extension"
 msgstr "LynxJournal-Chrome-Erweiterung herunterladen und installieren"
 
-#: build/settings.js:1 src/settings/App.jsx:226
+#: build/settings.js:1 src/settings/App.jsx:178
 msgid "Click the extension icon and go to Settings"
 msgstr "Auf das Erweiterungssymbol klicken und zu Einstellungen gehen"
 
-#: build/settings.js:1 src/settings/App.jsx:227
+#: build/settings.js:1 src/settings/App.jsx:179
 msgid "Paste your API Endpoint and API Key from above"
 msgstr "API-Endpunkt und API-Schlüssel von oben einfügen"
 
-#: build/settings.js:1 src/settings/App.jsx:228
+#: build/settings.js:1 src/settings/App.jsx:180
 msgid "Click Save"
 msgstr "Auf Speichern klicken"
 
-#: build/settings.js:1 src/settings/App.jsx:229
+#: build/settings.js:1 src/settings/App.jsx:181
 msgid "Now you can save links directly from any webpage!"
 msgstr "Jetzt kannst du Links direkt von jeder Webseite speichern!"
+
+#: build/settings.js:1 src/settings/App.jsx:208
+msgid ""
+"This will permanently invalidate your current API key. You will need to "
+"update the Chrome extension with the new key. Continue?"
+msgstr ""
+"Dadurch wird dein aktueller API-Schlüssel dauerhaft ungültig. Du musst die "
+"Chrome-Erweiterung mit dem neuen Schlüssel aktualisieren. Fortfahren?"
+
+#: build/settings.js:1 src/settings/App.jsx:221
+msgid "New API key generated successfully!"
+msgstr "Neuer API-Schlüssel erfolgreich generiert!"
+
+#: build/settings.js:1 src/settings/App.jsx:224
+msgid "Failed to generate API key."
+msgstr "API-Schlüssel konnte nicht erzeugt werden."
+
+#: build/settings.js:1 src/settings/App.jsx:236
+msgid "Testing…"
+msgstr "Teste…"
+
+#: build/settings.js:1 src/settings/App.jsx:242
+msgid "Connected successfully."
+msgstr "Erfolgreich verbunden."
+
+#: build/settings.js:1 src/settings/App.jsx:244
+msgid "Connection failed"
+msgstr "Verbindung fehlgeschlagen"
+
+#: build/settings.js:1 src/settings/App.jsx:248
+msgid "Could not reach endpoint."
+msgstr "Endpunkt konnte nicht erreicht werden."
+
+#: build/settings.js:1 src/settings/App.jsx:232
+msgid "Missing endpoint or API key."
+msgstr "Endpunkt oder API-Schlüssel fehlt."
+
+#~ msgid "Category added."
+#~ msgstr "Kategorie hinzugefügt."
+
+#~ msgid "Category deleted."
+#~ msgstr "Kategorie gelöscht."
 
 #~ msgid "LynxJournal - All Links"
 #~ msgstr "LynxJournal – Alle Links"

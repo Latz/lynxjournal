@@ -204,25 +204,31 @@ trait LynxJournal_Admin_Menu {
      * @return void
      */
     private function enqueueCategoriesAssets(): void {
-        $this->enqueuePageScript('lynxjournal-categories-js', 'categories.js');
-        wp_localize_script('lynxjournal-categories-js', 'lynxjournalCats', array(
-            'restUrl' => rest_url(LYNXJOURNAL_REST_NAMESPACE . '/categories/'),
-            'nonce'   => wp_create_nonce('wp_rest'),
-            'labels'  => array(
-                'edit'            => __('Edit', 'lynx-journal'),
-                'save'            => __('Save', 'lynx-journal'),
-                'cancel'          => __('Cancel', 'lynx-journal'),
-                'saving'          => __('Saving…', 'lynx-journal'),
-                'saveError'       => __('Save failed.', 'lynx-journal'),
-                'nameRequired'    => __('Name is required.', 'lynx-journal'),
-                'descPlaceholder' => __('Description (optional)', 'lynx-journal'),
-                'slugPlaceholder' => __('Leave blank to keep current', 'lynx-journal'),
-                'deleteOne'       => __('link will become uncategorized.', 'lynx-journal'),
-                'deleteMany'      => __('links will become uncategorized.', 'lynx-journal'),
-                /* translators: %s: category name. */
-                'deleteConfirm'   => __("Delete '%s'?", 'lynx-journal'),
-            ),
-        ));
+        $asset_file = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'build/categories.asset.php';
+        if (file_exists($asset_file)) {
+            $asset = require_once $asset_file;
+        } else {
+            $asset = array('dependencies' => array(), 'version' => '1.0.0');
+        }
+
+        wp_enqueue_script(
+            'lynxjournal-categories',
+            plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'build/categories.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+
+        $this->enqueuePageScriptTranslations('lynxjournal-categories');
+
+        if (file_exists(plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'build/categories.css')) {
+            wp_enqueue_style(
+                'lynxjournal-categories-style',
+                plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'build/categories.css',
+                array('wp-components'),
+                $asset['version']
+            );
+        }
     }
 
     /**
