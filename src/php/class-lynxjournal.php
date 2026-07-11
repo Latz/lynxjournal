@@ -49,6 +49,9 @@ class LynxJournal {
     public static function register(): void {
         $instance = new self();
 
+        // Load translations before any translated strings (e.g. post type labels) are built.
+        add_action('plugins_loaded', [$instance, 'loadTextdomain']);
+
         // Universal hooks: run on every request (front-end, admin, REST, cron, CLI)
         add_action('init', [$instance, 'register_post_type'],    0);
         add_action('init', [$instance, 'register_taxonomies'],   0);
@@ -65,6 +68,16 @@ class LynxJournal {
         if (is_admin()) {
             $instance->register_admin_hooks();
         }
+    }
+
+    /**
+     * Load the plugin's translation file.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    public function loadTextdomain(): void {
+        load_plugin_textdomain('lynx-journal', false, dirname(plugin_basename(LYNXJOURNAL_PLUGIN_FILE)) . '/languages');
     }
 
     /**
