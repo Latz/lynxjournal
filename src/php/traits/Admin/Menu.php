@@ -181,6 +181,12 @@ trait LynxJournal_Admin_Menu {
             true
         );
 
+        wp_set_script_translations(
+            'lynxjournal-settings-page',
+            'lynx-journal',
+            plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'languages'
+        );
+
         wp_localize_script('lynxjournal-settings-page', 'lynxjournalSettings', array(
             'restUrl' => rest_url(LYNXJOURNAL_REST_NAMESPACE),
         ));
@@ -336,6 +342,12 @@ trait LynxJournal_Admin_Menu {
             $asset['dependencies'],
             $asset['version'],
             true
+        );
+
+        wp_set_script_translations(
+            'lynxjournal-schedule',
+            'lynx-journal',
+            plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'languages'
         );
 
         wp_localize_script('lynxjournal-schedule', 'lynxjournalSchedule', array(

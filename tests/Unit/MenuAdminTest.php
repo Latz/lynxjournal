@@ -157,6 +157,7 @@ describe('LynxJournal::enqueueAdminAssets()', function (): void { // NOSONAR
         Functions\when('wp_enqueue_style')->justReturn(null);
         Functions\when('wp_enqueue_script')->justReturn(null);
         Functions\when('wp_localize_script')->justReturn(null);
+        Functions\when('wp_set_script_translations')->justReturn(true);
         Functions\when('rest_url')->justReturn('https://example.com/wp-json/lynxjournal/v1/links/');
         Functions\when('wp_create_nonce')->justReturn('nonce123');
         Functions\when('wp_timezone_string')->justReturn('UTC');

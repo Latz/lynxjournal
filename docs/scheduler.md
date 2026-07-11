@@ -465,7 +465,7 @@ There are no scheduler- or roundup-specific filters at present (post title, post
 
 ## Internationalisation
 
-All user-facing strings in the schedule UI and the roundup post title are wrapped in `__()` / `_e()` against the **`lynxjournal`** text domain. Translations live under `/languages/`; the canonical template is `languages/lynxjournal.pot`.
+All user-facing strings in the schedule UI and the roundup post title are wrapped in `__()` / `_e()` against the **`lynx-journal`** text domain. Translations live under `/languages/`; the canonical template is `languages/lynx-journal.pot`.
 
 To add or update a language:
 
@@ -473,8 +473,19 @@ To add or update a language:
 # Regenerate the POT file
 composer run i18n:pot
 # Or, directly:
-wp i18n make-pot . languages/lynxjournal.pot --domain=lynxjournal --exclude=vendor,node_modules,tests
+wp i18n make-pot . languages/lynx-journal.pot --domain=lynx-journal --exclude=vendor,node_modules,tests,bin,dist,chrome-extension,memory
 ```
+
+The Schedule and Chrome Extension Settings pages are React apps (`build/schedule.js`, `build/settings.js`) whose strings use `@wordpress/i18n`'s `__()`. These need a separate JSON translation file beyond the `.mo`/`.po`, generated with `wp i18n make-json`. The full regeneration sequence is:
+
+```bash
+npm run build            # rebuild JS bundles so build/*.js reflects current strings
+composer run i18n:pot    # rescan sources incl. build/*.js into the .pot
+# merge new/changed strings into lynx-journal-de_DE.po and translate them
+composer run i18n:json   # regenerate the JS translation JSON from the .po
+```
+
+`i18n:json` must be re-run whenever the `.po` file changes, not just when the `.pot` changes.
 
 Date formatting in roundup post titles uses `wp_date()`, which respects both the site timezone and the active translation, so a German install will produce _Links: 28. April 2026_ automatically.
 
