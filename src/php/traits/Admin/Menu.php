@@ -181,11 +181,7 @@ trait LynxJournal_Admin_Menu {
             true
         );
 
-        wp_set_script_translations(
-            'lynxjournal-settings-page',
-            'lynx-journal',
-            plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'languages'
-        );
+        $this->enqueuePageScriptTranslations('lynxjournal-settings-page');
 
         wp_localize_script('lynxjournal-settings-page', 'lynxjournalSettings', array(
             'restUrl' => rest_url(LYNXJOURNAL_REST_NAMESPACE),
@@ -344,11 +340,7 @@ trait LynxJournal_Admin_Menu {
             true
         );
 
-        wp_set_script_translations(
-            'lynxjournal-schedule',
-            'lynx-journal',
-            plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'languages'
-        );
+        $this->enqueuePageScriptTranslations('lynxjournal-schedule');
 
         wp_localize_script('lynxjournal-schedule', 'lynxjournalSchedule', array(
             'allModes'     => array_column(LynxJournal_ScheduleMode::cases(), 'value'),
@@ -426,6 +418,17 @@ trait LynxJournal_Admin_Menu {
         $css_dir = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'assets/css/';
         $css_url = plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'assets/css/';
         wp_enqueue_style($handle, $css_url . $file, $deps, (string) filemtime($css_dir . $file));
+    }
+
+    /**
+     * Register the lynx-journal translation catalog for a React-driven script handle.
+     *
+     * @since 1.0.0
+     * @param string $handle Script handle.
+     * @return void
+     */
+    private function enqueuePageScriptTranslations(string $handle): void {
+        wp_set_script_translations($handle, 'lynx-journal', plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'languages');
     }
 
     /**

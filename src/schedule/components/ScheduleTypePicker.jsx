@@ -1,27 +1,25 @@
 import { __ } from '@wordpress/i18n';
 
-const createMode = (value, label, desc) => ({ value, label, desc });
-
 const GROUPS = [
   {
     label: __('Scheduled', 'lynx-journal'),
     modes: [
-      createMode('daily',   __('Daily', 'lynx-journal'),   __('Every N days', 'lynx-journal')),
-      createMode('weekly',  __('Weekly', 'lynx-journal'),  __('Specific weekdays', 'lynx-journal')),
-      createMode('monthly', __('Monthly', 'lynx-journal'), __('Calendar days', 'lynx-journal')),
+      { value: 'daily',   label: __('Daily', 'lynx-journal'),   desc: __('Every N days', 'lynx-journal') },
+      { value: 'weekly',  label: __('Weekly', 'lynx-journal'),  desc: __('Specific weekdays', 'lynx-journal') },
+      { value: 'monthly', label: __('Monthly', 'lynx-journal'), desc: __('Calendar days', 'lynx-journal') },
     ],
   },
   {
     label: __('Trigger-based', 'lynx-journal'),
     modes: [
-      createMode('count', __('By Count', 'lynx-journal'), __('When N links queue', 'lynx-journal')),
-      createMode('age',   __('By Age', 'lynx-journal'),   __('When oldest link ages', 'lynx-journal')),
+      { value: 'count', label: __('By Count', 'lynx-journal'), desc: __('When N links queue', 'lynx-journal') },
+      { value: 'age',   label: __('By Age', 'lynx-journal'),   desc: __('When oldest link ages', 'lynx-journal') },
     ],
   },
   {
     label: __('Manual', 'lynx-journal'),
     modes: [
-      createMode('manual', __('Manual', 'lynx-journal'), __('No auto-publish', 'lynx-journal')),
+      { value: 'manual', label: __('Manual', 'lynx-journal'), desc: __('No auto-publish', 'lynx-journal') },
     ],
   },
 ];
