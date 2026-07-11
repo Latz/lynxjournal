@@ -4,9 +4,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: LynxJournal 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/LynxJournal\n"
-"POT-Creation-Date: 2026-04-26T20:14:58+00:00\n"
-"PO-Revision-Date: 2026-04-26 20:00+0000\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lynxjournal\n"
+"POT-Creation-Date: 2026-07-10T23:55:45+00:00\n"
+"PO-Revision-Date: 2026-07-11 00:00+0000\n"
 "Last-Translator: Latz\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -14,792 +14,2374 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: manual\n"
 "X-Domain: lynxjournal\n"
+"X-Generator: manual\n"
 
 #. Plugin Name of the plugin
+#: lynxjournal.php src/php/traits/Admin/Menu.php:19
+#: src/php/traits/Admin/Menu.php:20 svn/tags/1.0.2/includes/Menu.php:15
+#: svn/tags/1.0.2/includes/Menu.php:16 svn/trunk/includes/Menu.php:19
+#: svn/trunk/includes/Menu.php:20
 msgid "LynxJournal"
 msgstr "LynxJournal"
 
 #. Description of the plugin
+#: lynxjournal.php
 msgid "Save and publish links to your blog"
 msgstr "Links speichern und im Blog veröffentlichen"
 
 #. Author of the plugin
+#: lynxjournal.php
 msgid "Latz"
 msgstr "Latz"
 
+#: src/php/traits/Admin/AddLink.php:22 src/php/traits/trait-post-type.php:30
+#: svn/tags/1.0.2/includes/AddLink.php:22
+#: svn/tags/1.0.2/includes/trait-post-type.php:30
+#: svn/trunk/includes/AddLink.php:22 svn/trunk/includes/trait-post-type.php:30
 msgid "Add New Link"
 msgstr "Neuen Link hinzufügen"
 
+#: src/php/traits/Admin/AddLink.php:42 src/php/traits/Admin/Dashboard.php:421
+#: src/php/traits/Admin/LinksPage.php:161
+#: src/php/traits/Admin/LinksPage.php:192
+#: svn/tags/1.0.2/includes/AddLink.php:42
+#: svn/tags/1.0.2/includes/Dashboard.php:517
+#: svn/tags/1.0.2/includes/LinksPage.php:162
+#: svn/tags/1.0.2/includes/LinksPage.php:198 svn/trunk/includes/AddLink.php:42
+#: svn/trunk/includes/Dashboard.php:421 svn/trunk/includes/LinksPage.php:161
+#: svn/trunk/includes/LinksPage.php:192
 msgid "Title"
 msgstr "Titel"
 
+#: src/php/traits/Admin/AddLink.php:51 src/php/traits/Admin/Dashboard.php:426
+#: src/php/traits/Admin/LinksPage.php:162
+#: src/php/traits/Admin/LinksPage.php:193
+#: svn/tags/1.0.2/includes/AddLink.php:51
+#: svn/tags/1.0.2/includes/Dashboard.php:522
+#: svn/tags/1.0.2/includes/LinksPage.php:163
+#: svn/tags/1.0.2/includes/LinksPage.php:199 svn/trunk/includes/AddLink.php:51
+#: svn/trunk/includes/Dashboard.php:426 svn/trunk/includes/LinksPage.php:162
+#: svn/trunk/includes/LinksPage.php:193
 msgid "URL"
 msgstr "URL"
 
+#: src/php/traits/Admin/AddLink.php:60 svn/tags/1.0.2/includes/AddLink.php:60
+#: svn/trunk/includes/AddLink.php:60
 msgid "Text/Description"
 msgstr "Text/Beschreibung"
 
+#: src/php/traits/Admin/AddLink.php:69 src/php/traits/Admin/AddLink.php:73
+#: src/php/traits/Admin/Menu.php:31 src/php/traits/Admin/TemplatePage.php:51
+#: src/php/traits/trait-post-type.php:165
+#: svn/tags/1.0.2/includes/AddLink.php:75
+#: svn/tags/1.0.2/includes/AddLink.php:79 svn/tags/1.0.2/includes/Menu.php:27
+#: svn/tags/1.0.2/includes/trait-post-type.php:165
+#: svn/trunk/includes/AddLink.php:69 svn/trunk/includes/AddLink.php:73
+#: svn/trunk/includes/Menu.php:31 svn/trunk/includes/TemplatePage.php:51
+#: svn/trunk/includes/trait-post-type.php:165
 msgid "Categories"
 msgstr "Kategorien"
 
-msgid "No categories available. Create categories first in LynxJournal > Categories."
-msgstr "Keine Kategorien vorhanden. Erstelle zuerst Kategorien unter LynxJournal > Kategorien."
-
+#: src/php/traits/Admin/AddLink.php:81 src/php/traits/Admin/Menu.php:32
+#: src/php/traits/Admin/TemplatePage.php:56
+#: src/php/traits/trait-post-type.php:208
+#: svn/tags/1.0.2/includes/AddLink.php:98 svn/tags/1.0.2/includes/Menu.php:28
+#: svn/tags/1.0.2/includes/trait-post-type.php:208
+#: svn/trunk/includes/AddLink.php:81 svn/trunk/includes/Menu.php:32
+#: svn/trunk/includes/TemplatePage.php:56
+#: svn/trunk/includes/trait-post-type.php:208
 msgid "Tags"
 msgstr "Schlagwörter"
 
+#: src/php/traits/Admin/AddLink.php:84 src/php/traits/trait-post-type.php:217
+#: svn/tags/1.0.2/includes/AddLink.php:101
+#: svn/tags/1.0.2/includes/trait-post-type.php:217
+#: svn/trunk/includes/AddLink.php:84
+#: svn/trunk/includes/trait-post-type.php:217
 msgid "Separate tags with commas"
 msgstr "Schlagwörter mit Kommas trennen"
 
+#: src/php/traits/Admin/AddLink.php:85 svn/tags/1.0.2/includes/AddLink.php:102
+#: svn/trunk/includes/AddLink.php:85
 msgid "Separate multiple tags with commas (e.g., tag1, tag2, tag3)"
 msgstr "Mehrere Schlagwörter mit Kommas trennen (z. B. tag1, tag2, tag3)"
 
+#: src/php/traits/Admin/AddLink.php:91 src/php/traits/Admin/Dashboard.php:444
+#: src/php/traits/Admin/Menu.php:30 svn/tags/1.0.2/includes/AddLink.php:108
+#: svn/tags/1.0.2/includes/Dashboard.php:540
+#: svn/tags/1.0.2/includes/Menu.php:26 svn/trunk/includes/AddLink.php:91
+#: svn/trunk/includes/Dashboard.php:444 svn/trunk/includes/Menu.php:30
 msgid "Add Link"
 msgstr "Link hinzufügen"
 
+#: src/php/traits/Admin/AddLink.php:92 src/php/traits/Admin/Menu.php:157
+#: src/php/traits/Admin/Menu.php:212 svn/tags/1.0.2/includes/AddLink.php:109
+#: svn/tags/1.0.2/includes/Menu.php:242 svn/tags/1.0.2/includes/Menu.php:273
+#: svn/trunk/includes/AddLink.php:92 svn/trunk/includes/Menu.php:157
+#: svn/trunk/includes/Menu.php:212
 msgid "Cancel"
 msgstr "Abbrechen"
 
+#: src/php/traits/Admin/AddLink.php:130 svn/tags/1.0.2/includes/AddLink.php:90
+#: svn/trunk/includes/AddLink.php:130
+msgid ""
+"No categories available. Create categories first in LynxJournal > "
+"Categories."
+msgstr ""
+"Keine Kategorien vorhanden. Erstelle zuerst Kategorien unter LynxJournal > "
+"Kategorien."
+
+#: src/php/traits/Admin/AddLink.php:163 src/php/traits/Admin/Categories.php:88
+#: svn/tags/1.0.2/includes/AddLink.php:123
+#: svn/tags/1.0.2/includes/Categories.php:74
+#: svn/trunk/includes/AddLink.php:163 svn/trunk/includes/Categories.php:88
 msgid "Security check failed."
 msgstr "Sicherheitsprüfung fehlgeschlagen."
 
+#: src/php/traits/Admin/AddLink.php:167 src/php/traits/Admin/Categories.php:91
+#: svn/tags/1.0.2/includes/AddLink.php:127
+#: svn/tags/1.0.2/includes/Categories.php:77
+#: svn/trunk/includes/AddLink.php:167 svn/trunk/includes/Categories.php:91
+msgid "Insufficient permissions."
+msgstr "Unzureichende Berechtigungen."
+
+#: src/php/traits/Admin/AddLink.php:185 src/php/traits/RestApiSupport.php:17
+#: svn/tags/1.0.2/includes/AddLink.php:146
+#: svn/tags/1.0.2/includes/RestApi.php:363 svn/trunk/includes/AddLink.php:185
+#: svn/trunk/includes/RestApiSupport.php:17
 msgid "Title is required."
 msgstr "Titel ist erforderlich."
 
+#: src/php/traits/Admin/AddLink.php:198
+#: svn/tags/1.0.2/includes/AddLink.php:159 svn/trunk/includes/AddLink.php:198
 msgid "Failed to add link."
 msgstr "Link konnte nicht hinzugefügt werden."
 
+#: src/php/traits/Admin/AddLink.php:213 src/php/traits/Admin/Dashboard.php:416
+#: src/php/traits/RestApi.php:368 svn/tags/1.0.2/includes/AddLink.php:174
+#: svn/tags/1.0.2/includes/Dashboard.php:512
+#: svn/tags/1.0.2/includes/RestApi.php:349 svn/trunk/includes/AddLink.php:213
+#: svn/trunk/includes/Dashboard.php:416 svn/trunk/includes/RestApi.php:368
 msgid "Link added successfully!"
 msgstr "Link erfolgreich hinzugefügt!"
 
+#: src/php/traits/Admin/Categories.php:28
+#: svn/tags/1.0.2/includes/Categories.php:28
+#: svn/trunk/includes/Categories.php:28
+msgid "Link Categories"
+msgstr "Link-Kategorien"
+
+#: src/php/traits/Admin/Categories.php:58
+#: svn/tags/1.0.2/includes/Categories.php:58
+#: svn/trunk/includes/Categories.php:58
+msgid "Category added."
+msgstr "Kategorie hinzugefügt."
+
+#: src/php/traits/Admin/Categories.php:66
+#: svn/tags/1.0.2/includes/Categories.php:66
+#: svn/trunk/includes/Categories.php:66
+msgid "Category deleted."
+msgstr "Kategorie gelöscht."
+
+#: src/php/traits/Admin/Categories.php:67
+#: svn/tags/1.0.2/includes/Categories.php:67
+#: svn/trunk/includes/Categories.php:67
+msgid "Could not delete category."
+msgstr "Kategorie konnte nicht gelöscht werden."
+
+#: src/php/traits/Admin/Categories.php:101
+#: svn/tags/1.0.2/includes/Categories.php:81
+#: svn/trunk/includes/Categories.php:101
+msgid "Category name is required."
+msgstr "Kategoriename ist erforderlich."
+
+#: src/php/traits/Admin/Categories.php:176
+#: svn/tags/1.0.2/includes/Categories.php:143
+#: svn/trunk/includes/Categories.php:176
+msgid "No categories yet. Use the form to add your first category."
+msgstr ""
+"Noch keine Kategorien vorhanden. Nutze das Formular, um deine erste "
+"Kategorie hinzuzufügen."
+
+#: src/php/traits/Admin/Categories.php:183
+#: src/php/traits/Admin/Categories.php:234
+#: svn/tags/1.0.2/includes/Categories.php:150
+#: svn/tags/1.0.2/includes/Categories.php:201
+#: svn/trunk/includes/Categories.php:183 svn/trunk/includes/Categories.php:234
+msgid "Name"
+msgstr "Name"
+
+#: src/php/traits/Admin/Categories.php:184
+#: src/php/traits/Admin/Categories.php:239
+#: svn/tags/1.0.2/includes/Categories.php:151
+#: svn/tags/1.0.2/includes/Categories.php:206
+#: svn/trunk/includes/Categories.php:184 svn/trunk/includes/Categories.php:239
+msgid "Description"
+msgstr "Beschreibung"
+
+#: src/php/traits/Admin/Categories.php:185
+#: svn/tags/1.0.2/includes/Categories.php:152
+#: svn/trunk/includes/Categories.php:185
+msgid "Slug"
+msgstr "Slug"
+
+#: src/php/traits/Admin/Categories.php:186
+#: src/php/traits/Admin/TemplatePage.php:44
+#: svn/tags/1.0.2/includes/Categories.php:153
+#: svn/trunk/includes/Categories.php:186
+#: svn/trunk/includes/TemplatePage.php:44
+msgid "Links"
+msgstr "Links"
+
+#: src/php/traits/Admin/Categories.php:187
+#: src/php/traits/Admin/LinksPage.php:166
+#: src/php/traits/Admin/LinksPage.php:197
+#: svn/tags/1.0.2/includes/Categories.php:154
+#: svn/tags/1.0.2/includes/LinksPage.php:167
+#: svn/tags/1.0.2/includes/LinksPage.php:203
+#: svn/trunk/includes/Categories.php:187 svn/trunk/includes/LinksPage.php:166
+#: svn/trunk/includes/LinksPage.php:197
+msgid "Actions"
+msgstr "Aktionen"
+
+#: src/php/traits/Admin/Categories.php:205
+#: src/php/traits/Admin/LinksPage.php:360 src/php/traits/Admin/Menu.php:210
+#: svn/tags/1.0.2/includes/Categories.php:172
+#: svn/tags/1.0.2/includes/LinksPage.php:347
+#: svn/tags/1.0.2/includes/Menu.php:271 svn/trunk/includes/Categories.php:205
+#: svn/trunk/includes/LinksPage.php:360 svn/trunk/includes/Menu.php:210
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: src/php/traits/Admin/Categories.php:213
+#: src/php/traits/Admin/LinksPage.php:361
+#: svn/tags/1.0.2/includes/Categories.php:180
+#: svn/tags/1.0.2/includes/LinksPage.php:348
+#: svn/trunk/includes/Categories.php:213 svn/trunk/includes/LinksPage.php:361
+msgid "Delete"
+msgstr "Löschen"
+
+#: src/php/traits/Admin/Categories.php:228
+#: src/php/traits/trait-post-type.php:170
+#: svn/tags/1.0.2/includes/Categories.php:195
+#: svn/tags/1.0.2/includes/trait-post-type.php:170
+#: svn/trunk/includes/Categories.php:228
+#: svn/trunk/includes/trait-post-type.php:170
+msgid "Add New Category"
+msgstr "Neue Kategorie hinzufügen"
+
+#: src/php/traits/Admin/Categories.php:240
+#: svn/tags/1.0.2/includes/Categories.php:207
+#: svn/trunk/includes/Categories.php:240
+msgid "(optional)"
+msgstr "(optional)"
+
+#: src/php/traits/Admin/Categories.php:246
+#: svn/tags/1.0.2/includes/Categories.php:213
+#: svn/trunk/includes/Categories.php:246
+msgid "Add Category"
+msgstr "Kategorie hinzufügen"
+
+#: src/php/traits/Admin/Dashboard.php:30
+#: svn/tags/1.0.2/includes/Dashboard.php:30
+#: svn/trunk/includes/Dashboard.php:30
 msgid "Total"
 msgstr "Gesamt"
 
+#: src/php/traits/Admin/Dashboard.php:34
+#: src/php/traits/Admin/Dashboard.php:580
+#: src/php/traits/Admin/LinksPage.php:164
+#: src/php/traits/Admin/LinksPage.php:195
+#: src/php/traits/Admin/LinksPage.php:340
+#: svn/tags/1.0.2/includes/Dashboard.php:34
+#: svn/tags/1.0.2/includes/Dashboard.php:676
+#: svn/tags/1.0.2/includes/LinksPage.php:165
+#: svn/tags/1.0.2/includes/LinksPage.php:201
+#: svn/tags/1.0.2/includes/LinksPage.php:328
+#: svn/trunk/includes/Dashboard.php:34 svn/trunk/includes/Dashboard.php:580
+#: svn/trunk/includes/LinksPage.php:164 svn/trunk/includes/LinksPage.php:195
+#: svn/trunk/includes/LinksPage.php:340
 msgid "Published"
 msgstr "Veröffentlicht"
 
+#: src/php/traits/Admin/Dashboard.php:38
+#: src/php/traits/Admin/Dashboard.php:585
+#: src/php/traits/Admin/LinksPage.php:342
+#: svn/tags/1.0.2/includes/Dashboard.php:38
+#: svn/tags/1.0.2/includes/Dashboard.php:681
+#: svn/tags/1.0.2/includes/LinksPage.php:332
+#: svn/trunk/includes/Dashboard.php:38 svn/trunk/includes/Dashboard.php:585
+#: svn/trunk/includes/LinksPage.php:342
 msgid "Unpublished"
 msgstr "Unveröffentlicht"
 
+#: src/php/traits/Admin/Dashboard.php:44
+#: svn/tags/1.0.2/includes/Dashboard.php:44
+#: svn/trunk/includes/Dashboard.php:44
 msgid "Recent Unpublished"
 msgstr "Zuletzt unveröffentlicht"
 
+#: src/php/traits/Admin/Dashboard.php:66
+#: svn/tags/1.0.2/includes/Dashboard.php:66
+#: svn/trunk/includes/Dashboard.php:66
 msgid "Go to LynxJournal"
 msgstr "Zu LynxJournal wechseln"
 
+#. translators: 1: number of successfully processed links, 2: optional failure
+#. message
+#: src/php/traits/Admin/Dashboard.php:84
+#: svn/tags/1.0.2/includes/Dashboard.php:180
+#: svn/trunk/includes/Dashboard.php:84
 #, php-format
 msgid "%d failed."
 msgstr "%d fehlgeschlagen."
 
+#. translators: 1: number of successfully processed links, 2: optional failure
+#. message
+#: src/php/traits/Admin/Dashboard.php:87
+#: svn/tags/1.0.2/includes/Dashboard.php:183
+#: svn/trunk/includes/Dashboard.php:87
 #, php-format
 msgid "Successfully processed %1$d link(s). %2$s"
 msgstr "%1$d Link(s) erfolgreich verarbeitet. %2$s"
 
+#: src/php/traits/Admin/Dashboard.php:97
+#: src/php/traits/Admin/Dashboard.php:349
+#: src/php/traits/Admin/LinksPage.php:327
+#: src/php/traits/Admin/LinksPage.php:352
+#: svn/tags/1.0.2/includes/Dashboard.php:193
+#: svn/tags/1.0.2/includes/Dashboard.php:445
+#: svn/tags/1.0.2/includes/LinksPage.php:315
+#: svn/tags/1.0.2/includes/LinksPage.php:341
+#: svn/trunk/includes/Dashboard.php:97 svn/trunk/includes/Dashboard.php:349
+#: svn/trunk/includes/LinksPage.php:327 svn/trunk/includes/LinksPage.php:352
 msgid "View Post"
 msgstr "Beitrag ansehen"
 
+#. translators: %s: formatted next publish datetime
+#: src/php/traits/Admin/Dashboard.php:140
+#: svn/tags/1.0.2/includes/Dashboard.php:236
+#: svn/trunk/includes/Dashboard.php:140
+#, php-format
+msgid "next: %s"
+msgstr "nächste: %s"
+
+#. translators: 1: remaining links needed, 2: threshold
+#: src/php/traits/Admin/Dashboard.php:160
+#: svn/tags/1.0.2/includes/Dashboard.php:256
+#: svn/trunk/includes/Dashboard.php:160
+#, php-format
+msgid "%1$d out of %2$d left until publish"
+msgid_plural "%1$d out of %2$d left until publish"
+msgstr[0] "%1$d von %2$d bis zur Veröffentlichung übrig"
+msgstr[1] "%1$d von %2$d bis zur Veröffentlichung übrig"
+
+#: src/php/traits/Admin/Dashboard.php:181
+#: svn/tags/1.0.2/includes/Dashboard.php:277
+#: svn/trunk/includes/Dashboard.php:181
 msgid "Recent Unpublished Links"
 msgstr "Zuletzt unveröffentlichte Links"
 
+#: src/php/traits/Admin/Dashboard.php:195
+#: svn/tags/1.0.2/includes/Dashboard.php:291
+#: svn/trunk/includes/Dashboard.php:195
 msgid "No unpublished links at the moment."
 msgstr "Zurzeit keine unveröffentlichten Links."
 
-msgid "Delete link"
-msgstr "Link löschen"
-
+#: src/php/traits/Admin/Dashboard.php:200
+#: svn/tags/1.0.2/includes/Dashboard.php:296
+#: svn/trunk/includes/Dashboard.php:200
 msgid "View All Links"
 msgstr "Alle Links anzeigen"
 
+#: src/php/traits/Admin/Dashboard.php:228
+#: svn/tags/1.0.2/includes/Dashboard.php:324
+#: svn/trunk/includes/Dashboard.php:228
+msgid "Delete link"
+msgstr "Link löschen"
+
+#: src/php/traits/Admin/Dashboard.php:259
+#: svn/tags/1.0.2/includes/Dashboard.php:355
+#: svn/trunk/includes/Dashboard.php:259
 msgid "Recently Published"
 msgstr "Zuletzt veröffentlicht"
 
+#: src/php/traits/Admin/Dashboard.php:264
+#: svn/tags/1.0.2/includes/Dashboard.php:360
+#: svn/trunk/includes/Dashboard.php:264
 msgid "No published links yet."
 msgstr "Noch keine veröffentlichten Links."
 
-msgid "Publish Links"
-msgstr "Links veröffentlichen"
+#: src/php/traits/Admin/Dashboard.php:269
+#: svn/tags/1.0.2/includes/Dashboard.php:365
+#: svn/trunk/includes/Dashboard.php:269
+msgid "View all links →"
+msgstr "Alle Links anzeigen →"
 
+#: src/php/traits/Admin/Dashboard.php:289
+#: svn/tags/1.0.2/includes/Dashboard.php:385
+#: svn/trunk/includes/Dashboard.php:289
+msgid "Publish Now"
+msgstr "Jetzt veröffentlichen"
+
+#. translators: %d: number of unpublished links
+#: src/php/traits/Admin/Dashboard.php:298
+#: svn/tags/1.0.2/includes/Dashboard.php:394
+#: svn/trunk/includes/Dashboard.php:298
 #, php-format
-msgid "You have <strong>%d</strong> unpublished link(s) ready to publish."
-msgstr "Du hast <strong>%d</strong> unveröffentlichte(n) Link(s) bereit zur Veröffentlichung."
+msgid "You have <strong>%d</strong> unpublished link ready to publish."
+msgid_plural ""
+"You have <strong>%d</strong> unpublished links ready to publish."
+msgstr[0] ""
+"Du hast <strong>%d</strong> unveröffentlichten Link bereit zur "
+"Veröffentlichung."
+msgstr[1] ""
+"Du hast <strong>%d</strong> unveröffentlichte Links bereit zur "
+"Veröffentlichung."
 
+#: src/php/traits/Admin/Dashboard.php:307
+#: svn/tags/1.0.2/includes/Dashboard.php:403
+#: svn/trunk/includes/Dashboard.php:307
 msgid "Post Title"
 msgstr "Beitragstitel"
 
+#. translators: %s is the current date (e.g. "April 15, 2026")
+#. translators: %s: formatted date, e.g. "April 15, 2026"
+#: src/php/traits/Admin/Dashboard.php:311 src/php/traits/Batch.php:83
+#: svn/tags/1.0.2/includes/Batch.php:83
+#: svn/tags/1.0.2/includes/Dashboard.php:407 svn/trunk/includes/Batch.php:83
+#: svn/trunk/includes/Dashboard.php:311
 #, php-format
 msgid "Links Roundup - %s"
 msgstr "Link-Zusammenfassung – %s"
 
+#: src/php/traits/Admin/Dashboard.php:316
+#: svn/tags/1.0.2/includes/Dashboard.php:412
+#: svn/trunk/includes/Dashboard.php:316 build/schedule.js:3
+#: src/schedule/App.jsx:192 svn/tags/1.0.2/schedule/schedule.js:4
+#: svn/trunk/schedule/schedule.js:3
 msgid "Publish"
 msgstr "Veröffentlichen"
 
+#: src/php/traits/Admin/Dashboard.php:318
+#: svn/tags/1.0.2/includes/Dashboard.php:414
+#: svn/trunk/includes/Dashboard.php:318
 msgid "Save as Draft"
 msgstr "Als Entwurf speichern"
 
+#: src/php/traits/Admin/Dashboard.php:322
+#: svn/tags/1.0.2/includes/Dashboard.php:418
+#: svn/trunk/includes/Dashboard.php:322
+msgid ""
+"No pending links to publish. Add links first, then come back here to publish"
+" a roundup."
+msgstr ""
+"Keine ausstehenden Links zum Veröffentlichen. Füge zuerst Links hinzu und "
+"komm dann hierher zurück, um eine Zusammenfassung zu veröffentlichen."
+
+#: src/php/traits/Admin/Dashboard.php:349
+#: src/php/traits/Admin/LinksPage.php:356
+#: svn/tags/1.0.2/includes/Dashboard.php:445
+#: svn/tags/1.0.2/includes/LinksPage.php:344
+#: svn/trunk/includes/Dashboard.php:349 svn/trunk/includes/LinksPage.php:356
 msgid "View Draft"
 msgstr "Entwurf ansehen"
 
+#: src/php/traits/Admin/Dashboard.php:375
+#: src/php/traits/Admin/LinksPage.php:341
+#: svn/tags/1.0.2/includes/Dashboard.php:471
+#: svn/tags/1.0.2/includes/LinksPage.php:330
+#: svn/trunk/includes/Dashboard.php:375 svn/trunk/includes/LinksPage.php:341
+#: build/schedule.js:3 src/schedule/App.jsx:193
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
 msgid "Draft"
 msgstr "Entwurf"
 
+#: src/php/traits/Admin/Dashboard.php:411
+#: svn/tags/1.0.2/includes/Dashboard.php:507
+#: svn/trunk/includes/Dashboard.php:411
 msgid "Quick Add"
 msgstr "Schnell hinzufügen"
 
+#: src/php/traits/Admin/Dashboard.php:423
+#: svn/tags/1.0.2/includes/Dashboard.php:519
+#: svn/trunk/includes/Dashboard.php:423
 msgid "Enter link title"
 msgstr "Linktitel eingeben"
 
-msgid "Delete?"
-msgstr "Löschen?"
+#: src/php/traits/Admin/Dashboard.php:432
+#: src/php/traits/Admin/Dashboard.php:575
+#: svn/tags/1.0.2/includes/Dashboard.php:528
+#: svn/tags/1.0.2/includes/Dashboard.php:671
+#: svn/trunk/includes/Dashboard.php:432 svn/trunk/includes/Dashboard.php:575
+msgid "Category"
+msgid_plural "Categories"
+msgstr[0] "Kategorie"
+msgstr[1] "Kategorien"
 
-msgid "Yes"
-msgstr "Ja"
+#: src/php/traits/Admin/Dashboard.php:434
+#: svn/tags/1.0.2/includes/Dashboard.php:530
+#: svn/trunk/includes/Dashboard.php:434
+msgid "— Select category —"
+msgstr "— Kategorie auswählen —"
 
-msgid "lynxjournal"
-msgstr "lynxjournal"
+#. translators: %s: formatted next run datetime
+#: src/php/traits/Admin/Dashboard.php:473
+#: svn/tags/1.0.2/includes/Dashboard.php:569
+#: svn/trunk/includes/Dashboard.php:473
+#, php-format
+msgid "Next run: %s"
+msgstr "Nächster Lauf: %s"
 
+#: src/php/traits/Admin/Dashboard.php:481
+#: svn/tags/1.0.2/includes/Dashboard.php:577
+#: svn/trunk/includes/Dashboard.php:481
+msgid "No automatic schedule active."
+msgstr "Kein automatischer Zeitplan aktiv."
+
+#: src/php/traits/Admin/Dashboard.php:485
+#: svn/tags/1.0.2/includes/Dashboard.php:581
+#: svn/trunk/includes/Dashboard.php:485
+msgid "Schedule settings →"
+msgstr "Zeitplaneinstellungen →"
+
+#: src/php/traits/Admin/Dashboard.php:536
+#: svn/tags/1.0.2/includes/Dashboard.php:632
+#: svn/trunk/includes/Dashboard.php:536
+msgid "Overview"
+msgstr "Übersicht"
+
+#. translators: %s: link to the category admin page
+#: src/php/traits/Admin/Dashboard.php:546
+#: svn/tags/1.0.2/includes/Dashboard.php:642
+#: svn/trunk/includes/Dashboard.php:546
+#, php-format
+msgid "No categories defined yet. %s"
+msgstr "Noch keine Kategorien definiert. %s"
+
+#: src/php/traits/Admin/Dashboard.php:547
+#: svn/tags/1.0.2/includes/Dashboard.php:643
+#: svn/trunk/includes/Dashboard.php:547
+msgid "Add a category"
+msgstr "Kategorie hinzufügen"
+
+#: src/php/traits/Admin/Dashboard.php:558
+#: svn/tags/1.0.2/includes/Dashboard.php:654
+#: svn/trunk/includes/Dashboard.php:558
+msgid "No links yet."
+msgstr "Noch keine Links."
+
+#: src/php/traits/Admin/Dashboard.php:559
+#: svn/tags/1.0.2/includes/Dashboard.php:655
+#: svn/trunk/includes/Dashboard.php:559
+msgid "Start by adding your first link."
+msgstr "Füge deinen ersten Link hinzu, um loszulegen."
+
+#: src/php/traits/Admin/Dashboard.php:561
+#: svn/tags/1.0.2/includes/Dashboard.php:657
+#: svn/trunk/includes/Dashboard.php:561
+msgid "Add your first link →"
+msgstr "Füge deinen ersten Link hinzu →"
+
+#: src/php/traits/Admin/Dashboard.php:570
+#: svn/tags/1.0.2/includes/Dashboard.php:666
+#: svn/trunk/includes/Dashboard.php:570
 msgid "Total Links"
 msgstr "Links gesamt"
 
-msgid "LynxJournal - All Links"
-msgstr "LynxJournal – Alle Links"
-
-msgid "Add New"
-msgstr "Neu hinzufügen"
-
-msgid "No links found. Add your first link!"
-msgstr "Keine Links gefunden. Füge deinen ersten Link hinzu!"
-
-msgid "Status"
-msgstr "Status"
-
-msgid "Published Date"
-msgstr "Veröffentlichungsdatum"
-
-msgid "Date"
-msgstr "Datum"
-
-msgid "Actions"
-msgstr "Aktionen"
-
-msgid "Link deleted successfully."
-msgstr "Link erfolgreich gelöscht."
-
-msgid "Edit Draft"
-msgstr "Entwurf bearbeiten"
-
-msgid "Are you sure you want to unpublish this link?"
-msgstr "Möchtest du diesen Link wirklich unveröffentlichen?"
-
-msgid "Are you sure you want to delete this link?"
-msgstr "Möchtest du diesen Link wirklich löschen?"
-
-msgid "Unpublish"
-msgstr "Unveröffentlichen"
-
-msgid "Edit"
-msgstr "Bearbeiten"
-
-msgid "Delete"
-msgstr "Löschen"
-
-msgid "Dashboard"
-msgstr "Dashboard"
-
-msgid "Show Links"
-msgstr "Links anzeigen"
-
+#: src/php/traits/Admin/LinksPage.php:62 src/php/traits/Admin/Menu.php:29
+#: src/php/traits/trait-post-type.php:29 svn/tags/1.0.2/includes/Menu.php:25
+#: svn/tags/1.0.2/includes/trait-post-type.php:29
+#: svn/trunk/includes/LinksPage.php:62 svn/trunk/includes/Menu.php:29
+#: svn/trunk/includes/trait-post-type.php:29
 msgid "All Links"
 msgstr "Alle Links"
 
-msgid "Settings"
-msgstr "Einstellungen"
+#: src/php/traits/Admin/LinksPage.php:100
+#: svn/tags/1.0.2/includes/LinksPage.php:101
+#: svn/trunk/includes/LinksPage.php:100
+msgid "Filter by date"
+msgstr "Nach Datum filtern"
 
-msgid "Setting X"
-msgstr "Einstellung X"
+#: src/php/traits/Admin/LinksPage.php:102
+#: svn/tags/1.0.2/includes/LinksPage.php:103
+#: svn/trunk/includes/LinksPage.php:102
+msgid "All dates"
+msgstr "Alle Daten"
 
-msgid "Schedule"
-msgstr "Zeitplan"
+#. translators: 1: month name, 2: year
+#: src/php/traits/Admin/LinksPage.php:107
+#: svn/tags/1.0.2/includes/LinksPage.php:108
+#: svn/trunk/includes/LinksPage.php:107
+#, php-format
+msgctxt "month year"
+msgid "%1$s %2$d"
+msgstr "%1$s %2$d"
 
-msgid "New API key generated successfully!"
-msgstr "Neuer API-Schlüssel erfolgreich generiert!"
+#: src/php/traits/Admin/LinksPage.php:116
+#: svn/tags/1.0.2/includes/LinksPage.php:117
+#: svn/trunk/includes/LinksPage.php:116
+msgid "Filter by category"
+msgstr "Nach Kategorie filtern"
 
-msgid "LynxJournal Settings"
-msgstr "LynxJournal-Einstellungen"
+#: src/php/traits/Admin/LinksPage.php:118
+#: svn/tags/1.0.2/includes/LinksPage.php:119
+#: svn/trunk/includes/LinksPage.php:118
+msgid "All categories"
+msgstr "Alle Kategorien"
 
-msgid "Chrome Extension Access Data"
-msgstr "Zugangsdaten für Chrome-Erweiterung"
+#: src/php/traits/Admin/LinksPage.php:124
+#: svn/tags/1.0.2/includes/LinksPage.php:125
+#: svn/trunk/includes/LinksPage.php:124
+msgid "Filter"
+msgstr "Filtern"
 
-msgid "Use these credentials to connect the LynxJournal Chrome extension to your WordPress site."
-msgstr "Verwende diese Zugangsdaten, um die LynxJournal-Chrome-Erweiterung mit deiner WordPress-Website zu verbinden."
+#: src/php/traits/Admin/LinksPage.php:128
+#: src/php/traits/Admin/LinksPage.php:130
+#: svn/tags/1.0.2/includes/LinksPage.php:129
+#: svn/tags/1.0.2/includes/LinksPage.php:131
+#: svn/trunk/includes/LinksPage.php:128 svn/trunk/includes/LinksPage.php:130
+msgid "Search Links"
+msgstr "Links durchsuchen"
 
-msgid "API Endpoint:"
-msgstr "API-Endpunkt:"
+#. translators: %s: number of items in the list table
+#: src/php/traits/Admin/LinksPage.php:138
+#: svn/tags/1.0.2/includes/LinksPage.php:139
+#: svn/trunk/includes/LinksPage.php:138
+#, php-format
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] "%s Eintrag"
+msgstr[1] "%s Einträge"
 
-msgid "Use this URL in the Chrome extension settings."
-msgstr "Verwende diese URL in den Einstellungen der Chrome-Erweiterung."
+#: src/php/traits/Admin/LinksPage.php:154
+#: svn/tags/1.0.2/includes/LinksPage.php:155
+#: svn/trunk/includes/LinksPage.php:154
+msgid "No links found. Add your first link!"
+msgstr "Keine Links gefunden. Füge deinen ersten Link hinzu!"
 
-msgid "View REST API"
-msgstr "REST-API anzeigen"
+#: src/php/traits/Admin/LinksPage.php:163
+#: src/php/traits/Admin/LinksPage.php:194
+#: svn/tags/1.0.2/includes/LinksPage.php:164
+#: svn/tags/1.0.2/includes/LinksPage.php:200
+#: svn/trunk/includes/LinksPage.php:163 svn/trunk/includes/LinksPage.php:194
+msgid "Status"
+msgstr "Status"
 
-msgid "API Key:"
-msgstr "API-Schlüssel:"
+#: src/php/traits/Admin/LinksPage.php:165
+#: src/php/traits/Admin/LinksPage.php:196
+#: svn/tags/1.0.2/includes/LinksPage.php:166
+#: svn/tags/1.0.2/includes/LinksPage.php:202
+#: svn/trunk/includes/LinksPage.php:165 svn/trunk/includes/LinksPage.php:196
+msgid "Date"
+msgstr "Datum"
 
-msgid "Click to select and copy this key. Keep it secure!"
-msgstr "Klicke, um diesen Schlüssel auszuwählen und zu kopieren. Halte ihn sicher!"
+#: src/php/traits/Admin/LinksPage.php:170
+#: svn/tags/1.0.2/includes/LinksPage.php:171
+#: svn/trunk/includes/LinksPage.php:170
+msgid "No links found."
+msgstr "Keine Links gefunden."
 
-msgid "Generate New API Key"
-msgstr "Neuen API-Schlüssel generieren"
+#: src/php/traits/Admin/LinksPage.php:316
+#: svn/tags/1.0.2/includes/LinksPage.php:301
+#: svn/trunk/includes/LinksPage.php:316
+msgid "Link deleted successfully."
+msgstr "Link erfolgreich gelöscht."
 
-msgid "Generate API Key"
-msgstr "API-Schlüssel generieren"
+#: src/php/traits/Admin/LinksPage.php:325
+#: svn/tags/1.0.2/includes/LinksPage.php:313
+#: svn/trunk/includes/LinksPage.php:325
+msgid "Edit Draft"
+msgstr "Entwurf bearbeiten"
 
-msgid "Warning: Generating a new key will invalidate the old one."
-msgstr "Warnung: Das Generieren eines neuen Schlüssels macht den alten ungültig."
+#: src/php/traits/Admin/LinksPage.php:353
+#: src/php/traits/Admin/LinksPage.php:357
+#: svn/tags/1.0.2/includes/LinksPage.php:342
+#: svn/tags/1.0.2/includes/LinksPage.php:345
+#: svn/trunk/includes/LinksPage.php:353 svn/trunk/includes/LinksPage.php:357
+msgid "Are you sure you want to unpublish this link?"
+msgstr "Möchtest du diesen Link wirklich unveröffentlichen?"
 
-msgid "Chrome Extension Setup"
-msgstr "Chrome-Erweiterung einrichten"
+#: src/php/traits/Admin/LinksPage.php:353
+#: src/php/traits/Admin/LinksPage.php:357
+#: svn/tags/1.0.2/includes/LinksPage.php:342
+#: svn/tags/1.0.2/includes/LinksPage.php:345
+#: svn/trunk/includes/LinksPage.php:353 svn/trunk/includes/LinksPage.php:357
+msgid "Unpublish"
+msgstr "Unveröffentlichen"
 
-msgid "Download and install the LynxJournal Chrome extension"
-msgstr "LynxJournal-Chrome-Erweiterung herunterladen und installieren"
+#: src/php/traits/Admin/LinksPage.php:361
+#: svn/tags/1.0.2/includes/LinksPage.php:348
+#: svn/trunk/includes/LinksPage.php:361
+msgid "Are you sure you want to delete this link?"
+msgstr "Möchtest du diesen Link wirklich löschen?"
 
-msgid "Click the extension icon and go to Settings"
-msgstr "Auf das Erweiterungssymbol klicken und zu Einstellungen gehen"
+#: src/php/traits/Admin/Menu.php:28 svn/tags/1.0.2/includes/Menu.php:24
+#: svn/trunk/includes/Menu.php:28
+msgid "Dashboard"
+msgstr "Dashboard"
 
-msgid "Paste your API Endpoint and API Key from above"
-msgstr "API-Endpunkt und API-Schlüssel von oben einfügen"
+#: src/php/traits/Admin/Menu.php:29 svn/tags/1.0.2/includes/Menu.php:25
+#: svn/trunk/includes/Menu.php:29
+msgid "Show Links"
+msgstr "Links anzeigen"
 
-msgid "Click Save"
-msgstr "Auf Speichern klicken"
-
-msgid "Now you can save links directly from any webpage!"
-msgstr "Jetzt kannst du Links direkt von jeder Webseite speichern!"
-
-msgid "Schedule Configuration"
-msgstr "Zeitplankonfiguration"
-
-msgid "Enabled"
-msgstr "Aktiviert"
-
-msgid "Disabled"
-msgstr "Deaktiviert"
-
-msgid "Experimental"
-msgstr "Experimentell"
-
-msgid "Quick View:"
-msgstr "Schnellansicht:"
-
-msgid "Expand All"
-msgstr "Alle ausklappen"
-
-msgid "Collapse All"
-msgstr "Alle einklappen"
-
+#: src/php/traits/Admin/Menu.php:33 svn/tags/1.0.2/includes/Menu.php:29
+#: svn/trunk/includes/Menu.php:33
 msgid "Chrome Extension"
 msgstr "Chrome-Erweiterung"
 
-msgid "Extension enabled"
-msgstr "Erweiterung aktiviert"
+#: src/php/traits/Admin/Menu.php:34 svn/tags/1.0.2/includes/Menu.php:30
+#: svn/trunk/includes/Menu.php:34
+msgid "Schedule"
+msgstr "Zeitplan"
 
-msgid "Enable the Chrome extension integration"
-msgstr "Chrome-Erweiterungs-Integration aktivieren"
+#: src/php/traits/Admin/Menu.php:35 src/php/traits/Admin/TemplatePage.php:62
+#: svn/trunk/includes/Menu.php:35 svn/trunk/includes/TemplatePage.php:62
+msgid "Post Template"
+msgstr "Beitragsvorlage"
 
-msgid "Default category"
-msgstr "Standardkategorie"
+#: src/php/traits/Admin/Menu.php:71 svn/tags/1.0.2/includes/Menu.php:102
+#: svn/trunk/includes/Menu.php:71
+msgid "LynxJournal Chrome Extension"
+msgstr "LynxJournal-Chrome-Erweiterung"
 
-msgid "Not set"
-msgstr "Nicht festgelegt"
+#: src/php/traits/Admin/Menu.php:86 svn/tags/1.0.2/includes/Menu.php:202
+#: svn/trunk/includes/Menu.php:86
+msgid "Schedule Configuration"
+msgstr "Zeitplankonfiguration"
 
-msgid "Save as draft"
-msgstr "Als Entwurf speichern"
+#: src/php/traits/Admin/Menu.php:155 svn/tags/1.0.2/includes/Menu.php:240
+#: svn/trunk/includes/Menu.php:155
+msgid "Delete?"
+msgstr "Löschen?"
 
-msgid "Save links as drafts by default"
-msgstr "Links standardmäßig als Entwürfe speichern"
+#: src/php/traits/Admin/Menu.php:156 svn/tags/1.0.2/includes/Menu.php:241
+#: svn/trunk/includes/Menu.php:156
+msgid "Yes"
+msgstr "Ja"
 
-msgid "Auto-fill title"
-msgstr "Titel automatisch ausfüllen"
+#: src/php/traits/Admin/Menu.php:211 svn/tags/1.0.2/includes/Menu.php:272
+#: svn/trunk/includes/Menu.php:211
+msgid "Save"
+msgstr "Speichern"
 
-msgid "Pre-fill title from page title"
-msgstr "Titel aus Seitentitel vorausfüllen"
+#: src/php/traits/Admin/Menu.php:213 svn/tags/1.0.2/includes/Menu.php:274
+#: svn/trunk/includes/Menu.php:213
+msgid "Saving…"
+msgstr "Speichern…"
 
-msgid "Show tag input"
-msgstr "Schlagwort-Eingabe anzeigen"
+#: src/php/traits/Admin/Menu.php:214 svn/tags/1.0.2/includes/Menu.php:275
+#: svn/trunk/includes/Menu.php:214
+msgid "Save failed."
+msgstr "Speichern fehlgeschlagen."
 
-msgid "Show tag input field in the extension popup"
-msgstr "Schlagwort-Eingabefeld im Erweiterungs-Popup anzeigen"
+#: src/php/traits/Admin/Menu.php:215 svn/tags/1.0.2/includes/Menu.php:276
+#: svn/trunk/includes/Menu.php:215
+msgid "Name is required."
+msgstr "Name ist erforderlich."
 
-msgid "Post Settings"
-msgstr "Beitragseinstellungen"
+#: src/php/traits/Admin/Menu.php:216 svn/tags/1.0.2/includes/Menu.php:277
+#: svn/trunk/includes/Menu.php:216
+msgid "Description (optional)"
+msgstr "Beschreibung (optional)"
 
-msgid "Default post status"
-msgstr "Standard-Beitragsstatus"
+#: src/php/traits/Admin/Menu.php:217 svn/tags/1.0.2/includes/Menu.php:278
+#: svn/trunk/includes/Menu.php:217
+msgid "Leave blank to keep current"
+msgstr "Leer lassen, um aktuellen Wert zu behalten"
 
-msgid "Add source URL to content"
-msgstr "Quell-URL zum Inhalt hinzufügen"
+#: src/php/traits/Admin/Menu.php:218 svn/tags/1.0.2/includes/Menu.php:279
+#: svn/trunk/includes/Menu.php:218
+msgid "link will become uncategorized."
+msgstr "Link wird unkategorisiert."
 
-msgid "Append source URL to post content"
-msgstr "Quell-URL an Beitragsinhalt anhängen"
+#: src/php/traits/Admin/Menu.php:219 svn/tags/1.0.2/includes/Menu.php:280
+#: svn/trunk/includes/Menu.php:219
+msgid "links will become uncategorized."
+msgstr "Links werden unkategorisiert."
 
-msgid "Auto-generate excerpt"
-msgstr "Auszug automatisch generieren"
+#. translators: %s: category name.
+#: src/php/traits/Admin/Menu.php:221 svn/trunk/includes/Menu.php:221
+#, php-format
+msgid "Delete '%s'?"
+msgstr "„%s“ löschen?"
 
-msgid "Generate excerpt from link description"
-msgstr "Auszug aus Linkbeschreibung generieren"
-
-msgid "Archive posts after roundup"
-msgstr "Beiträge nach Zusammenfassung archivieren"
-
-msgid "Move source posts to trash after roundup is published"
-msgstr "Quellbeiträge in den Papierkorb verschieben, nachdem die Zusammenfassung veröffentlicht wurde"
-
-msgid "Override post author ID"
-msgstr "Beitragsautor-ID überschreiben"
-
-msgid "Default"
-msgstr "Standard"
-
-msgid "0 = use current user"
-msgstr "0 = aktuellen Benutzer verwenden"
-
-msgid "UI / Appearance"
-msgstr "Oberfläche / Erscheinungsbild"
-
-msgid "Accent color"
-msgstr "Akzentfarbe"
-
-msgid "Compact dashboard"
-msgstr "Kompaktes Dashboard"
-
-msgid "Use compact spacing on the dashboard"
-msgstr "Kompakten Abstand im Dashboard verwenden"
-
-msgid "Links per page"
-msgstr "Links pro Seite"
-
-msgid "Show category badges"
-msgstr "Kategorie-Abzeichen anzeigen"
-
-msgid "Display category badges on link items"
-msgstr "Kategorie-Abzeichen bei Link-Einträgen anzeigen"
-
-msgid "Date format"
-msgstr "Datumsformat"
-
-msgid "Relative (e.g. 2 hours ago)"
-msgstr "Relativ (z. B. vor 2 Stunden)"
-
-msgid "Absolute (e.g. 2026-04-20)"
-msgstr "Absolut (z. B. 2026-04-20)"
-
-msgid "Advanced / API"
-msgstr "Erweitert / API"
-
-msgid "Enable public API"
-msgstr "Öffentliche API aktivieren"
-
-msgid "Allow unauthenticated read access to the REST API"
-msgstr "Nicht authentifizierten Lesezugriff auf die REST-API erlauben"
-
-msgid "Allow CORS"
-msgstr "CORS erlauben"
-
-msgid "Send CORS headers for cross-origin requests"
-msgstr "CORS-Header für ursprungsübergreifende Anfragen senden"
-
-msgid "Cache duration (min)"
-msgstr "Cache-Dauer (Min.)"
-
-msgid "Debug mode"
-msgstr "Debug-Modus"
-
-msgid "Log API requests and errors"
-msgstr "API-Anfragen und Fehler protokollieren"
-
-msgid "Auto-trash after publishing"
-msgstr "Nach Veröffentlichung automatisch löschen"
-
-msgid "Automatically trash links after they are published"
-msgstr "Links nach der Veröffentlichung automatisch in den Papierkorb verschieben"
-
-msgid "20 total options available."
-msgstr "20 Optionen insgesamt verfügbar."
-
-msgid "Save All Changes"
-msgstr "Alle Änderungen speichern"
-
+#: src/php/traits/Admin/Menu.php:428 svn/tags/1.0.2/includes/Menu.php:388
+#: svn/trunk/includes/Menu.php:428
 msgid "LynxJournal Summary"
 msgstr "LynxJournal-Übersicht"
 
+#: src/php/traits/Admin/TemplatePage.php:25
+#: svn/trunk/includes/TemplatePage.php:25
+msgid "Template saved."
+msgstr "Vorlage gespeichert."
+
+#: src/php/traits/Admin/TemplatePage.php:31
+#: svn/trunk/includes/TemplatePage.php:31
+msgid "Structure"
+msgstr "Struktur"
+
+#: src/php/traits/Admin/TemplatePage.php:32
+#: svn/trunk/includes/TemplatePage.php:32
+msgid "Start of a category block"
+msgstr "Anfang eines Kategorieblocks"
+
+#: src/php/traits/Admin/TemplatePage.php:33
+#: svn/trunk/includes/TemplatePage.php:33
+msgid "End of a category block"
+msgstr "Ende eines Kategorieblocks"
+
+#: src/php/traits/Admin/TemplatePage.php:34
+#: svn/trunk/includes/TemplatePage.php:34
+msgid "Start of a link entry"
+msgstr "Anfang eines Linkeintrags"
+
+#: src/php/traits/Admin/TemplatePage.php:35
+#: svn/trunk/includes/TemplatePage.php:35
+msgid "End of a link entry"
+msgstr "Ende eines Linkeintrags"
+
+#: src/php/traits/Admin/TemplatePage.php:37
+#: svn/trunk/includes/TemplatePage.php:37
+msgid "Post"
+msgstr "Beitrag"
+
+#: src/php/traits/Admin/TemplatePage.php:38
+#: svn/trunk/includes/TemplatePage.php:38
+msgid "Title of the roundup post"
+msgstr "Titel des Zusammenfassungsbeitrags"
+
+#: src/php/traits/Admin/TemplatePage.php:39
+#: svn/trunk/includes/TemplatePage.php:39
+msgid "Publish date"
+msgstr "Veröffentlichungsdatum"
+
+#: src/php/traits/Admin/TemplatePage.php:40
+#: svn/trunk/includes/TemplatePage.php:40
+msgid "Name of the post author"
+msgstr "Name des Beitragsautors"
+
+#: src/php/traits/Admin/TemplatePage.php:41
+#: svn/trunk/includes/TemplatePage.php:41
+msgid "Name of the site"
+msgstr "Name der Website"
+
+#: src/php/traits/Admin/TemplatePage.php:42
+#: svn/trunk/includes/TemplatePage.php:42
+msgid "Number of roundups published so far"
+msgstr "Anzahl der bisher veröffentlichten Zusammenfassungen"
+
+#: src/php/traits/Admin/TemplatePage.php:45
+#: svn/trunk/includes/TemplatePage.php:45
+msgid "Number of links in the roundup"
+msgstr "Anzahl der Links in der Zusammenfassung"
+
+#: src/php/traits/Admin/TemplatePage.php:46
+#: svn/trunk/includes/TemplatePage.php:46
+msgid "Link as a Markdown hyperlink (title + URL)"
+msgstr "Link als Markdown-Hyperlink (Titel + URL)"
+
+#: src/php/traits/Admin/TemplatePage.php:47
+#: svn/trunk/includes/TemplatePage.php:47
+msgid "Link's description text"
+msgstr "Beschreibungstext des Links"
+
+#: src/php/traits/Admin/TemplatePage.php:48
+#: svn/trunk/includes/TemplatePage.php:48
+msgid "Domain of the URL (e.g. \"example.com\")"
+msgstr "Domain der URL (z. B. „example.com“)"
+
+#: src/php/traits/Admin/TemplatePage.php:49
+#: svn/trunk/includes/TemplatePage.php:49
+msgid "Date the link was saved"
+msgstr "Datum, an dem der Link gespeichert wurde"
+
+#: src/php/traits/Admin/TemplatePage.php:52
+#: svn/trunk/includes/TemplatePage.php:52
+msgid "Primary category"
+msgstr "Hauptkategorie"
+
+#: src/php/traits/Admin/TemplatePage.php:53
+#: svn/trunk/includes/TemplatePage.php:53
+msgid "Number of links in the category"
+msgstr "Anzahl der Links in der Kategorie"
+
+#: src/php/traits/Admin/TemplatePage.php:54
+#: svn/trunk/includes/TemplatePage.php:54
+msgid "All categories, comma-separated"
+msgstr "Alle Kategorien, kommagetrennt"
+
+#: src/php/traits/Admin/TemplatePage.php:57
+#: svn/trunk/includes/TemplatePage.php:57
+msgid "Link's tags, comma-separated"
+msgstr "Schlagwörter des Links, kommagetrennt"
+
+#: src/php/traits/Admin/TemplatePage.php:70
+#: svn/trunk/includes/TemplatePage.php:70
+msgid "Undo"
+msgstr "Rückgängig"
+
+#: src/php/traits/Admin/TemplatePage.php:71
+#: svn/trunk/includes/TemplatePage.php:71
+msgid "Redo"
+msgstr "Wiederholen"
+
+#: src/php/traits/Admin/TemplatePage.php:72
+#: svn/trunk/includes/TemplatePage.php:72
+msgid "Bold"
+msgstr "Fett"
+
+#: src/php/traits/Admin/TemplatePage.php:73
+#: svn/trunk/includes/TemplatePage.php:73
+msgid "Italic"
+msgstr "Kursiv"
+
+#: src/php/traits/Admin/TemplatePage.php:74
+#: svn/trunk/includes/TemplatePage.php:74
+msgid "Underline"
+msgstr "Unterstrichen"
+
+#: src/php/traits/Admin/TemplatePage.php:75
+#: src/php/traits/Admin/TemplatePage.php:76
+#: svn/trunk/includes/TemplatePage.php:75
+#: svn/trunk/includes/TemplatePage.php:76
+msgid "Heading"
+msgstr "Überschrift"
+
+#: src/php/traits/Admin/TemplatePage.php:84
+#: svn/trunk/includes/TemplatePage.php:84
+msgid "Bullet list"
+msgstr "Aufzählungsliste"
+
+#: src/php/traits/Admin/TemplatePage.php:85
+#: svn/trunk/includes/TemplatePage.php:85
+msgid "Numbered list"
+msgstr "Nummerierte Liste"
+
+#: src/php/traits/Admin/TemplatePage.php:86
+#: svn/trunk/includes/TemplatePage.php:86
+msgid "Indent"
+msgstr "Einrücken"
+
+#: src/php/traits/Admin/TemplatePage.php:87
+#: svn/trunk/includes/TemplatePage.php:87
+msgid "Outdent"
+msgstr "Ausrücken"
+
+#: src/php/traits/Admin/TemplatePage.php:88
+#: svn/trunk/includes/TemplatePage.php:88
+msgid "Horizontal rule"
+msgstr "Horizontale Linie"
+
+#: src/php/traits/Admin/TemplatePage.php:95
+#: svn/trunk/includes/TemplatePage.php:95
+msgid "Template"
+msgstr "Vorlage"
+
+#: src/php/traits/Admin/TemplatePage.php:101
+#: svn/trunk/includes/TemplatePage.php:101
+msgid "Preview"
+msgstr "Vorschau"
+
+#: src/php/traits/Admin/TemplatePage.php:103
+#: svn/trunk/includes/TemplatePage.php:103
+msgid "Preview style"
+msgstr "Vorschaustil"
+
+#: src/php/traits/Admin/TemplatePage.php:107
+#: svn/trunk/includes/TemplatePage.php:107
+msgid "Theme"
+msgstr "Theme"
+
+#: src/php/traits/Admin/TemplatePage.php:111
+#: svn/trunk/includes/TemplatePage.php:111
+msgid "Default"
+msgstr "Standard"
+
+#: src/php/traits/Admin/TemplatePage.php:115
+#: svn/trunk/includes/TemplatePage.php:115
+msgid "Preview width"
+msgstr "Vorschaubreite"
+
+#: src/php/traits/Admin/TemplatePage.php:119
+#: svn/trunk/includes/TemplatePage.php:119
+msgid "Desktop"
+msgstr "Desktop"
+
+#: src/php/traits/Admin/TemplatePage.php:123
+#: svn/trunk/includes/TemplatePage.php:123
+msgid "Mobile"
+msgstr "Mobil"
+
+#: src/php/traits/Admin/TemplatePage.php:126
+#: svn/trunk/includes/TemplatePage.php:126
+msgid "Live"
+msgstr "Live"
+
+#: src/php/traits/Admin/TemplatePage.php:132
+#: svn/trunk/includes/TemplatePage.php:132
+msgid "Toggle preview visibility"
+msgstr "Vorschau ein-/ausblenden"
+
+#: src/php/traits/Admin/TemplatePage.php:137
+#: svn/trunk/includes/TemplatePage.php:137
+msgid "Template preview"
+msgstr "Vorlagenvorschau"
+
+#: src/php/traits/Admin/TemplatePage.php:143
+#: svn/trunk/includes/TemplatePage.php:143
+msgid "Available tokens"
+msgstr "Verfügbare Platzhalter"
+
+#: src/php/traits/Admin/TemplatePage.php:166
+#: svn/trunk/includes/TemplatePage.php:166
+msgid "Save Template"
+msgstr "Vorlage speichern"
+
+#: src/php/traits/Batch.php:24 src/php/traits/Batch.php:64
+#: svn/tags/1.0.2/includes/Batch.php:24 svn/tags/1.0.2/includes/Batch.php:64
+#: svn/trunk/includes/Batch.php:24 svn/trunk/includes/Batch.php:64
 msgid "No links to publish."
 msgstr "Keine Links zum Veröffentlichen."
 
+#. translators: 1: link title, 2: error message
+#: src/php/traits/Batch.php:38 svn/tags/1.0.2/includes/Batch.php:38
+#: svn/trunk/includes/Batch.php:38
 #, php-format
 msgid "Failed to publish \"%1$s\": %2$s"
 msgstr "\"%1$s\" konnte nicht veröffentlicht werden: %2$s"
 
+#: src/php/traits/Batch.php:89 svn/tags/1.0.2/includes/Batch.php:89
+#: svn/trunk/includes/Batch.php:89
 msgid "No valid links to publish."
 msgstr "Keine gültigen Links zum Veröffentlichen."
 
-msgid "You do not have permission to publish posts."
-msgstr "Du hast keine Berechtigung, Beiträge zu veröffentlichen."
-
+#: src/php/traits/Batch.php:130 svn/tags/1.0.2/includes/Batch.php:124
+#: svn/trunk/includes/Batch.php:130
 msgid "Failed to create roundup post."
 msgstr "Zusammenfassungsbeitrag konnte nicht erstellt werden."
 
+#. translators: %d: number of links included in the roundup post
+#: src/php/traits/Batch.php:147 svn/tags/1.0.2/includes/Batch.php:137
+#: svn/trunk/includes/Batch.php:147
 #, php-format
-msgid "Roundup post created successfully with %d link(s)."
-msgstr "Zusammenfassungsbeitrag erfolgreich mit %d Link(s) erstellt."
+msgid "Roundup post created successfully with %d link."
+msgid_plural "Roundup post created successfully with %d links."
+msgstr[0] "Zusammenfassungsbeitrag erfolgreich mit %d Link erstellt."
+msgstr[1] "Zusammenfassungsbeitrag erfolgreich mit %d Links erstellt."
 
+#: src/php/traits/Batch.php:214 src/php/traits/TemplateRenderer.php:93
+#: svn/tags/1.0.2/includes/Batch.php:202 svn/trunk/includes/Batch.php:214
+#: svn/trunk/includes/TemplateRenderer.php:93
 msgid "Other"
 msgstr "Sonstige"
 
+#: src/php/traits/MetaBoxes.php:16 svn/tags/1.0.2/includes/MetaBoxes.php:16
+#: svn/trunk/includes/MetaBoxes.php:16
 msgid "Link URL"
 msgstr "Link-URL"
 
+#: src/php/traits/MetaBoxes.php:36 svn/tags/1.0.2/includes/MetaBoxes.php:36
+#: svn/trunk/includes/MetaBoxes.php:36
 msgid "URL:"
 msgstr "URL:"
 
-msgctxt "Post Type General Name"
-msgid "Links"
-msgstr "Links"
+#: src/php/traits/Publishing.php:16 svn/tags/1.0.2/includes/Publishing.php:16
+#: svn/trunk/includes/Publishing.php:16
+msgid "You do not have permission to publish posts."
+msgstr "Du hast keine Berechtigung, Beiträge zu veröffentlichen."
 
-msgctxt "Post Type Singular Name"
-msgid "Link"
-msgstr "Link"
-
-msgid "Link"
-msgstr "Link"
-
-msgid "Link Archives"
-msgstr "Link-Archiv"
-
-msgid "Link Attributes"
-msgstr "Link-Attribute"
-
-msgid "Parent Link:"
-msgstr "Übergeordneter Link:"
-
-msgid "New Link"
-msgstr "Neuer Link"
-
-msgid "Edit Link"
-msgstr "Link bearbeiten"
-
-msgid "Update Link"
-msgstr "Link aktualisieren"
-
-msgid "View Link"
-msgstr "Link ansehen"
-
-msgid "View Links"
-msgstr "Links ansehen"
-
-msgid "Search Link"
-msgstr "Link suchen"
-
-msgid "Not found"
-msgstr "Nicht gefunden"
-
-msgid "Not found in Trash"
-msgstr "Im Papierkorb nicht gefunden"
-
-msgid "Featured Image"
-msgstr "Beitragsbild"
-
-msgid "Set featured image"
-msgstr "Beitragsbild festlegen"
-
-msgid "Remove featured image"
-msgstr "Beitragsbild entfernen"
-
-msgid "Use as featured image"
-msgstr "Als Beitragsbild verwenden"
-
-msgid "Insert into link"
-msgstr "In Link einfügen"
-
-msgid "Uploaded to this link"
-msgstr "Zu diesem Link hochgeladen"
-
-msgid "Links list"
-msgstr "Linkliste"
-
-msgid "Links list navigation"
-msgstr "Linklisten-Navigation"
-
-msgid "Filter links list"
-msgstr "Linkliste filtern"
-
-msgid "Links to publish on blog"
-msgstr "Links für die Veröffentlichung im Blog"
-
-msgctxt "Taxonomy General Name"
-msgid "Link Categories"
-msgstr "Link-Kategorien"
-
-msgctxt "Taxonomy Singular Name"
-msgid "Link Category"
-msgstr "Link-Kategorie"
-
-msgid "All Categories"
-msgstr "Alle Kategorien"
-
-msgid "Parent Category"
-msgstr "Übergeordnete Kategorie"
-
-msgid "Parent Category:"
-msgstr "Übergeordnete Kategorie:"
-
-msgid "New Category Name"
-msgstr "Neuer Kategoriename"
-
-msgid "Add New Category"
-msgstr "Neue Kategorie hinzufügen"
-
-msgid "Edit Category"
-msgstr "Kategorie bearbeiten"
-
-msgid "Update Category"
-msgstr "Kategorie aktualisieren"
-
-msgid "View Category"
-msgstr "Kategorie ansehen"
-
-msgid "Separate categories with commas"
-msgstr "Kategorien mit Kommas trennen"
-
-msgid "Add or remove categories"
-msgstr "Kategorien hinzufügen oder entfernen"
-
-msgid "Choose from the most used"
-msgstr "Aus den meistgenutzten auswählen"
-
-msgid "Popular Categories"
-msgstr "Beliebte Kategorien"
-
-msgid "Search Categories"
-msgstr "Kategorien suchen"
-
-msgid "Not Found"
-msgstr "Nicht gefunden"
-
-msgid "No categories"
-msgstr "Keine Kategorien"
-
-msgid "Categories list"
-msgstr "Kategorieliste"
-
-msgid "Categories list navigation"
-msgstr "Kategorielisten-Navigation"
-
-msgctxt "Taxonomy General Name"
-msgid "Link Tags"
-msgstr "Link-Schlagwörter"
-
-msgctxt "Taxonomy Singular Name"
-msgid "Link Tag"
-msgstr "Link-Schlagwort"
-
-msgid "All Tags"
-msgstr "Alle Schlagwörter"
-
-msgid "Parent Tag"
-msgstr "Übergeordnetes Schlagwort"
-
-msgid "Parent Tag:"
-msgstr "Übergeordnetes Schlagwort:"
-
-msgid "New Tag Name"
-msgstr "Neuer Schlagwortname"
-
-msgid "Add New Tag"
-msgstr "Neues Schlagwort hinzufügen"
-
-msgid "Edit Tag"
-msgstr "Schlagwort bearbeiten"
-
-msgid "Update Tag"
-msgstr "Schlagwort aktualisieren"
-
-msgid "View Tag"
-msgstr "Schlagwort ansehen"
-
-msgid "Add or remove tags"
-msgstr "Schlagwörter hinzufügen oder entfernen"
-
-msgid "Popular Tags"
-msgstr "Beliebte Schlagwörter"
-
-msgid "Search Tags"
-msgstr "Schlagwörter suchen"
-
-msgid "No tags"
-msgstr "Keine Schlagwörter"
-
-msgid "Tags list"
-msgstr "Schlagwortliste"
-
-msgid "Tags list navigation"
-msgstr "Schlagwortlisten-Navigation"
-
+#: src/php/traits/Publishing.php:20 svn/tags/1.0.2/includes/Publishing.php:20
+#: svn/trunk/includes/Publishing.php:20
 msgid "Invalid link ID."
 msgstr "Ungültige Link-ID."
 
+#: src/php/traits/Publishing.php:35 svn/tags/1.0.2/includes/Publishing.php:35
+#: svn/trunk/includes/Publishing.php:35
 msgid "Link must have a title to publish."
 msgstr "Der Link muss einen Titel haben, um veröffentlicht zu werden."
 
+#: src/php/traits/Publishing.php:40 svn/tags/1.0.2/includes/Publishing.php:40
+#: svn/trunk/includes/Publishing.php:40
 msgid "This link has already been published."
 msgstr "Dieser Link wurde bereits veröffentlicht."
 
+#: src/php/traits/Publishing.php:61 svn/trunk/includes/Publishing.php:61
+msgid "Read more:"
+msgstr "Weiterlesen:"
+
+#: src/php/traits/Publishing.php:142
+#: svn/tags/1.0.2/includes/Publishing.php:142
+#: svn/trunk/includes/Publishing.php:142
 msgid "Failed to create blog post."
 msgstr "Blogbeitrag konnte nicht erstellt werden."
 
+#: src/php/traits/Publishing.php:160
+#: svn/tags/1.0.2/includes/Publishing.php:160
+#: svn/trunk/includes/Publishing.php:160
 msgid "Link saved as draft successfully."
 msgstr "Link erfolgreich als Entwurf gespeichert."
 
+#: src/php/traits/Publishing.php:161
+#: svn/tags/1.0.2/includes/Publishing.php:161
+#: svn/trunk/includes/Publishing.php:161
 msgid "Link published successfully."
 msgstr "Link erfolgreich veröffentlicht."
 
+#: src/php/traits/Queries.php:94 src/php/traits/Scheduler.php:314
+#: svn/tags/1.0.2/includes/Queries.php:94
+#: svn/tags/1.0.2/includes/Scheduler.php:314 svn/trunk/includes/Queries.php:94
+#: svn/trunk/includes/Scheduler.php:314
 msgid "Uncategorized"
 msgstr "Unkategorisiert"
 
+#: src/php/traits/Queries.php:206 svn/tags/1.0.2/includes/Queries.php:206
+#: svn/trunk/includes/Queries.php:206
 msgid "This link has not been published."
 msgstr "Dieser Link wurde noch nicht veröffentlicht."
 
+#: src/php/traits/Queries.php:216 svn/tags/1.0.2/includes/Queries.php:216
+#: svn/trunk/includes/Queries.php:216
 msgid "Failed to unpublish link."
 msgstr "Link konnte nicht unveröffentlicht werden."
 
+#: src/php/traits/Queries.php:229 svn/tags/1.0.2/includes/Queries.php:229
+#: svn/trunk/includes/Queries.php:229
 msgid "Link unpublished successfully."
 msgstr "Link erfolgreich unveröffentlicht."
 
+#: src/php/traits/RestApi.php:140 svn/tags/1.0.2/includes/RestApi.php:133
+#: svn/trunk/includes/RestApi.php:140
 msgid "No API key configured."
 msgstr "Kein API-Schlüssel konfiguriert."
 
+#: src/php/traits/RestApi.php:188 svn/trunk/includes/RestApi.php:188
+msgid "Forbidden"
+msgstr "Verboten"
+
+#: src/php/traits/RestApi.php:203 svn/trunk/includes/RestApi.php:203
+msgid "Link not found"
+msgstr "Link nicht gefunden"
+
+#: src/php/traits/RestApi.php:207 svn/trunk/includes/RestApi.php:207
+msgid "Could not delete link"
+msgstr "Link konnte nicht gelöscht werden"
+
+#: src/php/traits/RestApi.php:245 svn/tags/1.0.2/includes/RestApi.php:226
+#: svn/trunk/includes/RestApi.php:245
 msgid "Invalid schedule data"
 msgstr "Ungültige Zeitplandaten"
 
+#: src/php/traits/RestApi.php:298 svn/tags/1.0.2/includes/RestApi.php:279
+#: svn/trunk/includes/RestApi.php:298
+msgid "A schedule run is already in progress"
+msgstr "Ein Zeitplanlauf läuft bereits"
+
+#: src/php/traits/RestApi.php:354 svn/tags/1.0.2/includes/RestApi.php:335
+#: svn/trunk/includes/RestApi.php:354
 msgid "Failed to create link."
 msgstr "Link konnte nicht erstellt werden."
 
-msgid "This URL has already been saved."
-msgstr "Diese URL wurde bereits gespeichert."
-
+#: src/php/traits/RestApi.php:389 svn/tags/1.0.2/includes/RestApi.php:450
+#: svn/trunk/includes/RestApi.php:389
 msgid "Failed to fetch categories."
 msgstr "Kategorien konnten nicht abgerufen werden."
 
+#: src/php/traits/RestApiSupport.php:35
+#: svn/tags/1.0.2/includes/RestApi.php:381
+#: svn/trunk/includes/RestApiSupport.php:35
+msgid "This URL has already been saved."
+msgstr "Diese URL wurde bereits gespeichert."
+
+#. translators: %s is the formatted date (e.g. "April 15, 2026")
+#: src/php/traits/Scheduler.php:130 svn/tags/1.0.2/includes/Scheduler.php:130
+#: svn/trunk/includes/Scheduler.php:130
 #, php-format
 msgid "Links: %s"
 msgstr "Links: %s"
 
-msgid "Daily"
-msgstr "Täglich"
+#. translators: %d: number of links published
+#: src/php/traits/Scheduler.php:351 svn/tags/1.0.2/includes/Scheduler.php:350
+#: svn/trunk/includes/Scheduler.php:351
+#, php-format
+msgid "[LynxJournal] Roundup published: %d links"
+msgstr "[LynxJournal] Zusammenfassung veröffentlicht: %d Links"
 
-msgid "Weekly"
-msgstr "Wöchentlich"
+#. translators: 1: link count, 2: post URL
+#: src/php/traits/Scheduler.php:355 svn/tags/1.0.2/includes/Scheduler.php:354
+#: svn/trunk/includes/Scheduler.php:355
+#, php-format
+msgid ""
+"A new roundup was published.\n"
+"\n"
+"Links: %1$d\n"
+"View: %2$s"
+msgstr ""
+"Eine neue Zusammenfassung wurde veröffentlicht.\n"
+"\n"
+"Links: %1$d\n"
+"Ansehen: %2$s"
 
-msgid "Monthly"
-msgstr "Monatlich"
+#. translators: %s: schedule mode
+#: src/php/traits/Scheduler.php:362 svn/tags/1.0.2/includes/Scheduler.php:361
+#: svn/trunk/includes/Scheduler.php:362
+#, php-format
+msgid "Schedule ran in %s mode but no post was published."
+msgstr "Zeitplan lief im Modus %s, aber es wurde kein Beitrag veröffentlicht."
 
-msgid "By Count"
-msgstr "Nach Anzahl"
+#. translators: %s: comma-separated list of unrecognized field names
+#: src/php/traits/ScheduleValidator.php:35
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:35
+#: svn/trunk/includes/ScheduleValidator.php:35
+#, php-format
+msgid "Unknown schedule fields: %s"
+msgstr "Unbekannte Zeitplanfelder: %s"
 
-msgid "By Age"
-msgstr "Nach Alter"
+#: src/php/traits/ScheduleValidator.php:41
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:41
+#: svn/trunk/includes/ScheduleValidator.php:41
+msgid "Invalid schedule mode"
+msgstr "Ungültiger Zeitplanmodus"
 
+#: src/php/traits/ScheduleValidator.php:48
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:48
+#: svn/trunk/includes/ScheduleValidator.php:48
+msgid "times must be an array"
+msgstr "times muss ein Array sein"
+
+#: src/php/traits/ScheduleValidator.php:52
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:52
+#: svn/trunk/includes/ScheduleValidator.php:52
+msgid "times entries must be HH:MM strings"
+msgstr "times-Einträge müssen HH:MM-Zeichenfolgen sein"
+
+#: src/php/traits/ScheduleValidator.php:62
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:62
+#: svn/trunk/includes/ScheduleValidator.php:62
+msgid "recurrence must be an object"
+msgstr "recurrence muss ein Objekt sein"
+
+#: src/php/traits/ScheduleValidator.php:69
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:69
+#: svn/trunk/includes/ScheduleValidator.php:69
+msgid "trigger must be an object"
+msgstr "trigger muss ein Objekt sein"
+
+#: src/php/traits/ScheduleValidator.php:78
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:78
+#: svn/trunk/includes/ScheduleValidator.php:78
+msgid "trigger.count must be a positive integer"
+msgstr "trigger.count muss eine positive Ganzzahl sein"
+
+#: src/php/traits/ScheduleValidator.php:84
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:84
+#: svn/trunk/includes/ScheduleValidator.php:84
+msgid "trigger.days must be a positive integer"
+msgstr "trigger.days muss eine positive Ganzzahl sein"
+
+#: src/php/traits/ScheduleValidator.php:96
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:101
+#: svn/trunk/includes/ScheduleValidator.php:96
+msgid "post_status must be \"publish\" or \"draft\""
+msgstr "post_status muss „publish“ oder „draft“ sein"
+
+#: src/php/traits/ScheduleValidator.php:111
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:94
+#: svn/trunk/includes/ScheduleValidator.php:111
+msgid "publishAs must be a non-negative integer"
+msgstr "publishAs muss eine nicht-negative Ganzzahl sein"
+
+#: src/php/traits/ScheduleValidator.php:114
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:97
+#: svn/trunk/includes/ScheduleValidator.php:114
+msgid "publishAs must refer to a user who can publish posts"
+msgstr ""
+"publishAs muss auf einen Benutzer verweisen, der Beiträge veröffentlichen "
+"darf"
+
+#: src/php/traits/ScheduleValidator.php:121
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:108
+#: svn/trunk/includes/ScheduleValidator.php:121
+msgid "notify must be an object"
+msgstr "notify muss ein Objekt sein"
+
+#: src/php/traits/ScheduleValidator.php:127
+#: svn/tags/1.0.2/includes/ScheduleValidator.php:114
+#: svn/trunk/includes/ScheduleValidator.php:127
+msgid "notify.email is not a valid email address"
+msgstr "notify.email ist keine gültige E-Mail-Adresse"
+
+#: src/php/traits/trait-post-type.php:22
+#: svn/tags/1.0.2/includes/trait-post-type.php:22
+#: svn/trunk/includes/trait-post-type.php:22
+msgctxt "Post Type General Name"
+msgid "Links"
+msgstr "Links"
+
+#: src/php/traits/trait-post-type.php:23
+#: svn/tags/1.0.2/includes/trait-post-type.php:23
+#: svn/trunk/includes/trait-post-type.php:23
+msgctxt "Post Type Singular Name"
+msgid "Link"
+msgstr "Link"
+
+#: src/php/traits/trait-post-type.php:24
+#: svn/tags/1.0.2/includes/trait-post-type.php:24
+#: svn/trunk/includes/trait-post-type.php:24
+msgid "lynx-journal"
+msgstr "LynxJournal"
+
+#: src/php/traits/trait-post-type.php:25 src/php/traits/trait-post-type.php:52
+#: svn/tags/1.0.2/includes/trait-post-type.php:25
+#: svn/tags/1.0.2/includes/trait-post-type.php:52
+#: svn/trunk/includes/trait-post-type.php:25
+#: svn/trunk/includes/trait-post-type.php:52
+msgid "Link"
+msgstr "Link"
+
+#: src/php/traits/trait-post-type.php:26
+#: svn/tags/1.0.2/includes/trait-post-type.php:26
+#: svn/trunk/includes/trait-post-type.php:26
+msgid "Link Archives"
+msgstr "Link-Archiv"
+
+#: src/php/traits/trait-post-type.php:27
+#: svn/tags/1.0.2/includes/trait-post-type.php:27
+#: svn/trunk/includes/trait-post-type.php:27
+msgid "Link Attributes"
+msgstr "Link-Attribute"
+
+#: src/php/traits/trait-post-type.php:28
+#: svn/tags/1.0.2/includes/trait-post-type.php:28
+#: svn/trunk/includes/trait-post-type.php:28
+msgid "Parent Link:"
+msgstr "Übergeordneter Link:"
+
+#: src/php/traits/trait-post-type.php:31
+#: svn/tags/1.0.2/includes/LinksPage.php:63
+#: svn/tags/1.0.2/includes/trait-post-type.php:31
+#: svn/trunk/includes/trait-post-type.php:31
+msgid "Add New"
+msgstr "Neu hinzufügen"
+
+#: src/php/traits/trait-post-type.php:32
+#: svn/tags/1.0.2/includes/trait-post-type.php:32
+#: svn/trunk/includes/trait-post-type.php:32
+msgid "New Link"
+msgstr "Neuer Link"
+
+#: src/php/traits/trait-post-type.php:33
+#: svn/tags/1.0.2/includes/trait-post-type.php:33
+#: svn/trunk/includes/trait-post-type.php:33
+msgid "Edit Link"
+msgstr "Link bearbeiten"
+
+#: src/php/traits/trait-post-type.php:34
+#: svn/tags/1.0.2/includes/trait-post-type.php:34
+#: svn/trunk/includes/trait-post-type.php:34
+msgid "Update Link"
+msgstr "Link aktualisieren"
+
+#: src/php/traits/trait-post-type.php:35
+#: svn/tags/1.0.2/includes/trait-post-type.php:35
+#: svn/trunk/includes/trait-post-type.php:35
+msgid "View Link"
+msgstr "Link ansehen"
+
+#: src/php/traits/trait-post-type.php:36
+#: svn/tags/1.0.2/includes/trait-post-type.php:36
+#: svn/trunk/includes/trait-post-type.php:36
+msgid "View Links"
+msgstr "Links ansehen"
+
+#: src/php/traits/trait-post-type.php:37
+#: svn/tags/1.0.2/includes/trait-post-type.php:37
+#: svn/trunk/includes/trait-post-type.php:37
+msgid "Search Link"
+msgstr "Link suchen"
+
+#: src/php/traits/trait-post-type.php:38
+#: svn/tags/1.0.2/includes/trait-post-type.php:38
+#: svn/trunk/includes/trait-post-type.php:38
+msgid "Not found"
+msgstr "Nicht gefunden"
+
+#: src/php/traits/trait-post-type.php:39
+#: svn/tags/1.0.2/includes/trait-post-type.php:39
+#: svn/trunk/includes/trait-post-type.php:39
+msgid "Not found in Trash"
+msgstr "Im Papierkorb nicht gefunden"
+
+#: src/php/traits/trait-post-type.php:40
+#: svn/tags/1.0.2/includes/trait-post-type.php:40
+#: svn/trunk/includes/trait-post-type.php:40
+msgid "Featured Image"
+msgstr "Beitragsbild"
+
+#: src/php/traits/trait-post-type.php:41
+#: svn/tags/1.0.2/includes/trait-post-type.php:41
+#: svn/trunk/includes/trait-post-type.php:41
+msgid "Set featured image"
+msgstr "Beitragsbild festlegen"
+
+#: src/php/traits/trait-post-type.php:42
+#: svn/tags/1.0.2/includes/trait-post-type.php:42
+#: svn/trunk/includes/trait-post-type.php:42
+msgid "Remove featured image"
+msgstr "Beitragsbild entfernen"
+
+#: src/php/traits/trait-post-type.php:43
+#: svn/tags/1.0.2/includes/trait-post-type.php:43
+#: svn/trunk/includes/trait-post-type.php:43
+msgid "Use as featured image"
+msgstr "Als Beitragsbild verwenden"
+
+#: src/php/traits/trait-post-type.php:44
+#: svn/tags/1.0.2/includes/trait-post-type.php:44
+#: svn/trunk/includes/trait-post-type.php:44
+msgid "Insert into link"
+msgstr "In Link einfügen"
+
+#: src/php/traits/trait-post-type.php:45
+#: svn/tags/1.0.2/includes/trait-post-type.php:45
+#: svn/trunk/includes/trait-post-type.php:45
+msgid "Uploaded to this link"
+msgstr "Zu diesem Link hochgeladen"
+
+#: src/php/traits/trait-post-type.php:46
+#: svn/tags/1.0.2/includes/trait-post-type.php:46
+#: svn/trunk/includes/trait-post-type.php:46
+msgid "Links list"
+msgstr "Linkliste"
+
+#: src/php/traits/trait-post-type.php:47
+#: svn/tags/1.0.2/includes/trait-post-type.php:47
+#: svn/trunk/includes/trait-post-type.php:47
+msgid "Links list navigation"
+msgstr "Linklisten-Navigation"
+
+#: src/php/traits/trait-post-type.php:48
+#: svn/tags/1.0.2/includes/trait-post-type.php:48
+#: svn/trunk/includes/trait-post-type.php:48
+msgid "Filter links list"
+msgstr "Linkliste filtern"
+
+#: src/php/traits/trait-post-type.php:53
+#: svn/tags/1.0.2/includes/trait-post-type.php:53
+#: svn/trunk/includes/trait-post-type.php:53
+msgid "Links to publish on blog"
+msgstr "Links für die Veröffentlichung im Blog"
+
+#: src/php/traits/trait-post-type.php:110
+#: svn/tags/1.0.2/includes/trait-post-type.php:110
+#: svn/trunk/includes/trait-post-type.php:110
+msgctxt "lynxjournal post status"
+msgid "Pending"
+msgstr "Ausstehend"
+
+#. translators: %s: number of posts with this status.
+#: src/php/traits/trait-post-type.php:115
+#: svn/tags/1.0.2/includes/trait-post-type.php:115
+#: svn/trunk/includes/trait-post-type.php:115
+#, php-format
+msgid "Pending <span class=\"count\">(%s)</span>"
+msgid_plural "Pending <span class=\"count\">(%s)</span>"
+msgstr[0] "Ausstehend <span class=\"count\">(%s)</span>"
+msgstr[1] "Ausstehend <span class=\"count\">(%s)</span>"
+
+#: src/php/traits/trait-post-type.php:125
+#: svn/tags/1.0.2/includes/trait-post-type.php:125
+#: svn/trunk/includes/trait-post-type.php:125
+msgctxt "lynxjournal post status"
+msgid "In Roundup"
+msgstr "In Zusammenfassung"
+
+#. translators: %s: number of posts with this status.
+#: src/php/traits/trait-post-type.php:130
+#: svn/tags/1.0.2/includes/trait-post-type.php:130
+#: svn/trunk/includes/trait-post-type.php:130
+#, php-format
+msgid "In Roundup <span class=\"count\">(%s)</span>"
+msgid_plural "In Roundup <span class=\"count\">(%s)</span>"
+msgstr[0] "In Zusammenfassung <span class=\"count\">(%s)</span>"
+msgstr[1] "In Zusammenfassung <span class=\"count\">(%s)</span>"
+
+#: src/php/traits/trait-post-type.php:140
+#: svn/tags/1.0.2/includes/trait-post-type.php:140
+#: svn/trunk/includes/trait-post-type.php:140
+msgctxt "lynxjournal post status"
+msgid "In Draft Roundup"
+msgstr "In Entwurfs-Zusammenfassung"
+
+#. translators: %s: number of posts with this status.
+#: src/php/traits/trait-post-type.php:145
+#: svn/tags/1.0.2/includes/trait-post-type.php:145
+#: svn/trunk/includes/trait-post-type.php:145
+#, php-format
+msgid "In Draft Roundup <span class=\"count\">(%s)</span>"
+msgid_plural "In Draft Roundup <span class=\"count\">(%s)</span>"
+msgstr[0] "In Entwurfs-Zusammenfassung <span class=\"count\">(%s)</span>"
+msgstr[1] "In Entwurfs-Zusammenfassung <span class=\"count\">(%s)</span>"
+
+#: src/php/traits/trait-post-type.php:163
+#: svn/tags/1.0.2/includes/trait-post-type.php:163
+#: svn/trunk/includes/trait-post-type.php:163
+msgctxt "Taxonomy General Name"
+msgid "Link Categories"
+msgstr "Link-Kategorien"
+
+#: src/php/traits/trait-post-type.php:164
+#: svn/tags/1.0.2/includes/trait-post-type.php:164
+#: svn/trunk/includes/trait-post-type.php:164
+msgctxt "Taxonomy Singular Name"
+msgid "Link Category"
+msgstr "Link-Kategorie"
+
+#: src/php/traits/trait-post-type.php:166
+#: svn/tags/1.0.2/includes/trait-post-type.php:166
+#: svn/trunk/includes/trait-post-type.php:166
+msgid "All Categories"
+msgstr "Alle Kategorien"
+
+#: src/php/traits/trait-post-type.php:167
+#: svn/tags/1.0.2/includes/trait-post-type.php:167
+#: svn/trunk/includes/trait-post-type.php:167
+msgid "Parent Category"
+msgstr "Übergeordnete Kategorie"
+
+#: src/php/traits/trait-post-type.php:168
+#: svn/tags/1.0.2/includes/trait-post-type.php:168
+#: svn/trunk/includes/trait-post-type.php:168
+msgid "Parent Category:"
+msgstr "Übergeordnete Kategorie:"
+
+#: src/php/traits/trait-post-type.php:169
+#: svn/tags/1.0.2/includes/trait-post-type.php:169
+#: svn/trunk/includes/trait-post-type.php:169
+msgid "New Category Name"
+msgstr "Neuer Kategoriename"
+
+#: src/php/traits/trait-post-type.php:171
+#: svn/tags/1.0.2/includes/trait-post-type.php:171
+#: svn/trunk/includes/trait-post-type.php:171
+msgid "Edit Category"
+msgstr "Kategorie bearbeiten"
+
+#: src/php/traits/trait-post-type.php:172
+#: svn/tags/1.0.2/includes/trait-post-type.php:172
+#: svn/trunk/includes/trait-post-type.php:172
+msgid "Update Category"
+msgstr "Kategorie aktualisieren"
+
+#: src/php/traits/trait-post-type.php:173
+#: svn/tags/1.0.2/includes/trait-post-type.php:173
+#: svn/trunk/includes/trait-post-type.php:173
+msgid "View Category"
+msgstr "Kategorie ansehen"
+
+#: src/php/traits/trait-post-type.php:174
+#: svn/tags/1.0.2/includes/trait-post-type.php:174
+#: svn/trunk/includes/trait-post-type.php:174
+msgid "Separate categories with commas"
+msgstr "Kategorien mit Kommas trennen"
+
+#: src/php/traits/trait-post-type.php:175
+#: svn/tags/1.0.2/includes/trait-post-type.php:175
+#: svn/trunk/includes/trait-post-type.php:175
+msgid "Add or remove categories"
+msgstr "Kategorien hinzufügen oder entfernen"
+
+#: src/php/traits/trait-post-type.php:176
+#: src/php/traits/trait-post-type.php:219
+#: svn/tags/1.0.2/includes/trait-post-type.php:176
+#: svn/tags/1.0.2/includes/trait-post-type.php:219
+#: svn/trunk/includes/trait-post-type.php:176
+#: svn/trunk/includes/trait-post-type.php:219
+msgid "Choose from the most used"
+msgstr "Aus den meistgenutzten auswählen"
+
+#: src/php/traits/trait-post-type.php:177
+#: svn/tags/1.0.2/includes/trait-post-type.php:177
+#: svn/trunk/includes/trait-post-type.php:177
+msgid "Popular Categories"
+msgstr "Beliebte Kategorien"
+
+#: src/php/traits/trait-post-type.php:178
+#: svn/tags/1.0.2/includes/trait-post-type.php:178
+#: svn/trunk/includes/trait-post-type.php:178
+msgid "Search Categories"
+msgstr "Kategorien suchen"
+
+#: src/php/traits/trait-post-type.php:179
+#: src/php/traits/trait-post-type.php:222
+#: svn/tags/1.0.2/includes/trait-post-type.php:179
+#: svn/tags/1.0.2/includes/trait-post-type.php:222
+#: svn/trunk/includes/trait-post-type.php:179
+#: svn/trunk/includes/trait-post-type.php:222
+msgid "Not Found"
+msgstr "Nicht gefunden"
+
+#: src/php/traits/trait-post-type.php:180
+#: svn/tags/1.0.2/includes/trait-post-type.php:180
+#: svn/trunk/includes/trait-post-type.php:180
+msgid "No categories"
+msgstr "Keine Kategorien"
+
+#: src/php/traits/trait-post-type.php:181
+#: svn/tags/1.0.2/includes/trait-post-type.php:181
+#: svn/trunk/includes/trait-post-type.php:181
+msgid "Categories list"
+msgstr "Kategorieliste"
+
+#: src/php/traits/trait-post-type.php:182
+#: svn/tags/1.0.2/includes/trait-post-type.php:182
+#: svn/trunk/includes/trait-post-type.php:182
+msgid "Categories list navigation"
+msgstr "Kategorielisten-Navigation"
+
+#: src/php/traits/trait-post-type.php:206
+#: svn/tags/1.0.2/includes/trait-post-type.php:206
+#: svn/trunk/includes/trait-post-type.php:206
+msgctxt "Taxonomy General Name"
+msgid "Link Tags"
+msgstr "Link-Schlagwörter"
+
+#: src/php/traits/trait-post-type.php:207
+#: svn/tags/1.0.2/includes/trait-post-type.php:207
+#: svn/trunk/includes/trait-post-type.php:207
+msgctxt "Taxonomy Singular Name"
+msgid "Link Tag"
+msgstr "Link-Schlagwort"
+
+#: src/php/traits/trait-post-type.php:209
+#: svn/tags/1.0.2/includes/trait-post-type.php:209
+#: svn/trunk/includes/trait-post-type.php:209
+msgid "All Tags"
+msgstr "Alle Schlagwörter"
+
+#: src/php/traits/trait-post-type.php:210
+#: svn/tags/1.0.2/includes/trait-post-type.php:210
+#: svn/trunk/includes/trait-post-type.php:210
+msgid "Parent Tag"
+msgstr "Übergeordnetes Schlagwort"
+
+#: src/php/traits/trait-post-type.php:211
+#: svn/tags/1.0.2/includes/trait-post-type.php:211
+#: svn/trunk/includes/trait-post-type.php:211
+msgid "Parent Tag:"
+msgstr "Übergeordnetes Schlagwort:"
+
+#: src/php/traits/trait-post-type.php:212
+#: svn/tags/1.0.2/includes/trait-post-type.php:212
+#: svn/trunk/includes/trait-post-type.php:212
+msgid "New Tag Name"
+msgstr "Neuer Schlagwortname"
+
+#: src/php/traits/trait-post-type.php:213
+#: svn/tags/1.0.2/includes/trait-post-type.php:213
+#: svn/trunk/includes/trait-post-type.php:213
+msgid "Add New Tag"
+msgstr "Neues Schlagwort hinzufügen"
+
+#: src/php/traits/trait-post-type.php:214
+#: svn/tags/1.0.2/includes/trait-post-type.php:214
+#: svn/trunk/includes/trait-post-type.php:214
+msgid "Edit Tag"
+msgstr "Schlagwort bearbeiten"
+
+#: src/php/traits/trait-post-type.php:215
+#: svn/tags/1.0.2/includes/trait-post-type.php:215
+#: svn/trunk/includes/trait-post-type.php:215
+msgid "Update Tag"
+msgstr "Schlagwort aktualisieren"
+
+#: src/php/traits/trait-post-type.php:216
+#: svn/tags/1.0.2/includes/trait-post-type.php:216
+#: svn/trunk/includes/trait-post-type.php:216
+msgid "View Tag"
+msgstr "Schlagwort ansehen"
+
+#: src/php/traits/trait-post-type.php:218
+#: svn/tags/1.0.2/includes/trait-post-type.php:218
+#: svn/trunk/includes/trait-post-type.php:218
+msgid "Add or remove tags"
+msgstr "Schlagwörter hinzufügen oder entfernen"
+
+#: src/php/traits/trait-post-type.php:220
+#: svn/tags/1.0.2/includes/trait-post-type.php:220
+#: svn/trunk/includes/trait-post-type.php:220
+msgid "Popular Tags"
+msgstr "Beliebte Schlagwörter"
+
+#: src/php/traits/trait-post-type.php:221
+#: svn/tags/1.0.2/includes/trait-post-type.php:221
+#: svn/trunk/includes/trait-post-type.php:221
+msgid "Search Tags"
+msgstr "Schlagwörter suchen"
+
+#: src/php/traits/trait-post-type.php:223
+#: svn/tags/1.0.2/includes/trait-post-type.php:223
+#: svn/trunk/includes/trait-post-type.php:223
+msgid "No tags"
+msgstr "Keine Schlagwörter"
+
+#: src/php/traits/trait-post-type.php:224
+#: svn/tags/1.0.2/includes/trait-post-type.php:224
+#: svn/trunk/includes/trait-post-type.php:224
+msgid "Tags list"
+msgstr "Schlagwortliste"
+
+#: src/php/traits/trait-post-type.php:225
+#: svn/tags/1.0.2/includes/trait-post-type.php:225
+#: svn/trunk/includes/trait-post-type.php:225
+msgid "Tags list navigation"
+msgstr "Schlagwortlisten-Navigation"
+
+#: svn/tags/1.0.2/includes/LinksPage.php:62
+msgid "LynxJournal - All Links"
+msgstr "LynxJournal – Alle Links"
+
+#: svn/tags/1.0.2/includes/Menu.php:95 build/settings.js:1
+#: src/settings/App.jsx:112 svn/trunk/schedule/settings.js:1
+msgid "New API key generated successfully!"
+msgstr "Neuer API-Schlüssel erfolgreich generiert!"
+
+#: svn/tags/1.0.2/includes/Menu.php:105 build/settings.js:1
+#: src/settings/App.jsx:157 svn/trunk/schedule/settings.js:1
+msgid "Chrome Extension Access Data"
+msgstr "Zugangsdaten für Chrome-Erweiterung"
+
+#: svn/tags/1.0.2/includes/Menu.php:106 build/settings.js:1
+#: src/settings/App.jsx:158 svn/trunk/schedule/settings.js:1
+msgid ""
+"Use these credentials to connect the LynxJournal Chrome extension to your "
+"WordPress site."
+msgstr ""
+"Verwende diese Zugangsdaten, um die LynxJournal-Chrome-Erweiterung mit "
+"deiner WordPress-Website zu verbinden."
+
+#: svn/tags/1.0.2/includes/Menu.php:110 build/settings.js:1
+#: src/settings/App.jsx:162 svn/trunk/schedule/settings.js:1
+msgid "API Endpoint"
+msgstr "API-Endpunkt"
+
+#: svn/tags/1.0.2/includes/Menu.php:111 build/settings.js:1
+#: src/settings/App.jsx:164 svn/trunk/schedule/settings.js:1
+msgid "read-only"
+msgstr "schreibgeschützt"
+
+#: svn/tags/1.0.2/includes/Menu.php:126 build/settings.js:1
+#: src/settings/App.jsx:168 svn/trunk/schedule/settings.js:1
+msgid "Use this URL in the Chrome extension settings."
+msgstr "Verwende diese URL in den Einstellungen der Chrome-Erweiterung."
+
+#: svn/tags/1.0.2/includes/Menu.php:128 build/settings.js:1
+#: src/settings/App.jsx:171 svn/trunk/schedule/settings.js:1
+msgid "View REST API"
+msgstr "REST-API anzeigen"
+
+#: svn/tags/1.0.2/includes/Menu.php:136 build/settings.js:1
+#: src/settings/App.jsx:179 svn/trunk/schedule/settings.js:1
+msgid "API Key:"
+msgstr "API-Schlüssel:"
+
+#: svn/tags/1.0.2/includes/Menu.php:146 build/settings.js:1
+#: src/settings/App.jsx:189 svn/trunk/schedule/settings.js:1
+msgid "Show / hide API key"
+msgstr "API-Schlüssel anzeigen/verbergen"
+
+#: svn/tags/1.0.2/includes/Menu.php:154 build/settings.js:1
+#: src/settings/App.jsx:197 svn/trunk/schedule/settings.js:1
+msgid ""
+"Keep this key secure. Use the copy button to transfer it without revealing "
+"it."
+msgstr ""
+"Bewahre diesen Schlüssel sicher auf. Nutze die Kopieren-Schaltfläche, um ihn"
+" zu übertragen, ohne ihn offenzulegen."
+
+#: svn/tags/1.0.2/includes/Menu.php:158 build/settings.js:1
+#: src/settings/App.jsx:201 svn/trunk/schedule/settings.js:1
+msgid "Test Connection"
+msgstr "Verbindung testen"
+
+#: svn/tags/1.0.2/includes/Menu.php:169 build/settings.js:1
+#: src/settings/App.jsx:214 svn/trunk/schedule/settings.js:1
+msgid ""
+"Warning: Generating a new key will permanently invalidate the current one. "
+"You will need to update the Chrome extension with the new key."
+msgstr ""
+"Achtung: Das Erzeugen eines neuen Schlüssels macht den aktuellen dauerhaft "
+"ungültig. Du musst die Chrome-Erweiterung mit dem neuen Schlüssel "
+"aktualisieren."
+
+#: svn/tags/1.0.2/includes/Menu.php:173 build/settings.js:1
+#: src/settings/App.jsx:218 svn/trunk/schedule/settings.js:1
+msgid "Generate New API Key"
+msgstr "Neuen API-Schlüssel generieren"
+
+#: svn/tags/1.0.2/includes/Menu.php:173 build/settings.js:1
+#: src/settings/App.jsx:218 svn/trunk/schedule/settings.js:1
+msgid "Generate API Key"
+msgstr "API-Schlüssel generieren"
+
+#: svn/tags/1.0.2/includes/Menu.php:179 build/settings.js:1
+#: src/settings/App.jsx:223 svn/trunk/schedule/settings.js:1
+msgid "Chrome Extension Setup"
+msgstr "Chrome-Erweiterung einrichten"
+
+#: svn/tags/1.0.2/includes/Menu.php:181 build/settings.js:1
+#: src/settings/App.jsx:225 svn/trunk/schedule/settings.js:1
+msgid "Download and install the LynxJournal Chrome extension"
+msgstr "LynxJournal-Chrome-Erweiterung herunterladen und installieren"
+
+#: svn/tags/1.0.2/includes/Menu.php:182 build/settings.js:1
+#: src/settings/App.jsx:226 svn/trunk/schedule/settings.js:1
+msgid "Click the extension icon and go to Settings"
+msgstr "Auf das Erweiterungssymbol klicken und zu Einstellungen gehen"
+
+#: svn/tags/1.0.2/includes/Menu.php:183 build/settings.js:1
+#: src/settings/App.jsx:227 svn/trunk/schedule/settings.js:1
+msgid "Paste your API Endpoint and API Key from above"
+msgstr "API-Endpunkt und API-Schlüssel von oben einfügen"
+
+#: svn/tags/1.0.2/includes/Menu.php:184 build/settings.js:1
+#: src/settings/App.jsx:228 svn/trunk/schedule/settings.js:1
+msgid "Click Save"
+msgstr "Auf Speichern klicken"
+
+#: svn/tags/1.0.2/includes/Menu.php:185 build/settings.js:1
+#: src/settings/App.jsx:229 svn/trunk/schedule/settings.js:1
+msgid "Now you can save links directly from any webpage!"
+msgstr "Jetzt kannst du Links direkt von jeder Webseite speichern!"
+
+#: svn/tags/1.0.2/includes/Menu.php:251 build/settings.js:1
+#: src/settings/App.jsx:99 svn/trunk/schedule/settings.js:1
+msgid ""
+"This will permanently invalidate your current API key. You will need to "
+"update the Chrome extension with the new key. Continue?"
+msgstr ""
+"Dadurch wird dein aktueller API-Schlüssel dauerhaft ungültig. Du musst die "
+"Chrome-Erweiterung mit dem neuen Schlüssel aktualisieren. Fortfahren?"
+
+#: svn/tags/1.0.2/includes/Menu.php:252 build/settings.js:1
+#: src/settings/App.jsx:123 svn/trunk/schedule/settings.js:1
+msgid "Missing endpoint or API key."
+msgstr "Endpunkt oder API-Schlüssel fehlt."
+
+#: svn/tags/1.0.2/includes/Menu.php:253 build/settings.js:1
+#: src/settings/App.jsx:127 svn/trunk/schedule/settings.js:1
+msgid "Testing…"
+msgstr "Teste…"
+
+#: svn/tags/1.0.2/includes/Menu.php:254 build/settings.js:1
+#: src/settings/App.jsx:133 svn/trunk/schedule/settings.js:1
+msgid "Connected successfully."
+msgstr "Erfolgreich verbunden."
+
+#: svn/tags/1.0.2/includes/Menu.php:255 build/settings.js:1
+#: src/settings/App.jsx:135 svn/trunk/schedule/settings.js:1
+msgid "Connection failed"
+msgstr "Verbindung fehlgeschlagen"
+
+#: svn/tags/1.0.2/includes/Menu.php:256 build/settings.js:1
+#: src/settings/App.jsx:139 svn/trunk/schedule/settings.js:1
+msgid "Could not reach endpoint."
+msgstr "Endpunkt konnte nicht erreicht werden."
+
+#: svn/tags/1.0.2/includes/Menu.php:328
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:7
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
+msgid "Scheduled"
+msgstr "Geplant"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:15
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
+msgid "Trigger-based"
+msgstr "Ereignisbasiert"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:22
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "Manual"
 msgstr "Manuell"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:22
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "first"
 msgstr "erste"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:23
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "second"
 msgstr "zweite"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:24
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "third"
 msgstr "dritte"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:25
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "fourth"
 msgstr "vierte"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:53
+#: src/schedule/components/RecurrenceConfig.jsx:69
+#: src/schedule/components/RecurrenceConfig.jsx:130
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "Every"
 msgstr "Jeden"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:60
+#: src/schedule/components/TriggerCondition.jsx:46
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "day"
 msgstr "Tag"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:60
+#: src/schedule/components/TriggerCondition.jsx:46
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "days"
 msgstr "Tage"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:76
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "week"
 msgstr "Woche"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:76
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "weeks"
 msgstr "Wochen"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:137
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "month, on"
 msgstr "Monat, am"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:137
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "months, on"
 msgstr "Monate, am"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:164
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "or"
 msgstr "oder"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:192
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "Remove"
 msgstr "Entfernen"
 
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:201
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "Add day"
 msgstr "Tag hinzufügen"
 
+#: build/schedule.js:1 src/schedule/components/TriggerCondition.jsx:22
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "Post when there are at least"
 msgstr "Veröffentlichen, wenn mindestens"
 
+#: build/schedule.js:1 src/schedule/components/TriggerCondition.jsx:29
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "link"
 msgstr "Link"
 
+#: build/schedule.js:1 src/schedule/components/TriggerCondition.jsx:29
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "links"
 msgstr "Links"
 
+#: build/schedule.js:1 src/schedule/components/TriggerCondition.jsx:37
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "Post when oldest link is older than"
 msgstr "Veröffentlichen, wenn der älteste Link älter ist als"
 
+#: build/schedule.js:1 src/schedule/components/TimePicker.jsx:48
+#: svn/trunk/schedule/schedule.js:1
+msgid "Run time"
+msgstr "Laufzeit"
+
+#: build/schedule.js:1 src/schedule/components/TimePicker.jsx:57
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "Remove time"
 msgstr "Uhrzeit entfernen"
 
+#: build/schedule.js:1 src/schedule/components/TimePicker.jsx:65
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "Add time"
 msgstr "Uhrzeit hinzufügen"
 
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:64
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "Next 10 Schedules"
 msgstr "Nächste 10 geplante Zeitpunkte"
 
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:76
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
 msgid "No occurrences — check recurrence settings."
 msgstr "Keine Termine – Wiederholungseinstellungen prüfen."
 
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:81
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
+msgid "Times in %s"
+msgstr "Zeiten in %s"
+
+#: build/schedule.js:1 src/schedule/components/DiagnosticsPanel.jsx:18
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
+msgid "Condition not met"
+msgstr "Bedingung nicht erfüllt"
+
+#: build/schedule.js:1 src/schedule/components/DiagnosticsPanel.jsx:19
+#: svn/tags/1.0.2/schedule/schedule.js:1 svn/trunk/schedule/schedule.js:1
+msgid "Run was locked"
+msgstr "Lauf war gesperrt"
+
+#. translators: %d: number of links in the published roundup
+#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:36
+#: svn/tags/1.0.2/schedule/schedule.js:2 svn/trunk/schedule/schedule.js:2
+msgid "%d links"
+msgstr "%d Links"
+
+#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:69
+#: svn/tags/1.0.2/schedule/schedule.js:2 svn/trunk/schedule/schedule.js:2
+msgid "Diagnostics"
+msgstr "Diagnose"
+
+#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:72
+#: svn/tags/1.0.2/schedule/schedule.js:2 svn/trunk/schedule/schedule.js:2
+msgid "Loading…"
+msgstr "Lädt…"
+
+#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:79
+#: src/schedule/components/DiagnosticsPanel.jsx:99
+#: svn/tags/1.0.2/schedule/schedule.js:2 svn/trunk/schedule/schedule.js:2
+msgid "Next run"
+msgstr "Nächster Lauf"
+
+#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:85
+#: svn/tags/1.0.2/schedule/schedule.js:2 svn/trunk/schedule/schedule.js:2
+msgid "Not scheduled"
+msgstr "Nicht geplant"
+
+#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:88
+#: svn/tags/1.0.2/schedule/schedule.js:2 svn/trunk/schedule/schedule.js:2
+msgid "WP-Cron disabled"
+msgstr "WP-Cron deaktiviert"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:103
+#: svn/tags/1.0.2/schedule/schedule.js:3 svn/trunk/schedule/schedule.js:3
+msgid "%d links until post"
+msgstr "%d Links bis zum Beitrag"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:104
+#: svn/tags/1.0.2/schedule/schedule.js:3 svn/trunk/schedule/schedule.js:3
+msgid "Ready to post"
+msgstr "Bereit zum Posten"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:110
+#: svn/tags/1.0.2/schedule/schedule.js:3 svn/trunk/schedule/schedule.js:3
+msgid "Last run"
+msgstr "Letzter Lauf"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:123
+#: svn/tags/1.0.2/schedule/schedule.js:3 svn/trunk/schedule/schedule.js:3
+msgid "No runs yet"
+msgstr "Noch keine Läufe"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:129
+#: svn/tags/1.0.2/schedule/schedule.js:3 svn/trunk/schedule/schedule.js:3
+msgid "WP-Cron"
+msgstr "WP-Cron"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:132
+#: svn/tags/1.0.2/schedule/schedule.js:3 svn/trunk/schedule/schedule.js:3
+msgid "Disabled"
+msgstr "Deaktiviert"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:133
+#: svn/tags/1.0.2/schedule/schedule.js:3 svn/trunk/schedule/schedule.js:3
+msgid "Active"
+msgstr "Aktiv"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:142
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
+msgid "History (%d)"
+msgstr "Verlauf (%d)"
+
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:170
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
+msgid "Refresh"
+msgstr "Aktualisieren"
+
+#: build/schedule.js:3 src/schedule/App.jsx:119
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
 msgid "Recurrence"
 msgstr "Wiederholung"
 
+#: build/schedule.js:3 src/schedule/App.jsx:119
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
 msgid "Condition"
 msgstr "Bedingung"
 
+#: build/schedule.js:3 src/schedule/App.jsx:156
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
+msgid "WP-Cron is disabled."
+msgstr "WP-Cron ist deaktiviert."
+
+#: build/schedule.js:3 src/schedule/App.jsx:158
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
+msgid ""
+"Scheduled runs will not fire automatically. Add a real server cron job or "
+"remove"
+msgstr ""
+"Geplante Läufe werden nicht automatisch ausgelöst. Füge einen echten Server-"
+"Cronjob hinzu oder entferne"
+
+#: build/schedule.js:3 src/schedule/App.jsx:160
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
+msgid "from"
+msgstr "von"
+
+#: build/schedule.js:3 src/schedule/App.jsx:171
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
 msgid "Mode"
 msgstr "Modus"
 
+#: build/schedule.js:3 src/schedule/App.jsx:131
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
 msgid "No automatic trigger — posts must be triggered manually."
-msgstr "Kein automatischer Auslöser – Beiträge müssen manuell ausgelöst werden."
+msgstr ""
+"Kein automatischer Auslöser – Beiträge müssen manuell ausgelöst werden."
 
+#: build/schedule.js:3 src/schedule/App.jsx:180
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
 msgid "Execution Times"
 msgstr "Ausführungszeiten"
 
+#: build/schedule.js:3 src/schedule/App.jsx:188
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
+msgid "Post Status"
+msgstr "Beitragsstatus"
+
+#: build/schedule.js:3 src/schedule/App.jsx:200
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
+msgid "Notifications"
+msgstr "Benachrichtigungen"
+
+#: build/schedule.js:3 src/schedule/App.jsx:202
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
+msgid "Email me after each run"
+msgstr "Mich nach jedem Lauf per E-Mail benachrichtigen"
+
+#: build/schedule.js:3 src/schedule/App.jsx:208
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
+msgid "Email address"
+msgstr "E-Mail-Adresse"
+
+#: build/schedule.js:3 src/schedule/App.jsx:211
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
+msgid "Leave blank to use admin email"
+msgstr "Leer lassen, um die Admin-E-Mail zu verwenden"
+
+#: build/schedule.js:3 src/schedule/App.jsx:80
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
 msgid "Execution times must be unique."
 msgstr "Ausführungszeiten müssen eindeutig sein."
 
+#: build/schedule.js:3 src/schedule/App.jsx:87
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
 msgid "Schedule saved."
 msgstr "Zeitplan gespeichert."
 
+#: build/schedule.js:3 src/schedule/App.jsx:90
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
 msgid "Failed to save schedule."
 msgstr "Zeitplan konnte nicht gespeichert werden."
 
+#: build/schedule.js:3 src/schedule/App.jsx:220
+#: svn/tags/1.0.2/schedule/schedule.js:4 svn/trunk/schedule/schedule.js:3
 msgid "Save Schedule"
 msgstr "Zeitplan speichern"
+
+#: build/settings.js:1 src/settings/App.jsx:115
+#: svn/trunk/schedule/settings.js:1
+msgid "Failed to generate API key."
+msgstr "API-Schlüssel konnte nicht erzeugt werden."
+
+#: svn/tags/1.0.2/schedule/schedule.js:3
+msgid "Hide history"
+msgstr "Verlauf ausblenden"
+
+#~ msgid "Publish Links"
+#~ msgstr "Links veröffentlichen"
+
+#~ msgid "Setting X"
+#~ msgstr "Einstellung X"
+
+#~ msgid "LynxJournal Settings"
+#~ msgstr "LynxJournal-Einstellungen"
+
+#~ msgid "Click to select and copy this key. Keep it secure!"
+#~ msgstr ""
+#~ "Klicke, um diesen Schlüssel auszuwählen und zu kopieren. Halte ihn sicher!"
+
+#~ msgid "Warning: Generating a new key will invalidate the old one."
+#~ msgstr ""
+#~ "Warnung: Das Generieren eines neuen Schlüssels macht den alten ungültig."
+
+#~ msgid "Enabled"
+#~ msgstr "Aktiviert"
+
+#~ msgid "Experimental"
+#~ msgstr "Experimentell"
+
+#~ msgid "Quick View:"
+#~ msgstr "Schnellansicht:"
+
+#~ msgid "Expand All"
+#~ msgstr "Alle ausklappen"
+
+#~ msgid "Collapse All"
+#~ msgstr "Alle einklappen"
+
+#~ msgid "Extension enabled"
+#~ msgstr "Erweiterung aktiviert"
+
+#~ msgid "Enable the Chrome extension integration"
+#~ msgstr "Chrome-Erweiterungs-Integration aktivieren"
+
+#~ msgid "Not set"
+#~ msgstr "Nicht festgelegt"
+
+#~ msgid "Save as draft"
+#~ msgstr "Als Entwurf speichern"
+
+#~ msgid "Save links as drafts by default"
+#~ msgstr "Links standardmäßig als Entwürfe speichern"
+
+#~ msgid "Auto-fill title"
+#~ msgstr "Titel automatisch ausfüllen"
+
+#~ msgid "Pre-fill title from page title"
+#~ msgstr "Titel aus Seitentitel vorausfüllen"
+
+#~ msgid "Show tag input"
+#~ msgstr "Schlagwort-Eingabe anzeigen"
+
+#~ msgid "Show tag input field in the extension popup"
+#~ msgstr "Schlagwort-Eingabefeld im Erweiterungs-Popup anzeigen"
+
+#~ msgid "Default post status"
+#~ msgstr "Standard-Beitragsstatus"
+
+#~ msgid "Add source URL to content"
+#~ msgstr "Quell-URL zum Inhalt hinzufügen"
+
+#~ msgid "Append source URL to post content"
+#~ msgstr "Quell-URL an Beitragsinhalt anhängen"
+
+#~ msgid "Auto-generate excerpt"
+#~ msgstr "Auszug automatisch generieren"
+
+#~ msgid "Generate excerpt from link description"
+#~ msgstr "Auszug aus Linkbeschreibung generieren"
+
+#~ msgid "Archive posts after roundup"
+#~ msgstr "Beiträge nach Zusammenfassung archivieren"
+
+#~ msgid "Move source posts to trash after roundup is published"
+#~ msgstr ""
+#~ "Quellbeiträge in den Papierkorb verschieben, nachdem die Zusammenfassung "
+#~ "veröffentlicht wurde"
+
+#~ msgid "0 = use current user"
+#~ msgstr "0 = aktuellen Benutzer verwenden"
+
+#~ msgid "UI / Appearance"
+#~ msgstr "Oberfläche / Erscheinungsbild"
+
+#~ msgid "Accent color"
+#~ msgstr "Akzentfarbe"
+
+#~ msgid "Compact dashboard"
+#~ msgstr "Kompaktes Dashboard"
+
+#~ msgid "Use compact spacing on the dashboard"
+#~ msgstr "Kompakten Abstand im Dashboard verwenden"
+
+#~ msgid "Links per page"
+#~ msgstr "Links pro Seite"
+
+#~ msgid "Show category badges"
+#~ msgstr "Kategorie-Abzeichen anzeigen"
+
+#~ msgid "Display category badges on link items"
+#~ msgstr "Kategorie-Abzeichen bei Link-Einträgen anzeigen"
+
+#~ msgid "Date format"
+#~ msgstr "Datumsformat"
+
+#~ msgid "Relative (e.g. 2 hours ago)"
+#~ msgstr "Relativ (z. B. vor 2 Stunden)"
+
+#~ msgid "Absolute (e.g. 2026-04-20)"
+#~ msgstr "Absolut (z. B. 2026-04-20)"
+
+#~ msgid "Advanced / API"
+#~ msgstr "Erweitert / API"
+
+#~ msgid "Enable public API"
+#~ msgstr "Öffentliche API aktivieren"
+
+#~ msgid "Allow unauthenticated read access to the REST API"
+#~ msgstr "Nicht authentifizierten Lesezugriff auf die REST-API erlauben"
+
+#~ msgid "Allow CORS"
+#~ msgstr "CORS erlauben"
+
+#~ msgid "Send CORS headers for cross-origin requests"
+#~ msgstr "CORS-Header für ursprungsübergreifende Anfragen senden"
+
+#~ msgid "Cache duration (min)"
+#~ msgstr "Cache-Dauer (Min.)"
+
+#~ msgid "Debug mode"
+#~ msgstr "Debug-Modus"
+
+#~ msgid "Log API requests and errors"
+#~ msgstr "API-Anfragen und Fehler protokollieren"
+
+#~ msgid "Auto-trash after publishing"
+#~ msgstr "Nach Veröffentlichung automatisch löschen"
+
+#~ msgid "Automatically trash links after they are published"
+#~ msgstr ""
+#~ "Links nach der Veröffentlichung automatisch in den Papierkorb verschieben"
+
+#~ msgid "20 total options available."
+#~ msgstr "20 Optionen insgesamt verfügbar."
+
+#~ msgid "Save All Changes"
+#~ msgstr "Alle Änderungen speichern"
+
+#~ msgid "Daily"
+#~ msgstr "Täglich"
+
+#~ msgid "Weekly"
+#~ msgstr "Wöchentlich"
+
+#~ msgid "Monthly"
+#~ msgstr "Monatlich"
+
+#~ msgid "By Count"
+#~ msgstr "Nach Anzahl"
+
+#~ msgid "By Age"
+#~ msgstr "Nach Alter"
