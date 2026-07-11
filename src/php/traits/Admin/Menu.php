@@ -217,6 +217,8 @@ trait LynxJournal_Admin_Menu {
                 'slugPlaceholder' => __('Leave blank to keep current', 'lynx-journal'),
                 'deleteOne'       => __('link will become uncategorized.', 'lynx-journal'),
                 'deleteMany'      => __('links will become uncategorized.', 'lynx-journal'),
+                /* translators: %s: category name. */
+                'deleteConfirm'   => __("Delete '%s'?", 'lynx-journal'),
             ),
         ));
     }
@@ -285,10 +287,33 @@ trait LynxJournal_Admin_Menu {
             }
             wp_localize_script('lynxjournal-template-js', 'lynxjournalPreviewData', $preview_data);
         }
-        wp_localize_script('lynxjournal-template-js', 'lynxjournalTemplate', array(
-            'restUrl' => rest_url(LYNXJOURNAL_REST_NAMESPACE . '/template/test-post'),
-            'nonce'   => wp_create_nonce('wp_rest'),
-        ));
+        wp_localize_script('lynxjournal-template-js', 'lynxjournalThemePreview', $this->getThemePreviewAssets());
+    }
+
+    /**
+     * Collects the active theme's stylesheet URLs and global styles so the
+     * Post Template live preview can render inside an iframe styled like a
+     * real post, instead of the plugin's own generic preview CSS.
+     *
+     * @since 1.0.0
+     * @return array{stylesheets: string[], globalStyles: string, contentClass: string}
+     */
+    private function getThemePreviewAssets(): array {
+        $stylesheets = [get_stylesheet_uri()];
+        if (get_template_directory() !== get_stylesheet_directory()) {
+            array_unshift($stylesheets, get_template_directory_uri() . '/style.css');
+        }
+        if (current_theme_supports('editor-styles')) {
+            $stylesheets = array_merge($stylesheets, get_editor_stylesheets());
+        }
+
+        $global_styles = wp_get_global_stylesheet();
+
+        return [
+            'stylesheets'  => array_values(array_unique($stylesheets)),
+            'globalStyles' => $global_styles,
+            'contentClass' => 'entry-content',
+        ];
     }
 
     /**

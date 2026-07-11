@@ -13,13 +13,12 @@ use League\CommonMark\CommonMarkConverter;
  * (src/js/template-preview.js, src/js/template-utils.js,
  * assets/js/template-page.js), so real roundup publishing can honor the
  * saved lynxjournal_post_template option instead of only the JS-only
- * Test Publish/Test Post preview.
+ * live preview.
  *
  * One intentional omission vs. the JS pipeline: preserveBlankLines() is not
  * ported. It exists purely to make blank lines visible in the live in-editor
- * preview (wrapped in a marker paragraph that wrapAsGutenbergBlocks() then
- * strips again before final output) — for a real published post that
- * round-trip has no effect on the final Gutenberg markup, so skipping it is
+ * preview (wrapped in a marker paragraph, rendered as-is in the preview
+ * iframe) and has no equivalent in real publishing, so skipping it is
  * simpler and behavior-equivalent. Tradeoff: multiple consecutive blank
  * lines in a template collapse to normal single-paragraph Markdown spacing
  * in real output (see template.md's "Notes on real publishing").
@@ -457,8 +456,9 @@ trait LynxJournal_TemplateRenderer {
     }
 
     /**
-     * PHP port of wrapAsGutenbergBlocks() (assets/js/template-page.js), using
-     * DOMDocument in place of browser DOM APIs.
+     * Wraps top-level rendered HTML elements (headings, lists, paragraphs,
+     * horizontal rules) in Gutenberg block comments, using DOMDocument in
+     * place of browser DOM APIs.
      *
      * @since 1.0.0
      * @param string $rendered_html
@@ -505,7 +505,8 @@ trait LynxJournal_TemplateRenderer {
     }
 
     /**
-     * Recursive port of wrapListBlock() (assets/js/template-page.js).
+     * Recursively wraps a list node (and any nested sub-lists) in
+     * wp:list/wp:list-item block comments.
      *
      * @param \DOMElement $node
      * @return string

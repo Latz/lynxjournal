@@ -12,9 +12,10 @@
         form.addEventListener('submit', function(e) {
             var name  = form.dataset.name;
             var count = parseInt(form.dataset.count, 10);
+            var deleteConfirm = cfg.labels.deleteConfirm.replace('%s', name);
             var msg   = count > 0
-                ? "Delete '" + name + "'? " + count + ' ' + (count === 1 ? cfg.labels.deleteOne : cfg.labels.deleteMany)
-                : "Delete '" + name + "'?";
+                ? deleteConfirm + ' ' + count + ' ' + (count === 1 ? cfg.labels.deleteOne : cfg.labels.deleteMany)
+                : deleteConfirm;
             if (!confirm(msg)) { e.preventDefault(); }
         });
     });

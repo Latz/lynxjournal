@@ -11,7 +11,10 @@ The template is plain text written in Markdown, with special `[token]`
 placeholders that get replaced with real data (post title, links,
 categories, tags, etc.) when a roundup is generated. As you type, a live
 preview below the editor shows exactly what the rendered post will look
-like, using sample data.
+like, using sample data. The preview is rendered with your active theme's
+fonts, colors, and spacing (via an iframe loading the theme's stylesheet(s))
+so it reads like a real post — though it only themes the content area, not
+the full page (no header, footer, or sidebar).
 
 ## The editor
 
@@ -42,25 +45,15 @@ become a genuine nested sub-list instead.
 Below the editor, the **Preview** panel re-renders on every edit (after a
 short pause while typing):
 
+- **Theme / Default** toggle — view the preview styled with your active
+  theme's fonts and colors, or with the plugin's plain generic styling.
 - **Desktop / Mobile** toggle — check how the rendered post looks at each
   width.
 - **Live** status badge — dims briefly while a re-render is pending.
 - Validation warnings appear above the preview if `[category_start]` /
   `[category_end]` or `[link_start]` / `[link_end]` tokens are unbalanced.
-
-### Test publish
-
-Opens a new browser tab showing the exact HTML (Gutenberg block markup)
-that would be saved to a real post — useful for inspecting the output
-without opening browser dev tools. Nothing is saved; this is read-only.
-
-### Test post
-
-Creates a real **draft** WordPress post from the current preview content
-and opens it in the block editor for review. It is never published
-automatically — you always land on a draft you can inspect, edit, or
-discard. The draft title is taken from the first heading in the rendered
-preview, prefixed with `[Test]`.
+- Nothing in the preview is ever saved or published — it's a read-only
+  render of the current editor content.
 
 ## Available tokens
 
@@ -126,10 +119,10 @@ the save.
 - Real publishing (scheduled or manual) now fully honors your saved
   template — tokens, indentation, nested/ordered lists, bold/italic/
   underline, and horizontal rules all carry through to the actual
-  Gutenberg blocks used when a roundup is published, matching what Test
-  Publish/Test Post already preview. If no template is configured, a
-  fixed built-in format is used instead (a `<h3>` heading per category
-  followed by a bulleted link list).
+  Gutenberg blocks used when a roundup is published, matching what the
+  live preview already shows. If no template is configured, a fixed
+  built-in format is used instead (a `<h3>` heading per category followed
+  by a bulleted link list).
 - When a template is configured, category heading levels come from
   whatever real `#`–`######` markers actually appear in the rendered
   template output — not specifically scraped from the `[category_name]`

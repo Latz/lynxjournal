@@ -62,92 +62,95 @@ function buildRenderedHtml() {
 	return text.trim() ? window.marked.parse( text ) : '';
 }
 
-/**
- * Recursively wraps a `<ul>`/`<ol>` node in `wp:list`/`wp:list-item` block
- * comments. If an `<li>` contains a nested `<ul>`/`<ol>` (a genuine
- * sub-list — see `convertIndentedLines()`'s nesting fix), that nested list
- * is wrapped as its own inner `wp:list` block too, matching how real
- * Gutenberg represents nested lists, instead of leaving it as unblocked
- * raw HTML inside the parent list-item.
- * @param {HTMLUListElement|HTMLOListElement} node
- * @returns {string}
- */
-function wrapListBlock( node ) {
-	const tag = node.tagName.toLowerCase();
-	node.classList.add( 'wp-block-list' );
-	const start     = tag === 'ol' ? node.getAttribute( 'start' ) : null;
-	const startAttr = start ? `,"start":${ start }` : '';
-	const attrs     = tag === 'ol' ? ` {"ordered":true${ startAttr }}` : '';
-	const startHtml = start ? ` start="${ start }"` : '';
+const themePreview = window.lynxjournalThemePreview ?? { stylesheets: [], globalStyles: '', contentClass: 'entry-content' };
 
-	const items = [ ...node.children ].map( li => {
-		const nested = li.querySelector( ':scope > ul, :scope > ol' );
-		if ( !nested ) {
-			return `<!-- wp:list-item -->\n${ li.outerHTML }\n<!-- /wp:list-item -->`;
-		}
-		const nestedBlock = wrapListBlock( nested );
-		nested.remove();
-		return `<!-- wp:list-item -->\n<li>${ li.innerHTML }\n${ nestedBlock }</li>\n<!-- /wp:list-item -->`;
-	} ).join( '\n' );
+/** @type {'theme'|'default'} Which preview styling the iframe currently renders. */
+let previewViewMode = 'theme';
 
-	return `<!-- wp:list${ attrs } -->\n<${ tag }${ startHtml } class="wp-block-list">\n${ items }\n</${ tag }>\n<!-- /wp:list -->`;
-}
+// The plugin's original generic preview styling, used for "Default" view
+// mode — kept separate from PREVIEW_OVERRIDE_CSS (which applies in both
+// modes) so switching to "Theme" view doesn't carry any of it over.
+const DEFAULT_VIEW_CSS = `
+	body { background: #f6f7f7; font-size: 12px; line-height: 1.5; color: #3c434a; word-break: break-word; }
+	h2, h3 { margin-block: .3em .15em; margin-inline: 0; }
+	ul { margin-block: .15em; margin-inline: 0; padding-inline-start: 1.4em; list-style: disc; }
+	ul ul { list-style: circle; }
+	ul ul ul { list-style: square; }
+	ol { margin-block: .15em; margin-inline: 0; padding-inline-start: 1.4em; }
+	hr { border: none; border-block-start: 1px solid #c3c4c7; margin-block: .4em; margin-inline: 0; }
+	p { margin-block: .1em; margin-inline: 0; }
+`;
 
-/**
- * Wraps top-level headings, lists, and paragraphs from the rendered preview
- * HTML in Gutenberg block comments, mirroring the block markup the real
- * publish-content builders (Batch.php/Publishing.php) now produce. Other
- * elements (e.g. the padding-div lines from convertIndentedLines()) pass
- * through unwrapped, same as Gutenberg treats freeform content. The
- * `.lynxjournal-blank-line` markers (`preserveBlankLines()` in
- * template-utils.js, only meant to make blank lines visible in the live
- * in-page preview) are dropped entirely rather than becoming empty
- * `<!-- wp:paragraph -->` blocks — real Gutenberg content relies on the
- * theme's block margins for spacing, not empty `&nbsp;` paragraphs.
- * @param {string} renderedHtml
- * @returns {string}
- */
-function wrapAsGutenbergBlocks( renderedHtml ) {
-	const container = document.createElement( 'div' );
-	container.innerHTML = renderedHtml;
-	const parts = [];
+// Plugin editor UI shared by both preview modes, injected directly into the
+// preview iframe rather than relying on the theme's CSS.
+const SHARED_PREVIEW_CSS = `
+	body { padding: 12px 14px; }
+	.lynxjournal-preview-empty { color: #a7aaad; font-style: italic; }
+`;
 
-	for ( const node of container.children ) {
-		const tag = node.tagName.toLowerCase();
-		if ( tag === 'p' && node.classList.contains( 'lynxjournal-blank-line' ) ) {
-			continue;
-		}
-		if ( tag === 'hr' ) {
-			parts.push( '<!-- wp:separator -->\n<hr class="wp-block-separator has-alpha-channel-opacity"/>\n<!-- /wp:separator -->' );
-		} else if ( /^h[1-6]$/.test( tag ) ) {
-			const level = Number( tag[ 1 ] );
-			node.classList.add( 'wp-block-heading' );
-			const attrs = level === 2 ? '' : ` {"level":${ level }}`;
-			parts.push( `<!-- wp:heading${ attrs } -->\n${ node.outerHTML }\n<!-- /wp:heading -->` );
-		} else if ( tag === 'ul' || tag === 'ol' ) {
-			parts.push( wrapListBlock( node ) );
-		} else if ( tag === 'p' ) {
-			parts.push( `<!-- wp:paragraph -->\n${ node.outerHTML }\n<!-- /wp:paragraph -->` );
-		} else {
-			parts.push( node.outerHTML );
-		}
+// Injected by preserveBlankLines() for each blank line in the source — a
+// left border + reserved height marks the row as a blank line so a
+// trailing/leading blank run reads as intentional and not just background
+// padding. Default-view only: in Theme view the preview is meant to show
+// how the post will really look, where this editing aid would just be
+// visual clutter.
+const BLANK_LINE_MARKER_CSS = `
+	p.lynxjournal-blank-line {
+		margin-block: 0.25em;
+		min-height: 1.5em;
+		padding-inline-start: 6px;
+		border-inline-start: 3px solid #c3c4c7;
 	}
+`;
 
-	return parts.join( '\n\n' );
+/**
+ * Builds the full HTML document loaded into the preview iframe's `srcdoc`.
+ * In "theme" mode, links the active theme's stylesheets so the rendered
+ * markup picks up real theme typography/colors instead of the plugin's own
+ * generic CSS (only the content area is themed — no header/footer/sidebar,
+ * see the "Post Template" readme section). In "default" mode, the theme
+ * stylesheets are skipped and the plugin's original generic styling is used
+ * instead.
+ * @param {string} bodyHtml
+ * @returns {string}
+ */
+function buildPreviewDocument( bodyHtml ) {
+	const isTheme = previewViewMode === 'theme';
+	const links = isTheme
+		? themePreview.stylesheets
+			.map( href => `<link rel="stylesheet" href="${ href.replace( /"/g, '&quot;' ) }">` )
+			.join( '\n' )
+		: '';
+	const modeStyle = isTheme ? themePreview.globalStyles : DEFAULT_VIEW_CSS;
+	const contentClass = isTheme ? themePreview.contentClass : '';
+	const overrideStyle = isTheme ? SHARED_PREVIEW_CSS : SHARED_PREVIEW_CSS + BLANK_LINE_MARKER_CSS;
+	return `<!doctype html><html><head><meta charset="utf-8">${ links }` +
+		`<style>${ modeStyle }</style><style>${ overrideStyle }</style></head>` +
+		`<body><div class="${ contentClass }">${ bodyHtml }</div></body></html>`;
 }
 
 /**
- * Derives a distinguishable draft title from the first heading in the
- * rendered preview, prefixed so it's never mistaken for real content in
- * the Posts list.
- * @param {string} renderedHtml
- * @returns {string}
+ * Grows the preview iframe to fit its rendered content height, since an
+ * iframe has no intrinsic height of its own.
+ * @listens load
  */
-function extractPostTitle( renderedHtml ) {
-	const container = document.createElement( 'div' );
-	container.innerHTML = renderedHtml;
-	const heading = container.querySelector( 'h1, h2, h3, h4, h5, h6' );
-	return heading ? `[Test] ${ heading.textContent.trim() }` : '';
+function resizePreviewIframe() {
+	const body = preview.contentDocument?.body;
+	if ( body ) { preview.style.height = `${ body.scrollHeight }px`; }
+	preview.style.opacity = '1';
+}
+
+/**
+ * Slides a pill toggle's highlight thumb under the given button, sized and
+ * positioned to match its actual (text-driven) width.
+ * @param {HTMLElement} toggleEl The `.lynxjournal-preview-*-toggle` fieldset.
+ * @param {HTMLElement} activeBtn The button the thumb should move to.
+ */
+function positionToggleThumb( toggleEl, activeBtn ) {
+	const thumb = toggleEl.querySelector( '.lynxjournal-toggle-thumb' );
+	if ( !thumb ) { return; }
+	thumb.style.transform = `translateX(${ activeBtn.offsetLeft }px)`;
+	thumb.style.width = `${ activeBtn.offsetWidth }px`;
 }
 
 function updateTemplatePreview() {
@@ -155,7 +158,8 @@ function updateTemplatePreview() {
 	renderValidation( previewValidation, validateTemplate( rawText ) );
 
 	const html = buildRenderedHtml();
-	preview.innerHTML = html || '<span class="lynxjournal-preview-empty">—</span>';
+	preview.style.opacity = '0.35';
+	preview.srcdoc = buildPreviewDocument( html || '<span class="lynxjournal-preview-empty">—</span>' );
 	setPreviewLive( previewStatus );
 }
 
@@ -376,6 +380,24 @@ function initTemplateEditor() {
 
 	if ( !textarea || !preview ) { return; }
 
+	preview.addEventListener( 'load', resizePreviewIframe );
+
+	const panelState = loadPanelState();
+
+	if ( panelState.previewViewMode === 'theme' || panelState.previewViewMode === 'default' ) {
+		previewViewMode = panelState.previewViewMode;
+		document.querySelectorAll( '.lynxjournal-preview-view-btn' ).forEach( btn => {
+			btn.classList.toggle( 'is-active', btn.dataset.view === previewViewMode );
+		} );
+	}
+
+	if ( panelState.previewWidthMode === 'desktop' || panelState.previewWidthMode === 'mobile' ) {
+		document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( btn => {
+			btn.classList.toggle( 'is-active', btn.dataset.width === panelState.previewWidthMode );
+		} );
+		preview.classList.toggle( 'is-width-mobile', panelState.previewWidthMode === 'mobile' );
+	}
+
 	initialTemplateValue = textarea.value;
 	window.addEventListener( 'beforeunload', warnOnUnsavedChanges );
 	textarea.form?.addEventListener( 'submit', () => { isSubmitting = true; } );
@@ -466,53 +488,36 @@ function initTemplateEditor() {
 		} );
 	} );
 
-	/**
-	 * Creates a real draft WordPress post from the current template preview,
-	 * so the admin can review it in the actual block editor. Always a draft —
-	 * never published directly from here.
-	 * @listens click
-	 */
-	document.getElementById( 'lynxjournal-test-post-btn' )?.addEventListener( 'click', async ( event ) => {
-		const btn = event.currentTarget;
-		const html = buildRenderedHtml();
-		if ( !html ) { return; }
-
-		const content = wrapAsGutenbergBlocks( html );
-		const title   = extractPostTitle( html );
-
-		const originalLabel = btn.textContent;
-		btn.disabled    = true;
-		btn.textContent = 'Creating…';
-
-		try {
-			const res = await fetch( window.lynxjournalTemplate.restUrl, {
-				method: 'POST',
-				credentials: 'same-origin',
-				headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': window.lynxjournalTemplate.nonce },
-				body: JSON.stringify( { content, title } ),
-			} );
-			const data = await res.json();
-			if ( !res.ok || !data.success ) {
-				throw new Error( ( data && data.message ) || 'Failed to create test post.' );
-			}
-			window.open( data.edit_url, '_blank' );
-		} catch ( err ) {
-			alert( err.message || 'Failed to create test post.' );
-		} finally {
-			btn.disabled    = false;
-			btn.textContent = originalLabel;
-		}
-	} );
+	const widthToggle = document.querySelector( '.lynxjournal-preview-width-toggle' );
+	const viewToggle  = document.querySelector( '.lynxjournal-preview-view-toggle' );
 
 	document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( btn => {
 		btn.addEventListener( 'click', () => {
 			document.querySelectorAll( '.lynxjournal-preview-width-btn' ).forEach( b => b.classList.remove( 'is-active' ) );
 			btn.classList.add( 'is-active' );
 			preview.classList.toggle( 'is-width-mobile', btn.dataset.width === 'mobile' );
+			if ( widthToggle ) { positionToggleThumb( widthToggle, btn ); }
+			resizePreviewIframe();
+			panelState.previewWidthMode = btn.dataset.width;
+			savePanelState( panelState );
 		} );
 	} );
 
-	const panelState = loadPanelState();
+	document.querySelectorAll( '.lynxjournal-preview-view-btn' ).forEach( btn => {
+		btn.addEventListener( 'click', () => {
+			if ( btn.dataset.view === previewViewMode ) { return; }
+			document.querySelectorAll( '.lynxjournal-preview-view-btn' ).forEach( b => b.classList.remove( 'is-active' ) );
+			btn.classList.add( 'is-active' );
+			previewViewMode = btn.dataset.view;
+			if ( viewToggle ) { positionToggleThumb( viewToggle, btn ); }
+			updateTemplatePreview();
+			panelState.previewViewMode = previewViewMode;
+			savePanelState( panelState );
+		} );
+	} );
+
+	if ( widthToggle ) { positionToggleThumb( widthToggle, widthToggle.querySelector( '.is-active' ) ); }
+	if ( viewToggle ) { positionToggleThumb( viewToggle, viewToggle.querySelector( '.is-active' ) ); }
 
 	const tokenAccordion = document.getElementById( 'lynxjournal-token-accordion' );
 	if ( tokenAccordion ) {

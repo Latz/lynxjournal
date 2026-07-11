@@ -59,8 +59,7 @@ trait LynxJournal_Admin_LinksPage {
         ]) : '';
         ?>
         <div class="wrap">
-            <h1 class="wp-heading-inline"><?php esc_html_e('LynxJournal - All Links', 'lynx-journal'); ?></h1>
-            <a href="<?php echo esc_url(admin_url('admin.php?page=lynxjournal-add')); ?>" class="page-title-action"><?php esc_html_e('Add New', 'lynx-journal'); ?></a>
+            <h1 class="wp-heading-inline"><?php esc_html_e('All Links', 'lynx-journal'); ?></h1>
             <hr class="wp-header-end">
 
             <?php if ($action_message) : ?>
