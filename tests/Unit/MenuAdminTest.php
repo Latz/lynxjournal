@@ -39,7 +39,7 @@ afterEach(function (): void {
 
 describe('LynxJournal::adminMenu()', function (): void { // NOSONAR
 
-    it('registers the top-level menu page and all eight submenus', function (): void {
+    it('registers the top-level menu page and all seven submenus', function (): void {
         Functions\when('add_menu_page')->justReturn('lynxjournal-dashboard');
         $submenu_calls = [];
         Functions\when('add_submenu_page')->alias(function (...$args) use (&$submenu_calls) {
@@ -49,13 +49,12 @@ describe('LynxJournal::adminMenu()', function (): void { // NOSONAR
 
         $this->plugin->adminMenu();
 
-        expect($submenu_calls)->toHaveCount(8);
+        expect($submenu_calls)->toHaveCount(7);
         expect(array_column($submenu_calls, 4))->toBe([
             'lynxjournal-dashboard',
             'lynxjournal-admin',
             'lynxjournal-add',
             'lynxjournal-categories',
-            'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal',
             'lynxjournal-settings',
             'lynxjournal-schedule',
             'lynxjournal-template',
@@ -63,7 +62,7 @@ describe('LynxJournal::adminMenu()', function (): void { // NOSONAR
         expect($submenu_calls[0][0])->toBe('lynxjournal-dashboard');
     });
 
-    it('passes null as the render callback for the Tags submenu', function (): void {
+    it('passes the categoriesPage callback for the combined Categories & Tags submenu', function (): void {
         Functions\when('add_menu_page')->justReturn('lynxjournal-dashboard');
         $submenu_calls = [];
         Functions\when('add_submenu_page')->alias(function (...$args) use (&$submenu_calls) {
@@ -73,41 +72,8 @@ describe('LynxJournal::adminMenu()', function (): void { // NOSONAR
 
         $this->plugin->adminMenu();
 
-        expect($submenu_calls[4][5])->toBeNull();
+        expect($submenu_calls[3][5])->toBe([$this->plugin, 'categoriesPage']);
         expect($submenu_calls[0][5])->toBe([$this->plugin, 'dashboardPage']);
-    });
-});
-
-describe('LynxJournal::parentFileFilter() / submenuFileFilter()', function (): void { // NOSONAR
-
-    it('returns the lynxjournal dashboard file when on the lynxjournal_tag screen', function (): void {
-        $GLOBALS['pagenow'] = 'edit-tags.php';
-        $_GET['taxonomy']   = 'lynxjournal_tag';
-        Functions\when('sanitize_key')->returnArg();
-
-        expect($this->plugin->parentFileFilter('edit.php'))->toBe('lynxjournal-dashboard');
-        expect($this->plugin->submenuFileFilter(null))->toBe('edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal');
-    });
-
-    it('passes through the original file when not on the lynxjournal_tag screen', function (): void {
-        $GLOBALS['pagenow'] = 'edit.php';
-
-        expect($this->plugin->parentFileFilter('edit.php'))->toBe('edit.php');
-        expect($this->plugin->submenuFileFilter('some-file.php'))->toBe('some-file.php');
-    });
-
-    it('falls back to an empty string when submenu_file is null and not on the tag screen', function (): void {
-        $GLOBALS['pagenow'] = 'edit.php';
-
-        expect($this->plugin->submenuFileFilter(null))->toBe('');
-    });
-
-    it('returns false for a different taxonomy on the edit-tags screen', function (): void {
-        $GLOBALS['pagenow'] = 'edit-tags.php';
-        $_GET['taxonomy']   = 'category';
-        Functions\when('sanitize_key')->returnArg();
-
-        expect($this->plugin->parentFileFilter('edit.php'))->toBe('edit.php');
     });
 });
 
@@ -227,7 +193,7 @@ describe('LynxJournal::enqueueAdminAssets()', function (): void { // NOSONAR
         expect($scripts)->toContain('lynxjournal-links-page');
     });
 
-    it('enqueues the categories script using the real asset file', function (): void {
+    it('enqueues the taxonomies script using the real asset file', function (): void {
         $scripts = [];
         Functions\when('wp_enqueue_script')->alias(function (...$a) use (&$scripts) {
             $scripts[] = $a;
@@ -236,7 +202,7 @@ describe('LynxJournal::enqueueAdminAssets()', function (): void { // NOSONAR
 
         $this->plugin->enqueueAdminAssets('lynxjournal-dashboard_page_lynxjournal-categories');
 
-        expect(array_column($scripts, 0))->toContain('lynxjournal-categories');
+        expect(array_column($scripts, 0))->toContain('lynxjournal-taxonomies');
     });
 
     it('enqueues the schedule script, style, and localized data using the real asset file', function (): void {

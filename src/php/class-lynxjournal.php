@@ -95,8 +95,6 @@ class LynxJournal {
         add_action('admin_menu',                           [$this, 'adminMenu']);
         add_action('admin_enqueue_scripts',                [$this, 'enqueueAdminAssets']);
         add_action('wp_dashboard_setup',                   [$this, 'addDashboardWidget']);
-        add_filter('parent_file',                          [$this, 'parentFileFilter']);
-        add_filter('submenu_file',                         [$this, 'submenuFileFilter']);
     }
 
     /**

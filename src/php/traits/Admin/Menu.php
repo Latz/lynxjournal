@@ -28,35 +28,10 @@ trait LynxJournal_Admin_Menu {
         $this->addSubmenu(__('Dashboard',        'lynx-journal'), __('Dashboard',        'lynx-journal'), 'read',              'lynxjournal-dashboard',                                    'dashboardPage');
         $this->addSubmenu(__('Show Links',       'lynx-journal'), __('All Links',        'lynx-journal'), 'read',              'lynxjournal-admin',                                        'showLinksPage');
         $this->addSubmenu(__('Add Link',         'lynx-journal'), __('Add Link',         'lynx-journal'), 'read',              'lynxjournal-add',                                          'addLinkPage');
-        $this->addSubmenu(__('Categories',       'lynx-journal'), __('Categories',       'lynx-journal'), 'edit_posts', 'lynxjournal-categories',                                   'categoriesPage');
-        $this->addSubmenu(__('Tags',             'lynx-journal'), __('Tags',             'lynx-journal'), 'edit_posts', 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal');
+        $this->addSubmenu(__('Categories & Tags', 'lynx-journal'), __('Categories & Tags', 'lynx-journal'), 'edit_posts', 'lynxjournal-categories',                                   'categoriesPage');
         $this->addSubmenu(__('Chrome Extension', 'lynx-journal'), __('Chrome Extension', 'lynx-journal'), 'edit_posts', 'lynxjournal-settings',                                     'settingsPage');
         $this->addSubmenu(__('Schedule',         'lynx-journal'), __('Schedule',         'lynx-journal'), 'edit_posts', 'lynxjournal-schedule',                                     'schedulePage');
         $this->addSubmenu(__('Post Template',    'lynx-journal'), __('Post Template',    'lynx-journal'), 'edit_posts', 'lynxjournal-template',                                     'templatePage');
-    }
-
-    /**
-     * Filter the parent menu file for tag management pages.
-     *
-     * @since 1.0.0
-     * @param string $parent_file The parent menu file name.
-     * @return string The filtered parent menu file name.
-     */
-    public function parentFileFilter(string $parent_file): string {
-        return $this->isLynxJournalTag() ? 'lynxjournal-dashboard' : $parent_file;
-    }
-
-    /**
-     * Filter the submenu file for tag management pages.
-     *
-     * @since 1.0.0
-     * @param string|null $submenu_file The current submenu file name.
-     * @return string The filtered submenu file name.
-     */
-    public function submenuFileFilter(?string $submenu_file): string {
-        return $this->isLynxJournalTag()
-            ? 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal'
-            : ($submenu_file ?? '');
     }
 
     /**
@@ -127,7 +102,7 @@ trait LynxJournal_Admin_Menu {
         }
 
         if (strpos($hook, 'lynxjournal-categories') !== false) {
-            $this->enqueueCategoriesAssets();
+            $this->enqueueTaxonomiesAssets();
         }
 
         if (strpos($hook, 'lynxjournal-template') !== false) {
@@ -198,13 +173,13 @@ trait LynxJournal_Admin_Menu {
     }
 
     /**
-     * Enqueue categories page scripts and localized data.
+     * Enqueue the combined Categories & Tags page scripts and localized data.
      *
      * @since 1.0.0
      * @return void
      */
-    private function enqueueCategoriesAssets(): void {
-        $asset_file = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'build/categories.asset.php';
+    private function enqueueTaxonomiesAssets(): void {
+        $asset_file = plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'build/taxonomies.asset.php';
         if (file_exists($asset_file)) {
             $asset = require_once $asset_file;
         } else {
@@ -212,19 +187,19 @@ trait LynxJournal_Admin_Menu {
         }
 
         wp_enqueue_script(
-            'lynxjournal-categories',
-            plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'build/categories.js',
+            'lynxjournal-taxonomies',
+            plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'build/taxonomies.js',
             $asset['dependencies'],
             $asset['version'],
             true
         );
 
-        $this->enqueuePageScriptTranslations('lynxjournal-categories');
+        $this->enqueuePageScriptTranslations('lynxjournal-taxonomies');
 
-        if (file_exists(plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'build/categories.css')) {
+        if (file_exists(plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'build/taxonomies.css')) {
             wp_enqueue_style(
-                'lynxjournal-categories-style',
-                plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'build/categories.css',
+                'lynxjournal-taxonomies-style',
+                plugin_dir_url(LYNXJOURNAL_PLUGIN_FILE) . 'build/taxonomies.css',
                 array('wp-components'),
                 $asset['version']
             );
@@ -378,22 +353,6 @@ trait LynxJournal_Admin_Menu {
      */
     private function addSubmenu(string $page_title, string $menu_title, string $cap, string $slug, ?string $callback = null): void {
         add_submenu_page('lynxjournal-dashboard', $page_title, $menu_title, $cap, $slug, $callback !== null ? [$this, $callback] : null);
-    }
-
-    /**
-     * Return true when the current request is for the lynxjournal_tag taxonomy screen.
-     *
-     * @since 1.0.0
-     * @return bool
-     */
-    private function isLynxJournalTag(): bool {
-        global $pagenow;
-        if ($pagenow !== 'edit-tags.php') {
-            return false;
-        }
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $taxonomy = isset($_GET['taxonomy']) ? sanitize_key(wp_unslash($_GET['taxonomy'])) : '';
-        return $taxonomy === 'lynxjournal_tag';
     }
 
     /**
