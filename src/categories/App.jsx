@@ -63,9 +63,10 @@ function CategoryRow({ category, count, onUpdated, onDeleted }) {
   async function handleDelete() {
     /* translators: %s: category name */
     const deleteConfirm = sprintf(__("Delete '%s'?", 'lynx-journal'), category.name);
-    const message = count > 0
-      ? `${deleteConfirm} ${count} ${count === 1 ? __('link will become uncategorized.', 'lynx-journal') : __('links will become uncategorized.', 'lynx-journal')}`
-      : deleteConfirm;
+    const linkCountLabel = count === 1
+      ? __('link will become uncategorized.', 'lynx-journal')
+      : __('links will become uncategorized.', 'lynx-journal');
+    const message = count > 0 ? `${deleteConfirm} ${count} ${linkCountLabel}` : deleteConfirm;
     if (!window.confirm(message)) return;
 
     try {

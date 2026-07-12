@@ -63,9 +63,10 @@ function TagRow({ tag, count, onUpdated, onDeleted }) {
   async function handleDelete() {
     /* translators: %s: tag name */
     const deleteConfirm = sprintf(__("Delete '%s'?", 'lynx-journal'), tag.name);
-    const message = count > 0
-      ? `${deleteConfirm} ${count} ${count === 1 ? __('link will lose this tag.', 'lynx-journal') : __('links will lose this tag.', 'lynx-journal')}`
-      : deleteConfirm;
+    const linkCountLabel = count === 1
+      ? __('link will lose this tag.', 'lynx-journal')
+      : __('links will lose this tag.', 'lynx-journal');
+    const message = count > 0 ? `${deleteConfirm} ${count} ${linkCountLabel}` : deleteConfirm;
     if (!window.confirm(message)) return;
 
     try {
