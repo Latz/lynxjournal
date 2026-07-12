@@ -14,7 +14,7 @@
         }
     },
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.0",
         "league/commonmark": "^2.6"
     },
     "require-dev": {
@@ -43,8 +43,7 @@
         "i18n:pot": "wp i18n make-pot . languages/lynx-journal.pot --domain=lynx-journal --exclude=vendor,node_modules,tests,bin,dist,chrome-extension,memory,svn",
         "i18n:json": "wp i18n make-json languages --no-purge",
         "check-compatibility": [
-            "vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility",
-            "vendor/bin/phpcs -p src/ lynxjournal.php --standard=PHPCompatibility --extensions=php --runtime-set testVersion 8.2-"
+            "vendor/bin/phpcs -p src/ lynxjournal.php --standard=PHPCompatibility --extensions=php --runtime-set testVersion 8.0- --runtime-set installed_paths vendor/phpcompatibility/php-compatibility"
         ]
     }
 }
