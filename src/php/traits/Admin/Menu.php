@@ -29,13 +29,13 @@ trait LynxJournal_Admin_Menu {
         $this->addSubmenu(__('Show Links',       'lynx-journal'), __('All Links',        'lynx-journal'), 'read',              'lynxjournal-admin',                                        'showLinksPage');
         $this->addSubmenu(__('Add Link',         'lynx-journal'), __('Add Link',         'lynx-journal'), 'read',              'lynxjournal-add',                                          'addLinkPage');
         $this->addSubmenu(__('Categories & Tags', 'lynx-journal'), __('Categories & Tags', 'lynx-journal'), 'edit_posts', 'lynxjournal-categories',                                   'categoriesPage');
-        $this->addSubmenu(__('Chrome Extension', 'lynx-journal'), __('Chrome Extension', 'lynx-journal'), 'edit_posts', 'lynxjournal-settings',                                     'settingsPage');
+        $this->addSubmenu(__('Browser Extension', 'lynx-journal'), __('Browser Extension', 'lynx-journal'), 'edit_posts', 'lynxjournal-settings',                                     'settingsPage');
         $this->addSubmenu(__('Schedule',         'lynx-journal'), __('Schedule',         'lynx-journal'), 'edit_posts', 'lynxjournal-schedule',                                     'schedulePage');
         $this->addSubmenu(__('Post Template',    'lynx-journal'), __('Post Template',    'lynx-journal'), 'edit_posts', 'lynxjournal-template',                                     'templatePage');
     }
 
     /**
-     * Render the Chrome extension settings page.
+     * Render the browser extension settings page.
      *
      * @since 1.0.0
      * @return void
@@ -43,7 +43,7 @@ trait LynxJournal_Admin_Menu {
     public function settingsPage(): void {
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('LynxJournal Chrome Extension', 'lynx-journal'); ?></h1>
+            <h1><?php esc_html_e('LynxJournal Browser Extension', 'lynx-journal'); ?></h1>
             <div id="lynxjournal-settings-root"></div>
         </div>
         <?php
@@ -135,7 +135,7 @@ trait LynxJournal_Admin_Menu {
     }
 
     /**
-     * Enqueue Chrome extension settings page scripts and styles.
+     * Enqueue browser extension settings page scripts and styles.
      *
      * @since 1.0.0
      * @return void

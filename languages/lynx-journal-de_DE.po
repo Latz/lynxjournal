@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LynxJournal 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lynxjournal\n"
-"POT-Creation-Date: 2026-07-12T19:53:35+00:00\n"
+"POT-Creation-Date: 2026-07-12T20:30:34+00:00\n"
 "PO-Revision-Date: 2026-07-11 00:00+0000\n"
 "Last-Translator: Latz\n"
 "Language-Team: German\n"
@@ -78,8 +78,8 @@ msgid "Add Link"
 msgstr "Link hinzufügen"
 
 #: src/php/traits/Admin/AddLink.php:92 src/php/traits/Admin/Menu.php:132
-#: build/taxonomies.js:1 build/taxonomies.js:3 src/categories/App.jsx:121
-#: src/tags/App.jsx:121
+#: build/taxonomies.js:1 build/taxonomies.js:3 src/categories/App.jsx:122
+#: src/tags/App.jsx:122
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -378,7 +378,7 @@ msgstr "Datum"
 
 #: src/php/traits/Admin/LinksPage.php:166
 #: src/php/traits/Admin/LinksPage.php:197 build/taxonomies.js:3
-#: build/taxonomies.js:5 src/categories/App.jsx:171 src/tags/App.jsx:171
+#: build/taxonomies.js:5 src/categories/App.jsx:172 src/tags/App.jsx:172
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -405,7 +405,7 @@ msgid "Unpublish"
 msgstr "Unveröffentlichen"
 
 #: src/php/traits/Admin/LinksPage.php:360 build/taxonomies.js:1
-#: build/taxonomies.js:3 src/categories/App.jsx:137 src/tags/App.jsx:137
+#: build/taxonomies.js:3 src/categories/App.jsx:138 src/tags/App.jsx:138
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -414,7 +414,7 @@ msgid "Are you sure you want to delete this link?"
 msgstr "Möchtest du diesen Link wirklich löschen?"
 
 #: src/php/traits/Admin/LinksPage.php:361 build/taxonomies.js:3
-#: build/taxonomies.js:5 src/categories/App.jsx:141 src/tags/App.jsx:141
+#: build/taxonomies.js:5 src/categories/App.jsx:142 src/tags/App.jsx:142
 msgid "Delete"
 msgstr "Löschen"
 
@@ -427,8 +427,8 @@ msgid "Show Links"
 msgstr "Links anzeigen"
 
 #: src/php/traits/Admin/Menu.php:32
-msgid "Chrome Extension"
-msgstr "Chrome-Erweiterung"
+msgid "Browser Extension"
+msgstr "Browser-Erweiterung"
 
 #: src/php/traits/Admin/Menu.php:33
 msgid "Schedule"
@@ -439,8 +439,8 @@ msgid "Post Template"
 msgstr "Beitragsvorlage"
 
 #: src/php/traits/Admin/Menu.php:46
-msgid "LynxJournal Chrome Extension"
-msgstr "LynxJournal-Chrome-Erweiterung"
+msgid "LynxJournal Browser Extension"
+msgstr "LynxJournal-Browser-Erweiterung"
 
 #: src/php/traits/Admin/Menu.php:61
 msgid "Schedule Configuration"
@@ -454,7 +454,7 @@ msgstr "Löschen?"
 msgid "Yes"
 msgstr "Ja"
 
-#: src/php/traits/Admin/Menu.php:408
+#: src/php/traits/Admin/Menu.php:418
 msgid "LynxJournal Summary"
 msgstr "LynxJournal-Übersicht"
 
@@ -507,7 +507,7 @@ msgid "Number of roundups published so far"
 msgstr "Anzahl der bisher veröffentlichten Zusammenfassungen"
 
 #: src/php/traits/Admin/TemplatePage.php:44 build/taxonomies.js:3
-#: build/taxonomies.js:5 src/categories/App.jsx:170 src/tags/App.jsx:170
+#: build/taxonomies.js:5 src/categories/App.jsx:171 src/tags/App.jsx:171
 msgid "Links"
 msgstr "Links"
 
@@ -763,7 +763,7 @@ msgid "Failed to fetch categories."
 msgstr "Kategorien konnten nicht abgerufen werden."
 
 #: src/php/traits/RestApi.php:603 build/taxonomies.js:3
-#: src/categories/App.jsx:75
+#: src/categories/App.jsx:76
 msgid "Could not delete category."
 msgstr "Kategorie konnte nicht gelöscht werden."
 
@@ -771,7 +771,7 @@ msgstr "Kategorie konnte nicht gelöscht werden."
 msgid "Failed to fetch tags."
 msgstr "Schlagwörter konnten nicht abgerufen werden."
 
-#: src/php/traits/RestApi.php:732 build/taxonomies.js:5 src/tags/App.jsx:75
+#: src/php/traits/RestApi.php:732 build/taxonomies.js:5 src/tags/App.jsx:76
 msgid "Could not delete tag."
 msgstr "Schlagwort konnte nicht gelöscht werden."
 
@@ -1039,7 +1039,7 @@ msgid "New Category Name"
 msgstr "Neuer Kategoriename"
 
 #: src/php/traits/trait-post-type.php:170 build/taxonomies.js:3
-#: src/categories/App.jsx:226
+#: src/categories/App.jsx:227
 msgid "Add New Category"
 msgstr "Neue Kategorie hinzufügen"
 
@@ -1120,7 +1120,7 @@ msgid "New Tag Name"
 msgstr "Neuer Schlagwortname"
 
 #: src/php/traits/trait-post-type.php:213 build/taxonomies.js:5
-#: src/tags/App.jsx:226
+#: src/tags/App.jsx:227
 msgid "Add New Tag"
 msgstr "Neues Schlagwort hinzufügen"
 
@@ -1462,15 +1462,15 @@ msgid "Save Schedule"
 msgstr "Zeitplan speichern"
 
 #: build/settings.js:1 src/settings/App.jsx:100
-msgid "Chrome Extension Access Data"
-msgstr "Zugangsdaten für Chrome-Erweiterung"
+msgid "Browser Extension Access Data"
+msgstr "Zugangsdaten für Browser-Erweiterung"
 
 #: build/settings.js:1 src/settings/App.jsx:101
 msgid ""
-"Use these credentials to connect the LynxJournal Chrome extension to your "
+"Use these credentials to connect the LynxJournal browser extension to your "
 "WordPress site."
 msgstr ""
-"Verwende diese Zugangsdaten, um die LynxJournal-Chrome-Erweiterung mit "
+"Verwende diese Zugangsdaten, um die LynxJournal-Browser-Erweiterung mit "
 "deiner WordPress-Website zu verbinden."
 
 #: build/settings.js:1 src/settings/App.jsx:105
@@ -1482,8 +1482,8 @@ msgid "read-only"
 msgstr "schreibgeschützt"
 
 #: build/settings.js:1 src/settings/App.jsx:111
-msgid "Use this URL in the Chrome extension settings."
-msgstr "Verwende diese URL in den Einstellungen der Chrome-Erweiterung."
+msgid "Use this URL in the browser extension settings."
+msgstr "Verwende diese URL in den Einstellungen der Browser-Erweiterung."
 
 #: build/settings.js:1 src/settings/App.jsx:114
 msgid "View REST API"
@@ -1512,10 +1512,10 @@ msgstr "Verbindung testen"
 #: build/settings.js:1 src/settings/App.jsx:157
 msgid ""
 "Warning: Generating a new key will permanently invalidate the current one. "
-"You will need to update the Chrome extension with the new key."
+"You will need to update your browser extension with the new key."
 msgstr ""
 "Achtung: Das Erzeugen eines neuen Schlüssels macht den aktuellen dauerhaft "
-"ungültig. Du musst die Chrome-Erweiterung mit dem neuen Schlüssel "
+"ungültig. Du musst die Browser-Erweiterung mit dem neuen Schlüssel "
 "aktualisieren."
 
 #: build/settings.js:1 src/settings/App.jsx:161
@@ -1527,12 +1527,16 @@ msgid "Generate API Key"
 msgstr "API-Schlüssel generieren"
 
 #: build/settings.js:1 src/settings/App.jsx:175
-msgid "Chrome Extension Setup"
-msgstr "Chrome-Erweiterung einrichten"
+msgid "Browser Extension Setup"
+msgstr "Browser-Erweiterung einrichten"
 
 #: build/settings.js:1 src/settings/App.jsx:177
-msgid "Download and install the LynxJournal Chrome extension"
-msgstr "LynxJournal-Chrome-Erweiterung herunterladen und installieren"
+msgid ""
+"Download and install the LynxJournal browser extension for your browser "
+"(Chrome or Firefox)"
+msgstr ""
+"LynxJournal-Browser-Erweiterung für deinen Browser (Chrome oder Firefox) "
+"herunterladen und installieren"
 
 #: build/settings.js:1 src/settings/App.jsx:178
 msgid "Click the extension icon and go to Settings"
@@ -1553,10 +1557,10 @@ msgstr "Jetzt kannst du Links direkt von jeder Webseite speichern!"
 #: build/settings.js:1 src/settings/App.jsx:208
 msgid ""
 "This will permanently invalidate your current API key. You will need to "
-"update the Chrome extension with the new key. Continue?"
+"update your browser extension with the new key. Continue?"
 msgstr ""
 "Dadurch wird dein aktueller API-Schlüssel dauerhaft ungültig. Du musst die "
-"Chrome-Erweiterung mit dem neuen Schlüssel aktualisieren. Fortfahren?"
+"Browser-Erweiterung mit dem neuen Schlüssel aktualisieren. Fortfahren?"
 
 #: build/settings.js:1 src/settings/App.jsx:221
 msgid "New API key generated successfully!"
@@ -1586,19 +1590,19 @@ msgstr "Endpunkt konnte nicht erreicht werden."
 msgid "Missing endpoint or API key."
 msgstr "Endpunkt oder API-Schlüssel fehlt."
 
-#: build/taxonomies.js:1 build/taxonomies.js:3 src/categories/App.jsx:96
-#: src/tags/App.jsx:96
+#: build/taxonomies.js:1 build/taxonomies.js:3 src/categories/App.jsx:97
+#: src/tags/App.jsx:97
 msgid "Description (optional)"
 msgstr "Beschreibung (optional)"
 
-#: build/taxonomies.js:1 build/taxonomies.js:3 src/categories/App.jsx:105
-#: src/tags/App.jsx:105
+#: build/taxonomies.js:1 build/taxonomies.js:3 src/categories/App.jsx:106
+#: src/tags/App.jsx:106
 msgid "Leave blank to keep current"
 msgstr "Leer lassen, um aktuellen Wert zu behalten"
 
 #: build/taxonomies.js:1 build/taxonomies.js:3 build/taxonomies.js:5
-#: src/categories/App.jsx:56 src/categories/App.jsx:217 src/tags/App.jsx:56
-#: src/tags/App.jsx:217
+#: src/categories/App.jsx:56 src/categories/App.jsx:218 src/tags/App.jsx:56
+#: src/tags/App.jsx:218
 msgid "Save failed."
 msgstr "Speichern fehlgeschlagen."
 
@@ -1607,13 +1611,13 @@ msgstr "Speichern fehlgeschlagen."
 msgid "Name is required."
 msgstr "Name ist erforderlich."
 
-#: build/taxonomies.js:1 build/taxonomies.js:3 src/categories/App.jsx:117
-#: src/tags/App.jsx:117
+#: build/taxonomies.js:1 build/taxonomies.js:3 src/categories/App.jsx:118
+#: src/tags/App.jsx:118
 msgid "Saving…"
 msgstr "Speichern…"
 
-#: build/taxonomies.js:1 build/taxonomies.js:3 src/categories/App.jsx:117
-#: src/tags/App.jsx:117
+#: build/taxonomies.js:1 build/taxonomies.js:3 src/categories/App.jsx:118
+#: src/tags/App.jsx:118
 msgid "Save"
 msgstr "Speichern"
 
@@ -1628,45 +1632,45 @@ msgstr "„%s“ löschen?"
 msgid "link will become uncategorized."
 msgstr "Link wird unkategorisiert."
 
-#: build/taxonomies.js:3 src/categories/App.jsx:67
+#: build/taxonomies.js:3 src/categories/App.jsx:68
 msgid "links will become uncategorized."
 msgstr "Links werden unkategorisiert."
 
-#: build/taxonomies.js:3 src/categories/App.jsx:161
+#: build/taxonomies.js:3 src/categories/App.jsx:162
 msgid "No categories yet. Use the form to add your first category."
 msgstr ""
 "Noch keine Kategorien vorhanden. Nutze das Formular, um deine erste "
 "Kategorie hinzuzufügen."
 
-#: build/taxonomies.js:3 build/taxonomies.js:5 src/categories/App.jsx:167
-#: src/categories/App.jsx:231 src/tags/App.jsx:167 src/tags/App.jsx:231
+#: build/taxonomies.js:3 build/taxonomies.js:5 src/categories/App.jsx:168
+#: src/categories/App.jsx:232 src/tags/App.jsx:168 src/tags/App.jsx:232
 msgid "Name"
 msgstr "Name"
 
-#: build/taxonomies.js:3 build/taxonomies.js:5 src/categories/App.jsx:168
-#: src/categories/App.jsx:243 src/tags/App.jsx:168 src/tags/App.jsx:243
+#: build/taxonomies.js:3 build/taxonomies.js:5 src/categories/App.jsx:169
+#: src/categories/App.jsx:244 src/tags/App.jsx:169 src/tags/App.jsx:244
 msgid "Description"
 msgstr "Beschreibung"
 
-#: build/taxonomies.js:3 build/taxonomies.js:5 src/categories/App.jsx:169
-#: src/tags/App.jsx:169
+#: build/taxonomies.js:3 build/taxonomies.js:5 src/categories/App.jsx:170
+#: src/tags/App.jsx:170
 msgid "Slug"
 msgstr "Slug"
 
-#: build/taxonomies.js:3 src/categories/App.jsx:206
+#: build/taxonomies.js:3 src/categories/App.jsx:207
 msgid "Category name is required."
 msgstr "Kategoriename ist erforderlich."
 
-#: build/taxonomies.js:3 build/taxonomies.js:5 src/categories/App.jsx:245
-#: src/tags/App.jsx:245
+#: build/taxonomies.js:3 build/taxonomies.js:5 src/categories/App.jsx:246
+#: src/tags/App.jsx:246
 msgid "(optional)"
 msgstr "(optional)"
 
-#: build/taxonomies.js:3 src/categories/App.jsx:258
+#: build/taxonomies.js:3 src/categories/App.jsx:259
 msgid "Add Category"
 msgstr "Kategorie hinzufügen"
 
-#: build/taxonomies.js:3 src/categories/App.jsx:283
+#: build/taxonomies.js:3 src/categories/App.jsx:284
 msgid "Failed to load categories."
 msgstr "Kategorien konnten nicht abgerufen werden."
 
@@ -1674,27 +1678,61 @@ msgstr "Kategorien konnten nicht abgerufen werden."
 msgid "link will lose this tag."
 msgstr "Link verliert dieses Schlagwort."
 
-#: build/taxonomies.js:5 src/tags/App.jsx:67
+#: build/taxonomies.js:5 src/tags/App.jsx:68
 msgid "links will lose this tag."
 msgstr "Links verlieren dieses Schlagwort."
 
-#: build/taxonomies.js:5 src/tags/App.jsx:161
+#: build/taxonomies.js:5 src/tags/App.jsx:162
 msgid "No tags yet. Use the form to add your first tag."
 msgstr ""
 "Noch keine Schlagwörter vorhanden. Nutze das Formular, um dein erstes "
 "Schlagwort hinzuzufügen."
 
-#: build/taxonomies.js:5 src/tags/App.jsx:206
+#: build/taxonomies.js:5 src/tags/App.jsx:207
 msgid "Tag name is required."
 msgstr "Schlagwortname ist erforderlich."
 
-#: build/taxonomies.js:5 src/tags/App.jsx:258
+#: build/taxonomies.js:5 src/tags/App.jsx:259
 msgid "Add Tag"
 msgstr "Schlagwort hinzufügen"
 
-#: build/taxonomies.js:5 src/tags/App.jsx:283
+#: build/taxonomies.js:5 src/tags/App.jsx:284
 msgid "Failed to load tags."
 msgstr "Schlagwörter konnten nicht abgerufen werden."
+
+#~ msgid "Chrome Extension Access Data"
+#~ msgstr "Zugangsdaten für Chrome-Erweiterung"
+
+#~ msgid ""
+#~ "Use these credentials to connect the LynxJournal Chrome extension to your "
+#~ "WordPress site."
+#~ msgstr ""
+#~ "Verwende diese Zugangsdaten, um die LynxJournal-Chrome-Erweiterung mit "
+#~ "deiner WordPress-Website zu verbinden."
+
+#~ msgid "Use this URL in the Chrome extension settings."
+#~ msgstr "Verwende diese URL in den Einstellungen der Chrome-Erweiterung."
+
+#~ msgid ""
+#~ "Warning: Generating a new key will permanently invalidate the current "
+#~ "one. You will need to update the Chrome extension with the new key."
+#~ msgstr ""
+#~ "Achtung: Das Erzeugen eines neuen Schlüssels macht den aktuellen "
+#~ "dauerhaft ungültig. Du musst die Chrome-Erweiterung mit dem neuen "
+#~ "Schlüssel aktualisieren."
+
+#~ msgid "Chrome Extension Setup"
+#~ msgstr "Chrome-Erweiterung einrichten"
+
+#~ msgid "Download and install the LynxJournal Chrome extension"
+#~ msgstr "LynxJournal-Chrome-Erweiterung herunterladen und installieren"
+
+#~ msgid ""
+#~ "This will permanently invalidate your current API key. You will need to "
+#~ "update the Chrome extension with the new key. Continue?"
+#~ msgstr ""
+#~ "Dadurch wird dein aktueller API-Schlüssel dauerhaft ungültig. Du musst "
+#~ "die Chrome-Erweiterung mit dem neuen Schlüssel aktualisieren. Fortfahren?"
 
 #~ msgid "Link Categories & Tags"
 #~ msgstr "Link-Kategorien & Schlagwörter"

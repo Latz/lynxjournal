@@ -97,8 +97,8 @@ function AccessDataCard({
 }) {
   return (
     <div className="card lynxjournal-settings-card">
-      <h2>{__('Chrome Extension Access Data', 'lynx-journal')}</h2>
-      <p>{__('Use these credentials to connect the LynxJournal Chrome extension to your WordPress site.', 'lynx-journal')}</p>
+      <h2>{__('Browser Extension Access Data', 'lynx-journal')}</h2>
+      <p>{__('Use these credentials to connect the LynxJournal browser extension to your WordPress site.', 'lynx-journal')}</p>
 
       <div className="lynxjournal-settings-field">
         <label className="lynxjournal-settings-label" htmlFor="lynxjournal-api-endpoint">
@@ -108,7 +108,7 @@ function AccessDataCard({
         </label>
         <CopyableField id="lynxjournal-api-endpoint" value={restUrl} />
         <p className="description">
-          {__('Use this URL in the Chrome extension settings.', 'lynx-journal')}
+          {__('Use this URL in the browser extension settings.', 'lynx-journal')}
           {' '}
           <a href={restUrl} target="_blank" rel="noreferrer" className="lynxjournal-rest-link">
             {__('View REST API', 'lynx-journal')} ↗
@@ -154,7 +154,7 @@ function AccessDataCard({
 
       {apiKey && (
         <div className="notice notice-warning inline">
-          <p>{__('Warning: Generating a new key will permanently invalidate the current one. You will need to update the Chrome extension with the new key.', 'lynx-journal')}</p>
+          <p>{__('Warning: Generating a new key will permanently invalidate the current one. You will need to update your browser extension with the new key.', 'lynx-journal')}</p>
         </div>
       )}
       <Button variant="primary" onClick={onGenerate} isBusy={generating} disabled={generating}>
@@ -165,16 +165,16 @@ function AccessDataCard({
 }
 
 /**
- * Renders the static Chrome extension setup instructions card.
+ * Renders the static browser extension setup instructions card.
  *
  * @returns {JSX.Element}
  */
 function SetupCard() {
   return (
     <div className="card lynxjournal-setup-card">
-      <h2>{__('Chrome Extension Setup', 'lynx-journal')}</h2>
+      <h2>{__('Browser Extension Setup', 'lynx-journal')}</h2>
       <ol>
-        <li>{__('Download and install the LynxJournal Chrome extension', 'lynx-journal')}</li>
+        <li>{__('Download and install the LynxJournal browser extension for your browser (Chrome or Firefox)', 'lynx-journal')}</li>
         <li>{__('Click the extension icon and go to Settings', 'lynx-journal')}</li>
         <li>{__('Paste your API Endpoint and API Key from above', 'lynx-journal')}</li>
         <li>{__('Click Save', 'lynx-journal')}</li>
@@ -206,7 +206,7 @@ export default function App() {
   /** @listens click Regenerates the API key, confirming first when one already exists. */
   const handleGenerate = useCallback(() => {
     if (apiKey && !window.confirm(__(
-      'This will permanently invalidate your current API key. You will need to update the Chrome extension with the new key. Continue?',
+      'This will permanently invalidate your current API key. You will need to update your browser extension with the new key. Continue?',
       'lynx-journal'
     ))) {
       return;
