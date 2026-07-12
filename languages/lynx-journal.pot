@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-11T22:19:00+00:00\n"
+"POT-Creation-Date: 2026-07-12T19:44:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: lynx-journal\n"
@@ -56,14 +56,12 @@ msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:69
 #: src/php/traits/Admin/AddLink.php:73
-#: src/php/traits/Admin/Menu.php:31
 #: src/php/traits/Admin/TemplatePage.php:51
 #: src/php/traits/trait-post-type.php:165
 msgid "Categories"
 msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:81
-#: src/php/traits/Admin/Menu.php:32
 #: src/php/traits/Admin/TemplatePage.php:56
 #: src/php/traits/trait-post-type.php:208
 msgid "Tags"
@@ -85,9 +83,11 @@ msgid "Add Link"
 msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:92
-#: src/php/traits/Admin/Menu.php:157
-#: build/categories.js:1
+#: src/php/traits/Admin/Menu.php:132
+#: build/taxonomies.js:1
+#: build/taxonomies.js:3
 #: src/categories/App.jsx:121
+#: src/tags/App.jsx:121
 msgid "Cancel"
 msgstr ""
 
@@ -114,12 +114,12 @@ msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:213
 #: src/php/traits/Admin/Dashboard.php:416
-#: src/php/traits/RestApi.php:432
+#: src/php/traits/RestApi.php:486
 msgid "Link added successfully!"
 msgstr ""
 
 #: src/php/traits/Admin/Categories.php:16
-msgid "Link Categories"
+msgid "Link Categories & Tags"
 msgstr ""
 
 #: src/php/traits/Admin/Dashboard.php:30
@@ -384,8 +384,10 @@ msgstr ""
 
 #: src/php/traits/Admin/LinksPage.php:166
 #: src/php/traits/Admin/LinksPage.php:197
-#: build/categories.js:3
+#: build/taxonomies.js:3
+#: build/taxonomies.js:5
 #: src/categories/App.jsx:171
+#: src/tags/App.jsx:171
 msgid "Actions"
 msgstr ""
 
@@ -412,8 +414,10 @@ msgid "Unpublish"
 msgstr ""
 
 #: src/php/traits/Admin/LinksPage.php:360
-#: build/categories.js:1
+#: build/taxonomies.js:1
+#: build/taxonomies.js:3
 #: src/categories/App.jsx:137
+#: src/tags/App.jsx:137
 msgid "Edit"
 msgstr ""
 
@@ -422,8 +426,10 @@ msgid "Are you sure you want to delete this link?"
 msgstr ""
 
 #: src/php/traits/Admin/LinksPage.php:361
-#: build/categories.js:3
+#: build/taxonomies.js:3
+#: build/taxonomies.js:5
 #: src/categories/App.jsx:141
+#: src/tags/App.jsx:141
 msgid "Delete"
 msgstr ""
 
@@ -435,36 +441,40 @@ msgstr ""
 msgid "Show Links"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:33
+#: src/php/traits/Admin/Menu.php:31
+msgid "Categories & Tags"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:32
 msgid "Chrome Extension"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:34
+#: src/php/traits/Admin/Menu.php:33
 msgid "Schedule"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:35
+#: src/php/traits/Admin/Menu.php:34
 #: src/php/traits/Admin/TemplatePage.php:62
 msgid "Post Template"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:71
+#: src/php/traits/Admin/Menu.php:46
 msgid "LynxJournal Chrome Extension"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:86
+#: src/php/traits/Admin/Menu.php:61
 msgid "Schedule Configuration"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:155
+#: src/php/traits/Admin/Menu.php:130
 msgid "Delete?"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:156
+#: src/php/traits/Admin/Menu.php:131
 msgid "Yes"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:449
+#: src/php/traits/Admin/Menu.php:408
 msgid "LynxJournal Summary"
 msgstr ""
 
@@ -517,8 +527,10 @@ msgid "Number of roundups published so far"
 msgstr ""
 
 #: src/php/traits/Admin/TemplatePage.php:44
-#: build/categories.js:3
+#: build/taxonomies.js:3
+#: build/taxonomies.js:5
 #: src/categories/App.jsx:170
+#: src/tags/App.jsx:170
 msgid "Links"
 msgstr ""
 
@@ -732,54 +744,64 @@ msgstr ""
 msgid "Uncategorized"
 msgstr ""
 
-#: src/php/traits/Queries.php:231
+#: src/php/traits/Queries.php:276
 msgid "This link has not been published."
 msgstr ""
 
-#: src/php/traits/Queries.php:241
+#: src/php/traits/Queries.php:286
 msgid "Failed to unpublish link."
 msgstr ""
 
-#: src/php/traits/Queries.php:254
+#: src/php/traits/Queries.php:299
 msgid "Link unpublished successfully."
 msgstr ""
 
-#: src/php/traits/RestApi.php:204
+#: src/php/traits/RestApi.php:258
 msgid "No API key configured."
 msgstr ""
 
-#: src/php/traits/RestApi.php:252
+#: src/php/traits/RestApi.php:306
 msgid "Forbidden"
 msgstr ""
 
-#: src/php/traits/RestApi.php:267
+#: src/php/traits/RestApi.php:321
 msgid "Link not found"
 msgstr ""
 
-#: src/php/traits/RestApi.php:271
+#: src/php/traits/RestApi.php:325
 msgid "Could not delete link"
 msgstr ""
 
-#: src/php/traits/RestApi.php:309
+#: src/php/traits/RestApi.php:363
 msgid "Invalid schedule data"
 msgstr ""
 
-#: src/php/traits/RestApi.php:362
+#: src/php/traits/RestApi.php:416
 msgid "A schedule run is already in progress"
 msgstr ""
 
-#: src/php/traits/RestApi.php:418
+#: src/php/traits/RestApi.php:472
 msgid "Failed to create link."
 msgstr ""
 
-#: src/php/traits/RestApi.php:453
+#: src/php/traits/RestApi.php:507
 msgid "Failed to fetch categories."
 msgstr ""
 
-#: src/php/traits/RestApi.php:547
-#: build/categories.js:3
+#: src/php/traits/RestApi.php:603
+#: build/taxonomies.js:3
 #: src/categories/App.jsx:75
 msgid "Could not delete category."
+msgstr ""
+
+#: src/php/traits/RestApi.php:636
+msgid "Failed to fetch tags."
+msgstr ""
+
+#: src/php/traits/RestApi.php:732
+#: build/taxonomies.js:5
+#: src/tags/App.jsx:75
+msgid "Could not delete tag."
 msgstr ""
 
 #: src/php/traits/RestApiSupport.php:35
@@ -1041,7 +1063,7 @@ msgid "New Category Name"
 msgstr ""
 
 #: src/php/traits/trait-post-type.php:170
-#: build/categories.js:3
+#: build/taxonomies.js:3
 #: src/categories/App.jsx:226
 msgid "Add New Category"
 msgstr ""
@@ -1123,6 +1145,8 @@ msgid "New Tag Name"
 msgstr ""
 
 #: src/php/traits/trait-post-type.php:213
+#: build/taxonomies.js:5
+#: src/tags/App.jsx:226
 msgid "Add New Tag"
 msgstr ""
 
@@ -1160,97 +1184,6 @@ msgstr ""
 
 #: src/php/traits/trait-post-type.php:225
 msgid "Tags list navigation"
-msgstr ""
-
-#: build/categories.js:1
-#: src/categories/App.jsx:96
-msgid "Description (optional)"
-msgstr ""
-
-#: build/categories.js:1
-#: src/categories/App.jsx:105
-msgid "Leave blank to keep current"
-msgstr ""
-
-#: build/categories.js:1
-#: build/categories.js:3
-#: src/categories/App.jsx:56
-#: src/categories/App.jsx:217
-msgid "Save failed."
-msgstr ""
-
-#: build/categories.js:1
-#: src/categories/App.jsx:42
-msgid "Name is required."
-msgstr ""
-
-#: build/categories.js:1
-#: src/categories/App.jsx:117
-msgid "Saving…"
-msgstr ""
-
-#: build/categories.js:1
-#: src/categories/App.jsx:117
-msgid "Save"
-msgstr ""
-
-#. translators: %s: category name
-#: build/categories.js:3
-#: src/categories/App.jsx:65
-#, js-format
-msgid "Delete '%s'?"
-msgstr ""
-
-#: build/categories.js:3
-#: src/categories/App.jsx:67
-msgid "link will become uncategorized."
-msgstr ""
-
-#: build/categories.js:3
-#: src/categories/App.jsx:67
-msgid "links will become uncategorized."
-msgstr ""
-
-#: build/categories.js:3
-#: src/categories/App.jsx:161
-msgid "No categories yet. Use the form to add your first category."
-msgstr ""
-
-#: build/categories.js:3
-#: src/categories/App.jsx:167
-#: src/categories/App.jsx:231
-msgid "Name"
-msgstr ""
-
-#: build/categories.js:3
-#: src/categories/App.jsx:168
-#: src/categories/App.jsx:243
-msgid "Description"
-msgstr ""
-
-#: build/categories.js:3
-#: src/categories/App.jsx:169
-msgid "Slug"
-msgstr ""
-
-#: build/categories.js:3
-#: src/categories/App.jsx:206
-msgid "Category name is required."
-msgstr ""
-
-#: build/categories.js:3
-#: src/categories/App.jsx:245
-msgid "(optional)"
-msgstr ""
-
-#: build/categories.js:3
-#: src/categories/App.jsx:258
-msgid "Add Category"
-msgstr ""
-
-#: build/categories.js:3
-#: src/categories/App.jsx:283
-msgid "Failed to load categories."
 msgstr ""
 
 #: build/schedule.js:1
@@ -1450,93 +1383,93 @@ msgid "Times in %s"
 msgstr ""
 
 #: build/schedule.js:1
-#: src/schedule/components/DiagnosticsPanel.jsx:18
+#: src/schedule/components/DiagnosticsPanel.jsx:33
 msgid "Condition not met"
 msgstr ""
 
 #: build/schedule.js:1
-#: src/schedule/components/DiagnosticsPanel.jsx:19
+#: src/schedule/components/DiagnosticsPanel.jsx:34
 msgid "Run was locked"
 msgstr ""
 
 #. translators: %d: number of links in the published roundup
 #: build/schedule.js:2
-#: src/schedule/components/DiagnosticsPanel.jsx:36
+#: src/schedule/components/DiagnosticsPanel.jsx:51
 #, js-format
 msgid "%d links"
 msgstr ""
 
 #: build/schedule.js:2
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:60
-#: src/schedule/components/DiagnosticsPanel.jsx:73
+#: src/schedule/components/DiagnosticsPanel.jsx:75
+#: src/schedule/components/DiagnosticsPanel.jsx:88
 msgid "Next run"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:64
+#: src/schedule/components/DiagnosticsPanel.jsx:79
 #, js-format
 msgid "%d links until post"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:65
+#: src/schedule/components/DiagnosticsPanel.jsx:80
 msgid "Ready to post"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:79
+#: src/schedule/components/DiagnosticsPanel.jsx:94
 msgid "Not scheduled"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:82
+#: src/schedule/components/DiagnosticsPanel.jsx:97
 msgid "WP-Cron disabled"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:102
+#: src/schedule/components/DiagnosticsPanel.jsx:117
 msgid "Last run"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:115
+#: src/schedule/components/DiagnosticsPanel.jsx:130
 msgid "No runs yet"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:136
+#: src/schedule/components/DiagnosticsPanel.jsx:151
 #, js-format
 msgid "History (%d)"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:178
+#: src/schedule/components/DiagnosticsPanel.jsx:191
 msgid "Diagnostics"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:181
+#: src/schedule/components/DiagnosticsPanel.jsx:194
 msgid "Loading…"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:190
+#: src/schedule/components/DiagnosticsPanel.jsx:203
 msgid "WP-Cron"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:193
+#: src/schedule/components/DiagnosticsPanel.jsx:206
 msgid "Disabled"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:194
+#: src/schedule/components/DiagnosticsPanel.jsx:207
 msgid "Active"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:210
+#: src/schedule/components/DiagnosticsPanel.jsx:223
 msgid "Refresh"
 msgstr ""
 
@@ -1758,4 +1691,151 @@ msgstr ""
 #: build/settings.js:1
 #: src/settings/App.jsx:232
 msgid "Missing endpoint or API key."
+msgstr ""
+
+#: build/taxonomies.js:1
+#: build/taxonomies.js:3
+#: src/categories/App.jsx:96
+#: src/tags/App.jsx:96
+msgid "Description (optional)"
+msgstr ""
+
+#: build/taxonomies.js:1
+#: build/taxonomies.js:3
+#: src/categories/App.jsx:105
+#: src/tags/App.jsx:105
+msgid "Leave blank to keep current"
+msgstr ""
+
+#: build/taxonomies.js:1
+#: build/taxonomies.js:3
+#: build/taxonomies.js:5
+#: src/categories/App.jsx:56
+#: src/categories/App.jsx:217
+#: src/tags/App.jsx:56
+#: src/tags/App.jsx:217
+msgid "Save failed."
+msgstr ""
+
+#: build/taxonomies.js:1
+#: build/taxonomies.js:3
+#: src/categories/App.jsx:42
+#: src/tags/App.jsx:42
+msgid "Name is required."
+msgstr ""
+
+#: build/taxonomies.js:1
+#: build/taxonomies.js:3
+#: src/categories/App.jsx:117
+#: src/tags/App.jsx:117
+msgid "Saving…"
+msgstr ""
+
+#: build/taxonomies.js:1
+#: build/taxonomies.js:3
+#: src/categories/App.jsx:117
+#: src/tags/App.jsx:117
+msgid "Save"
+msgstr ""
+
+#. translators: %s: category name
+#. translators: %s: tag name
+#: build/taxonomies.js:3
+#: build/taxonomies.js:5
+#: src/categories/App.jsx:65
+#: src/tags/App.jsx:65
+#, js-format
+msgid "Delete '%s'?"
+msgstr ""
+
+#: build/taxonomies.js:3
+#: src/categories/App.jsx:67
+msgid "link will become uncategorized."
+msgstr ""
+
+#: build/taxonomies.js:3
+#: src/categories/App.jsx:67
+msgid "links will become uncategorized."
+msgstr ""
+
+#: build/taxonomies.js:3
+#: src/categories/App.jsx:161
+msgid "No categories yet. Use the form to add your first category."
+msgstr ""
+
+#: build/taxonomies.js:3
+#: build/taxonomies.js:5
+#: src/categories/App.jsx:167
+#: src/categories/App.jsx:231
+#: src/tags/App.jsx:167
+#: src/tags/App.jsx:231
+msgid "Name"
+msgstr ""
+
+#: build/taxonomies.js:3
+#: build/taxonomies.js:5
+#: src/categories/App.jsx:168
+#: src/categories/App.jsx:243
+#: src/tags/App.jsx:168
+#: src/tags/App.jsx:243
+msgid "Description"
+msgstr ""
+
+#: build/taxonomies.js:3
+#: build/taxonomies.js:5
+#: src/categories/App.jsx:169
+#: src/tags/App.jsx:169
+msgid "Slug"
+msgstr ""
+
+#: build/taxonomies.js:3
+#: src/categories/App.jsx:206
+msgid "Category name is required."
+msgstr ""
+
+#: build/taxonomies.js:3
+#: build/taxonomies.js:5
+#: src/categories/App.jsx:245
+#: src/tags/App.jsx:245
+msgid "(optional)"
+msgstr ""
+
+#: build/taxonomies.js:3
+#: src/categories/App.jsx:258
+msgid "Add Category"
+msgstr ""
+
+#: build/taxonomies.js:3
+#: src/categories/App.jsx:283
+msgid "Failed to load categories."
+msgstr ""
+
+#: build/taxonomies.js:5
+#: src/tags/App.jsx:67
+msgid "link will lose this tag."
+msgstr ""
+
+#: build/taxonomies.js:5
+#: src/tags/App.jsx:67
+msgid "links will lose this tag."
+msgstr ""
+
+#: build/taxonomies.js:5
+#: src/tags/App.jsx:161
+msgid "No tags yet. Use the form to add your first tag."
+msgstr ""
+
+#: build/taxonomies.js:5
+#: src/tags/App.jsx:206
+msgid "Tag name is required."
+msgstr ""
+
+#: build/taxonomies.js:5
+#: src/tags/App.jsx:258
+msgid "Add Tag"
+msgstr ""
+
+#: build/taxonomies.js:5
+#: src/tags/App.jsx:283
+msgid "Failed to load tags."
 msgstr ""

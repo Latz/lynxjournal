@@ -13,6 +13,7 @@ trait LynxJournal_RestApi {
     public function registerRestRoutes(): void {
         $this->registerLinkRoutes();
         $this->registerCategoryRoutes();
+        $this->registerTagRoutes();
         $this->registerScheduleRoutes();
         $this->registerAuthRoutes();
     }
@@ -109,6 +110,59 @@ trait LynxJournal_RestApi {
             array(
                 'methods'             => 'DELETE',
                 'callback'            => [$this, 'restDeleteCategory'],
+                'permission_callback' => fn() => current_user_can('edit_posts'),
+                'args'                => array(
+                    'id' => array( 'required' => true, 'type' => 'integer' ),
+                ),
+            ),
+        ));
+    }
+
+    /**
+     * Register REST routes for listing and updating link tags.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    private function registerTagRoutes(): void {
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/tags', array(
+            array(
+                'methods'             => 'GET',
+                'callback'            => [$this, 'restGetTags'],
+                'permission_callback' => [$this, 'restPermissionCheck'],
+            ),
+            array(
+                'methods'             => 'POST',
+                'callback'            => [$this, 'restCreateTag'],
+                'permission_callback' => fn() => current_user_can('edit_posts'),
+                'args'                => array(
+                    'name'        => array( 'required' => true,  'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
+                    'description' => array( 'required' => false, 'type' => 'string', 'sanitize_callback' => 'sanitize_textarea_field' ),
+                ),
+            ),
+        ));
+
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/tags/counts', array(
+            'methods'             => 'GET',
+            'callback'            => [$this, 'restGetTagLinkCounts'],
+            'permission_callback' => fn() => current_user_can('edit_posts'),
+        ));
+
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/tags/(?P<id>\d+)', array(
+            array(
+                'methods'             => 'POST',
+                'callback'            => [$this, 'updateTag'],
+                'permission_callback' => fn() => current_user_can('edit_posts'),
+                'args'                => array(
+                    'id'          => array( 'required' => true,  'type' => 'integer' ),
+                    'name'        => array( 'required' => true,  'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ),
+                    'description' => array( 'required' => false, 'type' => 'string',  'sanitize_callback' => 'sanitize_textarea_field' ),
+                    'slug'        => array( 'required' => false, 'type' => 'string',  'sanitize_callback' => 'sanitize_title' ),
+                ),
+            ),
+            array(
+                'methods'             => 'DELETE',
+                'callback'            => [$this, 'restDeleteTag'],
                 'permission_callback' => fn() => current_user_can('edit_posts'),
                 'args'                => array(
                     'id' => array( 'required' => true, 'type' => 'integer' ),
@@ -560,6 +614,135 @@ trait LynxJournal_RestApi {
      */
     public function restGetCategoryLinkCounts(): mixed {
         return rest_ensure_response( $this->getCategoryLinkCounts() );
+    }
+
+    /**
+     * Get all lynxjournal tags via REST API.
+     *
+     * @since 1.0.0
+     * @return mixed REST response with tags list.
+     */
+    public function restGetTags(): mixed {
+        $cache_key = 'lynxjournal_api_tags_list';
+        $tag_list  = get_transient($cache_key);
+
+        if (false === $tag_list) {
+            $tags = get_terms(array(
+                'taxonomy'   => 'lynxjournal_tag',
+                'hide_empty' => false,
+            ));
+
+            if (is_wp_error($tags)) {
+                return new \WP_Error('fetch_failed', __('Failed to fetch tags.', 'lynx-journal'), array('status' => 500));
+            }
+
+            $tag_list = array();
+            foreach ($tags as $tag) {
+                $tag_list[] = array(
+                    'id'          => $tag->term_id,
+                    'name'        => $tag->name,
+                    'slug'        => $tag->slug,
+                    'description' => $tag->description,
+                );
+            }
+            set_transient($cache_key, $tag_list, HOUR_IN_SECONDS);
+        }
+        return rest_ensure_response($tag_list);
+    }
+
+    /**
+     * Update a lynxjournal tag via REST API.
+     *
+     * @since 1.0.0
+     * @param \WP_REST_Request $request The REST request with tag data.
+     * @return mixed REST response with updated tag data.
+     */
+    public function updateTag( \WP_REST_Request $request ): mixed {
+        $term_id = (int) $request['id'];
+        $args    = array( 'name' => $request['name'] );
+        if ( $request->has_param('description') ) {
+            $args['description'] = $request['description'];
+        }
+        if ( $request->has_param('slug') && $request['slug'] !== '' ) {
+            $args['slug'] = $request['slug'];
+        }
+        $result = wp_update_term( $term_id, 'lynxjournal_tag', $args );
+        if ( is_wp_error( $result ) ) {
+            return $result;
+        }
+        $this->invalidateTagsCache();
+        $term = get_term( $result['term_id'], 'lynxjournal_tag' );
+        return rest_ensure_response( array(
+            'id'          => $term->term_id,
+            'name'        => $term->name,
+            'slug'        => $term->slug,
+            'description' => $term->description,
+        ) );
+    }
+
+    /**
+     * Invalidate all tags-related caches.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    public function invalidateTagsCache(): void {
+        delete_transient('lynxjournal_api_tags_list');
+        delete_transient('lynxjournal_tags_terms');
+        delete_transient('lynxjournal_tag_link_counts');
+    }
+
+    /**
+     * Create a lynxjournal tag via REST API.
+     *
+     * @since 1.0.0
+     * @param \WP_REST_Request $request The REST request with tag data.
+     * @return mixed REST response with the created tag, or a WP_Error.
+     */
+    public function restCreateTag( \WP_REST_Request $request ): mixed {
+        $result = wp_insert_term(
+            $request->get_param('name'),
+            'lynxjournal_tag',
+            array( 'description' => $request->get_param('description') ?? '' )
+        );
+        if ( is_wp_error( $result ) ) {
+            return $result;
+        }
+        $this->invalidateTagsCache();
+        $term = get_term( $result['term_id'], 'lynxjournal_tag' );
+        return rest_ensure_response( array(
+            'id'          => $term->term_id,
+            'name'        => $term->name,
+            'slug'        => $term->slug,
+            'description' => $term->description,
+        ) );
+    }
+
+    /**
+     * Delete a lynxjournal tag via REST API.
+     *
+     * @since 1.0.0
+     * @param \WP_REST_Request $request The REST request with the tag ID.
+     * @return \WP_REST_Response|\WP_Error 204 on success, or an error.
+     */
+    public function restDeleteTag( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
+        $term_id = (int) $request['id'];
+        $result  = wp_delete_term( $term_id, 'lynxjournal_tag' );
+        if ( is_wp_error( $result ) || $result === false ) {
+            return new \WP_Error( 'delete_failed', __( 'Could not delete tag.', 'lynx-journal' ), array( 'status' => 500 ) );
+        }
+        $this->invalidateTagsCache();
+        return new \WP_REST_Response( null, 204 );
+    }
+
+    /**
+     * Get per-tag link counts via REST API.
+     *
+     * @since 1.0.0
+     * @return mixed REST response with a term_id => count map.
+     */
+    public function restGetTagLinkCounts(): mixed {
+        return rest_ensure_response( $this->getTagLinkCounts() );
     }
 
 }

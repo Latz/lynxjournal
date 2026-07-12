@@ -9,8 +9,9 @@ if (!defined("ABSPATH")) {
 use Brain\Monkey\Functions;
 
 /**
- * Tests for the Categories admin-page entry point. The page body is a React
- * app (src/categories/); the PHP side only renders the container.
+ * Tests for the combined Categories & Tags admin-page entry point. The page
+ * body is made of two React apps (src/categories/ and src/tags/); the PHP
+ * side only renders the two containers.
  */
 
 beforeEach(function (): void {
@@ -22,12 +23,13 @@ beforeEach(function (): void {
 
 describe('LynxJournal::categoriesPage()', function (): void {
 
-    it('renders the categories root container', function (): void {
+    it('renders the categories and tags root containers', function (): void {
         ob_start();
         $this->plugin->categoriesPage();
         $html = ob_get_clean();
 
         expect($html)->toContain('lynxjournal-categories-root');
-        expect($html)->toContain('Link Categories');
+        expect($html)->toContain('lynxjournal-tags-root');
+        expect($html)->toContain('Link Categories &amp; Tags');
     });
 });

@@ -170,6 +170,40 @@ trait LynxJournal_Queries {
     }
 
     /**
+     * Count published/pending links per lynxjournal tag.
+     *
+     * Transient-cached for 5 minutes for the same reason as
+     * getCategoryLinkCounts() — counts change on every link publish/tag
+     * action, not just on tag create/update/delete.
+     *
+     * @since 1.0.0
+     * @return array<int, int> Map of term_id => link count.
+     */
+    public function getTagLinkCounts(): array {
+        $cache_key = 'lynxjournal_tag_link_counts';
+        $cached    = get_transient($cache_key);
+        if ($cached !== false) {
+            return $cached;
+        }
+
+        global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $rows = $wpdb->get_results(
+            "SELECT tt.term_id, COUNT(p.ID) AS cnt
+             FROM {$wpdb->term_taxonomy} tt
+             LEFT JOIN {$wpdb->term_relationships} tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
+             LEFT JOIN {$wpdb->posts} p ON tr.object_id = p.ID
+                AND p.post_status IN ('lynxjournal_pending','lynxjournal_pub','lynxjournal_draft')
+             WHERE tt.taxonomy = 'lynxjournal_tag'
+             GROUP BY tt.term_id",
+            ARRAY_A
+        );
+        $counts = $rows ? array_column( $rows, 'cnt', 'term_id' ) : array();
+        set_transient($cache_key, $counts, 5 * MINUTE_IN_SECONDS);
+        return $counts;
+    }
+
+    /**
      * Run schema migration to custom post statuses if needed.
      *
      * Migrates existing published lynxjournal posts to custom status values.
