@@ -145,7 +145,7 @@ trait LynxJournal_Admin_Menu {
         if (file_exists($asset_file)) {
             $asset = require_once $asset_file;
         } else {
-            $asset = array('dependencies' => array(), 'version' => '1.0.0');
+            $asset = $this->defaultAssetConfig();
         }
 
         wp_enqueue_script(
@@ -183,7 +183,7 @@ trait LynxJournal_Admin_Menu {
         if (file_exists($asset_file)) {
             $asset = require_once $asset_file;
         } else {
-            $asset = array('dependencies' => array(), 'version' => '1.0.0');
+            $asset = $this->defaultAssetConfig();
         }
 
         wp_enqueue_script(
@@ -310,7 +310,7 @@ trait LynxJournal_Admin_Menu {
         if (file_exists($asset_file)) {
             $asset = require_once $asset_file;
         } else {
-            $asset = array('dependencies' => array(), 'version' => '1.0.0');
+            $asset = $this->defaultAssetConfig();
         }
 
         wp_enqueue_script(
@@ -394,6 +394,16 @@ trait LynxJournal_Admin_Menu {
      */
     private function enqueuePageScriptTranslations(string $handle): void {
         wp_set_script_translations($handle, 'lynx-journal', plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'languages');
+    }
+
+    /**
+     * Fallback dependencies/version used when a build's *.asset.php file is missing.
+     *
+     * @since 1.0.0
+     * @return array{dependencies: array<int, string>, version: string}
+     */
+    private function defaultAssetConfig(): array {
+        return array('dependencies' => array(), 'version' => '1.0.0');
     }
 
     /**
