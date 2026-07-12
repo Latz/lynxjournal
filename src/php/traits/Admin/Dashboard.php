@@ -308,7 +308,7 @@ trait LynxJournal_Admin_Dashboard {
                             <input type="text" id="roundup_title" name="roundup_title" class="regular-text"
                                 value="<?php
                                 /* translators: %s is the current date (e.g. "April 15, 2026") */
-                                echo esc_attr( sprintf( __( 'Links Roundup - %s', 'lynx-journal' ), gmdate( 'F j, Y' ) ) );
+                                echo esc_attr( sprintf( __( 'Links Roundup - %s', 'lynx-journal' ), wp_date( 'F j, Y' ) ) );
                                 ?>">
                         </p>
                         <input type="hidden" name="roundup_as_draft" value="0">
@@ -354,7 +354,9 @@ trait LynxJournal_Admin_Dashboard {
                             <span><?php echo esc_html( $meta['category_name'] ); ?></span>
                         <?php endif; ?>
                         <?php if ( $meta['published_date'] ) : ?>
-                            <span><?php echo esc_html( mysql2date( 'M j, Y', $meta['published_date'] ) ); ?></span>
+                            <span class="lynxjournal-date-time" data-timestamp="<?php echo esc_attr( (string) mysql2date( 'U', $meta['published_date'] ) ); ?>">
+                                <?php echo esc_html( mysql2date( get_option( 'date_format' ), $meta['published_date'] ) ); ?>
+                            </span>
                         <?php endif; ?>
                     </div>
                 </li>
