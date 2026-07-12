@@ -30,6 +30,6 @@ describe('LynxJournal::categoriesPage()', function (): void {
 
         expect($html)->toContain('lynxjournal-categories-root');
         expect($html)->toContain('lynxjournal-tags-root');
-        expect($html)->toContain('Link Categories &amp; Tags');
+        expect($html)->toContain('Categories &amp; Tags');
     });
 });

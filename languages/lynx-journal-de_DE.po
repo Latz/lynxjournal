@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LynxJournal 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lynxjournal\n"
-"POT-Creation-Date: 2026-07-12T19:44:13+00:00\n"
+"POT-Creation-Date: 2026-07-12T19:53:35+00:00\n"
 "PO-Revision-Date: 2026-07-11 00:00+0000\n"
 "Last-Translator: Latz\n"
 "Language-Team: German\n"
@@ -111,9 +111,9 @@ msgstr "Link konnte nicht hinzugefügt werden."
 msgid "Link added successfully!"
 msgstr "Link erfolgreich hinzugefügt!"
 
-#: src/php/traits/Admin/Categories.php:16
-msgid "Link Categories & Tags"
-msgstr "Link-Kategorien & Schlagwörter"
+#: src/php/traits/Admin/Categories.php:16 src/php/traits/Admin/Menu.php:31
+msgid "Categories & Tags"
+msgstr "Kategorien & Schlagwörter"
 
 #: src/php/traits/Admin/Dashboard.php:30
 msgid "Total"
@@ -425,10 +425,6 @@ msgstr "Dashboard"
 #: src/php/traits/Admin/Menu.php:29
 msgid "Show Links"
 msgstr "Links anzeigen"
-
-#: src/php/traits/Admin/Menu.php:31
-msgid "Categories & Tags"
-msgstr "Kategorien & Schlagwörter"
 
 #: src/php/traits/Admin/Menu.php:32
 msgid "Chrome Extension"
@@ -1699,6 +1695,9 @@ msgstr "Schlagwort hinzufügen"
 #: build/taxonomies.js:5 src/tags/App.jsx:283
 msgid "Failed to load tags."
 msgstr "Schlagwörter konnten nicht abgerufen werden."
+
+#~ msgid "Link Categories & Tags"
+#~ msgstr "Link-Kategorien & Schlagwörter"
 
 #~ msgid "Category added."
 #~ msgstr "Kategorie hinzugefügt."

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-12T19:44:13+00:00\n"
+"POT-Creation-Date: 2026-07-12T19:53:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: lynx-journal\n"
@@ -119,7 +119,8 @@ msgid "Link added successfully!"
 msgstr ""
 
 #: src/php/traits/Admin/Categories.php:16
-msgid "Link Categories & Tags"
+#: src/php/traits/Admin/Menu.php:31
+msgid "Categories & Tags"
 msgstr ""
 
 #: src/php/traits/Admin/Dashboard.php:30
@@ -439,10 +440,6 @@ msgstr ""
 
 #: src/php/traits/Admin/Menu.php:29
 msgid "Show Links"
-msgstr ""
-
-#: src/php/traits/Admin/Menu.php:31
-msgid "Categories & Tags"
 msgstr ""
 
 #: src/php/traits/Admin/Menu.php:32
