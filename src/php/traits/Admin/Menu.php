@@ -43,7 +43,7 @@ trait LynxJournal_Admin_Menu {
     public function settingsPage(): void {
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('LynxJournal Browser Extension', 'lynx-journal'); ?></h1>
+            <h1><?php esc_html_e('Browser Extension', 'lynx-journal'); ?></h1>
             <div id="lynxjournal-settings-root"></div>
         </div>
         <?php

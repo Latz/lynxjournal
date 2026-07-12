@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LynxJournal 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lynxjournal\n"
-"POT-Creation-Date: 2026-07-12T20:30:34+00:00\n"
+"POT-Creation-Date: 2026-07-12T21:28:40+00:00\n"
 "PO-Revision-Date: 2026-07-11 00:00+0000\n"
 "Last-Translator: Latz\n"
 "Language-Team: German\n"
@@ -37,13 +37,13 @@ msgstr "Latz"
 msgid "Add New Link"
 msgstr "Neuen Link hinzufügen"
 
-#: src/php/traits/Admin/AddLink.php:42 src/php/traits/Admin/Dashboard.php:421
+#: src/php/traits/Admin/AddLink.php:42 src/php/traits/Admin/Dashboard.php:423
 #: src/php/traits/Admin/LinksPage.php:161
 #: src/php/traits/Admin/LinksPage.php:192
 msgid "Title"
 msgstr "Titel"
 
-#: src/php/traits/Admin/AddLink.php:51 src/php/traits/Admin/Dashboard.php:426
+#: src/php/traits/Admin/AddLink.php:51 src/php/traits/Admin/Dashboard.php:428
 #: src/php/traits/Admin/LinksPage.php:162
 #: src/php/traits/Admin/LinksPage.php:193
 msgid "URL"
@@ -72,7 +72,7 @@ msgstr "Schlagwörter mit Kommas trennen"
 msgid "Separate multiple tags with commas (e.g., tag1, tag2, tag3)"
 msgstr "Mehrere Schlagwörter mit Kommas trennen (z. B. tag1, tag2, tag3)"
 
-#: src/php/traits/Admin/AddLink.php:91 src/php/traits/Admin/Dashboard.php:444
+#: src/php/traits/Admin/AddLink.php:91 src/php/traits/Admin/Dashboard.php:446
 #: src/php/traits/Admin/Menu.php:30
 msgid "Add Link"
 msgstr "Link hinzufügen"
@@ -106,7 +106,7 @@ msgstr "Titel ist erforderlich."
 msgid "Failed to add link."
 msgstr "Link konnte nicht hinzugefügt werden."
 
-#: src/php/traits/Admin/AddLink.php:213 src/php/traits/Admin/Dashboard.php:416
+#: src/php/traits/Admin/AddLink.php:213 src/php/traits/Admin/Dashboard.php:418
 #: src/php/traits/RestApi.php:486
 msgid "Link added successfully!"
 msgstr "Link erfolgreich hinzugefügt!"
@@ -119,14 +119,14 @@ msgstr "Kategorien & Schlagwörter"
 msgid "Total"
 msgstr "Gesamt"
 
-#: src/php/traits/Admin/Dashboard.php:34 src/php/traits/Admin/Dashboard.php:644
+#: src/php/traits/Admin/Dashboard.php:34 src/php/traits/Admin/Dashboard.php:646
 #: src/php/traits/Admin/LinksPage.php:164
 #: src/php/traits/Admin/LinksPage.php:195
 #: src/php/traits/Admin/LinksPage.php:340
 msgid "Published"
 msgstr "Veröffentlicht"
 
-#: src/php/traits/Admin/Dashboard.php:38 src/php/traits/Admin/Dashboard.php:649
+#: src/php/traits/Admin/Dashboard.php:38 src/php/traits/Admin/Dashboard.php:651
 #: src/php/traits/Admin/LinksPage.php:342
 msgid "Unpublished"
 msgstr "Unveröffentlicht"
@@ -248,72 +248,72 @@ msgstr ""
 msgid "View Draft"
 msgstr "Entwurf ansehen"
 
-#: src/php/traits/Admin/Dashboard.php:375
+#: src/php/traits/Admin/Dashboard.php:377
 #: src/php/traits/Admin/LinksPage.php:341 build/schedule.js:3
 #: src/schedule/App.jsx:210
 msgid "Draft"
 msgstr "Entwurf"
 
-#: src/php/traits/Admin/Dashboard.php:411
+#: src/php/traits/Admin/Dashboard.php:413
 msgid "Quick Add"
 msgstr "Schnell hinzufügen"
 
-#: src/php/traits/Admin/Dashboard.php:423
+#: src/php/traits/Admin/Dashboard.php:425
 msgid "Enter link title"
 msgstr "Linktitel eingeben"
 
-#: src/php/traits/Admin/Dashboard.php:432
-#: src/php/traits/Admin/Dashboard.php:639
+#: src/php/traits/Admin/Dashboard.php:434
+#: src/php/traits/Admin/Dashboard.php:641
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Kategorie"
 msgstr[1] "Kategorien"
 
-#: src/php/traits/Admin/Dashboard.php:434
+#: src/php/traits/Admin/Dashboard.php:436
 msgid "— Select category —"
 msgstr "— Kategorie auswählen —"
 
 #. translators: %s: formatted next run datetime
-#: src/php/traits/Admin/Dashboard.php:473
+#: src/php/traits/Admin/Dashboard.php:475
 #, php-format
 msgid "Next run: %s"
 msgstr "Nächster Lauf: %s"
 
-#: src/php/traits/Admin/Dashboard.php:481
+#: src/php/traits/Admin/Dashboard.php:483
 msgid "No automatic schedule active."
 msgstr "Kein automatischer Zeitplan aktiv."
 
-#: src/php/traits/Admin/Dashboard.php:485
+#: src/php/traits/Admin/Dashboard.php:487
 msgid "Schedule settings →"
 msgstr "Zeitplaneinstellungen →"
 
-#: src/php/traits/Admin/Dashboard.php:509
+#: src/php/traits/Admin/Dashboard.php:511
 msgid "Overview"
 msgstr "Übersicht"
 
 #. translators: %s: link to the category admin page
-#: src/php/traits/Admin/Dashboard.php:610
+#: src/php/traits/Admin/Dashboard.php:612
 #, php-format
 msgid "No categories defined yet. %s"
 msgstr "Noch keine Kategorien definiert. %s"
 
-#: src/php/traits/Admin/Dashboard.php:611
+#: src/php/traits/Admin/Dashboard.php:613
 msgid "Add a category"
 msgstr "Kategorie hinzufügen"
 
-#: src/php/traits/Admin/Dashboard.php:622
+#: src/php/traits/Admin/Dashboard.php:624
 msgid "No links yet."
 msgstr "Noch keine Links."
 
-#: src/php/traits/Admin/Dashboard.php:623
+#: src/php/traits/Admin/Dashboard.php:625
 msgid "Start by adding your first link."
 msgstr "Füge deinen ersten Link hinzu, um loszulegen."
 
-#: src/php/traits/Admin/Dashboard.php:625
+#: src/php/traits/Admin/Dashboard.php:627
 msgid "Add your first link →"
 msgstr "Füge deinen ersten Link hinzu →"
 
-#: src/php/traits/Admin/Dashboard.php:634
+#: src/php/traits/Admin/Dashboard.php:636
 msgid "Total Links"
 msgstr "Links gesamt"
 
@@ -426,7 +426,7 @@ msgstr "Dashboard"
 msgid "Show Links"
 msgstr "Links anzeigen"
 
-#: src/php/traits/Admin/Menu.php:32
+#: src/php/traits/Admin/Menu.php:32 src/php/traits/Admin/Menu.php:46
 msgid "Browser Extension"
 msgstr "Browser-Erweiterung"
 
@@ -437,10 +437,6 @@ msgstr "Zeitplan"
 #: src/php/traits/Admin/Menu.php:34 src/php/traits/Admin/TemplatePage.php:62
 msgid "Post Template"
 msgstr "Beitragsvorlage"
-
-#: src/php/traits/Admin/Menu.php:46
-msgid "LynxJournal Browser Extension"
-msgstr "LynxJournal-Browser-Erweiterung"
 
 #: src/php/traits/Admin/Menu.php:61
 msgid "Schedule Configuration"
@@ -1699,6 +1695,9 @@ msgstr "Schlagwort hinzufügen"
 #: build/taxonomies.js:5 src/tags/App.jsx:284
 msgid "Failed to load tags."
 msgstr "Schlagwörter konnten nicht abgerufen werden."
+
+#~ msgid "LynxJournal Browser Extension"
+#~ msgstr "LynxJournal-Browser-Erweiterung"
 
 #~ msgid "Chrome Extension Access Data"
 #~ msgstr "Zugangsdaten für Chrome-Erweiterung"
