@@ -137,7 +137,7 @@ function CategoryRow({ category, count, onUpdated, onDeleted }) {
         <button type="button" className="button-link lynxjournal-cat-edit-btn" onClick={handleEdit}>
           {__('Edit', 'lynx-journal')}
         </button>
-        &nbsp;|&nbsp;
+        {' | '}
         <button type="button" className="button-link lynxjournal-cat-delete-btn" onClick={handleDelete}>
           {__('Delete', 'lynx-journal')}
         </button>
