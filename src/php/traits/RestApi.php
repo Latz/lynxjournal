@@ -456,9 +456,10 @@ trait LynxJournal_RestApi {
             $category_list = array();
             foreach ($categories as $category) {
                 $category_list[] = array(
-                    'id'   => $category->term_id,
-                    'name' => $category->name,
-                    'slug' => $category->slug,
+                    'id'          => $category->term_id,
+                    'name'        => $category->name,
+                    'slug'        => $category->slug,
+                    'description' => $category->description,
                 );
             }
             set_transient($cache_key, $category_list, HOUR_IN_SECONDS);
@@ -505,6 +506,7 @@ trait LynxJournal_RestApi {
     public function invalidateCategoriesCache(): void {
         delete_transient('lynxjournal_api_categories_list');
         delete_transient('lynxjournal_categories_terms');
+        delete_transient('lynxjournal_category_link_counts');
     }
 
     /**

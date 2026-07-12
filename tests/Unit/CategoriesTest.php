@@ -21,7 +21,7 @@ beforeEach(function (): void {
 describe('LynxJournal::restGetCategories()', function (): void {
 
     it('returns cached data and skips get_terms on a cache hit', function (): void {
-        $cached = [['id' => 1, 'name' => 'Tech', 'slug' => 'tech']];
+        $cached = [['id' => 1, 'name' => 'Tech', 'slug' => 'tech', 'description' => '']];
 
         Functions\when('get_transient')->justReturn($cached);
         // get_terms must NOT be called — stub it to return an unexpected value to catch misuse
@@ -33,7 +33,7 @@ describe('LynxJournal::restGetCategories()', function (): void {
     });
 
     it('fetches terms and stores them in a transient on a cache miss', function (): void {
-        $term        = (object) ['term_id' => 5, 'name' => 'PHP', 'slug' => 'php'];
+        $term        = (object) ['term_id' => 5, 'name' => 'PHP', 'slug' => 'php', 'description' => 'PHP links'];
         Functions\when('get_transient')->justReturn(false);
         Functions\when('get_terms')->justReturn([$term]);
 
@@ -57,10 +57,10 @@ describe('LynxJournal::restGetCategories()', function (): void {
         expect($result[0]['slug'])->toBe('php');
     });
 
-    it('returns the correct shape [id, name, slug] for each category', function (): void {
+    it('returns the correct shape [id, name, slug, description] for each category', function (): void {
         $terms = [
-            (object) ['term_id' => 1, 'name' => 'Tech',    'slug' => 'tech'],
-            (object) ['term_id' => 2, 'name' => 'Science', 'slug' => 'science'],
+            (object) ['term_id' => 1, 'name' => 'Tech',    'slug' => 'tech',    'description' => ''],
+            (object) ['term_id' => 2, 'name' => 'Science', 'slug' => 'science', 'description' => 'Science links'],
         ];
         Functions\when('get_transient')->justReturn(false);
         Functions\when('get_terms')->justReturn($terms);
@@ -69,7 +69,8 @@ describe('LynxJournal::restGetCategories()', function (): void {
         $result = $this->plugin->restGetCategories(lynxjournal_make_request());
 
         expect($result)->toHaveCount(2);
-        expect(array_keys($result[0]))->toBe(['id', 'name', 'slug']);
+        expect(array_keys($result[0]))->toBe(['id', 'name', 'slug', 'description']);
+        expect($result[1]['description'])->toBe('Science links');
     });
 
     it('returns an empty array when there are no categories', function (): void {

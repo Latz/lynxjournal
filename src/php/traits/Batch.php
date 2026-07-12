@@ -461,6 +461,10 @@ trait LynxJournal_Batch {
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         foreach ($link_ids as $link_id) {
+            $link = get_post($link_id);
+            if (!$link || $link->post_type !== 'lynx-journal') {
+                continue;
+            }
             update_post_meta($link_id, '_lynxjournal_published_post_id', $post_id);
             update_post_meta($link_id, '_lynxjournal_publish_status', $meta_status);
             update_post_meta($link_id, '_lynxjournal_published_date', $date);

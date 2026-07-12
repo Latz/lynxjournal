@@ -14,6 +14,21 @@ function fmtTs(ts) {
 
 const DIAG_HISTORY_STATE_KEY = 'lynxjournalScheduleDiagHistoryOpen';
 
+/**
+ * Reads the persisted history-panel open/closed state, tolerating
+ * environments where localStorage access throws (sandboxed iframe, blocked
+ * storage, some private-browsing modes) instead of crashing on mount.
+ *
+ * @return {boolean}
+ */
+function readHistoryOpenState() {
+  try {
+    return localStorage.getItem(DIAG_HISTORY_STATE_KEY) === 'true';
+  } catch {
+    return false;
+  }
+}
+
 const REASON_LABELS = {
   condition_not_met: __('Condition not met', 'lynx-journal'),
   locked:            __('Run was locked', 'lynx-journal'),
@@ -154,9 +169,7 @@ function HistoryList({ history, open, onToggle }) {
 }
 
 export default function DiagnosticsPanel({ data, loading, onRefresh, mode }) {
-  const [showHistory, setShowHistory] = useState(
-    () => localStorage.getItem(DIAG_HISTORY_STATE_KEY) === 'true'
-  );
+  const [showHistory, setShowHistory] = useState(readHistoryOpenState);
 
   /** @listens toggle Persists the native <details> open/closed state. */
   function handleHistoryToggle(event) {

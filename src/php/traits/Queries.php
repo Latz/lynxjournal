@@ -136,10 +136,22 @@ trait LynxJournal_Queries {
     /**
      * Count published/pending links per lynxjournal category.
      *
+     * Transient-cached for 5 minutes (like getPublishStatistics()) since
+     * counts change on every link publish/categorize action, not just on
+     * category create/update/delete — a short TTL keeps this cheap on the
+     * Categories admin page without wiring invalidation into every
+     * link-mutation code path.
+     *
      * @since 1.0.0
      * @return array<int, int> Map of term_id => link count.
      */
     public function getCategoryLinkCounts(): array {
+        $cache_key = 'lynxjournal_category_link_counts';
+        $cached    = get_transient($cache_key);
+        if ($cached !== false) {
+            return $cached;
+        }
+
         global $wpdb;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $rows = $wpdb->get_results(
@@ -152,10 +164,9 @@ trait LynxJournal_Queries {
              GROUP BY tt.term_id",
             ARRAY_A
         );
-        if ( ! $rows ) {
-            return array();
-        }
-        return array_column( $rows, 'cnt', 'term_id' );
+        $counts = $rows ? array_column( $rows, 'cnt', 'term_id' ) : array();
+        set_transient($cache_key, $counts, 5 * MINUTE_IN_SECONDS);
+        return $counts;
     }
 
     /**

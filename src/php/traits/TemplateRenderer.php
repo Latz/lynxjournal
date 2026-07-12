@@ -77,7 +77,7 @@ trait LynxJournal_TemplateRenderer {
         foreach ($links_by_category as $group) {
             $link_maps = array_map([$this, 'buildLinkTokenMap'], $group['links']);
             $category_variants[] = [
-                '[category_name]'       => $group['term']->name,
+                '[category_name]'       => esc_html($group['term']->name),
                 '[category_link_count]' => (string) count($group['links']),
                 'links'                 => $link_maps,
             ];
@@ -102,11 +102,11 @@ trait LynxJournal_TemplateRenderer {
         $scalar_data = [
             '[title]'          => $post_title,
             '[date]'           => wp_date((string) get_option('date_format')),
-            '[author]'         => $author_id > 0 ? (string) (get_userdata($author_id)->display_name ?? '') : '',
-            '[site_name]'      => (string) get_bloginfo('name'),
+            '[author]'         => $author_id > 0 ? esc_html($this->getAuthorDisplayName($author_id)) : '',
+            '[site_name]'      => esc_html((string) get_bloginfo('name')),
             '[roundup_count]'  => (string) get_option('lynxjournal_roundup_count', 0),
             '[link_count]'     => (string) count($all_link_token_maps),
-            '[category_list]'  => implode(', ', array_map(static fn($g) => $g['term']->name, $links_by_category)),
+            '[category_list]'  => esc_html(implode(', ', array_map(static fn($g) => $g['term']->name, $links_by_category))),
             '[tags]'           => implode(', ', $tags),
         ];
 
@@ -125,8 +125,25 @@ trait LynxJournal_TemplateRenderer {
     }
 
     /**
+     * Resolves a user's display name for the [author] token, tolerating a
+     * deleted/nonexistent user ID (get_userdata() returns false).
+     *
+     * @param int $author_id
+     * @return string
+     */
+    private function getAuthorDisplayName(int $author_id): string {
+        $user = get_userdata($author_id);
+        return $user ? (string) $user->display_name : '';
+    }
+
+    /**
      * Builds the [link]/[link_description]/[link_domain]/[link_date] token
-     * map for one link post.
+     * map for one link post. Title and URL are escaped before being embedded
+     * in the Markdown "[title](url)" syntax, and the description is passed
+     * through wp_kses_post(), because the CommonMark converter that later
+     * parses this template output is configured with html_input => 'allow'
+     * (see getTemplateMarkdownConverter()) and would otherwise pass raw HTML
+     * in a link's title/description straight through into published content.
      *
      * @param int $link_id
      * @return array<string,string>
@@ -134,7 +151,7 @@ trait LynxJournal_TemplateRenderer {
     private function buildLinkTokenMap(int $link_id): array {
         $link = get_post($link_id);
         $url  = $link ? get_post_meta($link_id, '_lynxjournal_url', true) : '';
-        $title = $link ? $link->post_title : '';
+        $title = $link ? esc_html($link->post_title) : '';
 
         $domain = '';
         if (!empty($url)) {
@@ -143,9 +160,9 @@ trait LynxJournal_TemplateRenderer {
         }
 
         return [
-            '[link]'             => !empty($url) ? "[{$title}]({$url})" : $title,
-            '[link_description]' => $link ? trim($link->post_content) : '',
-            '[link_domain]'      => $domain,
+            '[link]'             => !empty($url) ? '[' . $title . '](' . esc_url($url) . ')' : $title,
+            '[link_description]' => $link ? wp_kses_post(trim($link->post_content)) : '',
+            '[link_domain]'      => esc_html($domain),
             '[link_date]'        => $link ? get_the_date('Y-m-d', $link_id) : '',
         ];
     }

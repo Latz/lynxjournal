@@ -153,6 +153,12 @@ function positionToggleThumb( toggleEl, activeBtn ) {
 	thumb.style.width = `${ activeBtn.offsetWidth }px`;
 }
 
+/**
+ * Re-validates the current template text and re-renders the live preview
+ * iframe from it, briefly dimming the preview while it reloads.
+ *
+ * @returns {void}
+ */
 function updateTemplatePreview() {
 	const rawText = getEditorValue();
 	renderValidation( previewValidation, validateTemplate( rawText ) );
@@ -165,6 +171,12 @@ function updateTemplatePreview() {
 
 // ── Undo/redo button state ──────────────────────────────────
 
+/**
+ * Enables/disables the undo and redo toolbar buttons to match the editor's
+ * current history size (or disables both when CodeMirror isn't active).
+ *
+ * @returns {void}
+ */
 function updateUndoRedoState() {
 	if ( editor ) {
 		const hist = editor.historySize();
@@ -178,6 +190,13 @@ function updateUndoRedoState() {
 
 // ── Custom CodeMirror overlay for [token] highlighting ──────
 
+/**
+ * Registers a CodeMirror "lynxjournal" mode that overlays plain-text editing
+ * with a `lynxjournal-token` style span around every `[token]`-shaped match,
+ * so template placeholders are visually highlighted as the user types.
+ *
+ * @returns {void}
+ */
 function defineTokenOverlay() {
 	window.wp.CodeMirror.defineMode( 'lynxjournal', config =>
 		window.wp.CodeMirror.overlayMode(

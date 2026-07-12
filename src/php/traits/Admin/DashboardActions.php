@@ -162,6 +162,7 @@ trait LynxJournal_Admin_Dashboard_Actions {
             if ( $input['category'] > 0 ) {
                 wp_set_post_terms( $post_id, array( $input['category'] ), 'lynxjournal_category' );
             }
+            delete_transient( 'lynxjournal_publish_stats' );
         }
         return (bool) $post_id;
     }
