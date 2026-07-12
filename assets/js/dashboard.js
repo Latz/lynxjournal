@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var date = new Date(timestamp * 1000);
         element.textContent = date.toLocaleString(navigator.language, {
             year: 'numeric', month: 'short', day: 'numeric',
-            hour: 'numeric', minute: '2-digit', hour12: true
+            hour: 'numeric', minute: '2-digit'
         });
     });
 });

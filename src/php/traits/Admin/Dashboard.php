@@ -236,7 +236,7 @@ trait LynxJournal_Admin_Dashboard {
                             <span><?php echo esc_html( $category_name ); ?></span>
                         <?php endif; ?>
                         <span class="lynxjournal-date-time" data-timestamp="<?php echo esc_attr( get_the_time( 'U', $link->ID ) ); ?>">
-                            <?php echo esc_html( get_the_date( 'M j, Y', $link->ID ) ); ?> <?php echo esc_html( get_the_time( 'g:i a', $link->ID ) ); ?>
+                            <?php echo esc_html( get_the_date( 'M j, Y', $link->ID ) ); ?> <?php echo esc_html( get_the_time( get_option( 'time_format' ), $link->ID ) ); ?>
                         </span>
                     </div>
                 </li>
