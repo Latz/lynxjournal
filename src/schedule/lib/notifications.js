@@ -24,7 +24,7 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
   const initialNotifyTab = useMemo(() => {
     if (form.notify?.discordEnabled) return 'discord';
     if (form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) return 'slack';
-    if (form.notify?.telegramEnabled) return 'telegram';
+    if (form.notify?.telegramEnabled || form.notify?.telegramDmEnabled) return 'telegram';
     if (form.notify?.mastodonEnabled) return 'mastodon';
     return 'email';
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only recompute once config finishes loading
@@ -125,9 +125,12 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
   const slackDmComplete = !!form.notify?.slackDmEnabled && !!form.notify?.slackBotToken && !!form.notify?.slackUserId;
   const slackEnabled = !!form.notify?.slackChannelEnabled || !!form.notify?.slackDmEnabled;
   const slackIncomplete = (!!form.notify?.slackChannelEnabled && !slackChannelComplete) || (!!form.notify?.slackDmEnabled && !slackDmComplete);
-  const telegramComplete = !!form.notify?.telegramEnabled && !!form.notify?.telegramBotToken && !!form.notify?.telegramChatId;
+  const telegramChannelComplete = !!form.notify?.telegramEnabled && !!form.notify?.telegramBotToken && !!form.notify?.telegramChatId;
+  const telegramDmComplete = !!form.notify?.telegramDmEnabled && !!form.notify?.telegramBotToken && !!form.notify?.telegramDmChatId;
+  const telegramEnabled = !!form.notify?.telegramEnabled || !!form.notify?.telegramDmEnabled;
+  const telegramIncomplete = (!!form.notify?.telegramEnabled && !telegramChannelComplete) || (!!form.notify?.telegramDmEnabled && !telegramDmComplete);
   const mastodonComplete = !!form.notify?.mastodonEnabled && !!form.notify?.mastodonInstanceUrl && !!form.notify?.mastodonAccessToken && !!form.notify?.mastodonRecipient;
-  const anyNotifyEnabled = !!form.notify?.enabled || !!form.notify?.discordEnabled || slackEnabled || !!form.notify?.telegramEnabled || !!form.notify?.mastodonEnabled;
+  const anyNotifyEnabled = !!form.notify?.enabled || !!form.notify?.discordEnabled || slackEnabled || telegramEnabled || !!form.notify?.mastodonEnabled;
 
   return {
     initialNotifyTab,
@@ -146,7 +149,10 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
     slackDmComplete,
     slackEnabled,
     slackIncomplete,
-    telegramComplete,
+    telegramChannelComplete,
+    telegramDmComplete,
+    telegramEnabled,
+    telegramIncomplete,
     mastodonComplete,
     anyNotifyEnabled,
   };

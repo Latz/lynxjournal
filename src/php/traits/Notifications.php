@@ -22,6 +22,7 @@ trait LynxJournal_Notifications {
         add_action('lynxjournal_after_run', [$this, 'maybeSendSlackChannelNotification'], 10, 3);
         add_action('lynxjournal_after_run', [$this, 'maybeSendSlackDmNotification'], 10, 3);
         add_action('lynxjournal_after_run', [$this, 'maybeSendTelegramNotification'], 10, 3);
+        add_action('lynxjournal_after_run', [$this, 'maybeSendTelegramDmNotification'], 10, 3);
         add_action('lynxjournal_after_run', [$this, 'maybeSendMastodonNotification'], 10, 3);
     }
 
@@ -299,6 +300,26 @@ trait LynxJournal_Notifications {
     }
 
     /**
+     * Send a Telegram personal DM notification after schedule runs, if enabled.
+     *
+     * @since 1.0.0
+     * @param int|null $post_id The published post ID, or null if nothing was published.
+     * @param array $link_ids Array of link post IDs that were published.
+     * @param string $mode The schedule mode that ran.
+     * @return void
+     */
+    public function maybeSendTelegramDmNotification(int|null $post_id, array $link_ids, string $mode): void {
+        $config = get_option('lynxjournal_schedule', []);
+        $notify = $config['notify'] ?? [];
+        if (empty($notify['telegramDmEnabled']) || empty($notify['telegramBotToken']) || empty($notify['telegramDmChatId'])) {
+            return;
+        }
+
+        $message = $this->buildTelegramMessage($post_id, count($link_ids), $mode);
+        $this->postTelegramMessage($notify['telegramBotToken'], $notify['telegramDmChatId'], $message);
+    }
+
+    /**
      * Send a message via the Telegram Bot API.
      *
      * @since 1.0.0
@@ -439,7 +460,7 @@ trait LynxJournal_Notifications {
      * (possibly unsaved) notify settings rather than the stored option.
      *
      * @since 1.0.0
-     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|mastodon.
+     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon.
      * @param array $notify Notify settings to test with (already sanitized by validateNotify()).
      * @return true|\WP_Error True on success, WP_Error describing why the test couldn't be sent.
      */
@@ -485,6 +506,12 @@ trait LynxJournal_Notifications {
                 }
                 return $this->postTelegramMessage($notify['telegramBotToken'], $notify['telegramChatId'], $message);
 
+            case 'telegram_dm':
+                if (empty($notify['telegramDmEnabled']) || empty($notify['telegramBotToken']) || empty($notify['telegramDmChatId'])) {
+                    return new \WP_Error('test_missing_field', __('Enable Telegram DM notifications and fill in the bot token and user chat ID first.', 'lynx-journal'), ['status' => 400]);
+                }
+                return $this->postTelegramMessage($notify['telegramBotToken'], $notify['telegramDmChatId'], $message);
+
             case 'mastodon':
                 if (empty($notify['mastodonEnabled']) || empty($notify['mastodonInstanceUrl']) || empty($notify['mastodonAccessToken']) || empty($notify['mastodonRecipient'])) {
                     return new \WP_Error('test_missing_field', __('Enable Mastodon notifications and fill in the instance URL, access token, and recipient handle first.', 'lynx-journal'), ['status' => 400]);
@@ -519,7 +546,7 @@ trait LynxJournal_Notifications {
      */
     public function restTestNotification(\WP_REST_Request $request): \WP_REST_Response|\WP_Error {
         $channel = (string) $request->get_param('channel');
-        if (!in_array($channel, ['email', 'discord', 'slack_channel', 'slack_dm', 'telegram', 'mastodon'], true)) {
+        if (!in_array($channel, ['email', 'discord', 'slack_channel', 'slack_dm', 'telegram', 'telegram_dm', 'mastodon'], true)) {
             return new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), array('status' => 400));
         }
 
@@ -547,7 +574,7 @@ trait LynxJournal_Notifications {
      */
     public function restSaveNotification(\WP_REST_Request $request): \WP_REST_Response|\WP_Error {
         $channel = (string) $request->get_param('channel');
-        if (!in_array($channel, ['email', 'discord', 'slack_channel', 'slack_dm', 'telegram', 'mastodon'], true)) {
+        if (!in_array($channel, ['email', 'discord', 'slack_channel', 'slack_dm', 'telegram', 'telegram_dm', 'mastodon'], true)) {
             return new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), array('status' => 400));
         }
 
@@ -580,7 +607,7 @@ trait LynxJournal_Notifications {
      * The notify field names that belong to one notification channel.
      *
      * @since 1.0.0
-     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|mastodon.
+     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon.
      * @return string[] Field names within notify.
      */
     private function notifyChannelFields(string $channel): array {
@@ -590,6 +617,7 @@ trait LynxJournal_Notifications {
             'slack_channel' => ['slackBotToken', 'slackChannelEnabled', 'slackChannelId'],
             'slack_dm' => ['slackBotToken', 'slackDmEnabled', 'slackUserId'],
             'telegram' => ['telegramEnabled', 'telegramBotToken', 'telegramChatId'],
+            'telegram_dm' => ['telegramBotToken', 'telegramDmEnabled', 'telegramDmChatId'],
             'mastodon' => ['mastodonEnabled', 'mastodonInstanceUrl', 'mastodonAccessToken', 'mastodonRecipient'],
             default => [],
         };

@@ -118,7 +118,10 @@ function ChannelActions({ canTest, testState, onTest, saveState, onSave }) {
  * @param {boolean}  props.slackDmComplete     Whether the Slack DM target's required fields are filled in.
  * @param {boolean}  props.slackEnabled        Whether either Slack target is enabled.
  * @param {boolean}  props.slackIncomplete     Whether an enabled Slack target is missing required fields.
- * @param {boolean}  props.telegramComplete    Whether Telegram's required fields are filled in.
+ * @param {boolean}  props.telegramChannelComplete Whether the Telegram channel/group target's required fields are filled in.
+ * @param {boolean}  props.telegramDmComplete  Whether the Telegram DM target's required fields are filled in.
+ * @param {boolean}  props.telegramEnabled     Whether either Telegram target is enabled.
+ * @param {boolean}  props.telegramIncomplete  Whether an enabled Telegram target is missing required fields.
  * @param {boolean}  props.mastodonComplete    Whether Mastodon's required fields are filled in.
  * @returns {JSX.Element}
  */
@@ -141,7 +144,10 @@ export default function NotificationsSection({
   slackDmComplete,
   slackEnabled,
   slackIncomplete,
-  telegramComplete,
+  telegramChannelComplete,
+  telegramDmComplete,
+  telegramEnabled,
+  telegramIncomplete,
   mastodonComplete,
 }) {
   return (
@@ -164,7 +170,7 @@ export default function NotificationsSection({
             { name: 'email', title: <TabTitleWithBadge label={__('Email', 'lynx-journal')} enabled={form.notify?.enabled ?? false} incomplete={!!form.notify?.enabled && !form.notify?.email} /> },
             { name: 'discord', title: <TabTitleWithBadge label={__('Discord', 'lynx-journal')} enabled={form.notify?.discordEnabled ?? false} incomplete={!!form.notify?.discordEnabled && !discordComplete} /> },
             { name: 'slack', title: <TabTitleWithBadge label={__('Slack', 'lynx-journal')} enabled={slackEnabled} incomplete={slackIncomplete} /> },
-            { name: 'telegram', title: <TabTitleWithBadge label={__('Telegram', 'lynx-journal')} enabled={form.notify?.telegramEnabled ?? false} incomplete={!!form.notify?.telegramEnabled && !telegramComplete} /> },
+            { name: 'telegram', title: <TabTitleWithBadge label={__('Telegram', 'lynx-journal')} enabled={telegramEnabled} incomplete={telegramIncomplete} /> },
             { name: 'mastodon', title: <TabTitleWithBadge label={__('Mastodon', 'lynx-journal')} enabled={form.notify?.mastodonEnabled ?? false} incomplete={!!form.notify?.mastodonEnabled && !mastodonComplete} /> },
           ]}
         >
@@ -283,7 +289,7 @@ export default function NotificationsSection({
 
         <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'telegram' ? '' : undefined}>
           <CheckboxControl
-            label={__('Send a Telegram notification after each run', 'lynx-journal')}
+            label={__('Post to a Telegram group or channel after each run', 'lynx-journal')}
             checked={form.notify?.telegramEnabled ?? false}
             onChange={telegramEnabled => setForm(f => ({ ...f, notify: { ...f.notify, telegramEnabled } }))}
           />
@@ -296,18 +302,38 @@ export default function NotificationsSection({
             __nextHasNoMarginBottom
           />
           <TextControl
-            label={__('Telegram chat ID', 'lynx-journal')}
+            label={__('Telegram group/channel chat ID', 'lynx-journal')}
             value={form.notify?.telegramChatId ?? ''}
             placeholder={__('-1001234567890', 'lynx-journal')}
             onChange={telegramChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramChatId } }))}
             __nextHasNoMarginBottom
           />
           <ChannelActions
-            canTest={telegramComplete}
+            canTest={telegramChannelComplete}
             testState={testState.telegram}
             onTest={() => handleTest('telegram')}
             saveState={channelSaveState.telegram}
             onSave={() => handleSaveChannel('telegram')}
+          />
+
+          <CheckboxControl
+            label={__('Send me a Telegram DM after each run', 'lynx-journal')}
+            checked={form.notify?.telegramDmEnabled ?? false}
+            onChange={telegramDmEnabled => setForm(f => ({ ...f, notify: { ...f.notify, telegramDmEnabled } }))}
+          />
+          <TextControl
+            label={__('Telegram user chat ID', 'lynx-journal')}
+            value={form.notify?.telegramDmChatId ?? ''}
+            placeholder={__('123456789', 'lynx-journal')}
+            onChange={telegramDmChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramDmChatId } }))}
+            __nextHasNoMarginBottom
+          />
+          <ChannelActions
+            canTest={telegramDmComplete}
+            testState={testState.telegram_dm}
+            onTest={() => handleTest('telegram_dm')}
+            saveState={channelSaveState.telegram_dm}
+            onSave={() => handleSaveChannel('telegram_dm')}
           />
         </div>
 

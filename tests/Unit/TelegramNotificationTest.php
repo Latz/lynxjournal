@@ -141,3 +141,78 @@ describe('LynxJournal::maybeSendTelegramNotification()', function (): void {
         $this->plugin->maybeSendTelegramNotification(42, [1], 'daily');
     })->throwsNoExceptions();
 });
+
+describe('LynxJournal::maybeSendTelegramDmNotification()', function (): void {
+
+    it('does nothing when the DM target is disabled', function (): void {
+        Functions\when('get_option')->justReturn([
+            'notify' => ['telegramDmEnabled' => false, 'telegramBotToken' => '123:abc', 'telegramDmChatId' => '123'],
+        ]);
+
+        $called = false;
+        Functions\when('wp_remote_post')->alias(function () use (&$called): array {
+            $called = true;
+            return [];
+        });
+
+        $this->plugin->maybeSendTelegramDmNotification(42, [1, 2, 3], 'daily');
+
+        expect($called)->toBeFalse();
+    });
+
+    it('does nothing when enabled but bot token is missing', function (): void {
+        Functions\when('get_option')->justReturn([
+            'notify' => ['telegramDmEnabled' => true, 'telegramBotToken' => '', 'telegramDmChatId' => '123'],
+        ]);
+
+        $called = false;
+        Functions\when('wp_remote_post')->alias(function () use (&$called): array {
+            $called = true;
+            return [];
+        });
+
+        $this->plugin->maybeSendTelegramDmNotification(42, [1, 2, 3], 'daily');
+
+        expect($called)->toBeFalse();
+    });
+
+    it('does nothing when enabled but DM chat id is missing', function (): void {
+        Functions\when('get_option')->justReturn([
+            'notify' => ['telegramDmEnabled' => true, 'telegramBotToken' => '123:abc', 'telegramDmChatId' => ''],
+        ]);
+
+        $called = false;
+        Functions\when('wp_remote_post')->alias(function () use (&$called): array {
+            $called = true;
+            return [];
+        });
+
+        $this->plugin->maybeSendTelegramDmNotification(42, [1, 2, 3], 'daily');
+
+        expect($called)->toBeFalse();
+    });
+
+    it('posts a message to the personal chat id using the shared bot token', function (): void {
+        Functions\when('get_option')->justReturn([
+            'notify' => ['telegramDmEnabled' => true, 'telegramBotToken' => '123456789:AAAbbbCCCdddEEEfffGGGhhh', 'telegramDmChatId' => '987654321'],
+        ]);
+        Functions\when('get_permalink')->justReturn('https://site.example/roundup-42');
+        Functions\when('get_the_title')->justReturn('Links: April 15, 2026');
+        Functions\when('is_wp_error')->justReturn(false);
+        Functions\when('wp_remote_retrieve_response_code')->justReturn(200);
+        Functions\when('wp_remote_retrieve_body')->justReturn(json_encode(['ok' => true]));
+
+        $captured = [];
+        Functions\when('wp_remote_post')->alias(function ($url, $args) use (&$captured): array {
+            $captured = compact('url', 'args');
+            return ['response' => ['code' => 200]];
+        });
+
+        $this->plugin->maybeSendTelegramDmNotification(42, [1, 2, 3], 'daily');
+
+        expect($captured['url'])->toBe('https://api.telegram.org/bot123456789:AAAbbbCCCdddEEEfffGGGhhh/sendMessage');
+        $body = json_decode($captured['args']['body'], true);
+        expect($body['chat_id'])->toBe('987654321');
+        expect($body['text'])->toContain('Links: April 15, 2026');
+    });
+});

@@ -29,7 +29,7 @@ trait LynxJournal_NotificationValidator {
      * testing the channel currently being configured.
      *
      * @since 1.0.0
-     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|mastodon.
+     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon.
      * @param array $data The request data containing a 'notify' key.
      * @return \WP_Error|null Error if invalid, null if valid.
      */
@@ -41,7 +41,7 @@ trait LynxJournal_NotificationValidator {
             'email' => $this->validateNotifyEmail($data),
             'discord' => $this->validateNotifyDiscord($data),
             'slack_channel', 'slack_dm' => $this->validateNotifySlack($data),
-            'telegram' => $this->validateNotifyTelegram($data),
+            'telegram', 'telegram_dm' => $this->validateNotifyTelegram($data),
             'mastodon' => $this->validateNotifyMastodon($data),
             default => new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), ['status' => 400]),
         };
@@ -129,6 +129,24 @@ trait LynxJournal_NotificationValidator {
             }
             if ($data['notify']['telegramChatId'] === '') {
                 return new \WP_Error('invalid_notify_telegram_chat_id', __('notify.telegramChatId is required when Telegram notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            }
+        }
+
+        $data['notify']['telegramDmEnabled'] = (bool) ($data['notify']['telegramDmEnabled'] ?? false);
+        $data['notify']['telegramDmChatId'] = !empty($data['notify']['telegramDmChatId'])
+            ? sanitize_text_field(trim((string) $data['notify']['telegramDmChatId']))
+            : '';
+
+        if ($data['notify']['telegramDmChatId'] !== '' && !preg_match('/^-?\d+$/', $data['notify']['telegramDmChatId'])) {
+            return new \WP_Error('invalid_notify_telegram_dm_chat_id', __('notify.telegramDmChatId must be a valid Telegram chat ID', 'lynx-journal'), ['status' => 400]);
+        }
+
+        if (!empty($data['notify']['telegramDmEnabled'])) {
+            if ($data['notify']['telegramBotToken'] === '') {
+                return new \WP_Error('invalid_notify_telegram_token', __('notify.telegramBotToken is required when Telegram DM notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            }
+            if ($data['notify']['telegramDmChatId'] === '') {
+                return new \WP_Error('invalid_notify_telegram_dm_chat_id', __('notify.telegramDmChatId is required when Telegram DM notifications are enabled', 'lynx-journal'), ['status' => 400]);
             }
         }
         return null;

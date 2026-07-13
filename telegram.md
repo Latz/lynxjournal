@@ -8,11 +8,20 @@ the existing email, Discord, and Slack notifications.
 
 Go to **LynxJournal → Schedule** in the WordPress admin menu. In the
 **Notifications** section, below the existing Email/Discord/Slack options,
-you'll find:
+you'll find two independent Telegram targets, sharing one bot token:
 
-- **Send a Telegram notification after each run** — checkbox to enable it.
-- **Telegram bot token** — the token for your bot.
-- **Telegram chat ID** — the chat, group, or channel the bot should post to.
+- **Post to a Telegram group or channel after each run** — checkbox to
+  enable posting to a group or channel.
+- **Telegram bot token** — the token for your bot (shared by both targets
+  below).
+- **Telegram group/channel chat ID** — the group or channel the bot should
+  post to.
+- **Send me a Telegram DM after each run** — checkbox to enable a personal
+  direct message to you.
+- **Telegram user chat ID** — your personal chat ID to DM.
+
+Both targets can be enabled at the same time, each with its own Test and
+Save button.
 
 ## Creating a Telegram bot
 
@@ -33,12 +42,20 @@ You need a bot token and a chat ID to receive notifications:
 
 ## Enabling it
 
-1. Check **Send a Telegram notification after each run**.
+**Group/channel target:**
+1. Check **Post to a Telegram group or channel after each run**.
 2. Paste the bot token into the **Telegram bot token** field.
-3. Paste the chat ID into the **Telegram chat ID** field.
-4. Click **Save Schedule**.
+3. Paste the chat ID into the **Telegram group/channel chat ID** field.
+4. Click **Save Schedule** (or the target's own **Save** button).
 
-If you leave the checkbox checked but either field empty (or paste values
+**Personal DM target:**
+1. Check **Send me a Telegram DM after each run**.
+2. Paste the bot token into the **Telegram bot token** field (same field as
+   above — one token serves both targets).
+3. Paste your personal chat ID into the **Telegram user chat ID** field.
+4. Click **Save Schedule** (or the target's own **Save** button).
+
+If you leave a checkbox checked but its chat ID field empty (or paste values
 that don't look like a real bot token/chat ID), saving fails with a
 validation error and nothing is stored — fix the values and save again.
 
@@ -47,7 +64,8 @@ validation error and nothing is stored — fix the values and save again.
 - **Bot token**: a numeric bot ID, a colon, and a secret, e.g.
   `123456789:AAAbbbCCCdddEEEfffGGGhhh`.
 - **Chat ID**: an integer — negative for groups/channels, positive for a
-  personal chat.
+  personal chat. Both the group/channel and DM chat ID fields accept either
+  form; Telegram has no structural marker distinguishing them.
 
 Anything else is rejected when you try to save.
 

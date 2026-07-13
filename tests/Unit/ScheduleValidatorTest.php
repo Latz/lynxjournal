@@ -461,6 +461,63 @@ describe('LynxJournal::validateScheduleConfig()', function (): void {
         expect($result)->toBeArray();
     });
 
+    it('returns 400 invalid_notify_telegram_token when telegramDmEnabled is true but no bot token is given', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['telegramDmEnabled' => true, 'telegramDmChatId' => '987654321'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_telegram_token');
+        expect($result->get_error_data()['status'])->toBe(400);
+    });
+
+    it('returns 400 invalid_notify_telegram_dm_chat_id when telegramDmEnabled is true but no chat id is given', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['telegramDmEnabled' => true, 'telegramBotToken' => '123456789:AAAbbbCCCdddEEEfffGGGhhh'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_telegram_dm_chat_id');
+    });
+
+    it('returns 400 invalid_notify_telegram_dm_chat_id for a malformed DM chat id', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['telegramDmChatId' => 'not-a-chat-id'],
+        ]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_notify_telegram_dm_chat_id');
+    });
+
+    it('accepts a valid positive Telegram DM chat id and does not clobber the channel target', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => [
+                'telegramEnabled'   => true,
+                'telegramChatId'    => '-1001234567890',
+                'telegramDmEnabled' => true,
+                'telegramBotToken'  => '123456789:AAAbbbCCCdddEEEfffGGGhhh',
+                'telegramDmChatId'  => '987654321',
+            ],
+        ]);
+
+        expect($result)->toBeArray();
+        expect($result['notify']['telegramChatId'])->toBe('-1001234567890');
+        expect($result['notify']['telegramDmChatId'])->toBe('987654321');
+    });
+
+    it('allows all Telegram DM fields to be empty/false when telegramDmEnabled is false', function (): void {
+        $result = $this->plugin->validateScheduleConfig([
+            'mode'   => 'daily',
+            'notify' => ['telegramDmEnabled' => false],
+        ]);
+
+        expect($result)->toBeArray();
+    });
+
     it('returns 400 invalid_notify_mastodon_instance when mastodonEnabled is true but no instance url is given', function (): void {
         $result = $this->plugin->validateScheduleConfig([
             'mode'   => 'daily',
