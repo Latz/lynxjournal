@@ -115,20 +115,23 @@
 }
 
 .lynxjournal-field-with-toggle {
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
+  position: relative;
 }
 
-.lynxjournal-field-with-toggle .components-base-control {
-  flex: 1;
-  min-width: 0;
+/* Room for the reveal button so typed text/placeholder don't render under it. */
+.lynxjournal-field-with-toggle input {
+  padding-inline-end: 36px;
 }
 
 /* !important overrides components-button's own min-width/height rules,
-   which otherwise tie in specificity with our single-class selector. */
+   which otherwise tie in specificity with our single-class selector.
+   Positioned to sit inside the input's right edge, vertically centered
+   on the input row (the control's label sits above, so this anchors to
+   the bottom of the control rather than its vertical center). */
 .lynxjournal-field-toggle-btn {
-  flex-shrink: 0;
+  position: absolute;
+  inset-inline-end: 2px;
+  bottom: 1px;
   width: 30px !important;
   min-width: 30px !important;
   height: 30px !important;

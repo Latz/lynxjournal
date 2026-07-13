@@ -154,3 +154,4 @@ https://github.com/Latz/lynxjournal
 
 = 1.0.2 =
 * Initial release.
+* Moved the Slack field reveal/hide toggle inside the input box instead of beside it.
