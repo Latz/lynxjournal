@@ -31,18 +31,38 @@ const DEFAULT_FORM = {
 };
 
 /**
+ * Reads a collapsed/expanded boolean previously stored for a section, if any.
+ *
+ * @param {string} storageKey localStorage key to read.
+ * @returns {boolean|null} The stored value, or null if unset/unavailable.
+ */
+function readStoredCollapsed(storageKey) {
+  try {
+    const stored = window.localStorage.getItem(storageKey);
+    return stored === null ? null : stored === '1';
+  } catch {
+    return null;
+  }
+}
+
+/**
  * A titled section box. Optionally collapsible, toggled by clicking the heading.
  *
  * @param {Object}   props
  * @param {string}   props.title             Section heading text.
  * @param {*}        props.children          Section body content.
  * @param {boolean}  [props.collapsible]     Whether the section can be collapsed.
- * @param {boolean}  [props.defaultCollapsed] Initial collapsed state, if collapsible.
+ * @param {boolean}  [props.defaultCollapsed] Initial collapsed state, if collapsible and nothing is stored yet.
+ * @param {string}   [props.storageKey]      localStorage key to remember the collapsed state across page loads.
  * @param {Function} [props.onToggle]        Called with the new collapsed state after each toggle.
  * @returns {JSX.Element}
  */
-function Section({ title, children, collapsible, defaultCollapsed, onToggle }) {
-  const [collapsed, setCollapsed] = useState(!!collapsible && !!defaultCollapsed);
+function Section({ title, children, collapsible, defaultCollapsed, storageKey, onToggle }) {
+  const [collapsed, setCollapsed] = useState(() => {
+    if (!collapsible) return false;
+    const stored = storageKey ? readStoredCollapsed(storageKey) : null;
+    return stored ?? !!defaultCollapsed;
+  });
 
   if (!collapsible) {
     return (
@@ -63,6 +83,13 @@ function Section({ title, children, collapsible, defaultCollapsed, onToggle }) {
           onClick={() => {
             const next = !collapsed;
             setCollapsed(next);
+            if (storageKey) {
+              try {
+                window.localStorage.setItem(storageKey, next ? '1' : '0');
+              } catch {
+                // localStorage unavailable (private browsing, etc.) — collapsed state just won't persist.
+              }
+            }
             onToggle?.(next);
           }}
         >
@@ -252,6 +279,7 @@ export default function App() {
           title={<TabTitleWithBadge label={__('Notifications', 'lynx-journal')} enabled={notifications.anyNotifyEnabled} />}
           collapsible
           defaultCollapsed
+          storageKey="lynxjournal_notify_section_collapsed"
           onToggle={notifications.handleNotifySectionToggle}
         >
           <NotificationsSection
