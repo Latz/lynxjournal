@@ -207,9 +207,29 @@ trait LynxJournal_Notifications {
         // success/failure signal is the "ok" boolean in the JSON body.
         $body = json_decode(wp_remote_retrieve_body($response), true);
         if (empty($body['ok'])) {
-            return new \WP_Error('slack_request_failed', $body['error'] ?? __('Unknown Slack API error', 'lynx-journal'), ['status' => 500]);
+            $error = $body['error'] ?? '';
+            return new \WP_Error('slack_request_failed', $this->describeSlackError($error), ['status' => 500]);
         }
         return true;
+    }
+
+    /**
+     * Translate a Slack Web API error code into a friendlier, actionable
+     * message. Unrecognized codes are passed through so nothing is hidden.
+     *
+     * @since 1.0.0
+     * @param string $error Slack API error code (e.g. "not_in_channel").
+     * @return string Human-readable error message.
+     */
+    private function describeSlackError(string $error): string {
+        return match ($error) {
+            'not_in_channel' => __('The bot isn\'t a member of this channel. In Slack, open the channel and run "/invite @YourBotName", then try again.', 'lynx-journal'),
+            'channel_not_found' => __('Slack channel not found. Double-check the channel ID.', 'lynx-journal'),
+            'invalid_auth', 'account_inactive', 'token_revoked' => __('Slack bot token is invalid or has been revoked. Generate a new token and update it here.', 'lynx-journal'),
+            'missing_scope' => __('The Slack bot token is missing a required permission scope. Reinstall the Slack app with the chat:write scope.', 'lynx-journal'),
+            '' => __('Unknown Slack API error', 'lynx-journal'),
+            default => $error,
+        };
     }
 
     /**
