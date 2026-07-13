@@ -248,43 +248,49 @@ export default function NotificationsSection({
             onChange={slackBotToken => setForm(f => ({ ...f, notify: { ...f.notify, slackBotToken } }))}
           />
 
-          <CheckboxControl
-            label={__('Post to a Slack channel after each run', 'lynx-journal')}
-            checked={form.notify?.slackChannelEnabled ?? false}
-            onChange={slackChannelEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelEnabled } }))}
-          />
-          <RevealableTextControl
-            label={__('Slack channel ID', 'lynx-journal')}
-            value={form.notify?.slackChannelId ?? ''}
-            placeholder={__('C0123456789', 'lynx-journal')}
-            onChange={slackChannelId => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelId } }))}
-          />
-          <ChannelActions
-            canTest={slackChannelComplete}
-            testState={testState.slack_channel}
-            onTest={() => handleTest('slack_channel')}
-            saveState={channelSaveState.slack_channel}
-            onSave={() => handleSaveChannel('slack_channel')}
-          />
+          <div className="lynxjournal-notify-target-group">
+            <p className="lynxjournal-notify-target-heading">{__('Channel', 'lynx-journal')}</p>
+            <CheckboxControl
+              label={__('Post to a Slack channel after each run', 'lynx-journal')}
+              checked={form.notify?.slackChannelEnabled ?? false}
+              onChange={slackChannelEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelEnabled } }))}
+            />
+            <RevealableTextControl
+              label={__('Slack channel ID', 'lynx-journal')}
+              value={form.notify?.slackChannelId ?? ''}
+              placeholder={__('C0123456789', 'lynx-journal')}
+              onChange={slackChannelId => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelId } }))}
+            />
+            <ChannelActions
+              canTest={slackChannelComplete}
+              testState={testState.slack_channel}
+              onTest={() => handleTest('slack_channel')}
+              saveState={channelSaveState.slack_channel}
+              onSave={() => handleSaveChannel('slack_channel')}
+            />
+          </div>
 
-          <CheckboxControl
-            label={__('Send me a Slack DM after each run', 'lynx-journal')}
-            checked={form.notify?.slackDmEnabled ?? false}
-            onChange={slackDmEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackDmEnabled } }))}
-          />
-          <RevealableTextControl
-            label={__('Slack user ID', 'lynx-journal')}
-            value={form.notify?.slackUserId ?? ''}
-            placeholder={__('U0123456789', 'lynx-journal')}
-            onChange={slackUserId => setForm(f => ({ ...f, notify: { ...f.notify, slackUserId } }))}
-          />
-          <ChannelActions
-            canTest={slackDmComplete}
-            testState={testState.slack_dm}
-            onTest={() => handleTest('slack_dm')}
-            saveState={channelSaveState.slack_dm}
-            onSave={() => handleSaveChannel('slack_dm')}
-          />
+          <div className="lynxjournal-notify-target-group">
+            <p className="lynxjournal-notify-target-heading">{__('Personal message', 'lynx-journal')}</p>
+            <CheckboxControl
+              label={__('Send me a Slack DM after each run', 'lynx-journal')}
+              checked={form.notify?.slackDmEnabled ?? false}
+              onChange={slackDmEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackDmEnabled } }))}
+            />
+            <RevealableTextControl
+              label={__('Slack user ID', 'lynx-journal')}
+              value={form.notify?.slackUserId ?? ''}
+              placeholder={__('U0123456789', 'lynx-journal')}
+              onChange={slackUserId => setForm(f => ({ ...f, notify: { ...f.notify, slackUserId } }))}
+            />
+            <ChannelActions
+              canTest={slackDmComplete}
+              testState={testState.slack_dm}
+              onTest={() => handleTest('slack_dm')}
+              saveState={channelSaveState.slack_dm}
+              onSave={() => handleSaveChannel('slack_dm')}
+            />
+          </div>
         </div>
 
         <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'telegram' ? '' : undefined}>
