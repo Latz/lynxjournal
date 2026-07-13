@@ -1,5 +1,39 @@
+import { useState } from '@wordpress/element';
 import { Button, Notice, CheckboxControl, TextControl, TabPanel } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+
+/**
+ * A masked TextControl with a toggle button to reveal/hide its contents,
+ * for secrets (bot tokens, channel/user IDs) that shouldn't be shown by default.
+ *
+ * @param {Object}   props
+ * @param {string}   props.label       Field label.
+ * @param {string}   props.value       Current field value.
+ * @param {string}   [props.placeholder] Placeholder text.
+ * @param {Function} props.onChange    Called with the new value on change.
+ * @returns {JSX.Element}
+ */
+function RevealableTextControl({ label, value, placeholder, onChange }) {
+  const [revealed, setRevealed] = useState(false);
+  return (
+    <div className="lynxjournal-field-with-toggle">
+      <TextControl
+        label={label}
+        type={revealed ? 'text' : 'password'}
+        value={value}
+        placeholder={placeholder}
+        onChange={onChange}
+        __nextHasNoMarginBottom
+      />
+      <Button
+        className="lynxjournal-field-toggle-btn"
+        icon={revealed ? 'hidden' : 'visibility'}
+        label={revealed ? __('Hide', 'lynx-journal') : __('Show', 'lynx-journal')}
+        onClick={() => setRevealed(r => !r)}
+      />
+    </div>
+  );
+}
 
 /**
  * Tab title for a notification channel, with an inline On/Off status badge.
@@ -201,13 +235,11 @@ export default function NotificationsSection({
         </div>
 
         <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'slack' ? '' : undefined}>
-          <TextControl
+          <RevealableTextControl
             label={__('Slack Bot Token', 'lynx-journal')}
-            type="password"
             value={form.notify?.slackBotToken ?? ''}
             placeholder={__('xoxb-...', 'lynx-journal')}
             onChange={slackBotToken => setForm(f => ({ ...f, notify: { ...f.notify, slackBotToken } }))}
-            __nextHasNoMarginBottom
           />
 
           <CheckboxControl
@@ -215,12 +247,11 @@ export default function NotificationsSection({
             checked={form.notify?.slackChannelEnabled ?? false}
             onChange={slackChannelEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelEnabled } }))}
           />
-          <TextControl
+          <RevealableTextControl
             label={__('Slack channel ID', 'lynx-journal')}
             value={form.notify?.slackChannelId ?? ''}
             placeholder={__('C0123456789', 'lynx-journal')}
             onChange={slackChannelId => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelId } }))}
-            __nextHasNoMarginBottom
           />
           <ChannelActions
             canTest={slackChannelComplete}
@@ -235,12 +266,11 @@ export default function NotificationsSection({
             checked={form.notify?.slackDmEnabled ?? false}
             onChange={slackDmEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackDmEnabled } }))}
           />
-          <TextControl
+          <RevealableTextControl
             label={__('Slack user ID', 'lynx-journal')}
             value={form.notify?.slackUserId ?? ''}
             placeholder={__('U0123456789', 'lynx-journal')}
             onChange={slackUserId => setForm(f => ({ ...f, notify: { ...f.notify, slackUserId } }))}
-            __nextHasNoMarginBottom
           />
           <ChannelActions
             canTest={slackDmComplete}

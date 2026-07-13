@@ -113,3 +113,24 @@
   gap: 8px;
   align-self: flex-start;
 }
+
+.lynxjournal-field-with-toggle {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.lynxjournal-field-with-toggle .components-base-control {
+  flex: 1;
+  min-width: 0;
+}
+
+/* !important overrides components-button's own min-width/height rules,
+   which otherwise tie in specificity with our single-class selector. */
+.lynxjournal-field-toggle-btn {
+  flex-shrink: 0;
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  padding: 0;
+}
