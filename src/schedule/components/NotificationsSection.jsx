@@ -288,53 +288,56 @@ export default function NotificationsSection({
         </div>
 
         <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'telegram' ? '' : undefined}>
-          <CheckboxControl
-            label={__('Post to a Telegram group or channel after each run', 'lynx-journal')}
-            checked={form.notify?.telegramEnabled ?? false}
-            onChange={telegramEnabled => setForm(f => ({ ...f, notify: { ...f.notify, telegramEnabled } }))}
-          />
-          <TextControl
+          <RevealableTextControl
             label={__('Telegram bot token', 'lynx-journal')}
-            type="password"
             value={form.notify?.telegramBotToken ?? ''}
             placeholder={__('123456789:AAH...', 'lynx-journal')}
             onChange={telegramBotToken => setForm(f => ({ ...f, notify: { ...f.notify, telegramBotToken } }))}
-            __nextHasNoMarginBottom
-          />
-          <TextControl
-            label={__('Telegram group/channel chat ID', 'lynx-journal')}
-            value={form.notify?.telegramChatId ?? ''}
-            placeholder={__('-1001234567890', 'lynx-journal')}
-            onChange={telegramChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramChatId } }))}
-            __nextHasNoMarginBottom
-          />
-          <ChannelActions
-            canTest={telegramChannelComplete}
-            testState={testState.telegram}
-            onTest={() => handleTest('telegram')}
-            saveState={channelSaveState.telegram}
-            onSave={() => handleSaveChannel('telegram')}
           />
 
-          <CheckboxControl
-            label={__('Send me a Telegram DM after each run', 'lynx-journal')}
-            checked={form.notify?.telegramDmEnabled ?? false}
-            onChange={telegramDmEnabled => setForm(f => ({ ...f, notify: { ...f.notify, telegramDmEnabled } }))}
-          />
-          <TextControl
-            label={__('Telegram user chat ID', 'lynx-journal')}
-            value={form.notify?.telegramDmChatId ?? ''}
-            placeholder={__('123456789', 'lynx-journal')}
-            onChange={telegramDmChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramDmChatId } }))}
-            __nextHasNoMarginBottom
-          />
-          <ChannelActions
-            canTest={telegramDmComplete}
-            testState={testState.telegram_dm}
-            onTest={() => handleTest('telegram_dm')}
-            saveState={channelSaveState.telegram_dm}
-            onSave={() => handleSaveChannel('telegram_dm')}
-          />
+          <div className="lynxjournal-notify-target-group">
+            <p className="lynxjournal-notify-target-heading">{__('Group or channel', 'lynx-journal')}</p>
+            <CheckboxControl
+              label={__('Post to a Telegram group or channel after each run', 'lynx-journal')}
+              checked={form.notify?.telegramEnabled ?? false}
+              onChange={telegramEnabled => setForm(f => ({ ...f, notify: { ...f.notify, telegramEnabled } }))}
+            />
+            <RevealableTextControl
+              label={__('Telegram group/channel chat ID', 'lynx-journal')}
+              value={form.notify?.telegramChatId ?? ''}
+              placeholder={__('-1001234567890', 'lynx-journal')}
+              onChange={telegramChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramChatId } }))}
+            />
+            <ChannelActions
+              canTest={telegramChannelComplete}
+              testState={testState.telegram}
+              onTest={() => handleTest('telegram')}
+              saveState={channelSaveState.telegram}
+              onSave={() => handleSaveChannel('telegram')}
+            />
+          </div>
+
+          <div className="lynxjournal-notify-target-group">
+            <p className="lynxjournal-notify-target-heading">{__('Personal message', 'lynx-journal')}</p>
+            <CheckboxControl
+              label={__('Send me a Telegram DM after each run', 'lynx-journal')}
+              checked={form.notify?.telegramDmEnabled ?? false}
+              onChange={telegramDmEnabled => setForm(f => ({ ...f, notify: { ...f.notify, telegramDmEnabled } }))}
+            />
+            <RevealableTextControl
+              label={__('Telegram personal chat ID', 'lynx-journal')}
+              value={form.notify?.telegramDmChatId ?? ''}
+              placeholder={__('123456789', 'lynx-journal')}
+              onChange={telegramDmChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramDmChatId } }))}
+            />
+            <ChannelActions
+              canTest={telegramDmComplete}
+              testState={testState.telegram_dm}
+              onTest={() => handleTest('telegram_dm')}
+              saveState={channelSaveState.telegram_dm}
+              onSave={() => handleSaveChannel('telegram_dm')}
+            />
+          </div>
         </div>
 
         <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'mastodon' ? '' : undefined}>
