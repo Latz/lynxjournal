@@ -120,22 +120,24 @@
 
 /* Room for the reveal button so typed text/placeholder don't render under it. */
 .lynxjournal-field-with-toggle input {
-  padding-inline-end: 36px;
+  padding-inline-end: 38px;
 }
 
-/* !important overrides components-button's own min-width/height rules,
-   which otherwise tie in specificity with our single-class selector.
-   Positioned to sit inside the input's right edge, vertically centered
-   on the input row (the control's label sits above, so this anchors to
-   the bottom of the control rather than its vertical center). */
+/* !important overrides components-button's own min-width/height/padding rules
+   (.components-button.has-icon sets padding: 6px at higher specificity than a
+   single class, which would otherwise shrink/offset the icon inside the box).
+   Height/bottom match .components-text-control__input's own 32px, border-box
+   height exactly, so the button's box is flush with and the same height as
+   the input itself — the control's label sits above, so this anchors to the
+   bottom of the control rather than its vertical center. */
 .lynxjournal-field-toggle-btn {
   position: absolute;
-  inset-inline-end: 2px;
-  bottom: 1px;
-  width: 30px !important;
-  min-width: 30px !important;
-  height: 30px !important;
-  padding: 0;
+  inset-inline-end: 1px;
+  bottom: 0;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
 }
 
 .lynxjournal-notify-target-group {
