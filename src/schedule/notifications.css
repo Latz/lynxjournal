@@ -140,6 +140,14 @@
   padding: 0 !important;
 }
 
+/* Suppress components-button's focus box-shadow/outline on mouse click (it
+   clips awkwardly against the input's edge here); keyboard focus still
+   shows it via :focus-visible, so this stays accessible. */
+.lynxjournal-field-toggle-btn:focus:not(:focus-visible) {
+  box-shadow: none;
+  outline: none;
+}
+
 .lynxjournal-notify-target-group {
   display: flex;
   flex-direction: column;
