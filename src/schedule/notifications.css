@@ -5,7 +5,7 @@
   margin-inline-start: 8px;
   padding: 1px 6px;
   border-radius: 10px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   text-align: center;
 }
@@ -148,18 +148,25 @@
   outline: none;
 }
 
+/* Reset the browser default fieldset box (min-width, border, margin) so our
+   own border/padding/gap below are the only ones that apply. */
 .lynxjournal-notify-target-group {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
+  margin: 0;
   padding: 12px;
   border: 1px solid #dcdcde;
   border-radius: 4px;
 }
 
+/* Reset the browser default legend box (padding, position) so it lays out
+   as a normal flex child instead of overlapping the fieldset border. */
 .lynxjournal-notify-target-heading {
+  padding: 0;
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;

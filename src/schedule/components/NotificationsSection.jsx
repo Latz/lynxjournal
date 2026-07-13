@@ -248,8 +248,8 @@ export default function NotificationsSection({
             onChange={slackBotToken => setForm(f => ({ ...f, notify: { ...f.notify, slackBotToken } }))}
           />
 
-          <div className="lynxjournal-notify-target-group">
-            <p className="lynxjournal-notify-target-heading">{__('Channel', 'lynx-journal')}</p>
+          <fieldset className="lynxjournal-notify-target-group">
+            <legend className="lynxjournal-notify-target-heading">{__('Channel', 'lynx-journal')}</legend>
             <CheckboxControl
               label={__('Post to a Slack channel after each run', 'lynx-journal')}
               checked={form.notify?.slackChannelEnabled ?? false}
@@ -268,10 +268,10 @@ export default function NotificationsSection({
               saveState={channelSaveState.slack_channel}
               onSave={() => handleSaveChannel('slack_channel')}
             />
-          </div>
+          </fieldset>
 
-          <div className="lynxjournal-notify-target-group">
-            <p className="lynxjournal-notify-target-heading">{__('Personal message', 'lynx-journal')}</p>
+          <fieldset className="lynxjournal-notify-target-group">
+            <legend className="lynxjournal-notify-target-heading">{__('Personal message', 'lynx-journal')}</legend>
             <CheckboxControl
               label={__('Send me a Slack DM after each run', 'lynx-journal')}
               checked={form.notify?.slackDmEnabled ?? false}
@@ -290,7 +290,7 @@ export default function NotificationsSection({
               saveState={channelSaveState.slack_dm}
               onSave={() => handleSaveChannel('slack_dm')}
             />
-          </div>
+          </fieldset>
         </div>
 
         <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'telegram' ? '' : undefined}>
@@ -301,8 +301,8 @@ export default function NotificationsSection({
             onChange={telegramBotToken => setForm(f => ({ ...f, notify: { ...f.notify, telegramBotToken } }))}
           />
 
-          <div className="lynxjournal-notify-target-group">
-            <p className="lynxjournal-notify-target-heading">{__('Group or channel', 'lynx-journal')}</p>
+          <fieldset className="lynxjournal-notify-target-group">
+            <legend className="lynxjournal-notify-target-heading">{__('Group or channel', 'lynx-journal')}</legend>
             <CheckboxControl
               label={__('Post to a Telegram group or channel after each run', 'lynx-journal')}
               checked={form.notify?.telegramEnabled ?? false}
@@ -321,10 +321,10 @@ export default function NotificationsSection({
               saveState={channelSaveState.telegram}
               onSave={() => handleSaveChannel('telegram')}
             />
-          </div>
+          </fieldset>
 
-          <div className="lynxjournal-notify-target-group">
-            <p className="lynxjournal-notify-target-heading">{__('Personal message', 'lynx-journal')}</p>
+          <fieldset className="lynxjournal-notify-target-group">
+            <legend className="lynxjournal-notify-target-heading">{__('Personal message', 'lynx-journal')}</legend>
             <CheckboxControl
               label={__('Send me a Telegram DM after each run', 'lynx-journal')}
               checked={form.notify?.telegramDmEnabled ?? false}
@@ -343,7 +343,7 @@ export default function NotificationsSection({
               saveState={channelSaveState.telegram_dm}
               onSave={() => handleSaveChannel('telegram_dm')}
             />
-          </div>
+          </fieldset>
         </div>
 
         <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'mastodon' ? '' : undefined}>
