@@ -18,7 +18,8 @@ trait LynxJournal_NotificationValidator {
             ?? $this->validateNotifyDiscord($data)
             ?? $this->validateNotifySlack($data)
             ?? $this->validateNotifyTelegram($data)
-            ?? $this->validateNotifyMastodon($data);
+            ?? $this->validateNotifyMastodon($data)
+            ?? $this->validateNotifyBluesky($data);
     }
 
     /**
@@ -29,7 +30,7 @@ trait LynxJournal_NotificationValidator {
      * testing the channel currently being configured.
      *
      * @since 1.0.0
-     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon.
+     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon|bluesky.
      * @param array $data The request data containing a 'notify' key.
      * @return \WP_Error|null Error if invalid, null if valid.
      */
@@ -43,6 +44,7 @@ trait LynxJournal_NotificationValidator {
             'slack_channel', 'slack_dm' => $this->validateNotifySlack($data),
             'telegram', 'telegram_dm' => $this->validateNotifyTelegram($data),
             'mastodon' => $this->validateNotifyMastodon($data),
+            'bluesky' => $this->validateNotifyBluesky($data),
             default => new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), ['status' => 400]),
         };
     }
@@ -184,6 +186,42 @@ trait LynxJournal_NotificationValidator {
             }
             if ($data['notify']['mastodonRecipient'] === '') {
                 return new \WP_Error('invalid_notify_mastodon_recipient', __('notify.mastodonRecipient is required when Mastodon notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            }
+        }
+        return null;
+    }
+
+    private function validateNotifyBluesky(array &$data): ?\WP_Error {
+        $data['notify']['bskyEnabled'] = (bool) ($data['notify']['bskyEnabled'] ?? false);
+        $data['notify']['bskyHandle'] = !empty($data['notify']['bskyHandle'])
+            ? sanitize_text_field(trim((string) $data['notify']['bskyHandle']))
+            : '';
+        $data['notify']['bskyAppPassword'] = !empty($data['notify']['bskyAppPassword'])
+            ? sanitize_text_field(trim((string) $data['notify']['bskyAppPassword']))
+            : '';
+        $data['notify']['bskyRecipient'] = !empty($data['notify']['bskyRecipient'])
+            ? sanitize_text_field(trim((string) $data['notify']['bskyRecipient']))
+            : '';
+
+        if ($data['notify']['bskyHandle'] !== '' && !preg_match('/^[\w.-]+\.[a-z]{2,}$/i', $data['notify']['bskyHandle'])) {
+            return new \WP_Error('invalid_notify_bsky_handle', __('notify.bskyHandle must be a valid Bluesky handle, e.g. user.bsky.social', 'lynx-journal'), ['status' => 400]);
+        }
+        if ($data['notify']['bskyAppPassword'] !== '' && !preg_match('/^[\w]{4}-[\w]{4}-[\w]{4}-[\w]{4}$/', $data['notify']['bskyAppPassword'])) {
+            return new \WP_Error('invalid_notify_bsky_password', __('notify.bskyAppPassword must be a valid Bluesky app password (xxxx-xxxx-xxxx-xxxx)', 'lynx-journal'), ['status' => 400]);
+        }
+        if ($data['notify']['bskyRecipient'] !== '' && !preg_match('/^[\w.-]+\.[a-z]{2,}$/i', $data['notify']['bskyRecipient'])) {
+            return new \WP_Error('invalid_notify_bsky_recipient', __('notify.bskyRecipient must be a valid Bluesky handle, e.g. friend.bsky.social', 'lynx-journal'), ['status' => 400]);
+        }
+
+        if (!empty($data['notify']['bskyEnabled'])) {
+            if ($data['notify']['bskyHandle'] === '') {
+                return new \WP_Error('invalid_notify_bsky_handle', __('notify.bskyHandle is required when Bluesky notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            }
+            if ($data['notify']['bskyAppPassword'] === '') {
+                return new \WP_Error('invalid_notify_bsky_password', __('notify.bskyAppPassword is required when Bluesky notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            }
+            if ($data['notify']['bskyRecipient'] === '') {
+                return new \WP_Error('invalid_notify_bsky_recipient', __('notify.bskyRecipient is required when Bluesky notifications are enabled', 'lynx-journal'), ['status' => 400]);
             }
         }
         return null;

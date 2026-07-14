@@ -16,7 +16,7 @@ import { __ } from '@wordpress/i18n';
  * @returns {Object} Everything NotificationsSection needs to render and respond to input.
  */
 export function useNotifications(form, setForm, setSavedForm, configLoaded) {
-  // Keyed by channel ('email' | 'discord' | 'slack_channel' | 'slack_dm' | 'telegram' | 'mastodon').
+  // Keyed by channel ('email' | 'discord' | 'slack_channel' | 'slack_dm' | 'telegram' | 'mastodon' | 'bluesky').
   const [testState, setTestState] = useState({});
   // Keyed the same way as testState, but for the per-channel Save button.
   const [channelSaveState, setChannelSaveState] = useState({});
@@ -26,6 +26,7 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
     if (form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) return 'slack';
     if (form.notify?.telegramEnabled || form.notify?.telegramDmEnabled) return 'telegram';
     if (form.notify?.mastodonEnabled) return 'mastodon';
+    if (form.notify?.bskyEnabled) return 'bluesky';
     return 'email';
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only recompute once config finishes loading
   }, [configLoaded]);
@@ -41,7 +42,7 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
    * Send a one-off test notification for a single channel using the
    * currently-entered (possibly unsaved) notify settings.
    *
-   * @param {string} channel One of email|discord|slack_channel|slack_dm|telegram|mastodon.
+   * @param {string} channel One of email|discord|slack_channel|slack_dm|telegram|mastodon|bluesky.
    * @returns {Promise<void>}
    */
   async function handleTest(channel) {
@@ -58,7 +59,7 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
    * Persist just one notification channel's current field values,
    * independent of any other unsaved changes elsewhere on the page.
    *
-   * @param {string} channel One of email|discord|slack_channel|slack_dm|telegram|mastodon.
+   * @param {string} channel One of email|discord|slack_channel|slack_dm|telegram|mastodon|bluesky.
    * @returns {Promise<void>}
    */
   async function handleSaveChannel(channel) {
@@ -130,7 +131,8 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
   const telegramEnabled = !!form.notify?.telegramEnabled || !!form.notify?.telegramDmEnabled;
   const telegramIncomplete = (!!form.notify?.telegramEnabled && !telegramChannelComplete) || (!!form.notify?.telegramDmEnabled && !telegramDmComplete);
   const mastodonComplete = !!form.notify?.mastodonEnabled && !!form.notify?.mastodonInstanceUrl && !!form.notify?.mastodonAccessToken && !!form.notify?.mastodonRecipient;
-  const anyNotifyEnabled = !!form.notify?.enabled || !!form.notify?.discordEnabled || slackEnabled || telegramEnabled || !!form.notify?.mastodonEnabled;
+  const blueskyComplete = !!form.notify?.bskyEnabled && !!form.notify?.bskyHandle && !!form.notify?.bskyAppPassword && !!form.notify?.bskyRecipient;
+  const anyNotifyEnabled = !!form.notify?.enabled || !!form.notify?.discordEnabled || slackEnabled || telegramEnabled || !!form.notify?.mastodonEnabled || !!form.notify?.bskyEnabled;
 
   return {
     initialNotifyTab,
@@ -154,6 +156,7 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
     telegramEnabled,
     telegramIncomplete,
     mastodonComplete,
+    blueskyComplete,
     anyNotifyEnabled,
   };
 }

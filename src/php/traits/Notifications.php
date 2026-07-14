@@ -24,6 +24,7 @@ trait LynxJournal_Notifications {
         add_action('lynxjournal_after_run', [$this, 'maybeSendTelegramNotification'], 10, 3);
         add_action('lynxjournal_after_run', [$this, 'maybeSendTelegramDmNotification'], 10, 3);
         add_action('lynxjournal_after_run', [$this, 'maybeSendMastodonNotification'], 10, 3);
+        add_action('lynxjournal_after_run', [$this, 'maybeSendBlueskyNotification'], 10, 3);
     }
 
     /**
@@ -456,11 +457,193 @@ trait LynxJournal_Notifications {
     }
 
     /**
+     * Send a Bluesky direct message after schedule runs, if enabled.
+     *
+     * @since 1.0.0
+     * @param int|null $post_id The published post ID, or null if nothing was published.
+     * @param array $link_ids Array of link post IDs that were published.
+     * @param string $mode The schedule mode that ran.
+     * @return void
+     */
+    public function maybeSendBlueskyNotification(int|null $post_id, array $link_ids, string $mode): void {
+        $config = get_option('lynxjournal_schedule', []);
+        $notify = $config['notify'] ?? [];
+        if (empty($notify['bskyEnabled']) || empty($notify['bskyHandle']) || empty($notify['bskyAppPassword']) || empty($notify['bskyRecipient'])) {
+            return;
+        }
+
+        $message = $this->buildBlueskyMessage($post_id, count($link_ids), $mode);
+        $this->postBlueskyDm($notify['bskyHandle'], $notify['bskyAppPassword'], $notify['bskyRecipient'], $message);
+    }
+
+    /**
+     * Create a short-lived Bluesky session for the sending account.
+     *
+     * @since 1.0.0
+     * @param string $handle Bluesky handle (identifier) of the sending account.
+     * @param string $appPassword Bluesky app password.
+     * @return array{accessJwt: string, did: string}|\WP_Error Session data on success, WP_Error otherwise.
+     */
+    private function createBlueskySession(string $handle, string $appPassword): array|\WP_Error {
+        $response = wp_remote_post('https://bsky.social/xrpc/com.atproto.server.createSession', [
+            'timeout' => 8,
+            'headers' => ['Content-Type' => 'application/json'],
+            'body'    => wp_json_encode(['identifier' => $handle, 'password' => $appPassword]),
+        ]);
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+        if (wp_remote_retrieve_response_code($response) >= 300) {
+            return new \WP_Error('bluesky_auth_failed', wp_remote_retrieve_body($response), ['status' => 500]);
+        }
+
+        $body = json_decode(wp_remote_retrieve_body($response), true);
+        if (empty($body['accessJwt']) || empty($body['did'])) {
+            return new \WP_Error('bluesky_auth_failed', __('Bluesky did not return a valid session. Check the handle and app password.', 'lynx-journal'), ['status' => 500]);
+        }
+        return ['accessJwt' => $body['accessJwt'], 'did' => $body['did']];
+    }
+
+    /**
+     * Resolve a Bluesky handle to its DID.
+     *
+     * @since 1.0.0
+     * @param string $handle Bluesky handle to resolve, e.g. "user.bsky.social".
+     * @param string $accessJwt Access token from createBlueskySession().
+     * @return string|\WP_Error The resolved DID, or WP_Error on failure.
+     */
+    private function resolveBlueskyHandle(string $handle, string $accessJwt): string|\WP_Error {
+        $url = add_query_arg('handle', rawurlencode($handle), 'https://bsky.social/xrpc/com.atproto.identity.resolveHandle');
+        $response = wp_remote_get($url, [
+            'timeout' => 8,
+            'headers' => ['Authorization' => 'Bearer ' . $accessJwt],
+        ]);
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+        if (wp_remote_retrieve_response_code($response) >= 300) {
+            return new \WP_Error('bluesky_resolve_failed', __('Could not resolve the Bluesky recipient handle.', 'lynx-journal'), ['status' => 500]);
+        }
+
+        $body = json_decode(wp_remote_retrieve_body($response), true);
+        if (empty($body['did'])) {
+            return new \WP_Error('bluesky_resolve_failed', __('Could not resolve the Bluesky recipient handle.', 'lynx-journal'), ['status' => 500]);
+        }
+        return $body['did'];
+    }
+
+    /**
+     * Get (or create) the DM conversation ID between the sender and recipient.
+     *
+     * @since 1.0.0
+     * @param string $senderDid DID of the sending account.
+     * @param string $recipientDid DID of the recipient account.
+     * @param string $accessJwt Access token from createBlueskySession().
+     * @return string|\WP_Error The conversation ID, or WP_Error on failure.
+     */
+    private function getBlueskyConvoId(string $senderDid, string $recipientDid, string $accessJwt): string|\WP_Error {
+        $response = wp_remote_post('https://bsky.chat/xrpc/chat.bsky.convo.getConvoForMembers', [
+            'timeout' => 8,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessJwt,
+                'Content-Type'  => 'application/json',
+            ],
+            'body' => wp_json_encode(['members' => [$senderDid, $recipientDid]]),
+        ]);
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+        if (wp_remote_retrieve_response_code($response) >= 300) {
+            return new \WP_Error('bluesky_convo_failed', wp_remote_retrieve_body($response), ['status' => 500]);
+        }
+
+        $body = json_decode(wp_remote_retrieve_body($response), true);
+        if (empty($body['convo']['id'])) {
+            return new \WP_Error('bluesky_convo_failed', __('Could not open a Bluesky DM conversation with the recipient.', 'lynx-journal'), ['status' => 500]);
+        }
+        return $body['convo']['id'];
+    }
+
+    /**
+     * Send a Bluesky direct message to a recipient handle.
+     *
+     * Performs the full AT Protocol handshake: create a session, resolve the
+     * recipient handle to a DID, open the DM conversation, then send the
+     * message. A fresh session is created per send since Bluesky sessions
+     * are short-lived and sends only happen on cron runs or test clicks.
+     *
+     * @since 1.0.0
+     * @param string $handle Bluesky handle (identifier) of the sending account.
+     * @param string $appPassword Bluesky app password.
+     * @param string $recipientHandle Bluesky handle of the DM recipient.
+     * @param string $text Message text.
+     * @return true|\WP_Error True on success, WP_Error with the failure reason otherwise.
+     */
+    private function postBlueskyDm(string $handle, string $appPassword, string $recipientHandle, string $text): true|\WP_Error {
+        $session = $this->createBlueskySession($handle, $appPassword);
+        if (is_wp_error($session)) {
+            return $session;
+        }
+
+        $recipientDid = $this->resolveBlueskyHandle($recipientHandle, $session['accessJwt']);
+        if (is_wp_error($recipientDid)) {
+            return $recipientDid;
+        }
+
+        $convoId = $this->getBlueskyConvoId($session['did'], $recipientDid, $session['accessJwt']);
+        if (is_wp_error($convoId)) {
+            return $convoId;
+        }
+
+        $response = wp_remote_post('https://bsky.chat/xrpc/chat.bsky.convo.sendMessage', [
+            'timeout' => 8,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $session['accessJwt'],
+                'Content-Type'  => 'application/json',
+            ],
+            'body' => wp_json_encode(['convoId' => $convoId, 'message' => ['text' => $text]]),
+        ]);
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+        if (wp_remote_retrieve_response_code($response) >= 300) {
+            return new \WP_Error('bluesky_send_failed', wp_remote_retrieve_body($response), ['status' => 500]);
+        }
+        return true;
+    }
+
+    /**
+     * Build the Bluesky DM text for a run notification.
+     *
+     * @since 1.0.0
+     * @param int|null $post_id The published post ID, or null if nothing was published.
+     * @param int $link_count Number of links included in the run.
+     * @param string $mode The schedule mode that ran.
+     * @return string Message text.
+     */
+    private function buildBlueskyMessage(int|null $post_id, int $link_count, string $mode): string {
+        if ($post_id) {
+            $title = esc_html(get_the_title($post_id));
+            $url   = esc_url(get_permalink($post_id));
+            /* translators: %d: number of links published */
+            $body  = sprintf(__('A new roundup was published with %d links.', 'lynx-journal'), $link_count);
+            return "{$title}\n{$body}\n{$url}";
+        }
+
+        /* translators: %s: schedule mode */
+        return sprintf(__('Schedule ran in %s mode but no post was published.', 'lynx-journal'), $mode);
+    }
+
+    /**
      * Send a one-off test notification for a single channel, using ad-hoc
      * (possibly unsaved) notify settings rather than the stored option.
      *
      * @since 1.0.0
-     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon.
+     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon|bluesky.
      * @param array $notify Notify settings to test with (already sanitized by validateNotify()).
      * @return true|\WP_Error True on success, WP_Error describing why the test couldn't be sent.
      */
@@ -518,6 +701,12 @@ trait LynxJournal_Notifications {
                 }
                 return $this->postMastodonStatus($notify['mastodonInstanceUrl'], $notify['mastodonAccessToken'], $notify['mastodonRecipient'] . "\n" . $message);
 
+            case 'bluesky':
+                if (empty($notify['bskyEnabled']) || empty($notify['bskyHandle']) || empty($notify['bskyAppPassword']) || empty($notify['bskyRecipient'])) {
+                    return new \WP_Error('test_missing_field', __('Enable Bluesky notifications and fill in the handle, app password, and recipient handle first.', 'lynx-journal'), ['status' => 400]);
+                }
+                return $this->postBlueskyDm($notify['bskyHandle'], $notify['bskyAppPassword'], $notify['bskyRecipient'], $message);
+
             default:
                 return new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), ['status' => 400]);
         }
@@ -546,7 +735,7 @@ trait LynxJournal_Notifications {
      */
     public function restTestNotification(\WP_REST_Request $request): \WP_REST_Response|\WP_Error {
         $channel = (string) $request->get_param('channel');
-        if (!in_array($channel, ['email', 'discord', 'slack_channel', 'slack_dm', 'telegram', 'telegram_dm', 'mastodon'], true)) {
+        if (!in_array($channel, ['email', 'discord', 'slack_channel', 'slack_dm', 'telegram', 'telegram_dm', 'mastodon', 'bluesky'], true)) {
             return new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), array('status' => 400));
         }
 
@@ -574,7 +763,7 @@ trait LynxJournal_Notifications {
      */
     public function restSaveNotification(\WP_REST_Request $request): \WP_REST_Response|\WP_Error {
         $channel = (string) $request->get_param('channel');
-        if (!in_array($channel, ['email', 'discord', 'slack_channel', 'slack_dm', 'telegram', 'telegram_dm', 'mastodon'], true)) {
+        if (!in_array($channel, ['email', 'discord', 'slack_channel', 'slack_dm', 'telegram', 'telegram_dm', 'mastodon', 'bluesky'], true)) {
             return new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), array('status' => 400));
         }
 
@@ -607,7 +796,7 @@ trait LynxJournal_Notifications {
      * The notify field names that belong to one notification channel.
      *
      * @since 1.0.0
-     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon.
+     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon|bluesky.
      * @return string[] Field names within notify.
      */
     private function notifyChannelFields(string $channel): array {
@@ -619,6 +808,7 @@ trait LynxJournal_Notifications {
             'telegram' => ['telegramEnabled', 'telegramBotToken', 'telegramChatId'],
             'telegram_dm' => ['telegramBotToken', 'telegramDmEnabled', 'telegramDmChatId'],
             'mastodon' => ['mastodonEnabled', 'mastodonInstanceUrl', 'mastodonAccessToken', 'mastodonRecipient'],
+            'bluesky' => ['bskyEnabled', 'bskyHandle', 'bskyAppPassword', 'bskyRecipient'],
             default => [],
         };
     }

@@ -26,6 +26,7 @@ const DEFAULT_FORM = {
     slackDmEnabled: false, slackUserId: '',
     telegramEnabled: false, telegramBotToken: '', telegramChatId: '',
     mastodonEnabled: false, mastodonInstanceUrl: '', mastodonAccessToken: '', mastodonRecipient: '',
+    bskyEnabled: false, bskyHandle: '', bskyAppPassword: '', bskyRecipient: '',
   },
   post_status: 'publish',
 };

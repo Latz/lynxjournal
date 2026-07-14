@@ -97,8 +97,8 @@ function ChannelActions({ canTest, testState, onTest, saveState, onSave }) {
 }
 
 /**
- * The Notifications section of the Schedule admin page: 5 per-channel tabs
- * (Email/Discord/Slack/Telegram/Mastodon), each with its own fields, test
+ * The Notifications section of the Schedule admin page: 6 per-channel tabs
+ * (Email/Discord/Slack/Telegram/Mastodon/Bluesky), each with its own fields, test
  * button, and independent save button.
  *
  * @param {Object}   props
@@ -125,6 +125,7 @@ function ChannelActions({ canTest, testState, onTest, saveState, onSave }) {
  * @param {boolean}  props.telegramEnabled     Whether either Telegram target is enabled.
  * @param {boolean}  props.telegramIncomplete  Whether an enabled Telegram target is missing required fields.
  * @param {boolean}  props.mastodonComplete    Whether Mastodon's required fields are filled in.
+ * @param {boolean}  props.blueskyComplete     Whether Bluesky's required fields are filled in.
  * @returns {JSX.Element}
  */
 export default function NotificationsSection({
@@ -151,6 +152,7 @@ export default function NotificationsSection({
   telegramEnabled,
   telegramIncomplete,
   mastodonComplete,
+  blueskyComplete,
 }) {
   return (
     <>
@@ -174,6 +176,7 @@ export default function NotificationsSection({
             { name: 'slack', title: <TabTitleWithBadge label={__('Slack', 'lynx-journal')} enabled={slackEnabled} incomplete={slackIncomplete} /> },
             { name: 'telegram', title: <TabTitleWithBadge label={__('Telegram', 'lynx-journal')} enabled={telegramEnabled} incomplete={telegramIncomplete} /> },
             { name: 'mastodon', title: <TabTitleWithBadge label={__('Mastodon', 'lynx-journal')} enabled={form.notify?.mastodonEnabled ?? false} incomplete={!!form.notify?.mastodonEnabled && !mastodonComplete} /> },
+            { name: 'bluesky', title: <TabTitleWithBadge label={__('Bluesky', 'lynx-journal')} enabled={form.notify?.bskyEnabled ?? false} incomplete={!!form.notify?.bskyEnabled && !blueskyComplete} /> },
           ]}
         >
           {() => null}
@@ -381,6 +384,41 @@ export default function NotificationsSection({
             onTest={() => handleTest('mastodon')}
             saveState={channelSaveState.mastodon}
             onSave={() => handleSaveChannel('mastodon')}
+          />
+        </div>
+
+        <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'bluesky' ? '' : undefined}>
+          <CheckboxControl
+            label={__('Send a Bluesky direct message after each run', 'lynx-journal')}
+            checked={form.notify?.bskyEnabled ?? false}
+            onChange={bskyEnabled => setForm(f => ({ ...f, notify: { ...f.notify, bskyEnabled } }))}
+          />
+          <TextControl
+            label={__('Bluesky handle', 'lynx-journal')}
+            value={form.notify?.bskyHandle ?? ''}
+            placeholder={__('you.bsky.social', 'lynx-journal')}
+            onChange={bskyHandle => setForm(f => ({ ...f, notify: { ...f.notify, bskyHandle } }))}
+            __nextHasNoMarginBottom
+          />
+          <RevealableTextControl
+            label={__('Bluesky app password', 'lynx-journal')}
+            value={form.notify?.bskyAppPassword ?? ''}
+            placeholder={__('xxxx-xxxx-xxxx-xxxx', 'lynx-journal')}
+            onChange={bskyAppPassword => setForm(f => ({ ...f, notify: { ...f.notify, bskyAppPassword } }))}
+          />
+          <TextControl
+            label={__('Recipient handle', 'lynx-journal')}
+            value={form.notify?.bskyRecipient ?? ''}
+            placeholder={__('friend.bsky.social', 'lynx-journal')}
+            onChange={bskyRecipient => setForm(f => ({ ...f, notify: { ...f.notify, bskyRecipient } }))}
+            __nextHasNoMarginBottom
+          />
+          <ChannelActions
+            canTest={blueskyComplete}
+            testState={testState.bluesky}
+            onTest={() => handleTest('bluesky')}
+            saveState={channelSaveState.bluesky}
+            onSave={() => handleSaveChannel('bluesky')}
           />
         </div>
       </div>
