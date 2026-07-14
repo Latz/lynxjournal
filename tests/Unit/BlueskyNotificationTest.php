@@ -114,6 +114,24 @@ describe('LynxJournal::maybeSendBlueskyNotification()', function (): void {
         expect($called)->toBeFalse();
     });
 
+    it('sends the raw post title, not HTML-entity-escaped, since Bluesky DMs are plain text', function (): void {
+        Functions\when('get_option')->justReturn([
+            'notify' => ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social'],
+        ]);
+        Functions\when('get_permalink')->justReturn('https://site.example/roundup-42');
+        Functions\when('get_the_title')->justReturn('Coffee & Code roundup');
+
+        $captured = [];
+        mockBlueskyHandshakeSuccess($captured);
+
+        $this->plugin->maybeSendBlueskyNotification(42, [1, 2, 3], 'daily');
+
+        $sendCall = $captured['https://bsky.chat/xrpc/chat.bsky.convo.sendMessage'];
+        $sendBody = json_decode($sendCall['args']['body'], true);
+        expect($sendBody['message']['text'])->toContain('Coffee & Code roundup');
+        expect($sendBody['message']['text'])->not->toContain('&amp;');
+    });
+
     it('runs the full handshake and sends the DM when enabled with a post_id', function (): void {
         Functions\when('get_option')->justReturn([
             'notify' => ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social'],

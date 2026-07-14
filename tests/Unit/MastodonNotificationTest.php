@@ -79,6 +79,28 @@ describe('LynxJournal::maybeSendMastodonNotification()', function (): void {
         expect($called)->toBeFalse();
     });
 
+    it('sends the raw post title, not HTML-entity-escaped, since Mastodon DMs are plain text', function (): void {
+        Functions\when('get_option')->justReturn([
+            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social'],
+        ]);
+        Functions\when('get_permalink')->justReturn('https://site.example/roundup-42');
+        Functions\when('get_the_title')->justReturn('Coffee & Code roundup');
+        Functions\when('is_wp_error')->justReturn(false);
+        Functions\when('wp_remote_retrieve_response_code')->justReturn(200);
+
+        $captured = [];
+        Functions\when('wp_remote_post')->alias(function ($url, $args) use (&$captured): array {
+            $captured = compact('url', 'args');
+            return ['response' => ['code' => 200]];
+        });
+
+        $this->plugin->maybeSendMastodonNotification(42, [1, 2, 3], 'daily');
+
+        $body = json_decode($captured['args']['body'], true);
+        expect($body['status'])->toContain('Coffee & Code roundup');
+        expect($body['status'])->not->toContain('&amp;');
+    });
+
     it('posts a direct status to the instance API when enabled with a post_id', function (): void {
         Functions\when('get_option')->justReturn([
             'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social'],

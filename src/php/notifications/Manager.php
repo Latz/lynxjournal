@@ -120,7 +120,7 @@ final class LynxJournal_Notify_Manager {
      * @return string[] Field names within notify.
      */
     public function channelFields(string $key): array {
-        return $this->channels[$key]?->fields() ?? [];
+        return $this->channel($key)?->fields() ?? [];
     }
 
     /**
