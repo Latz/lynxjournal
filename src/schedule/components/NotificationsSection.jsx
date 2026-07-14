@@ -1,6 +1,7 @@
 import { useState } from '@wordpress/element';
 import { Button, Notice, CheckboxControl, TextControl, TabPanel } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { NOTIFICATION_CHANNELS, isChannelEnabled, isChannelComplete, isChannelIncomplete, isTargetComplete } from '../lib/notificationChannels';
 
 /**
  * A masked TextControl with a toggle button to reveal/hide its contents,
@@ -97,9 +98,72 @@ function ChannelActions({ canTest, testState, onTest, saveState, onSave }) {
 }
 
 /**
- * The Notifications section of the Schedule admin page: 6 per-channel tabs
- * (Email/Discord/Slack/Telegram/Mastodon/Bluesky), each with its own fields, test
- * button, and independent save button.
+ * Render one channel field (text/url/email/revealable) bound to `notify[field.name]`.
+ *
+ * @param {Object}   field    A NOTIFICATION_CHANNELS field definition.
+ * @param {Object}   notify   Current `notify` form state.
+ * @param {Function} setForm  Schedule form setter.
+ * @returns {JSX.Element}
+ */
+function renderField(field, notify, setForm) {
+  const value = notify?.[field.name] ?? '';
+  const onChange = newValue => setForm(f => ({ ...f, notify: { ...f.notify, [field.name]: newValue } }));
+
+  if (field.type === 'revealable') {
+    return <RevealableTextControl key={field.name} label={field.label} value={value} placeholder={field.placeholder} onChange={onChange} />;
+  }
+  return (
+    <TextControl
+      key={field.name}
+      label={field.label}
+      type={field.type}
+      value={value}
+      placeholder={field.placeholder}
+      onChange={onChange}
+      __nextHasNoMarginBottom
+    />
+  );
+}
+
+/**
+ * Render one target's (or a non-grouped channel's own) enable checkbox,
+ * fields, and test/save actions.
+ *
+ * @param {Object}   props
+ * @param {Object}   props.entry            The parent NOTIFICATION_CHANNELS entry (for sharedFields).
+ * @param {Object}   props.target           The target itself (or `entry`, for non-grouped channels).
+ * @param {Object}   props.notify           Current `notify` form state.
+ * @param {Function} props.setForm          Schedule form setter.
+ * @param {Object}   [props.testState]      This target's { testing, notice } state, if any.
+ * @param {Object}   [props.channelSaveState] This target's { saving, notice } state, if any.
+ * @param {Function} props.handleTest       Sends a test notification for a channel key.
+ * @param {Function} props.handleSaveChannel Persists a channel key's fields.
+ * @returns {JSX.Element}
+ */
+function TargetFields({ entry, target, notify, setForm, testState, channelSaveState, handleTest, handleSaveChannel }) {
+  return (
+    <>
+      <CheckboxControl
+        label={target.checkboxLabel}
+        checked={!!notify?.[target.enabledField]}
+        onChange={checked => setForm(f => ({ ...f, notify: { ...f.notify, [target.enabledField]: checked } }))}
+      />
+      {target.fields.map(field => renderField(field, notify, setForm))}
+      <ChannelActions
+        canTest={isTargetComplete(entry, target, notify)}
+        testState={testState[target.key]}
+        onTest={() => handleTest(target.key)}
+        saveState={channelSaveState[target.key]}
+        onSave={() => handleSaveChannel(target.key)}
+      />
+    </>
+  );
+}
+
+/**
+ * The Notifications section of the Schedule admin page: one tab per
+ * NOTIFICATION_CHANNELS entry (Email/Discord/Slack/Telegram/Mastodon/
+ * Bluesky), each rendered generically from its field config.
  *
  * @param {Object}   props
  * @param {Object}   props.form                Schedule form state (reads form.notify).
@@ -115,17 +179,6 @@ function ChannelActions({ canTest, testState, onTest, saveState, onSave }) {
  * @param {Object}   props.tabsWrapRef         Ref for the scrollable tab bar wrapper.
  * @param {boolean}  props.tabsOverflow        Whether the tab bar currently overflows its container.
  * @param {Function} props.scrollNotifyTabs    Scrolls the tab bar left/right.
- * @param {boolean}  props.discordComplete     Whether Discord's required fields are filled in.
- * @param {boolean}  props.slackChannelComplete Whether the Slack channel target's required fields are filled in.
- * @param {boolean}  props.slackDmComplete     Whether the Slack DM target's required fields are filled in.
- * @param {boolean}  props.slackEnabled        Whether either Slack target is enabled.
- * @param {boolean}  props.slackIncomplete     Whether an enabled Slack target is missing required fields.
- * @param {boolean}  props.telegramChannelComplete Whether the Telegram channel/group target's required fields are filled in.
- * @param {boolean}  props.telegramDmComplete  Whether the Telegram DM target's required fields are filled in.
- * @param {boolean}  props.telegramEnabled     Whether either Telegram target is enabled.
- * @param {boolean}  props.telegramIncomplete  Whether an enabled Telegram target is missing required fields.
- * @param {boolean}  props.mastodonComplete    Whether Mastodon's required fields are filled in.
- * @param {boolean}  props.blueskyComplete     Whether Bluesky's required fields are filled in.
  * @returns {JSX.Element}
  */
 export default function NotificationsSection({
@@ -142,18 +195,9 @@ export default function NotificationsSection({
   tabsWrapRef,
   tabsOverflow,
   scrollNotifyTabs,
-  discordComplete,
-  slackChannelComplete,
-  slackDmComplete,
-  slackEnabled,
-  slackIncomplete,
-  telegramChannelComplete,
-  telegramDmComplete,
-  telegramEnabled,
-  telegramIncomplete,
-  mastodonComplete,
-  blueskyComplete,
 }) {
+  const notify = form.notify;
+
   return (
     <>
       <div className="lynxjournal-notify-tabs-row" ref={tabsWrapRef}>
@@ -170,14 +214,16 @@ export default function NotificationsSection({
           className="lynxjournal-notify-tabs"
           initialTabName={initialNotifyTab}
           onSelect={setActiveNotifyTab}
-          tabs={[
-            { name: 'email', title: <TabTitleWithBadge label={__('Email', 'lynx-journal')} enabled={form.notify?.enabled ?? false} incomplete={!!form.notify?.enabled && !form.notify?.email} /> },
-            { name: 'discord', title: <TabTitleWithBadge label={__('Discord', 'lynx-journal')} enabled={form.notify?.discordEnabled ?? false} incomplete={!!form.notify?.discordEnabled && !discordComplete} /> },
-            { name: 'slack', title: <TabTitleWithBadge label={__('Slack', 'lynx-journal')} enabled={slackEnabled} incomplete={slackIncomplete} /> },
-            { name: 'telegram', title: <TabTitleWithBadge label={__('Telegram', 'lynx-journal')} enabled={telegramEnabled} incomplete={telegramIncomplete} /> },
-            { name: 'mastodon', title: <TabTitleWithBadge label={__('Mastodon', 'lynx-journal')} enabled={form.notify?.mastodonEnabled ?? false} incomplete={!!form.notify?.mastodonEnabled && !mastodonComplete} /> },
-            { name: 'bluesky', title: <TabTitleWithBadge label={__('Bluesky', 'lynx-journal')} enabled={form.notify?.bskyEnabled ?? false} incomplete={!!form.notify?.bskyEnabled && !blueskyComplete} /> },
-          ]}
+          tabs={NOTIFICATION_CHANNELS.map(entry => ({
+            name: entry.key,
+            title: (
+              <TabTitleWithBadge
+                label={entry.tabLabel}
+                enabled={isChannelEnabled(entry, notify)}
+                incomplete={isChannelIncomplete(entry, notify)}
+              />
+            ),
+          }))}
         >
           {() => null}
         </TabPanel>
@@ -199,228 +245,41 @@ export default function NotificationsSection({
         they keep contributing their height to that auto-sizing.
       */}
       <div className="lynxjournal-notify-tab-panel-stack">
-        <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'email' ? '' : undefined}>
-          <CheckboxControl
-            label={__('Email me after each run', 'lynx-journal')}
-            checked={form.notify?.enabled ?? false}
-            onChange={enabled => setForm(f => ({ ...f, notify: { ...f.notify, enabled } }))}
-          />
-          <TextControl
-            label={__('Email address', 'lynx-journal')}
-            type="email"
-            value={form.notify?.email ?? ''}
-            placeholder={__('Leave blank to use admin email', 'lynx-journal')}
-            onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
-            __nextHasNoMarginBottom
-          />
-          <ChannelActions
-            canTest={!!form.notify?.enabled}
-            testState={testState.email}
-            onTest={() => handleTest('email')}
-            saveState={channelSaveState.email}
-            onSave={() => handleSaveChannel('email')}
-          />
-        </div>
-
-        <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'discord' ? '' : undefined}>
-          <CheckboxControl
-            label={__('Send a Discord notification after each run', 'lynx-journal')}
-            checked={form.notify?.discordEnabled ?? false}
-            onChange={discordEnabled => setForm(f => ({ ...f, notify: { ...f.notify, discordEnabled } }))}
-          />
-          <TextControl
-            label={__('Discord webhook URL', 'lynx-journal')}
-            type="url"
-            value={form.notify?.discordWebhookUrl ?? ''}
-            placeholder={__('https://discord.com/api/webhooks/...', 'lynx-journal')}
-            onChange={discordWebhookUrl => setForm(f => ({ ...f, notify: { ...f.notify, discordWebhookUrl } }))}
-            __nextHasNoMarginBottom
-          />
-          <ChannelActions
-            canTest={discordComplete}
-            testState={testState.discord}
-            onTest={() => handleTest('discord')}
-            saveState={channelSaveState.discord}
-            onSave={() => handleSaveChannel('discord')}
-          />
-        </div>
-
-        <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'slack' ? '' : undefined}>
-          <RevealableTextControl
-            label={__('Slack Bot Token', 'lynx-journal')}
-            value={form.notify?.slackBotToken ?? ''}
-            placeholder={__('xoxb-...', 'lynx-journal')}
-            onChange={slackBotToken => setForm(f => ({ ...f, notify: { ...f.notify, slackBotToken } }))}
-          />
-
-          <fieldset className="lynxjournal-notify-target-group">
-            <legend className="lynxjournal-notify-target-heading">{__('Channel', 'lynx-journal')}</legend>
-            <CheckboxControl
-              label={__('Post to a Slack channel after each run', 'lynx-journal')}
-              checked={form.notify?.slackChannelEnabled ?? false}
-              onChange={slackChannelEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelEnabled } }))}
-            />
-            <RevealableTextControl
-              label={__('Slack channel ID', 'lynx-journal')}
-              value={form.notify?.slackChannelId ?? ''}
-              placeholder={__('C0123456789', 'lynx-journal')}
-              onChange={slackChannelId => setForm(f => ({ ...f, notify: { ...f.notify, slackChannelId } }))}
-            />
-            <ChannelActions
-              canTest={slackChannelComplete}
-              testState={testState.slack_channel}
-              onTest={() => handleTest('slack_channel')}
-              saveState={channelSaveState.slack_channel}
-              onSave={() => handleSaveChannel('slack_channel')}
-            />
-          </fieldset>
-
-          <fieldset className="lynxjournal-notify-target-group">
-            <legend className="lynxjournal-notify-target-heading">{__('Personal message', 'lynx-journal')}</legend>
-            <CheckboxControl
-              label={__('Send me a Slack DM after each run', 'lynx-journal')}
-              checked={form.notify?.slackDmEnabled ?? false}
-              onChange={slackDmEnabled => setForm(f => ({ ...f, notify: { ...f.notify, slackDmEnabled } }))}
-            />
-            <RevealableTextControl
-              label={__('Slack user ID', 'lynx-journal')}
-              value={form.notify?.slackUserId ?? ''}
-              placeholder={__('U0123456789', 'lynx-journal')}
-              onChange={slackUserId => setForm(f => ({ ...f, notify: { ...f.notify, slackUserId } }))}
-            />
-            <ChannelActions
-              canTest={slackDmComplete}
-              testState={testState.slack_dm}
-              onTest={() => handleTest('slack_dm')}
-              saveState={channelSaveState.slack_dm}
-              onSave={() => handleSaveChannel('slack_dm')}
-            />
-          </fieldset>
-        </div>
-
-        <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'telegram' ? '' : undefined}>
-          <RevealableTextControl
-            label={__('Telegram bot token', 'lynx-journal')}
-            value={form.notify?.telegramBotToken ?? ''}
-            placeholder={__('123456789:AAH...', 'lynx-journal')}
-            onChange={telegramBotToken => setForm(f => ({ ...f, notify: { ...f.notify, telegramBotToken } }))}
-          />
-
-          <fieldset className="lynxjournal-notify-target-group">
-            <legend className="lynxjournal-notify-target-heading">{__('Group or channel', 'lynx-journal')}</legend>
-            <CheckboxControl
-              label={__('Post to a Telegram group or channel after each run', 'lynx-journal')}
-              checked={form.notify?.telegramEnabled ?? false}
-              onChange={telegramEnabled => setForm(f => ({ ...f, notify: { ...f.notify, telegramEnabled } }))}
-            />
-            <RevealableTextControl
-              label={__('Telegram group/channel chat ID', 'lynx-journal')}
-              value={form.notify?.telegramChatId ?? ''}
-              placeholder={__('-1001234567890', 'lynx-journal')}
-              onChange={telegramChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramChatId } }))}
-            />
-            <ChannelActions
-              canTest={telegramChannelComplete}
-              testState={testState.telegram}
-              onTest={() => handleTest('telegram')}
-              saveState={channelSaveState.telegram}
-              onSave={() => handleSaveChannel('telegram')}
-            />
-          </fieldset>
-
-          <fieldset className="lynxjournal-notify-target-group">
-            <legend className="lynxjournal-notify-target-heading">{__('Personal message', 'lynx-journal')}</legend>
-            <CheckboxControl
-              label={__('Send me a Telegram DM after each run', 'lynx-journal')}
-              checked={form.notify?.telegramDmEnabled ?? false}
-              onChange={telegramDmEnabled => setForm(f => ({ ...f, notify: { ...f.notify, telegramDmEnabled } }))}
-            />
-            <RevealableTextControl
-              label={__('Telegram personal chat ID', 'lynx-journal')}
-              value={form.notify?.telegramDmChatId ?? ''}
-              placeholder={__('123456789', 'lynx-journal')}
-              onChange={telegramDmChatId => setForm(f => ({ ...f, notify: { ...f.notify, telegramDmChatId } }))}
-            />
-            <ChannelActions
-              canTest={telegramDmComplete}
-              testState={testState.telegram_dm}
-              onTest={() => handleTest('telegram_dm')}
-              saveState={channelSaveState.telegram_dm}
-              onSave={() => handleSaveChannel('telegram_dm')}
-            />
-          </fieldset>
-        </div>
-
-        <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'mastodon' ? '' : undefined}>
-          <CheckboxControl
-            label={__('Send a Mastodon direct message after each run', 'lynx-journal')}
-            checked={form.notify?.mastodonEnabled ?? false}
-            onChange={mastodonEnabled => setForm(f => ({ ...f, notify: { ...f.notify, mastodonEnabled } }))}
-          />
-          <TextControl
-            label={__('Mastodon instance URL', 'lynx-journal')}
-            type="url"
-            value={form.notify?.mastodonInstanceUrl ?? ''}
-            placeholder={__('https://mastodon.social', 'lynx-journal')}
-            onChange={mastodonInstanceUrl => setForm(f => ({ ...f, notify: { ...f.notify, mastodonInstanceUrl } }))}
-            __nextHasNoMarginBottom
-          />
-          <RevealableTextControl
-            label={__('Mastodon access token', 'lynx-journal')}
-            value={form.notify?.mastodonAccessToken ?? ''}
-            placeholder={__('Access token from your Mastodon app', 'lynx-journal')}
-            onChange={mastodonAccessToken => setForm(f => ({ ...f, notify: { ...f.notify, mastodonAccessToken } }))}
-          />
-          <TextControl
-            label={__('Recipient handle', 'lynx-journal')}
-            value={form.notify?.mastodonRecipient ?? ''}
-            placeholder={__('@you@mastodon.social', 'lynx-journal')}
-            onChange={mastodonRecipient => setForm(f => ({ ...f, notify: { ...f.notify, mastodonRecipient } }))}
-            __nextHasNoMarginBottom
-          />
-          <ChannelActions
-            canTest={mastodonComplete}
-            testState={testState.mastodon}
-            onTest={() => handleTest('mastodon')}
-            saveState={channelSaveState.mastodon}
-            onSave={() => handleSaveChannel('mastodon')}
-          />
-        </div>
-
-        <div className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== 'bluesky' ? '' : undefined}>
-          <CheckboxControl
-            label={__('Send a Bluesky direct message after each run', 'lynx-journal')}
-            checked={form.notify?.bskyEnabled ?? false}
-            onChange={bskyEnabled => setForm(f => ({ ...f, notify: { ...f.notify, bskyEnabled } }))}
-          />
-          <TextControl
-            label={__('Bluesky handle', 'lynx-journal')}
-            value={form.notify?.bskyHandle ?? ''}
-            placeholder={__('you.bsky.social', 'lynx-journal')}
-            onChange={bskyHandle => setForm(f => ({ ...f, notify: { ...f.notify, bskyHandle } }))}
-            __nextHasNoMarginBottom
-          />
-          <RevealableTextControl
-            label={__('Bluesky app password', 'lynx-journal')}
-            value={form.notify?.bskyAppPassword ?? ''}
-            placeholder={__('xxxx-xxxx-xxxx-xxxx', 'lynx-journal')}
-            onChange={bskyAppPassword => setForm(f => ({ ...f, notify: { ...f.notify, bskyAppPassword } }))}
-          />
-          <TextControl
-            label={__('Recipient handle', 'lynx-journal')}
-            value={form.notify?.bskyRecipient ?? ''}
-            placeholder={__('friend.bsky.social', 'lynx-journal')}
-            onChange={bskyRecipient => setForm(f => ({ ...f, notify: { ...f.notify, bskyRecipient } }))}
-            __nextHasNoMarginBottom
-          />
-          <ChannelActions
-            canTest={blueskyComplete}
-            testState={testState.bluesky}
-            onTest={() => handleTest('bluesky')}
-            saveState={channelSaveState.bluesky}
-            onSave={() => handleSaveChannel('bluesky')}
-          />
-        </div>
+        {NOTIFICATION_CHANNELS.map(entry => (
+          <div key={entry.key} className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== entry.key ? '' : undefined}>
+            {entry.targets ? (
+              <>
+                {entry.sharedFields.map(field => renderField(field, notify, setForm))}
+                {entry.targets.map(target => (
+                  <fieldset key={target.key} className="lynxjournal-notify-target-group">
+                    <legend className="lynxjournal-notify-target-heading">{target.groupLabel}</legend>
+                    <TargetFields
+                      entry={entry}
+                      target={target}
+                      notify={notify}
+                      setForm={setForm}
+                      testState={testState}
+                      channelSaveState={channelSaveState}
+                      handleTest={handleTest}
+                      handleSaveChannel={handleSaveChannel}
+                    />
+                  </fieldset>
+                ))}
+              </>
+            ) : (
+              <TargetFields
+                entry={entry}
+                target={entry}
+                notify={notify}
+                setForm={setForm}
+                testState={testState}
+                channelSaveState={channelSaveState}
+                handleTest={handleTest}
+                handleSaveChannel={handleSaveChannel}
+              />
+            )}
+          </div>
+        ))}
       </div>
     </>
   );

@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
+import { initialTabFor, anyChannelEnabled } from './notificationChannels';
 
 /**
  * Encapsulates all state and handlers for the Notifications section: the
- * active channel tab, per-channel test/save request state, tab-bar overflow
- * scrolling, and the derived "complete"/"enabled" booleans used for the
- * tab badges and test-button gating.
+ * active channel tab, per-channel test/save request state, and tab-bar
+ * overflow scrolling. Per-field completeness/enabled state is derived
+ * directly from NOTIFICATION_CHANNELS by the component itself.
  *
  * @param {Object}   form         Current schedule form state (read for form.notify).
  * @param {Function} setForm      Schedule form setter.
@@ -21,15 +22,9 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
   // Keyed the same way as testState, but for the per-channel Save button.
   const [channelSaveState, setChannelSaveState] = useState({});
 
-  const initialNotifyTab = useMemo(() => {
-    if (form.notify?.discordEnabled) return 'discord';
-    if (form.notify?.slackChannelEnabled || form.notify?.slackDmEnabled) return 'slack';
-    if (form.notify?.telegramEnabled || form.notify?.telegramDmEnabled) return 'telegram';
-    if (form.notify?.mastodonEnabled) return 'mastodon';
-    if (form.notify?.bskyEnabled) return 'bluesky';
-    return 'email';
+  const initialNotifyTab = useMemo(() => initialTabFor(form.notify),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only recompute once config finishes loading
-  }, [configLoaded]);
+    [configLoaded]);
 
   const [activeNotifyTab, setActiveNotifyTab] = useState(initialNotifyTab);
 
@@ -119,20 +114,7 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
     if (!collapsed) requestAnimationFrame(measureTabsOverflow);
   }
 
-  // Whether each notify target has its required fields filled in (used for both
-  // the tab badges' "on but incomplete" yellow state and the test-button gating).
-  const discordComplete = !!form.notify?.discordEnabled && !!form.notify?.discordWebhookUrl;
-  const slackChannelComplete = !!form.notify?.slackChannelEnabled && !!form.notify?.slackBotToken && !!form.notify?.slackChannelId;
-  const slackDmComplete = !!form.notify?.slackDmEnabled && !!form.notify?.slackBotToken && !!form.notify?.slackUserId;
-  const slackEnabled = !!form.notify?.slackChannelEnabled || !!form.notify?.slackDmEnabled;
-  const slackIncomplete = (!!form.notify?.slackChannelEnabled && !slackChannelComplete) || (!!form.notify?.slackDmEnabled && !slackDmComplete);
-  const telegramChannelComplete = !!form.notify?.telegramEnabled && !!form.notify?.telegramBotToken && !!form.notify?.telegramChatId;
-  const telegramDmComplete = !!form.notify?.telegramDmEnabled && !!form.notify?.telegramBotToken && !!form.notify?.telegramDmChatId;
-  const telegramEnabled = !!form.notify?.telegramEnabled || !!form.notify?.telegramDmEnabled;
-  const telegramIncomplete = (!!form.notify?.telegramEnabled && !telegramChannelComplete) || (!!form.notify?.telegramDmEnabled && !telegramDmComplete);
-  const mastodonComplete = !!form.notify?.mastodonEnabled && !!form.notify?.mastodonInstanceUrl && !!form.notify?.mastodonAccessToken && !!form.notify?.mastodonRecipient;
-  const blueskyComplete = !!form.notify?.bskyEnabled && !!form.notify?.bskyHandle && !!form.notify?.bskyAppPassword && !!form.notify?.bskyRecipient;
-  const anyNotifyEnabled = !!form.notify?.enabled || !!form.notify?.discordEnabled || slackEnabled || telegramEnabled || !!form.notify?.mastodonEnabled || !!form.notify?.bskyEnabled;
+  const anyNotifyEnabled = anyChannelEnabled(form.notify);
 
   return {
     initialNotifyTab,
@@ -146,17 +128,6 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
     tabsOverflow,
     scrollNotifyTabs,
     handleNotifySectionToggle,
-    discordComplete,
-    slackChannelComplete,
-    slackDmComplete,
-    slackEnabled,
-    slackIncomplete,
-    telegramChannelComplete,
-    telegramDmComplete,
-    telegramEnabled,
-    telegramIncomplete,
-    mastodonComplete,
-    blueskyComplete,
     anyNotifyEnabled,
   };
 }

@@ -33,7 +33,6 @@ require_once __DIR__ . '/src/php/traits/Publishing.php';
 require_once __DIR__ . '/src/php/traits/Batch.php';
 require_once __DIR__ . '/src/php/traits/Queries.php';
 require_once __DIR__ . '/src/php/traits/ScheduleValidator.php';
-require_once __DIR__ . '/src/php/traits/NotificationValidator.php';
 require_once __DIR__ . '/src/php/traits/RestApi.php';
 require_once __DIR__ . '/src/php/traits/Admin/Menu.php';
 require_once __DIR__ . '/src/php/traits/Admin/Dashboard.php';
@@ -41,7 +40,22 @@ require_once __DIR__ . '/src/php/traits/Admin/LinksPage.php';
 require_once __DIR__ . '/src/php/traits/Admin/AddLink.php';
 require_once __DIR__ . '/src/php/traits/Admin/Categories.php';
 require_once __DIR__ . '/src/php/traits/Scheduler.php';
-require_once __DIR__ . '/src/php/traits/Notifications.php';
+
+// Notification channels (must be required before the class)
+require_once __DIR__ . '/src/php/notifications/Channel.php';
+require_once __DIR__ . '/src/php/notifications/Http.php';
+require_once __DIR__ . '/src/php/notifications/channels/EmailChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/DiscordChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/SlackBase.php';
+require_once __DIR__ . '/src/php/notifications/channels/SlackChannelChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/SlackDmChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/TelegramBase.php';
+require_once __DIR__ . '/src/php/notifications/channels/TelegramChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/TelegramDmChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/MastodonChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/BlueskyChannel.php';
+require_once __DIR__ . '/src/php/notifications/Manager.php';
+
 require_once __DIR__ . '/src/php/class-lynxjournal.php';
 
 register_deactivation_hook(LYNXJOURNAL_PLUGIN_FILE, function() {
