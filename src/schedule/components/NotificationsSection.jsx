@@ -362,13 +362,11 @@ export default function NotificationsSection({
             onChange={mastodonInstanceUrl => setForm(f => ({ ...f, notify: { ...f.notify, mastodonInstanceUrl } }))}
             __nextHasNoMarginBottom
           />
-          <TextControl
+          <RevealableTextControl
             label={__('Mastodon access token', 'lynx-journal')}
-            type="password"
             value={form.notify?.mastodonAccessToken ?? ''}
             placeholder={__('Access token from your Mastodon app', 'lynx-journal')}
             onChange={mastodonAccessToken => setForm(f => ({ ...f, notify: { ...f.notify, mastodonAccessToken } }))}
-            __nextHasNoMarginBottom
           />
           <TextControl
             label={__('Recipient handle', 'lynx-journal')}
