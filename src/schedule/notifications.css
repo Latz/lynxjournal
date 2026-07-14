@@ -1,30 +1,22 @@
 /* Notification channel tabs (nested one level inside .lynxjournal-section) */
-.lynxjournal-notify-badge {
-  display: inline-block;
-  min-width: 24px;
-  margin-inline-start: 8px;
-  padding: 1px 6px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  text-align: center;
+
+/* Tab title colored by channel state. on/incomplete get a faux-bold via
+   text-shadow (not font-weight) so they pop against the plain "off" state
+   without changing the text's measured width — a real font-weight bump here
+   shifted the tab layout every time a channel's state toggled.
+   Colors contrast-checked >=4.5:1 on white and #f0f0f1 hover. */
+.lynxjournal-notify-tab-title.is-on {
+  color: var(--lynxjournal-color-success-text);
+  text-shadow: 0 0 0.5px currentColor;
 }
 
-/* Darkened to meet 4.5:1 contrast against white badge text (WCAG AA) */
-.lynxjournal-notify-badge.is-on {
-  background: var(--lynxjournal-color-success-text);
-  color: #fff;
+.lynxjournal-notify-tab-title.is-off {
+  color: var(--lynxjournal-color-neutral-text);
 }
 
-.lynxjournal-notify-badge.is-off {
-  background: var(--lynxjournal-color-neutral-text);
-  color: #fff;
-}
-
-/* On but missing required fields; ~8.9:1 contrast against white (WCAG AA) */
-.lynxjournal-notify-badge.is-incomplete {
-  background: var(--lynxjournal-color-warning-text);
-  color: #fff;
+.lynxjournal-notify-tab-title.is-incomplete {
+  color: #8a6100;
+  text-shadow: 0 0 0.5px currentColor;
 }
 
 .lynxjournal-notify-tabs-row {

@@ -36,7 +36,7 @@ function RevealableTextControl({ label, value, placeholder, onChange }) {
 }
 
 /**
- * Tab title for a notification channel, with an inline On/Off status badge.
+ * Tab title for a notification channel, colored to reflect its on/off/incomplete state.
  *
  * @param {Object}  props
  * @param {string}  props.label       Channel display name.
@@ -45,14 +45,16 @@ function RevealableTextControl({ label, value, placeholder, onChange }) {
  * @returns {JSX.Element}
  */
 export function TabTitleWithBadge({ label, enabled, incomplete }) {
-  const badgeClass = !enabled ? 'is-off' : incomplete ? 'is-incomplete' : 'is-on';
+  const stateClass = !enabled ? 'is-off' : incomplete ? 'is-incomplete' : 'is-on';
+  const stateLabel = !enabled
+    ? __('Off', 'lynx-journal')
+    : incomplete
+      ? __('On, incomplete', 'lynx-journal')
+      : __('On', 'lynx-journal');
   return (
-    <>
+    <span className={`lynxjournal-notify-tab-title ${stateClass}`} aria-label={`${label}: ${stateLabel}`}>
       {label}
-      <span className={`lynxjournal-notify-badge ${badgeClass}`}>
-        {enabled ? __('On', 'lynx-journal') : __('Off', 'lynx-journal')}
-      </span>
-    </>
+    </span>
   );
 }
 
