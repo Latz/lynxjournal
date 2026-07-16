@@ -11,3 +11,10 @@ HTMLCanvasElement.prototype.getContext = () => ({
     clearRect: () => {},
     getImageData: () => ({ data: new Uint8ClampedArray(4) }),
 });
+
+// jsdom doesn't implement the two-argument (pseudoElt) form of
+// getComputedStyle and logs "Not implemented" to stderr instead of throwing;
+// axe's color-contrast check hits this while probing ::before/::after for
+// icon ligatures. Drop the pseudoElt arg so jsdom's real implementation runs.
+const nativeGetComputedStyle = window.getComputedStyle.bind(window);
+window.getComputedStyle = (elt) => nativeGetComputedStyle(elt);
