@@ -150,20 +150,16 @@ function renderField(field, notify, setForm) {
  * @param {Object}   [props.channelSaveState] This target's { saving, notice } state, if any.
  * @param {Function} props.handleTest       Sends a test notification for a channel key.
  * @param {Function} props.handleSaveChannel Persists a channel key's fields.
- * @param {JSX.Element} [props.helpButton]   Help link to render on the checkbox's row, for non-grouped channels only.
  * @returns {JSX.Element}
  */
-function TargetFields({ entry, target, notify, setForm, testState, channelSaveState, handleTest, handleSaveChannel, helpButton }) {
+function TargetFields({ entry, target, notify, setForm, testState, channelSaveState, handleTest, handleSaveChannel }) {
   return (
     <>
-      <div className="lynxjournal-notify-checkbox-row">
-        <CheckboxControl
-          label={target.checkboxLabel}
-          checked={!!notify?.[target.enabledField]}
-          onChange={checked => setForm(f => ({ ...f, notify: { ...f.notify, [target.enabledField]: checked } }))}
-        />
-        {helpButton}
-      </div>
+      <CheckboxControl
+        label={target.checkboxLabel}
+        checked={!!notify?.[target.enabledField]}
+        onChange={checked => setForm(f => ({ ...f, notify: { ...f.notify, [target.enabledField]: checked } }))}
+      />
       {target.fields.map(field => renderField(field, notify, setForm))}
       <ChannelActions
         canTest={isTargetComplete(entry, target, notify)}
@@ -263,21 +259,17 @@ export default function NotificationsSection({
       <div className="lynxjournal-notify-tab-panel-stack">
         {NOTIFICATION_CHANNELS.map(entry => (
           <div key={entry.key} className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== entry.key ? '' : undefined}>
+            <Button
+              variant="link"
+              icon="editor-help"
+              className="lynxjournal-notify-help-link"
+              onClick={() => openHelpTab(helpTabIdFor(entry.key))}
+            >
+              {__('Help', 'lynx-journal')}
+            </Button>
             {entry.targets ? (
               <>
-                <div className="lynxjournal-notify-sharedfield-row">
-                  <div className="lynxjournal-notify-sharedfield-row-fields">
-                    {entry.sharedFields.map(field => renderField(field, notify, setForm))}
-                  </div>
-                  <Button
-                    variant="link"
-                    icon="editor-help"
-                    className="lynxjournal-notify-help-link"
-                    onClick={() => openHelpTab(helpTabIdFor(entry.key))}
-                  >
-                    {__('Help', 'lynx-journal')}
-                  </Button>
-                </div>
+                {entry.sharedFields.map(field => renderField(field, notify, setForm))}
                 {entry.targets.map(target => (
                   <fieldset key={target.key} className="lynxjournal-notify-target-group">
                     <legend className="lynxjournal-notify-target-heading">{target.groupLabel}</legend>
@@ -304,16 +296,6 @@ export default function NotificationsSection({
                 channelSaveState={channelSaveState}
                 handleTest={handleTest}
                 handleSaveChannel={handleSaveChannel}
-                helpButton={
-                  <Button
-                    variant="link"
-                    icon="editor-help"
-                    className="lynxjournal-notify-help-link"
-                    onClick={() => openHelpTab(helpTabIdFor(entry.key))}
-                  >
-                    {__('Help', 'lynx-journal')}
-                  </Button>
-                }
               />
             )}
           </div>
