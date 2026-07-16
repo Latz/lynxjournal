@@ -105,8 +105,12 @@
 
 .lynxjournal-notify-sharedfield-row {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 8px;
+}
+
+.lynxjournal-notify-sharedfield-row .lynxjournal-notify-help-link {
+  align-self: flex-start;
 }
 
 .lynxjournal-notify-sharedfield-row-fields {
