@@ -468,11 +468,15 @@
 
 .lynxjournal-mode-cards {
   display: flex;
+  align-items: stretch;
   gap: 6px;
 }
 
 .lynxjournal-mode-card {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
   width: 96px;
   padding: 10px 12px;
   border: 2px solid #c3c4c7;
