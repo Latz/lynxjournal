@@ -84,7 +84,7 @@
  */
 .lynxjournal-notify-tab-panel-stack {
   display: grid;
-  padding-block-start: 16px;
+  padding-block-start: 8px;
 }
 
 .lynxjournal-notify-tab-panel {
@@ -104,6 +104,15 @@
 
 .components-button.is-link.lynxjournal-notify-help-link {
   text-decoration: none;
+  border: 1px solid #c3c4c7;
+  border-radius: 2px;
+  padding: 2px 8px;
+  background: #f6f7f7;
+}
+
+.components-button.is-link.lynxjournal-notify-help-link:hover {
+  background: #f0f0f1;
+  border-color: var(--wp-admin-theme-color, #2271b1);
 }
 
 .components-button.lynxjournal-notify-help-link:focus,
