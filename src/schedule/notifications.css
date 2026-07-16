@@ -92,6 +92,17 @@
   align-self: flex-end;
 }
 
+.lynxjournal-notify-checkbox-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.lynxjournal-notify-checkbox-row .lynxjournal-notify-help-link {
+  align-self: auto;
+}
+
 .components-button.is-link.lynxjournal-notify-help-link {
   text-decoration: none;
 }
