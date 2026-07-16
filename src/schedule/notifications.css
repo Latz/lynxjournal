@@ -46,6 +46,13 @@
   scrollbar-width: none;
 }
 
+.lynxjournal-notify-tabs .components-tab-panel__tabs::after {
+  content: '';
+  flex: 1;
+  min-width: 0;
+  border-bottom: 1px solid #dcdcde;
+}
+
 .lynxjournal-notify-tabs .components-tab-panel__tabs-item {
   border-inline-end: 1px solid #dcdcde;
   border-bottom: 1px solid #dcdcde;
