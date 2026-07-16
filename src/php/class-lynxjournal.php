@@ -47,6 +47,7 @@ class LynxJournal {
         $instance = new self();
 
         // Universal hooks: run on every request (front-end, admin, REST, cron, CLI)
+        add_action('init', [$instance, 'loadTextdomain'],         0);
         add_action('init', [$instance, 'register_post_type'],    0);
         add_action('init', [$instance, 'register_taxonomies'],   0);
         add_action('init', [$instance, 'maybeRunMigration'],     5);
@@ -96,6 +97,16 @@ class LynxJournal {
         add_action('init', [$this, 'handlePreflight'], 1);
         $this->registerRestRoutes();
         add_filter('rest_pre_serve_request', [$this, 'addCorsHeaders'], 15);
+    }
+
+    /**
+     * Load the plugin's translation catalog for the 'lynx-journal' text domain.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    public function loadTextdomain(): void {
+        load_plugin_textdomain('lynx-journal', false, dirname(plugin_basename(LYNXJOURNAL_PLUGIN_FILE)) . '/languages');
     }
 
     /**

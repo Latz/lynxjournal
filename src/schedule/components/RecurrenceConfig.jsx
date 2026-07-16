@@ -6,17 +6,23 @@ import { __experimentalNumberControl as NumberControl, SelectControl, Button } f
 import { __ } from '@wordpress/i18n';
 
 const WEEKDAYS = [
-  { value: 'MO', label: 'Mon' },
-  { value: 'TU', label: 'Tue' },
-  { value: 'WE', label: 'Wed' },
-  { value: 'TH', label: 'Thu' },
-  { value: 'FR', label: 'Fri' },
-  { value: 'SA', label: 'Sat' },
-  { value: 'SU', label: 'Sun' },
+  { value: 'MO', label: __('Mon', 'lynx-journal') },
+  { value: 'TU', label: __('Tue', 'lynx-journal') },
+  { value: 'WE', label: __('Wed', 'lynx-journal') },
+  { value: 'TH', label: __('Thu', 'lynx-journal') },
+  { value: 'FR', label: __('Fri', 'lynx-journal') },
+  { value: 'SA', label: __('Sat', 'lynx-journal') },
+  { value: 'SU', label: __('Sun', 'lynx-journal') },
 ];
 
-const WEEKDAY_SHORT = { MO: 'Mon', TU: 'Tue', WE: 'Wed', TH: 'Thu', FR: 'Fri', SA: 'Sat', SU: 'Sun' };
-const WEEKDAY_FULL  = { MO: 'Monday', TU: 'Tuesday', WE: 'Wednesday', TH: 'Thursday', FR: 'Friday', SA: 'Saturday', SU: 'Sunday' };
+const WEEKDAY_SHORT = {
+  MO: __('Mon', 'lynx-journal'), TU: __('Tue', 'lynx-journal'), WE: __('Wed', 'lynx-journal'), TH: __('Thu', 'lynx-journal'),
+  FR: __('Fri', 'lynx-journal'), SA: __('Sat', 'lynx-journal'), SU: __('Sun', 'lynx-journal'),
+};
+const WEEKDAY_FULL = {
+  MO: __('Monday', 'lynx-journal'), TU: __('Tuesday', 'lynx-journal'), WE: __('Wednesday', 'lynx-journal'), TH: __('Thursday', 'lynx-journal'),
+  FR: __('Friday', 'lynx-journal'), SA: __('Saturday', 'lynx-journal'), SU: __('Sunday', 'lynx-journal'),
+};
 
 const NTH_OPTIONS = [
   { label: __('first',  'lynx-journal'), value: '1' },

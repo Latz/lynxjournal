@@ -3,8 +3,15 @@ import { RRule } from 'rrule';
 import { __, sprintf } from '@wordpress/i18n';
 import { SCHEDULE_MODES } from '../lib/modes';
 
-const DAYS   = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const DAYS = [
+  __('Sun', 'lynx-journal'), __('Mon', 'lynx-journal'), __('Tue', 'lynx-journal'), __('Wed', 'lynx-journal'),
+  __('Thu', 'lynx-journal'), __('Fri', 'lynx-journal'), __('Sat', 'lynx-journal'),
+];
+const MONTHS = [
+  __('Jan', 'lynx-journal'), __('Feb', 'lynx-journal'), __('Mar', 'lynx-journal'), __('Apr', 'lynx-journal'),
+  __('May', 'lynx-journal'), __('Jun', 'lynx-journal'), __('Jul', 'lynx-journal'), __('Aug', 'lynx-journal'),
+  __('Sep', 'lynx-journal'), __('Oct', 'lynx-journal'), __('Nov', 'lynx-journal'), __('Dec', 'lynx-journal'),
+];
 
 const loc = globalThis.lynxjournalSchedule || {};
 const SITE_TIMEZONE = loc.timezone || null;

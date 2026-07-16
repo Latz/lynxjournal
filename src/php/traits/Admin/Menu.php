@@ -393,6 +393,8 @@ trait LynxJournal_Admin_Menu {
                 true
             );
 
+            wp_set_script_translations('lynxjournal-schedule', 'lynx-journal', plugin_dir_path(LYNXJOURNAL_PLUGIN_FILE) . 'languages');
+
             wp_localize_script('lynxjournal-schedule', 'lynxjournalSchedule', array(
                 'allModes'     => array_column(ScheduleMode::cases(), 'value'),
                 'timeModes'    => array_column(ScheduleMode::timeBased(), 'value'),

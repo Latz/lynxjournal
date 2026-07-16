@@ -186,7 +186,7 @@ trait LynxJournal_RestApi {
             $this->setCorsOriginHeaders($origin);
         }
         if (!current_user_can('edit_posts')) {
-            wp_send_json_error('Forbidden', 403);
+            wp_send_json_error(__('Forbidden', 'lynx-journal'), 403);
         }
         wp_send_json_success(['nonce' => wp_create_nonce('wp_rest')]);
     }
@@ -201,11 +201,11 @@ trait LynxJournal_RestApi {
     public function restDeleteLink(\WP_REST_Request $request): \WP_REST_Response|\WP_Error {
         $link_id = (int) $request['id'];
         if (get_post_type($link_id) !== 'lynx-journal') {
-            return new \WP_Error('invalid_link', 'Link not found', array('status' => 404));
+            return new \WP_Error('invalid_link', __('Link not found', 'lynx-journal'), array('status' => 404));
         }
         $result = wp_delete_post($link_id, true);
         if (!$result) {
-            return new \WP_Error('delete_failed', 'Could not delete link', array('status' => 500));
+            return new \WP_Error('delete_failed', __('Could not delete link', 'lynx-journal'), array('status' => 500));
         }
         delete_transient('lynxjournal_publish_stats');
         return new \WP_REST_Response(null, 204);

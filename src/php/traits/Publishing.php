@@ -58,7 +58,7 @@ trait LynxJournal_Publishing {
             $post_content .= "\n\n" . wp_kses_post($description);
         }
         if (!empty($url)) {
-            $post_content .= "\n\n" . '<p>Read more: <a href="' . esc_url($url) . '">' . esc_html($url) . '</a></p>';
+            $post_content .= "\n\n" . '<p>' . esc_html__('Read more:', 'lynx-journal') . ' <a href="' . esc_url($url) . '">' . esc_html($url) . '</a></p>';
         }
         // Allows themes/plugins to override or extend the generated post HTML.
         return apply_filters('lynxjournal_blog_post_content', $post_content, $link_id, $url, $description);
