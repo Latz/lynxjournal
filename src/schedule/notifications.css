@@ -103,6 +103,17 @@
   align-self: auto;
 }
 
+.lynxjournal-notify-sharedfield-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.lynxjournal-notify-sharedfield-row-fields {
+  flex: 1;
+  min-width: 0;
+}
+
 .components-button.is-link.lynxjournal-notify-help-link {
   text-decoration: none;
 }

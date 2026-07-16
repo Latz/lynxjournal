@@ -265,15 +265,19 @@ export default function NotificationsSection({
           <div key={entry.key} className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== entry.key ? '' : undefined}>
             {entry.targets ? (
               <>
-                {entry.sharedFields.map(field => renderField(field, notify, setForm))}
-                <Button
-                  variant="link"
-                  icon="editor-help"
-                  className="lynxjournal-notify-help-link"
-                  onClick={() => openHelpTab(helpTabIdFor(entry.key))}
-                >
-                  {__('Help', 'lynx-journal')}
-                </Button>
+                <div className="lynxjournal-notify-sharedfield-row">
+                  <div className="lynxjournal-notify-sharedfield-row-fields">
+                    {entry.sharedFields.map(field => renderField(field, notify, setForm))}
+                  </div>
+                  <Button
+                    variant="link"
+                    icon="editor-help"
+                    className="lynxjournal-notify-help-link"
+                    onClick={() => openHelpTab(helpTabIdFor(entry.key))}
+                  >
+                    {__('Help', 'lynx-journal')}
+                  </Button>
+                </div>
                 {entry.targets.map(target => (
                   <fieldset key={target.key} className="lynxjournal-notify-target-group">
                     <legend className="lynxjournal-notify-target-heading">{target.groupLabel}</legend>
