@@ -261,6 +261,7 @@ export default function NotificationsSection({
           <div key={entry.key} className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== entry.key ? '' : undefined}>
             <Button
               variant="link"
+              icon="editor-help"
               className="lynxjournal-notify-help-link"
               onClick={() => openHelpTab(helpTabIdFor(entry.key))}
             >

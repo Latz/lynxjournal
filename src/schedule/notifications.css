@@ -92,6 +92,16 @@
   align-self: flex-end;
 }
 
+.components-button.is-link.lynxjournal-notify-help-link {
+  text-decoration: none;
+}
+
+.components-button.lynxjournal-notify-help-link:focus,
+.components-button.lynxjournal-notify-help-link:focus:not(:active) {
+  box-shadow: none;
+  outline: none;
+}
+
 .lynxjournal-channel-actions {
   display: flex;
   flex-direction: column;
