@@ -269,3 +269,57 @@ describe('LynxJournal_Notify_Manager::channelLabel()', function (): void {
         expect($this->manager->channelLabel('not_a_channel'))->toBe('not_a_channel');
     });
 });
+
+describe('LynxJournal_Notify_Manager::test()', function (): void {
+    it('records a failure when sendTest() returns a WP_Error', function (): void {
+        $notify = ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc'];
+        Functions\when('wp_remote_post')->justReturn(new WP_Error('http_request_failed', 'boom'));
+
+        $captured = null;
+        Functions\when('update_option')->alias(function ($key, $value) use (&$captured): bool {
+            if ($key === 'lynxjournal_notification_failures') {
+                $captured = $value;
+            }
+            return true;
+        });
+        Functions\when('get_option')->justReturn([]);
+
+        $result = $this->manager->test('discord', $notify);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($captured)->toHaveCount(1);
+        expect($captured[0]['channel'])->toBe('discord');
+        expect($captured[0]['message'])->toBe('boom');
+    });
+
+    it('does not touch the failures option when sendTest() succeeds', function (): void {
+        $notify = ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc'];
+        Functions\when('wp_remote_retrieve_response_code')->justReturn(204);
+        Functions\when('wp_remote_post')->justReturn(['response' => ['code' => 204]]);
+
+        $updatedKeys = [];
+        Functions\when('update_option')->alias(function ($key) use (&$updatedKeys): bool {
+            $updatedKeys[] = $key;
+            return true;
+        });
+
+        $result = $this->manager->test('discord', $notify);
+
+        expect($result)->toBeTrue();
+        expect($updatedKeys)->not->toContain('lynxjournal_notification_failures');
+    });
+
+    it('does not touch the failures option for an unknown channel', function (): void {
+        $updatedKeys = [];
+        Functions\when('update_option')->alias(function ($key) use (&$updatedKeys): bool {
+            $updatedKeys[] = $key;
+            return true;
+        });
+
+        $result = $this->manager->test('not_a_channel', []);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_channel');
+        expect($updatedKeys)->not->toContain('lynxjournal_notification_failures');
+    });
+});

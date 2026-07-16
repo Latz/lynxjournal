@@ -161,7 +161,11 @@ final class LynxJournal_Notify_Manager {
         if (!$channel) {
             return new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), ['status' => 400]);
         }
-        return $channel->sendTest($notify);
+        $result = $channel->sendTest($notify);
+        if (is_wp_error($result)) {
+            $this->recordChannelFailure($key, $result);
+        }
+        return $result;
     }
 
     /**
