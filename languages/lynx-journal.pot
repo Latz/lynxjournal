@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-16T15:20:46+00:00\n"
+"POT-Creation-Date: 2026-07-16T19:42:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: lynx-journal\n"
@@ -31,15 +31,15 @@ msgstr ""
 msgid "Latz"
 msgstr ""
 
-#: src/php/class-lynxjournal.php:272
-#: src/php/class-lynxjournal.php:291
+#: src/php/class-lynxjournal.php:275
+#: src/php/class-lynxjournal.php:294
 msgid "notify must be an object"
 msgstr ""
 
-#: src/php/class-lynxjournal.php:317
-#: src/php/class-lynxjournal.php:345
-#: src/php/notifications/Manager.php:94
-#: src/php/notifications/Manager.php:110
+#: src/php/class-lynxjournal.php:320
+#: src/php/class-lynxjournal.php:348
+#: src/php/notifications/Manager.php:146
+#: src/php/notifications/Manager.php:162
 msgid "Unknown notification channel."
 msgstr ""
 
@@ -314,6 +314,52 @@ msgstr ""
 msgid "Enable Telegram DM notifications and fill in the bot token and user chat ID first."
 msgstr ""
 
+#: src/php/notifications/Manager.php:105
+#: build/schedule.js:1
+#: src/schedule/lib/notificationChannels.js:19
+msgid "Email"
+msgstr ""
+
+#: src/php/notifications/Manager.php:106
+#: src/php/traits/Admin/Menu.php:247
+#: build/schedule.js:1
+#: src/schedule/lib/notificationChannels.js:28
+msgid "Discord"
+msgstr ""
+
+#: src/php/notifications/Manager.php:107
+msgid "Slack (Channel)"
+msgstr ""
+
+#: src/php/notifications/Manager.php:108
+msgid "Slack (DM)"
+msgstr ""
+
+#: src/php/notifications/Manager.php:109
+#: src/php/traits/Admin/Menu.php:265
+#: build/schedule.js:1
+#: src/schedule/lib/notificationChannels.js:64
+msgid "Telegram"
+msgstr ""
+
+#: src/php/notifications/Manager.php:110
+msgid "Telegram (DM)"
+msgstr ""
+
+#: src/php/notifications/Manager.php:111
+#: src/php/traits/Admin/Menu.php:273
+#: build/schedule.js:1
+#: src/schedule/lib/notificationChannels.js:91
+msgid "Mastodon"
+msgstr ""
+
+#: src/php/notifications/Manager.php:112
+#: src/php/traits/Admin/Menu.php:281
+#: build/schedule.js:1
+#: src/schedule/lib/notificationChannels.js:102
+msgid "Bluesky"
+msgstr ""
+
 #: src/php/traits/Admin/AddLink.php:22
 #: src/php/traits/trait-post-type.php:30
 msgid "Add New Link"
@@ -370,8 +416,8 @@ msgid "Add Link"
 msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:109
-#: src/php/traits/Admin/Menu.php:337
-#: src/php/traits/Admin/Menu.php:368
+#: src/php/traits/Admin/Menu.php:343
+#: src/php/traits/Admin/Menu.php:374
 msgid "Cancel"
 msgstr ""
 
@@ -446,7 +492,7 @@ msgstr ""
 
 #: src/php/traits/Admin/Categories.php:172
 #: src/php/traits/Admin/LinksPage.php:341
-#: src/php/traits/Admin/Menu.php:366
+#: src/php/traits/Admin/Menu.php:372
 msgid "Edit"
 msgstr ""
 
@@ -875,12 +921,6 @@ msgstr ""
 msgid "Choose a Mode (a recurring schedule like Daily/Weekly/Monthly, a trigger condition like \"every N links\" or \"every N days\", or Manual for no automatic trigger), set the Recurrence or Condition for that mode, and pick one or more Execution Times. Each notification channel below is an independent, optional add-on — you can enable any combination of them, or none at all."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:247
-#: build/schedule.js:1
-#: src/schedule/lib/notificationChannels.js:28
-msgid "Discord"
-msgstr ""
-
 #: src/php/traits/Admin/Menu.php:248
 msgid "Posts a rich embed to a Discord channel via a webhook every time a scheduled run actually publishes (or attempts to publish) a roundup."
 msgstr ""
@@ -947,12 +987,6 @@ msgstr ""
 msgid "Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the bot is still in the channel and the token/IDs are current."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:265
-#: build/schedule.js:1
-#: src/schedule/lib/notificationChannels.js:64
-msgid "Telegram"
-msgstr ""
-
 #: src/php/traits/Admin/Menu.php:266
 msgid "Uses a single Telegram bot token to post to a group/channel, DM you personally, or both — independently — every time a scheduled run publishes (or attempts to publish) a roundup."
 msgstr ""
@@ -975,12 +1009,6 @@ msgstr ""
 msgid "Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the token is still valid and the bot is still a member of the target chat."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:273
-#: build/schedule.js:1
-#: src/schedule/lib/notificationChannels.js:91
-msgid "Mastodon"
-msgstr ""
-
 #: src/php/traits/Admin/Menu.php:274
 msgid "Sends a visibility-restricted status (Mastodon's equivalent of a DM) to a recipient handle every time a scheduled run publishes (or attempts to publish) a roundup."
 msgstr ""
@@ -995,12 +1023,6 @@ msgstr ""
 
 #: src/php/traits/Admin/Menu.php:277
 msgid "This is not end-to-end encrypted — it's a regular post restricted to the people mentioned. Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the access token hasn't been revoked and the recipient handle is spelled exactly right."
-msgstr ""
-
-#: src/php/traits/Admin/Menu.php:281
-#: build/schedule.js:1
-#: src/schedule/lib/notificationChannels.js:102
-msgid "Bluesky"
 msgstr ""
 
 #: src/php/traits/Admin/Menu.php:282
@@ -1023,78 +1045,93 @@ msgstr ""
 msgid "Detailed instructions"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:335
+#: src/php/traits/Admin/Menu.php:341
 msgid "Delete?"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:336
+#: src/php/traits/Admin/Menu.php:342
 msgid "Yes"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:346
+#: src/php/traits/Admin/Menu.php:352
 msgid "This will permanently invalidate your current API key. You will need to update the Chrome extension with the new key. Continue?"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:347
+#: src/php/traits/Admin/Menu.php:353
 msgid "Missing endpoint or API key."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:348
+#: src/php/traits/Admin/Menu.php:354
 msgid "Testing…"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:349
+#: src/php/traits/Admin/Menu.php:355
 msgid "Connected successfully."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:350
+#: src/php/traits/Admin/Menu.php:356
 msgid "Connection failed"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:351
+#: src/php/traits/Admin/Menu.php:357
 msgid "Could not reach endpoint."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:367
+#: src/php/traits/Admin/Menu.php:373
 #: build/schedule.js:4
 #: src/schedule/components/NotificationsSection.jsx:95
 msgid "Save"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:369
+#: src/php/traits/Admin/Menu.php:375
 msgid "Saving…"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:370
+#: src/php/traits/Admin/Menu.php:376
 msgid "Save failed."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:371
+#: src/php/traits/Admin/Menu.php:377
 msgid "Name is required."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:372
+#: src/php/traits/Admin/Menu.php:378
 msgid "Description (optional)"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:373
+#: src/php/traits/Admin/Menu.php:379
 msgid "Leave blank to keep current"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:374
+#: src/php/traits/Admin/Menu.php:380
 msgid "link will become uncategorized."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:375
+#: src/php/traits/Admin/Menu.php:381
 msgid "links will become uncategorized."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:443
+#: src/php/traits/Admin/Menu.php:449
 msgid "Settings"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:503
+#: src/php/traits/Admin/Menu.php:509
 msgid "LynxJournal Summary"
+msgstr ""
+
+#: src/php/traits/Admin/NotificationFailureNotice.php:34
+msgid "LynxJournal: a notification failed to send."
+msgstr ""
+
+#. translators: 1: channel name, 2: date/time, 3: error message
+#: src/php/traits/Admin/NotificationFailureNotice.php:38
+#, php-format
+msgid "%1$s on %2$s: %3$s"
+msgstr ""
+
+#: src/php/traits/Admin/NotificationFailureNotice.php:79
+#: src/php/traits/RestApi.php:189
+msgid "Forbidden"
 msgstr ""
 
 #: src/php/traits/Batch.php:24
@@ -1187,10 +1224,6 @@ msgstr ""
 
 #: src/php/traits/RestApi.php:153
 msgid "No API key configured."
-msgstr ""
-
-#: src/php/traits/RestApi.php:189
-msgid "Forbidden"
 msgstr ""
 
 #: src/php/traits/RestApi.php:204
@@ -1555,11 +1588,6 @@ msgstr ""
 
 #: src/php/traits/trait-post-type.php:225
 msgid "Tags list navigation"
-msgstr ""
-
-#: build/schedule.js:1
-#: src/schedule/lib/notificationChannels.js:19
-msgid "Email"
 msgstr ""
 
 #: build/schedule.js:1
