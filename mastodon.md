@@ -79,11 +79,12 @@ would any other automated status update.
 ## If something goes wrong
 
 Sending to Mastodon is "fire and forget": if the access token is no longer
-valid, the instance is unreachable, or the request otherwise fails, the
-notification is silently skipped — there's no retry and no error shown in
-WordPress. Importantly, this never affects the roundup publish itself; a
-failed Mastodon notification never blocks or breaks a scheduled run. If
-messages stop arriving:
+valid, the instance is unreachable, or the request otherwise fails, there's
+no retry — but a dismissible error notice appears in wp-admin naming the
+Mastodon channel and the reason, so the failure isn't invisible. Importantly,
+this never affects the roundup publish itself; a failed Mastodon
+notification never blocks or breaks a scheduled run. If messages stop
+arriving:
 - confirm the access token hasn't been revoked (check **Settings →
   Development** on your instance),
 - confirm the instance URL is correct and the instance is reachable,

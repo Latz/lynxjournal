@@ -57,9 +57,61 @@ final class LynxJournal_Notify_Manager {
 
         foreach ($this->channels as $channel) {
             if ($channel->isEnabled($notify)) {
-                $channel->send($post_id, $link_ids, $mode, $notify);
+                $result = $channel->send($post_id, $link_ids, $mode, $notify);
+                if (is_wp_error($result)) {
+                    $this->recordChannelFailure($channel->key(), $result);
+                }
             }
         }
+    }
+
+    /**
+     * Persist a channel send failure so it can surface as an admin notice,
+     * and log it for site admins who monitor debug.log.
+     *
+     * @since 1.0.0
+     * @param string $key Channel key that failed.
+     * @param \WP_Error $error The error returned by the channel's send().
+     * @return void
+     */
+    private function recordChannelFailure(string $key, \WP_Error $error): void {
+        $message = $error->get_error_message();
+
+        $failures = get_option('lynxjournal_notification_failures', []);
+        if (!is_array($failures)) {
+            $failures = [];
+        }
+        array_unshift($failures, [
+            'ts'      => time(),
+            'channel' => $key,
+            'label'   => $this->channelLabel($key),
+            'message' => $message,
+        ]);
+        update_option('lynxjournal_notification_failures', array_slice($failures, 0, 10));
+
+        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+        error_log(sprintf('LynxJournal: %s notification failed: %s', $key, $message));
+    }
+
+    /**
+     * Human-readable label for a notification channel key.
+     *
+     * @since 1.0.0
+     * @param string $key Channel key.
+     * @return string Translated human label, or the raw key if unknown.
+     */
+    public function channelLabel(string $key): string {
+        $labels = [
+            'email'         => __('Email', 'lynx-journal'),
+            'discord'       => __('Discord', 'lynx-journal'),
+            'slack_channel' => __('Slack (Channel)', 'lynx-journal'),
+            'slack_dm'      => __('Slack (DM)', 'lynx-journal'),
+            'telegram'      => __('Telegram', 'lynx-journal'),
+            'telegram_dm'   => __('Telegram (DM)', 'lynx-journal'),
+            'mastodon'      => __('Mastodon', 'lynx-journal'),
+            'bluesky'       => __('Bluesky', 'lynx-journal'),
+        ];
+        return $labels[$key] ?? $key;
     }
 
     /**

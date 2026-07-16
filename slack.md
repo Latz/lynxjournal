@@ -109,9 +109,10 @@ messages — one to the channel, one as a DM — for the same run.
 
 Sending to Slack is "fire and forget": if the bot token is revoked, the
 channel/user ID is wrong, the bot isn't in the channel, or the request
-otherwise fails, the notification is silently skipped — no retry, no error
-shown in WordPress. This never affects the roundup publish itself; a
-failed Slack notification never blocks or breaks a scheduled run.
+otherwise fails, there's no retry — but a dismissible error notice appears in
+wp-admin naming the Slack channel/DM target and the reason, so the failure
+isn't invisible. This never affects the roundup publish itself; a failed
+Slack notification never blocks or breaks a scheduled run.
 
 Common causes of a missing message:
 - The bot hasn't been invited to the target channel (channel messages

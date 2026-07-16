@@ -74,10 +74,11 @@ messages your configured recipient handle directly:
 
 Sending to Bluesky is "fire and forget": if the app password is no longer
 valid, the recipient handle can't be resolved, or the request otherwise
-fails at any step of the handshake, the notification is silently skipped —
-there's no retry and no error shown in WordPress. Importantly, this never
-affects the roundup publish itself; a failed Bluesky notification never
-blocks or breaks a scheduled run. If messages stop arriving:
+fails at any step of the handshake, there's no retry — but a dismissible
+error notice appears in wp-admin naming the Bluesky channel and the reason,
+so the failure isn't invisible. Importantly, this never affects the roundup
+publish itself; a failed Bluesky notification never blocks or breaks a
+scheduled run. If messages stop arriving:
 - confirm the app password hasn't been revoked (check **Settings → App
   Passwords** in the Bluesky app),
 - confirm the sending handle is spelled correctly,

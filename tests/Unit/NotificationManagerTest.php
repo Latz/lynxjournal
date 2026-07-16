@@ -125,4 +125,147 @@ describe('LynxJournal_Notify_Manager::runAfterPublish()', function (): void {
             'https://slack.com/api/chat.postMessage',
         ]);
     });
+
+    it('records a failure when a channel send() returns a WP_Error', function (): void {
+        Functions\when('get_option')->alias(function ($key, $default = false) {
+            if ($key === 'lynxjournal_schedule') {
+                return [
+                    'notify' => [
+                        'discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc',
+                    ],
+                ];
+            }
+            if ($key === 'lynxjournal_notification_failures') {
+                return [];
+            }
+            return $default;
+        });
+        Functions\when('wp_remote_post')->justReturn(new WP_Error('http_request_failed', 'Could not resolve host'));
+
+        $captured = null;
+        Functions\when('update_option')->alias(function ($key, $value) use (&$captured): bool {
+            if ($key === 'lynxjournal_notification_failures') {
+                $captured = $value;
+            }
+            return true;
+        });
+
+        $this->manager->runAfterPublish(42, [1], 'daily');
+
+        expect($captured)->toHaveCount(1);
+        expect($captured[0]['channel'])->toBe('discord');
+        expect($captured[0]['label'])->toBe('Discord');
+        expect($captured[0]['message'])->toBe('Could not resolve host');
+        expect($captured[0]['ts'])->toBeInt();
+    });
+
+    it('records every failing channel from the same run, newest first', function (): void {
+        $stored = [];
+        Functions\when('get_option')->alias(function ($key, $default = false) use (&$stored) {
+            if ($key === 'lynxjournal_schedule') {
+                return [
+                    'notify' => [
+                        'discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc',
+                        'slackChannelEnabled' => true, 'slackBotToken' => 'xoxb-123', 'slackChannelId' => 'C0123456789',
+                    ],
+                ];
+            }
+            if ($key === 'lynxjournal_notification_failures') {
+                return $stored;
+            }
+            return $default;
+        });
+        Functions\when('wp_remote_post')->justReturn(new WP_Error('http_request_failed', 'boom'));
+
+        Functions\when('update_option')->alias(function ($key, $value) use (&$stored): bool {
+            if ($key === 'lynxjournal_notification_failures') {
+                $stored = $value;
+            }
+            return true;
+        });
+
+        $this->manager->runAfterPublish(42, [1], 'daily');
+
+        expect($stored)->toHaveCount(2);
+        expect($stored[0]['channel'])->toBe('slack_channel');
+        expect($stored[1]['channel'])->toBe('discord');
+    });
+
+    it('caps the stored failures list at 10, dropping the oldest', function (): void {
+        $existing = [];
+        for ($i = 0; $i < 10; $i++) {
+            $existing[] = ['ts' => 1000 + $i, 'channel' => 'old_' . $i, 'label' => 'Old ' . $i, 'message' => 'm'];
+        }
+
+        Functions\when('get_option')->alias(function ($key, $default = false) use ($existing) {
+            if ($key === 'lynxjournal_schedule') {
+                return [
+                    'notify' => [
+                        'discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc',
+                    ],
+                ];
+            }
+            if ($key === 'lynxjournal_notification_failures') {
+                return $existing;
+            }
+            return $default;
+        });
+        Functions\when('wp_remote_post')->justReturn(new WP_Error('http_request_failed', 'boom'));
+
+        $captured = null;
+        Functions\when('update_option')->alias(function ($key, $value) use (&$captured): bool {
+            if ($key === 'lynxjournal_notification_failures') {
+                $captured = $value;
+            }
+            return true;
+        });
+
+        $this->manager->runAfterPublish(42, [1], 'daily');
+
+        expect($captured)->toHaveCount(10);
+        expect($captured[0]['channel'])->toBe('discord');
+        expect(array_column($captured, 'channel'))->not->toContain('old_9');
+    });
+
+    it('does not touch the failures option when every channel send() succeeds', function (): void {
+        Functions\when('get_option')->alias(function ($key, $default = false) {
+            if ($key === 'lynxjournal_schedule') {
+                return [
+                    'notify' => [
+                        'discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc',
+                    ],
+                ];
+            }
+            return $default;
+        });
+        Functions\when('wp_remote_retrieve_response_code')->justReturn(204);
+        Functions\when('wp_remote_post')->justReturn(['response' => ['code' => 204]]);
+
+        $updatedKeys = [];
+        Functions\when('update_option')->alias(function ($key) use (&$updatedKeys): bool {
+            $updatedKeys[] = $key;
+            return true;
+        });
+
+        $this->manager->runAfterPublish(42, [1], 'daily');
+
+        expect($updatedKeys)->not->toContain('lynxjournal_notification_failures');
+    });
+});
+
+describe('LynxJournal_Notify_Manager::channelLabel()', function (): void {
+    it('returns a human label for each known channel key', function (): void {
+        expect($this->manager->channelLabel('email'))->toBe('Email');
+        expect($this->manager->channelLabel('discord'))->toBe('Discord');
+        expect($this->manager->channelLabel('slack_channel'))->toBe('Slack (Channel)');
+        expect($this->manager->channelLabel('slack_dm'))->toBe('Slack (DM)');
+        expect($this->manager->channelLabel('telegram'))->toBe('Telegram');
+        expect($this->manager->channelLabel('telegram_dm'))->toBe('Telegram (DM)');
+        expect($this->manager->channelLabel('mastodon'))->toBe('Mastodon');
+        expect($this->manager->channelLabel('bluesky'))->toBe('Bluesky');
+    });
+
+    it('falls back to the raw key for an unknown channel', function (): void {
+        expect($this->manager->channelLabel('not_a_channel'))->toBe('not_a_channel');
+    });
 });

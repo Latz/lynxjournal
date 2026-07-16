@@ -95,11 +95,12 @@ Slack, and Telegram however you like.
 
 Sending to Telegram is "fire and forget": if the bot token is no longer
 valid, the bot hasn't been messaged/added to the target chat, Telegram is
-unreachable, or the request otherwise fails, the notification is silently
-skipped — there's no retry and no error shown in WordPress. Importantly,
-this never affects the roundup publish itself; a failed Telegram
-notification never blocks or breaks a scheduled run. If messages stop
-arriving:
+unreachable, or the request otherwise fails, there's no retry — but a
+dismissible error notice appears in wp-admin naming the Telegram
+channel/DM target and the reason, so the failure isn't invisible.
+Importantly, this never affects the roundup publish itself; a failed
+Telegram notification never blocks or breaks a scheduled run. If messages
+stop arriving:
 - confirm the bot token is still valid (tokens can be revoked via
   @BotFather),
 - confirm the chat ID is correct,

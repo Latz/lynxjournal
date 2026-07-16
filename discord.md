@@ -75,9 +75,10 @@ LynxJournal posts a rich embed, not a plain text message:
 ## If something goes wrong
 
 Sending to Discord is "fire and forget": if the webhook URL is no longer
-valid, Discord is unreachable, or the request otherwise fails, the
-notification is silently skipped — there's no retry and no error shown in
-WordPress. Importantly, this never affects the roundup publish itself; a
-failed Discord notification never blocks or breaks a scheduled run. If
-messages stop arriving, re-copy a fresh webhook URL from Discord (webhooks
-can be deleted/regenerated on Discord's side) and re-save it here.
+valid, Discord is unreachable, or the request otherwise fails, there's no
+retry — but a dismissible error notice appears in wp-admin naming the
+Discord channel and the reason, so the failure isn't invisible. Importantly,
+this never affects the roundup publish itself; a failed Discord notification
+never blocks or breaks a scheduled run. If messages stop arriving, re-copy a
+fresh webhook URL from Discord (webhooks can be deleted/regenerated on
+Discord's side) and re-save it here.

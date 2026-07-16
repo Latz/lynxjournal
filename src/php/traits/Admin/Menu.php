@@ -310,6 +310,12 @@ trait LynxJournal_Admin_Menu {
     public function enqueueAdminAssets(string $hook): void {
         $is_lynxjournal = strpos($hook, 'lynxjournal') !== false;
 
+        // The failure notice can render on any wp-admin screen, so its
+        // dismiss-persistence script is enqueued globally; it no-ops if the
+        // notice isn't present in the DOM. The dismiss nonce travels via the
+        // notice markup's data-nonce attribute, not a localized global.
+        $this->enqueuePageScript('lynxjournal-notification-failure-notice', 'notification-failure-notice.js');
+
         // CSS must also load on the WP core dashboard (index.php) for the lynxjournal widget
         if ($is_lynxjournal || $hook === 'index.php') {
             wp_enqueue_style('dashicons');

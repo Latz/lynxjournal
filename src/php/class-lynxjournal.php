@@ -36,6 +36,7 @@ class LynxJournal {
     use LynxJournal_Admin_LinksPage;
     use LynxJournal_Admin_AddLink;
     use LynxJournal_Admin_Categories;
+    use LynxJournal_Admin_NotificationFailureNotice;
 
     /**
      * Register hooks and initialize plugin.
@@ -78,8 +79,10 @@ class LynxJournal {
         add_action('add_meta_boxes',                       [$this, 'addMetaBoxes']);
         add_action('save_post_lynx-journal',                [$this, 'saveUrl']);
         add_action('wp_ajax_lynxjournal_get_rest_nonce',    [$this, 'handleGetRestNonce']);
+        add_action('wp_ajax_lynxjournal_dismiss_notification_failures', [$this, 'handleDismissNotificationFailureNotice']);
         add_action('admin_menu',                           [$this, 'adminMenu']);
         add_action('admin_enqueue_scripts',                [$this, 'enqueueAdminAssets']);
+        add_action('admin_notices',                        [$this, 'renderNotificationFailureNotice']);
         add_action('wp_dashboard_setup',                   [$this, 'addDashboardWidget']);
         add_filter('parent_file',                          [$this, 'parentFileFilter']);
         add_filter('submenu_file',                         [$this, 'submenuFileFilter']);
