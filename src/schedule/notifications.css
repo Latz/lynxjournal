@@ -88,6 +88,10 @@
   visibility: hidden;
 }
 
+.lynxjournal-notify-help-link {
+  align-self: flex-end;
+}
+
 .lynxjournal-channel-actions {
   display: flex;
   flex-direction: column;

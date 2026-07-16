@@ -1,6 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 import NotificationsSection from '../../../src/schedule/components/NotificationsSection.jsx';
+import { openHelpTab } from '../../../src/schedule/lib/helpPanel';
+
+vi.mock('../../../src/schedule/lib/helpPanel', () => ({ openHelpTab: vi.fn() }));
 
 const baseProps = {
     configLoaded: true,
@@ -87,5 +90,23 @@ describe('NotificationsSection', () => {
     it('marks the Discord tab badge as "Off" when disabled', () => {
         renderSection({ discordEnabled: false });
         expect(screen.getByLabelText('Discord: Off')).toBeInTheDocument();
+    });
+
+    it('opens the Discord help tab when that panel\'s Help link is clicked', () => {
+        renderSection();
+        const discordPanel = screen.getByLabelText('Discord webhook URL').closest('.lynxjournal-notify-tab-panel');
+
+        fireEvent.click(within(discordPanel).getByText('Help'));
+
+        expect(openHelpTab).toHaveBeenCalledWith('discord');
+    });
+
+    it('opens the overview help tab when the Email panel\'s Help link is clicked', () => {
+        renderSection();
+        const emailPanel = screen.getByLabelText('Email address').closest('.lynxjournal-notify-tab-panel');
+
+        fireEvent.click(within(emailPanel).getByText('Help'));
+
+        expect(openHelpTab).toHaveBeenCalledWith('overview');
     });
 });

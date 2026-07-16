@@ -27,7 +27,11 @@ trait LynxJournal_Admin_Menu {
         $this->addSubmenu(__('Categories',       'lynx-journal'), __('Categories',       'lynx-journal'), 'edit_posts', 'lynxjournal-categories',                                   'categoriesPage');
         $this->addSubmenu(__('Tags',             'lynx-journal'), __('Tags',             'lynx-journal'), 'edit_posts', 'edit-tags.php?taxonomy=lynxjournal_tag&post_type=lynx-journal');
         $this->addSubmenu(__('Chrome Extension', 'lynx-journal'), __('Chrome Extension', 'lynx-journal'), 'edit_posts', 'lynxjournal-settings',                                     'settingsPage');
-        $this->addSubmenu(__('Schedule',         'lynx-journal'), __('Schedule',         'lynx-journal'), 'edit_posts', 'lynxjournal-schedule',                                     'schedulePage');
+
+        $schedule_hook = $this->addSubmenu(__('Schedule', 'lynx-journal'), __('Schedule', 'lynx-journal'), 'edit_posts', 'lynxjournal-schedule', 'schedulePage');
+        if ($schedule_hook) {
+            add_action("load-{$schedule_hook}", [$this, 'scheduleHelpTabs']);
+        }
     }
 
     /**
@@ -206,6 +210,97 @@ trait LynxJournal_Admin_Menu {
     }
 
     /**
+     * Register contextual Help tabs on the Schedule screen, one per notification channel.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    public function scheduleHelpTabs(): void {
+        $screen = get_current_screen();
+        if (!$screen) {
+            return;
+        }
+
+        foreach ($this->scheduleHelpTabContent() as $id => [$title, $content]) {
+            $screen->add_help_tab([
+                'id'      => "lynxjournal-help-{$id}",
+                'title'   => $title,
+                'content' => wp_kses_post($content),
+            ]);
+        }
+    }
+
+    /**
+     * Content for each Schedule screen Help tab, keyed by tab id.
+     *
+     * @since 1.0.0
+     * @return array<string, array{0: string, 1: string}> Map of tab id to [title, HTML content].
+     */
+    private function scheduleHelpTabContent(): array {
+        return [
+            'overview' => [
+                __('Overview', 'lynx-journal'),
+                '<p>' . __('The Schedule page controls when LynxJournal automatically publishes a roundup post, and (optionally) who gets notified when it does.', 'lynx-journal') . '</p>'
+                . '<p>' . __('Choose a Mode (a recurring schedule like Daily/Weekly/Monthly, a trigger condition like "every N links" or "every N days", or Manual for no automatic trigger), set the Recurrence or Condition for that mode, and pick one or more Execution Times. Each notification channel below is an independent, optional add-on — you can enable any combination of them, or none at all.', 'lynx-journal') . '</p>',
+            ],
+            'discord' => [
+                __('Discord', 'lynx-journal'),
+                '<p>' . __('Posts a rich embed to a Discord channel via a webhook every time a scheduled run actually publishes (or attempts to publish) a roundup.', 'lynx-journal') . '</p>'
+                . '<p><strong>' . __('Setup:', 'lynx-journal') . '</strong> ' . __('In Discord, open Server Settings → Integrations → Webhooks, click New Webhook, pick a channel, then Copy Webhook URL.', 'lynx-journal') . '</p>'
+                . '<p><strong>' . __('Enable:', 'lynx-journal') . '</strong> ' . __('Check "Send a Discord notification after each run", paste the webhook URL, then Save Schedule.', 'lynx-journal') . '</p>'
+                . '<p><strong>' . __('Accepted URL:', 'lynx-journal') . '</strong> ' . __('must start with https:// and point to discord.com, discordapp.com, ptb.discord.com, or canary.discord.com with a path shaped like /api/webhooks/{id}/{token}.', 'lynx-journal') . '</p>'
+                . '<p>' . __('Sending is fire-and-forget: a failed or unreachable webhook is silently skipped and never blocks the scheduled run itself. If messages stop arriving, re-copy a fresh webhook URL from Discord and re-save.', 'lynx-journal') . '</p>'
+                . $this->helpDocLink('discord'),
+            ],
+            'slack' => [
+                __('Slack', 'lynx-journal'),
+                '<p>' . __('Uses a single Slack Bot Token to post to a channel, DM a person, or both — independently — every time a scheduled run publishes (or attempts to publish) a roundup.', 'lynx-journal') . '</p>'
+                . '<p><strong>' . __('Setup:', 'lynx-journal') . '</strong> ' . __('At api.slack.com/apps, create an app, add the chat:write Bot Token Scope under OAuth & Permissions, install the app to your workspace, and copy the Bot User OAuth Token (starts with xoxb-).', 'lynx-journal') . '</p>'
+                . '<p>' . __('For a channel message: invite the bot to that channel and grab its channel ID. For a DM: get the recipient\'s Slack user ID from their profile.', 'lynx-journal') . '</p>'
+                . '<p><strong>' . __('Accepted IDs:', 'lynx-journal') . '</strong> ' . __('bot token starts with xoxb-; channel ID starts with C or G; user ID starts with U. Display names like #general or @someone are not accepted.', 'lynx-journal') . '</p>'
+                . '<p>' . __('Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the bot is still in the channel and the token/IDs are current.', 'lynx-journal') . '</p>'
+                . $this->helpDocLink('slack'),
+            ],
+            'telegram' => [
+                __('Telegram', 'lynx-journal'),
+                '<p>' . __('Uses a single Telegram bot token to post to a group/channel, DM you personally, or both — independently — every time a scheduled run publishes (or attempts to publish) a roundup.', 'lynx-journal') . '</p>'
+                . '<p><strong>' . __('Setup:', 'lynx-journal') . '</strong> ' . __('Message @BotFather in Telegram and run /newbot to get a bot token (looks like 123456789:AAH...). To find a chat ID: message the bot then visit https://api.telegram.org/bot<TOKEN>/getUpdates and read message.chat.id, or use a helper bot like @userinfobot for your own user ID. For groups/channels, add the bot first (channels need it as admin); group/channel chat IDs are negative numbers.', 'lynx-journal') . '</p>'
+                . '<p><strong>' . __('Accepted formats:', 'lynx-journal') . '</strong> ' . __('bot token is a numeric ID, a colon, and a secret; chat ID is any integer (negative for groups/channels, positive for a personal chat).', 'lynx-journal') . '</p>'
+                . '<p>' . __('Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the token is still valid and the bot is still a member of the target chat.', 'lynx-journal') . '</p>'
+                . $this->helpDocLink('telegram'),
+            ],
+            'mastodon' => [
+                __('Mastodon', 'lynx-journal'),
+                '<p>' . __('Sends a visibility-restricted status (Mastodon\'s equivalent of a DM) to a recipient handle every time a scheduled run publishes (or attempts to publish) a roundup.', 'lynx-journal') . '</p>'
+                . '<p><strong>' . __('Setup:', 'lynx-journal') . '</strong> ' . __('On your Mastodon instance, go to Settings → Development → New application, check only the write:statuses scope, save, then copy the Access Token and note your instance URL (e.g. https://mastodon.social).', 'lynx-journal') . '</p>'
+                . '<p><strong>' . __('Accepted formats:', 'lynx-journal') . '</strong> ' . __('instance URL must start with https:// and include a host; recipient handle must include both parts, e.g. @you@mastodon.social.', 'lynx-journal') . '</p>'
+                . '<p>' . __('This is not end-to-end encrypted — it\'s a regular post restricted to the people mentioned. Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the access token hasn\'t been revoked and the recipient handle is spelled exactly right.', 'lynx-journal') . '</p>'
+                . $this->helpDocLink('mastodon'),
+            ],
+            'bluesky' => [
+                __('Bluesky', 'lynx-journal'),
+                '<p>' . __('Sends a genuine private direct message via Bluesky\'s Chat API to a recipient handle every time a scheduled run publishes (or attempts to publish) a roundup.', 'lynx-journal') . '</p>'
+                . '<p><strong>' . __('Setup:', 'lynx-journal') . '</strong> ' . __('In the Bluesky app, go to Settings → App Passwords → Add App Password, name it, and copy the generated password (format xxxx-xxxx-xxxx-xxxx) — you can\'t view it again after leaving that screen.', 'lynx-journal') . '</p>'
+                . '<p><strong>' . __('Accepted formats:', 'lynx-journal') . '</strong> ' . __('handles are bare, e.g. you.bsky.social (no @ prefix); the app password must be exactly four groups of four characters separated by hyphens.', 'lynx-journal') . '</p>'
+                . '<p>' . __('Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the app password hasn\'t been revoked and both handles are spelled exactly right.', 'lynx-journal') . '</p>'
+                . $this->helpDocLink('bluesky'),
+            ],
+        ];
+    }
+
+    /**
+     * Build a "Detailed instructions" link to the hosted setup guide for a notification channel.
+     *
+     * @since 1.0.0
+     * @param string $slug Channel slug, matching the path segment on elektroelch.net.
+     * @return string HTML paragraph containing the link.
+     */
+    private function helpDocLink(string $slug): string {
+        $url = esc_url("https://elektroelch.net/wordpress/lynxjournal/{$slug}/");
+        return '<p><a href="' . $url . '" target="_blank" rel="noopener noreferrer">' . __('Detailed instructions', 'lynx-journal') . '</a></p>';
+    }
+
+    /**
      * Enqueue admin CSS and JavaScript assets for LynxJournal pages.
      *
      * @since 1.0.0
@@ -313,6 +408,24 @@ trait LynxJournal_Admin_Menu {
                     $asset['version']
                 );
             }
+
+            // Stack every help tab panel in the same grid cell so the contextual
+            // Help box always sizes to the tallest tab, instead of resizing per tab.
+            wp_register_style('lynxjournal-schedule-help-fix', false, array(), $asset['version']);
+            wp_enqueue_style('lynxjournal-schedule-help-fix');
+            wp_add_inline_style('lynxjournal-schedule-help-fix', '
+                #contextual-help-wrap .contextual-help-tabs-wrap { display: grid; }
+                #contextual-help-wrap .help-tab-content {
+                    grid-area: 1 / 1;
+                    display: block !important;
+                    visibility: hidden;
+                    pointer-events: none;
+                }
+                #contextual-help-wrap .help-tab-content.active {
+                    visibility: visible;
+                    pointer-events: auto;
+                }
+            ');
         }
     }
 
@@ -339,10 +452,10 @@ trait LynxJournal_Admin_Menu {
      * @param string      $cap        Required capability.
      * @param string      $slug       Menu slug.
      * @param string|null $callback   Method name on $this, or null for no render callback.
-     * @return void
+     * @return string|false The resulting page's hook suffix, or false on failure.
      */
-    private function addSubmenu(string $page_title, string $menu_title, string $cap, string $slug, ?string $callback = null): void {
-        add_submenu_page('lynxjournal-dashboard', $page_title, $menu_title, $cap, $slug, $callback !== null ? [$this, $callback] : null);
+    private function addSubmenu(string $page_title, string $menu_title, string $cap, string $slug, ?string $callback = null): string|false {
+        return add_submenu_page('lynxjournal-dashboard', $page_title, $menu_title, $cap, $slug, $callback !== null ? [$this, $callback] : null);
     }
 
     /**

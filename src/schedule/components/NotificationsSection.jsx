@@ -2,6 +2,18 @@ import { useState } from '@wordpress/element';
 import { Button, Notice, CheckboxControl, TextControl, TabPanel } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { NOTIFICATION_CHANNELS, isChannelEnabled, isChannelComplete, isChannelIncomplete, isTargetComplete } from '../lib/notificationChannels';
+import { openHelpTab } from '../lib/helpPanel';
+
+/**
+ * The Help-dropdown tab id for a channel entry's key. Every channel matches
+ * its own key except Email, which has no dedicated tab and falls back to Overview.
+ *
+ * @param {string} channelKey A NOTIFICATION_CHANNELS entry's `key`.
+ * @returns {string} The corresponding `lynxjournal-help-*` tab id suffix.
+ */
+function helpTabIdFor(channelKey) {
+  return channelKey === 'email' ? 'overview' : channelKey;
+}
 
 /**
  * A masked TextControl with a toggle button to reveal/hide its contents,
@@ -247,6 +259,13 @@ export default function NotificationsSection({
       <div className="lynxjournal-notify-tab-panel-stack">
         {NOTIFICATION_CHANNELS.map(entry => (
           <div key={entry.key} className="lynxjournal-notify-tab-panel" inert={activeNotifyTab !== entry.key ? '' : undefined}>
+            <Button
+              variant="link"
+              className="lynxjournal-notify-help-link"
+              onClick={() => openHelpTab(helpTabIdFor(entry.key))}
+            >
+              {__('Help', 'lynx-journal')}
+            </Button>
             {entry.targets ? (
               <>
                 {entry.sharedFields.map(field => renderField(field, notify, setForm))}
