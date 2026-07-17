@@ -160,8 +160,13 @@ class LynxJournal {
      * @since 1.0.0
      * @param array $data The request data containing a 'notify' key, modified in place.
      * @return \WP_Error|null Error if invalid, null if valid.
+     *
+     * Not actually unused: called via $this->validateNotify() from
+     * LynxJournal_ScheduleValidator::validateSchedule() (traits/ScheduleValidator.php),
+     * a trait used by this class. Sonar's analyzer doesn't resolve trait-mediated
+     * calls back to this private method, so it flags it as unused.
      */
-    private function validateNotify(array &$data): ?\WP_Error {
+    private function validateNotify(array &$data): ?\WP_Error { // NOSONAR php:S1144 — see docblock
         if (!isset($data['notify']) || !is_array($data['notify'])) {
             return isset($data['notify']) ? new \WP_Error('invalid_notify', __('notify must be an object', 'lynx-journal'), ['status' => 400]) : null;
         }
