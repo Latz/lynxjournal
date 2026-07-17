@@ -204,6 +204,21 @@ class LynxJournal {
     }
 
     /**
+     * Check that $channel is known and validate/sanitize $data['notify'] for it.
+     *
+     * @since 1.0.0
+     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon|bluesky.
+     * @param array $data The request data containing a 'notify' key, modified in place.
+     * @return \WP_Error|null Error if invalid, null if valid.
+     */
+    private function validateChannelAndNotify(string $channel, array &$data): ?\WP_Error {
+        if (!in_array($channel, $this->notifications()->knownChannelKeys(), true)) {
+            return new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), array('status' => 400));
+        }
+        return $this->validateNotifyChannel($channel, $data);
+    }
+
+    /**
      * Send a one-off test notification for a single channel via REST.
      *
      * @since 1.0.0
@@ -212,21 +227,14 @@ class LynxJournal {
      */
     public function restTestNotification(\WP_REST_Request $request): \WP_REST_Response|\WP_Error {
         $channel = (string) $request->get_param('channel');
-        if (!in_array($channel, $this->notifications()->knownChannelKeys(), true)) {
-            return new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), array('status' => 400));
-        }
-
         $data = array('notify' => $request->get_param('notify'));
-        $validated = $this->validateNotifyChannel($channel, $data);
+        $validated = $this->validateChannelAndNotify($channel, $data);
         if (is_wp_error($validated)) {
             return $validated;
         }
 
         $result = $this->dispatchTestNotification($channel, $data['notify']);
-        if (is_wp_error($result)) {
-            return $result;
-        }
-        return rest_ensure_response(array('success' => true));
+        return is_wp_error($result) ? $result : rest_ensure_response(array('success' => true));
     }
 
     /**
@@ -240,12 +248,8 @@ class LynxJournal {
      */
     public function restSaveNotification(\WP_REST_Request $request): \WP_REST_Response|\WP_Error {
         $channel = (string) $request->get_param('channel');
-        if (!in_array($channel, $this->notifications()->knownChannelKeys(), true)) {
-            return new \WP_Error('invalid_channel', __('Unknown notification channel.', 'lynx-journal'), array('status' => 400));
-        }
-
         $data = array('notify' => $request->get_param('notify'));
-        $validated = $this->validateNotifyChannel($channel, $data);
+        $validated = $this->validateChannelAndNotify($channel, $data);
         if (is_wp_error($validated)) {
             return $validated;
         }

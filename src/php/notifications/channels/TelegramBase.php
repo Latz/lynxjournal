@@ -113,14 +113,27 @@ abstract class LynxJournalNotifyTelegramBase implements LynxJournalNotifyChannel
         if ($notify[$chatIdField] !== '' && !preg_match('/^-?\d+$/', $notify[$chatIdField])) {
             return new \WP_Error($this->chatIdErrorCode(), $this->invalidChatIdMessage(), ['status' => 400]);
         }
+        return $this->validateRequiredWhenEnabled($notify, $enabledField, $chatIdField);
+    }
 
-        if (!empty($notify[$enabledField])) {
-            if ($notify['telegramBotToken'] === '') {
-                return new \WP_Error('invalid_notify_telegram_token', $this->tokenRequiredMessage(), ['status' => 400]);
-            }
-            if ($notify[$chatIdField] === '') {
-                return new \WP_Error($this->chatIdErrorCode(), $this->chatIdRequiredMessage(), ['status' => 400]);
-            }
+    /**
+     * When this target is enabled, check that the bot token and chat ID are both present.
+     *
+     * @since 1.0.0
+     * @param array $notify The sanitized notify settings.
+     * @param string $enabledField This target's enabled-toggle field name.
+     * @param string $chatIdField This target's chat ID field name.
+     * @return \WP_Error|null Error if invalid, null if valid.
+     */
+    private function validateRequiredWhenEnabled(array $notify, string $enabledField, string $chatIdField): ?\WP_Error {
+        if (empty($notify[$enabledField])) {
+            return null;
+        }
+        if ($notify['telegramBotToken'] === '') {
+            return new \WP_Error('invalid_notify_telegram_token', $this->tokenRequiredMessage(), ['status' => 400]);
+        }
+        if ($notify[$chatIdField] === '') {
+            return new \WP_Error($this->chatIdErrorCode(), $this->chatIdRequiredMessage(), ['status' => 400]);
         }
         return null;
     }

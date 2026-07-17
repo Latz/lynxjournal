@@ -99,9 +99,6 @@ abstract class LynxJournalNotifySlackBase implements LynxJournalNotifyChannel {
         $notify['slackBotToken'] = !empty($notify['slackBotToken'])
             ? sanitize_text_field((string) $notify['slackBotToken'])
             : '';
-        if ($notify['slackBotToken'] !== '' && !preg_match('/^xoxb-[\w-]+$/', $notify['slackBotToken'])) {
-            return new \WP_Error('invalid_notify_slack_token', __('notify.slackBotToken must be a valid Slack bot token (starting with xoxb-)', 'lynx-journal'), ['status' => 400]);
-        }
 
         $enabledField = $this->enabledField();
         $targetIdField = $this->targetIdField();
@@ -110,13 +107,30 @@ abstract class LynxJournalNotifySlackBase implements LynxJournalNotifyChannel {
             ? strtoupper(sanitize_text_field(trim((string) $notify[$targetIdField])))
             : '';
 
-        if (!empty($notify[$enabledField])) {
-            if ($notify['slackBotToken'] === '') {
-                return new \WP_Error('invalid_notify_slack_token', $this->tokenRequiredMessage(), ['status' => 400]);
-            }
-            if (!preg_match($this->targetIdPattern(), $notify[$targetIdField])) {
-                return new \WP_Error($this->targetIdErrorCode(), $this->invalidTargetIdMessage(), ['status' => 400]);
-            }
+        if ($notify['slackBotToken'] !== '' && !preg_match('/^xoxb-[\w-]+$/', $notify['slackBotToken'])) {
+            return new \WP_Error('invalid_notify_slack_token', __('notify.slackBotToken must be a valid Slack bot token (starting with xoxb-)', 'lynx-journal'), ['status' => 400]);
+        }
+        return $this->validateRequiredWhenEnabled($notify, $enabledField, $targetIdField);
+    }
+
+    /**
+     * When this target is enabled, check that the bot token and target ID are both present/valid.
+     *
+     * @since 1.0.0
+     * @param array $notify The sanitized notify settings.
+     * @param string $enabledField This target's enabled-toggle field name.
+     * @param string $targetIdField This target's channel/user ID field name.
+     * @return \WP_Error|null Error if invalid, null if valid.
+     */
+    private function validateRequiredWhenEnabled(array $notify, string $enabledField, string $targetIdField): ?\WP_Error {
+        if (empty($notify[$enabledField])) {
+            return null;
+        }
+        if ($notify['slackBotToken'] === '') {
+            return new \WP_Error('invalid_notify_slack_token', $this->tokenRequiredMessage(), ['status' => 400]);
+        }
+        if (!preg_match($this->targetIdPattern(), $notify[$targetIdField])) {
+            return new \WP_Error($this->targetIdErrorCode(), $this->invalidTargetIdMessage(), ['status' => 400]);
         }
         return null;
     }

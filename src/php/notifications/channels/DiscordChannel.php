@@ -121,14 +121,9 @@ final class LynxJournalNotifyDiscordChannel implements LynxJournalNotifyChannel 
             return false;
         }
         $parts = wp_parse_url($url);
-        if (empty($parts['scheme']) || $parts['scheme'] !== 'https' || empty($parts['host'])) {
-            return false;
-        }
-        $host = strtolower($parts['host']);
-        if (!in_array($host, ['discord.com', 'discordapp.com', 'ptb.discord.com', 'canary.discord.com'], true)) {
-            return false;
-        }
-        $path = $parts['path'] ?? '';
-        return (bool) preg_match('#^/api(?:/v\d+)?/webhooks/\d+/[\w-]+$#', $path);
+        $validHost = !empty($parts['scheme']) && $parts['scheme'] === 'https' && !empty($parts['host'])
+            && in_array(strtolower($parts['host']), ['discord.com', 'discordapp.com', 'ptb.discord.com', 'canary.discord.com'], true);
+
+        return $validHost && (bool) preg_match('#^/api(?:/v\d+)?/webhooks/\d+/[\w-]+$#', $parts['path'] ?? '');
     }
 }

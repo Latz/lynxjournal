@@ -1,7 +1,7 @@
 import { useState } from '@wordpress/element';
 import { Button, Notice, CheckboxControl, TextControl, TabPanel } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { NOTIFICATION_CHANNELS, isChannelEnabled, isChannelComplete, isChannelIncomplete, isTargetComplete } from '../lib/notificationChannels';
+import { NOTIFICATION_CHANNELS, isChannelEnabled, isChannelIncomplete, isTargetComplete } from '../lib/notificationChannels';
 import { openHelpTab } from '../lib/helpPanel';
 
 /**
@@ -58,12 +58,15 @@ function RevealableTextControl({ label, value, placeholder, onChange }) {
  * @returns {JSX.Element}
  */
 export function TabTitleWithBadge({ label, enabled, incomplete }) {
-  const stateClass = !enabled ? 'is-off' : incomplete ? 'is-incomplete' : 'is-on';
-  const stateLabel = !enabled
-    ? __('Off', 'lynx-journal')
-    : incomplete
-      ? __('On, incomplete', 'lynx-journal')
-      : __('On', 'lynx-journal');
+  let stateClass = 'is-on';
+  let stateLabel = __('On', 'lynx-journal');
+  if (!enabled) {
+    stateClass = 'is-off';
+    stateLabel = __('Off', 'lynx-journal');
+  } else if (incomplete) {
+    stateClass = 'is-incomplete';
+    stateLabel = __('On, incomplete', 'lynx-journal');
+  }
   return (
     <span className={`lynxjournal-notify-tab-title ${stateClass}`} aria-label={`${label}: ${stateLabel}`}>
       {label}

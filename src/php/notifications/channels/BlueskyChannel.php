@@ -13,6 +13,8 @@ if (!defined('ABSPATH')) {
  */
 final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel {
 
+    private const BEARER_PREFIX = 'Bearer ';
+
     public function key(): string {
         return 'bluesky';
     }
@@ -34,35 +36,53 @@ final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel 
 
     public function validate(array &$notify): ?\WP_Error {
         $notify['bskyEnabled'] = (bool) ($notify['bskyEnabled'] ?? false);
-        $notify['bskyHandle'] = !empty($notify['bskyHandle'])
-            ? sanitize_text_field(trim((string) $notify['bskyHandle']))
-            : '';
-        $notify['bskyAppPassword'] = !empty($notify['bskyAppPassword'])
-            ? sanitize_text_field(trim((string) $notify['bskyAppPassword']))
-            : '';
-        $notify['bskyRecipient'] = !empty($notify['bskyRecipient'])
-            ? sanitize_text_field(trim((string) $notify['bskyRecipient']))
-            : '';
-
-        if ($notify['bskyHandle'] !== '' && !preg_match('/^[\w.-]+\.[a-z]{2,}$/i', $notify['bskyHandle'])) {
-            return new \WP_Error('invalid_notify_bsky_handle', __('notify.bskyHandle must be a valid Bluesky handle, e.g. user.bsky.social', 'lynx-journal'), ['status' => 400]);
-        }
-        if ($notify['bskyAppPassword'] !== '' && !preg_match('/^[\w]{4}-[\w]{4}-[\w]{4}-[\w]{4}$/', $notify['bskyAppPassword'])) {
-            return new \WP_Error('invalid_notify_bsky_password', __('notify.bskyAppPassword must be a valid Bluesky app password (xxxx-xxxx-xxxx-xxxx)', 'lynx-journal'), ['status' => 400]);
-        }
-        if ($notify['bskyRecipient'] !== '' && !preg_match('/^[\w.-]+\.[a-z]{2,}$/i', $notify['bskyRecipient'])) {
-            return new \WP_Error('invalid_notify_bsky_recipient', __('notify.bskyRecipient must be a valid Bluesky handle, e.g. friend.bsky.social', 'lynx-journal'), ['status' => 400]);
+        foreach (['bskyHandle', 'bskyAppPassword', 'bskyRecipient'] as $field) {
+            $notify[$field] = !empty($notify[$field]) ? sanitize_text_field(trim((string) $notify[$field])) : '';
         }
 
-        if (!empty($notify['bskyEnabled'])) {
-            if ($notify['bskyHandle'] === '') {
-                return new \WP_Error('invalid_notify_bsky_handle', __('notify.bskyHandle is required when Bluesky notifications are enabled', 'lynx-journal'), ['status' => 400]);
+        return $this->validateFieldFormats($notify) ?? $this->validateRequiredWhenEnabled($notify);
+    }
+
+    /**
+     * Check that any non-empty Bluesky fields match their expected format.
+     *
+     * @since 1.0.0
+     * @param array $notify The sanitized notify settings.
+     * @return \WP_Error|null Error for the first malformed field, or null if all are valid.
+     */
+    private function validateFieldFormats(array $notify): ?\WP_Error {
+        $checks = [
+            'bskyHandle'      => ['/^[\w.-]+\.[a-z]{2,}$/i', 'invalid_notify_bsky_handle', __('notify.bskyHandle must be a valid Bluesky handle, e.g. user.bsky.social', 'lynx-journal')],
+            'bskyAppPassword' => ['/^[\w]{4}-[\w]{4}-[\w]{4}-[\w]{4}$/', 'invalid_notify_bsky_password', __('notify.bskyAppPassword must be a valid Bluesky app password (xxxx-xxxx-xxxx-xxxx)', 'lynx-journal')],
+            'bskyRecipient'   => ['/^[\w.-]+\.[a-z]{2,}$/i', 'invalid_notify_bsky_recipient', __('notify.bskyRecipient must be a valid Bluesky handle, e.g. friend.bsky.social', 'lynx-journal')],
+        ];
+        foreach ($checks as $field => [$pattern, $code, $message]) {
+            if ($notify[$field] !== '' && !preg_match($pattern, $notify[$field])) {
+                return new \WP_Error($code, $message, ['status' => 400]);
             }
-            if ($notify['bskyAppPassword'] === '') {
-                return new \WP_Error('invalid_notify_bsky_password', __('notify.bskyAppPassword is required when Bluesky notifications are enabled', 'lynx-journal'), ['status' => 400]);
-            }
-            if ($notify['bskyRecipient'] === '') {
-                return new \WP_Error('invalid_notify_bsky_recipient', __('notify.bskyRecipient is required when Bluesky notifications are enabled', 'lynx-journal'), ['status' => 400]);
+        }
+        return null;
+    }
+
+    /**
+     * When Bluesky notifications are enabled, check that all required fields are filled in.
+     *
+     * @since 1.0.0
+     * @param array $notify The sanitized notify settings.
+     * @return \WP_Error|null Error for the first missing required field, or null if valid.
+     */
+    private function validateRequiredWhenEnabled(array $notify): ?\WP_Error {
+        if (empty($notify['bskyEnabled'])) {
+            return null;
+        }
+        $required = [
+            'bskyHandle'      => ['invalid_notify_bsky_handle', __('notify.bskyHandle is required when Bluesky notifications are enabled', 'lynx-journal')],
+            'bskyAppPassword' => ['invalid_notify_bsky_password', __('notify.bskyAppPassword is required when Bluesky notifications are enabled', 'lynx-journal')],
+            'bskyRecipient'   => ['invalid_notify_bsky_recipient', __('notify.bskyRecipient is required when Bluesky notifications are enabled', 'lynx-journal')],
+        ];
+        foreach ($required as $field => [$code, $message]) {
+            if ($notify[$field] === '') {
+                return new \WP_Error($code, $message, ['status' => 400]);
             }
         }
         return null;
@@ -104,7 +124,19 @@ final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel 
         if (is_wp_error($session)) {
             return $session;
         }
+        return $this->sendToRecipient($session, $recipientHandle, $text);
+    }
 
+    /**
+     * Resolve the recipient and open a DM conversation, then send the message.
+     *
+     * @since 1.0.0
+     * @param array{accessJwt: string, did: string} $session Session data from createSession().
+     * @param string $recipientHandle Bluesky handle of the DM recipient.
+     * @param string $text Message text.
+     * @return true|\WP_Error True on success, WP_Error with the failure reason otherwise.
+     */
+    private function sendToRecipient(array $session, string $recipientHandle, string $text): true|\WP_Error {
         $recipientDid = $this->resolveHandle($recipientHandle, $session['accessJwt']);
         if (is_wp_error($recipientDid)) {
             return $recipientDid;
@@ -118,7 +150,7 @@ final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel 
         $result = LynxJournalNotifyHttp::postJson(
             'https://bsky.chat/xrpc/chat.bsky.convo.sendMessage',
             ['convoId' => $convoId, 'message' => ['text' => $text]],
-            ['Authorization' => 'Bearer ' . $session['accessJwt']],
+            ['Authorization' => self::BEARER_PREFIX . $session['accessJwt']],
             'bluesky_send_failed'
         );
         return is_wp_error($result) ? $result : true;
@@ -162,18 +194,16 @@ final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel 
         $url = add_query_arg('handle', rawurlencode($handle), 'https://bsky.social/xrpc/com.atproto.identity.resolveHandle');
         $response = wp_remote_get($url, [
             'timeout' => 8,
-            'headers' => ['Authorization' => 'Bearer ' . $accessJwt],
+            'headers' => ['Authorization' => self::BEARER_PREFIX . $accessJwt],
         ]);
 
         if (is_wp_error($response)) {
             return $response;
         }
-        if (wp_remote_retrieve_response_code($response) >= 300) {
-            return new \WP_Error('bluesky_resolve_failed', __('Could not resolve the Bluesky recipient handle.', 'lynx-journal'), ['status' => 500]);
-        }
 
+        $failed = wp_remote_retrieve_response_code($response) >= 300;
         $body = json_decode(wp_remote_retrieve_body($response), true);
-        if (empty($body['did'])) {
+        if ($failed || empty($body['did'])) {
             return new \WP_Error('bluesky_resolve_failed', __('Could not resolve the Bluesky recipient handle.', 'lynx-journal'), ['status' => 500]);
         }
         return $body['did'];
@@ -192,7 +222,7 @@ final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel 
         $result = LynxJournalNotifyHttp::postJson(
             'https://bsky.chat/xrpc/chat.bsky.convo.getConvoForMembers',
             ['members' => [$senderDid, $recipientDid]],
-            ['Authorization' => 'Bearer ' . $accessJwt],
+            ['Authorization' => self::BEARER_PREFIX . $accessJwt],
             'bluesky_convo_failed'
         );
         if (is_wp_error($result)) {

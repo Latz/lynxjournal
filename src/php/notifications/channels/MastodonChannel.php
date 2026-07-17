@@ -34,36 +34,52 @@ final class LynxJournalNotifyMastodonChannel implements LynxJournalNotifyChannel
 
     public function validate(array &$notify): ?\WP_Error {
         $notify['mastodonEnabled'] = (bool) ($notify['mastodonEnabled'] ?? false);
-        $notify['mastodonAccessToken'] = !empty($notify['mastodonAccessToken'])
-            ? sanitize_text_field(trim((string) $notify['mastodonAccessToken']))
-            : '';
-        $notify['mastodonRecipient'] = !empty($notify['mastodonRecipient'])
-            ? sanitize_text_field(trim((string) $notify['mastodonRecipient']))
-            : '';
-
-        if (!empty($notify['mastodonInstanceUrl'])) {
-            $instanceUrl = esc_url_raw(trim((string) $notify['mastodonInstanceUrl']));
-            if (!$this->isValidInstanceUrl($instanceUrl)) {
-                return new \WP_Error('invalid_notify_mastodon_instance', __('notify.mastodonInstanceUrl must be a valid https:// URL', 'lynx-journal'), ['status' => 400]);
-            }
-            $notify['mastodonInstanceUrl'] = $instanceUrl;
-        } else {
-            $notify['mastodonInstanceUrl'] = '';
+        foreach (['mastodonAccessToken', 'mastodonRecipient'] as $field) {
+            $notify[$field] = !empty($notify[$field]) ? sanitize_text_field(trim((string) $notify[$field])) : '';
         }
+        $notify['mastodonInstanceUrl'] = !empty($notify['mastodonInstanceUrl'])
+            ? esc_url_raw(trim((string) $notify['mastodonInstanceUrl']))
+            : '';
 
+        return $this->validateFieldFormats($notify) ?? $this->validateRequiredWhenEnabled($notify);
+    }
+
+    /**
+     * Check that any non-empty Mastodon fields match their expected format.
+     *
+     * @since 1.0.0
+     * @param array $notify The sanitized notify settings.
+     * @return \WP_Error|null Error for the first malformed field, or null if all are valid.
+     */
+    private function validateFieldFormats(array $notify): ?\WP_Error {
+        if ($notify['mastodonInstanceUrl'] !== '' && !$this->isValidInstanceUrl($notify['mastodonInstanceUrl'])) {
+            return new \WP_Error('invalid_notify_mastodon_instance', __('notify.mastodonInstanceUrl must be a valid https:// URL', 'lynx-journal'), ['status' => 400]);
+        }
         if ($notify['mastodonRecipient'] !== '' && !preg_match('/^@[\w.]+@[\w.-]+\.[a-z]{2,}$/i', $notify['mastodonRecipient'])) {
             return new \WP_Error('invalid_notify_mastodon_recipient', __('notify.mastodonRecipient must be a valid handle, e.g. @user@instance.social', 'lynx-journal'), ['status' => 400]);
         }
+        return null;
+    }
 
-        if (!empty($notify['mastodonEnabled'])) {
-            if ($notify['mastodonInstanceUrl'] === '') {
-                return new \WP_Error('invalid_notify_mastodon_instance', __('notify.mastodonInstanceUrl is required when Mastodon notifications are enabled', 'lynx-journal'), ['status' => 400]);
-            }
-            if ($notify['mastodonAccessToken'] === '') {
-                return new \WP_Error('invalid_notify_mastodon_token', __('notify.mastodonAccessToken is required when Mastodon notifications are enabled', 'lynx-journal'), ['status' => 400]);
-            }
-            if ($notify['mastodonRecipient'] === '') {
-                return new \WP_Error('invalid_notify_mastodon_recipient', __('notify.mastodonRecipient is required when Mastodon notifications are enabled', 'lynx-journal'), ['status' => 400]);
+    /**
+     * When Mastodon notifications are enabled, check that all required fields are filled in.
+     *
+     * @since 1.0.0
+     * @param array $notify The sanitized notify settings.
+     * @return \WP_Error|null Error for the first missing required field, or null if valid.
+     */
+    private function validateRequiredWhenEnabled(array $notify): ?\WP_Error {
+        if (empty($notify['mastodonEnabled'])) {
+            return null;
+        }
+        $required = [
+            'mastodonInstanceUrl'  => ['invalid_notify_mastodon_instance', __('notify.mastodonInstanceUrl is required when Mastodon notifications are enabled', 'lynx-journal')],
+            'mastodonAccessToken'  => ['invalid_notify_mastodon_token', __('notify.mastodonAccessToken is required when Mastodon notifications are enabled', 'lynx-journal')],
+            'mastodonRecipient'    => ['invalid_notify_mastodon_recipient', __('notify.mastodonRecipient is required when Mastodon notifications are enabled', 'lynx-journal')],
+        ];
+        foreach ($required as $field => [$code, $message]) {
+            if ($notify[$field] === '') {
+                return new \WP_Error($code, $message, ['status' => 400]);
             }
         }
         return null;
