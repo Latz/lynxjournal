@@ -49,7 +49,7 @@ The bootstrap (`tests/bootstrap-unit.php`) loads in this fixed order:
 4. **Test helpers** (`tests/helpers.php`) — `makePost()` and `makeRequest()` factory functions used across test files
 5. **Plugin bootstrap** (`lynxjournal.php`) — `add_action`/`add_filter` calls are absorbed by a one-shot Brain Monkey setUp/tearDown
 
-`pest.php` wraps every test in `Brain\Monkey\setUp()` / `Brain\Monkey\tearDown()` + `Mockery::close()` so each test starts clean.
+`tests/Pest.php` wraps every test in `Brain\Monkey\setUp()` / `Brain\Monkey\tearDown()` + `Mockery::close()` so each test starts clean.
 
 ### Helpers
 
