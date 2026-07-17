@@ -142,7 +142,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
     font-size: 11px;
-    transition: all 0.2s;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
     user-select: none;
     color: var(--text-primary);
 }
@@ -179,7 +179,7 @@ body {
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s, opacity 0.2s;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -232,7 +232,7 @@ body {
     border-radius: 6px;
     font-size: 12px;
     opacity: 0;
-    transition: all 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
     z-index: 1000;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     pointer-events: none;
