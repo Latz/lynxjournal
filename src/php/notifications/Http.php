@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  *
  * @since 1.0.0
  */
-final class LynxJournal_Notify_Http {
+final class LynxJournalNotifyHttp {
 
     /**
      * POST a JSON body and check for transport/HTTP-level failure.

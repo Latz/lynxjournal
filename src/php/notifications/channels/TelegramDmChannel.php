@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  *
  * @since 1.0.0
  */
-final class LynxJournal_Notify_TelegramDmChannel extends LynxJournal_Notify_TelegramBase {
+final class LynxJournalNotifyTelegramDmChannel extends LynxJournalNotifyTelegramBase {
 
     public function key(): string {
         return 'telegram_dm';

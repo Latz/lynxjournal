@@ -11,10 +11,10 @@ use Brain\Monkey\Functions;
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
     Functions\when('is_wp_error')->alias(fn ($thing) => $thing instanceof WP_Error);
-    $this->manager = new LynxJournal_Notify_Manager();
+    $this->manager = new LynxJournalNotifyManager();
 });
 
-describe('LynxJournal_Notify_Manager::knownChannelKeys()', function (): void {
+describe('LynxJournalNotifyManager::knownChannelKeys()', function (): void {
     it('returns all 8 channel keys in the fixed registration order', function (): void {
         expect($this->manager->knownChannelKeys())->toBe([
             'email', 'discord', 'slack_channel', 'slack_dm', 'telegram', 'telegram_dm', 'mastodon', 'bluesky',
@@ -22,7 +22,7 @@ describe('LynxJournal_Notify_Manager::knownChannelKeys()', function (): void {
     });
 });
 
-describe('LynxJournal_Notify_Manager::channelFields()', function (): void {
+describe('LynxJournalNotifyManager::channelFields()', function (): void {
     it('matches each channel class\'s own fields()', function (): void {
         expect($this->manager->channelFields('discord'))->toBe(['discordEnabled', 'discordWebhookUrl']);
         expect($this->manager->channelFields('email'))->toBe(['enabled', 'email']);
@@ -35,10 +35,10 @@ describe('LynxJournal_Notify_Manager::channelFields()', function (): void {
     });
 });
 
-describe('LynxJournal_Notify_Manager::channel()', function (): void {
+describe('LynxJournalNotifyManager::channel()', function (): void {
     it('returns the matching channel instance', function (): void {
-        expect($this->manager->channel('discord'))->toBeInstanceOf(LynxJournal_Notify_DiscordChannel::class);
-        expect($this->manager->channel('slack_dm'))->toBeInstanceOf(LynxJournal_Notify_SlackDmChannel::class);
+        expect($this->manager->channel('discord'))->toBeInstanceOf(LynxJournalNotifyDiscordChannel::class);
+        expect($this->manager->channel('slack_dm'))->toBeInstanceOf(LynxJournalNotifySlackDmChannel::class);
     });
 
     it('returns null for an unknown channel', function (): void {
@@ -46,7 +46,7 @@ describe('LynxJournal_Notify_Manager::channel()', function (): void {
     });
 });
 
-describe('LynxJournal_Notify_Manager::validateAll()', function (): void {
+describe('LynxJournalNotifyManager::validateAll()', function (): void {
     it('sets notify.enabled to a strict bool', function (): void {
         $notify = [];
         $this->manager->validateAll($notify);
@@ -67,7 +67,7 @@ describe('LynxJournal_Notify_Manager::validateAll()', function (): void {
     });
 });
 
-describe('LynxJournal_Notify_Manager::validateChannel()', function (): void {
+describe('LynxJournalNotifyManager::validateChannel()', function (): void {
     it('delegates to the named channel only', function (): void {
         $notify = ['discordEnabled' => true, 'discordWebhookUrl' => 'not-a-webhook'];
         $error = $this->manager->validateChannel('discord', $notify);
@@ -81,7 +81,7 @@ describe('LynxJournal_Notify_Manager::validateChannel()', function (): void {
     });
 });
 
-describe('LynxJournal_Notify_Manager::runAfterPublish()', function (): void {
+describe('LynxJournalNotifyManager::runAfterPublish()', function (): void {
     it('sends only to enabled channels, skipping disabled ones', function (): void {
         Functions\when('get_option')->justReturn([
             'notify' => [
@@ -253,7 +253,7 @@ describe('LynxJournal_Notify_Manager::runAfterPublish()', function (): void {
     });
 });
 
-describe('LynxJournal_Notify_Manager::channelLabel()', function (): void {
+describe('LynxJournalNotifyManager::channelLabel()', function (): void {
     it('returns a human label for each known channel key', function (): void {
         expect($this->manager->channelLabel('email'))->toBe('Email');
         expect($this->manager->channelLabel('discord'))->toBe('Discord');
@@ -270,7 +270,7 @@ describe('LynxJournal_Notify_Manager::channelLabel()', function (): void {
     });
 });
 
-describe('LynxJournal_Notify_Manager::test()', function (): void {
+describe('LynxJournalNotifyManager::test()', function (): void {
     it('records a failure when sendTest() returns a WP_Error', function (): void {
         $notify = ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc'];
         Functions\when('wp_remote_post')->justReturn(new WP_Error('http_request_failed', 'boom'));

@@ -10,10 +10,10 @@ use Brain\Monkey\Functions;
 
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
-    $this->channel = new LynxJournal_Notify_DiscordChannel();
+    $this->channel = new LynxJournalNotifyDiscordChannel();
 });
 
-describe('LynxJournal_Notify_DiscordChannel::send()', function (): void {
+describe('LynxJournalNotifyDiscordChannel::send()', function (): void {
 
     it('does nothing when discord is disabled', function (): void {
         $called = false;

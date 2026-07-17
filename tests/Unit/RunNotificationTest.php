@@ -10,10 +10,10 @@ use Brain\Monkey\Functions;
 
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
-    $this->channel = new LynxJournal_Notify_EmailChannel();
+    $this->channel = new LynxJournalNotifyEmailChannel();
 });
 
-describe('LynxJournal_Notify_EmailChannel::send()', function (): void {
+describe('LynxJournalNotifyEmailChannel::send()', function (): void {
 
     it('does nothing when notify is disabled', function (): void {
         $mailSent = false;

@@ -10,11 +10,11 @@ use Brain\Monkey\Functions;
 
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
-    $this->channelChannel = new LynxJournal_Notify_SlackChannelChannel();
-    $this->dmChannel = new LynxJournal_Notify_SlackDmChannel();
+    $this->channelChannel = new LynxJournalNotifySlackChannelChannel();
+    $this->dmChannel = new LynxJournalNotifySlackDmChannel();
 });
 
-describe('LynxJournal_Notify_SlackChannelChannel::send()', function (): void {
+describe('LynxJournalNotifySlackChannelChannel::send()', function (): void {
 
     it('does nothing when slack channel is disabled', function (): void {
         $called = false;
@@ -124,7 +124,7 @@ describe('LynxJournal_Notify_SlackChannelChannel::send()', function (): void {
     });
 });
 
-describe('LynxJournal_Notify_SlackDmChannel::send()', function (): void {
+describe('LynxJournalNotifySlackDmChannel::send()', function (): void {
 
     it('does nothing when slack DM is disabled', function (): void {
         $called = false;
@@ -170,7 +170,7 @@ describe('LynxJournal_Notify_SlackDmChannel::send()', function (): void {
     });
 });
 
-describe('LynxJournal_Notify_SlackChannelChannel + LynxJournal_Notify_SlackDmChannel together', function (): void {
+describe('LynxJournalNotifySlackChannelChannel + LynxJournalNotifySlackDmChannel together', function (): void {
 
     it('sends two independent messages when both channel and DM are enabled', function (): void {
         Functions\when('get_permalink')->justReturn('https://site.example/roundup-42');

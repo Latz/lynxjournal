@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  *
  * @since 1.0.0
  */
-final class LynxJournal_Notify_BlueskyChannel implements LynxJournal_Notify_Channel {
+final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel {
 
     public function key(): string {
         return 'bluesky';
@@ -115,7 +115,7 @@ final class LynxJournal_Notify_BlueskyChannel implements LynxJournal_Notify_Chan
             return $convoId;
         }
 
-        $result = LynxJournal_Notify_Http::postJson(
+        $result = LynxJournalNotifyHttp::postJson(
             'https://bsky.chat/xrpc/chat.bsky.convo.sendMessage',
             ['convoId' => $convoId, 'message' => ['text' => $text]],
             ['Authorization' => 'Bearer ' . $session['accessJwt']],
@@ -133,7 +133,7 @@ final class LynxJournal_Notify_BlueskyChannel implements LynxJournal_Notify_Chan
      * @return array{accessJwt: string, did: string}|\WP_Error Session data on success, WP_Error otherwise.
      */
     private function createSession(string $handle, string $appPassword): array|\WP_Error {
-        $result = LynxJournal_Notify_Http::postJson(
+        $result = LynxJournalNotifyHttp::postJson(
             'https://bsky.social/xrpc/com.atproto.server.createSession',
             ['identifier' => $handle, 'password' => $appPassword],
             [],
@@ -189,7 +189,7 @@ final class LynxJournal_Notify_BlueskyChannel implements LynxJournal_Notify_Chan
      * @return string|\WP_Error The conversation ID, or WP_Error on failure.
      */
     private function getConvoId(string $senderDid, string $recipientDid, string $accessJwt): string|\WP_Error {
-        $result = LynxJournal_Notify_Http::postJson(
+        $result = LynxJournalNotifyHttp::postJson(
             'https://bsky.chat/xrpc/chat.bsky.convo.getConvoForMembers',
             ['members' => [$senderDid, $recipientDid]],
             ['Authorization' => 'Bearer ' . $accessJwt],
@@ -216,7 +216,7 @@ final class LynxJournal_Notify_BlueskyChannel implements LynxJournal_Notify_Chan
      * @return string Message text.
      */
     private function buildMessage(int|null $post_id, int $link_count, string $mode): string {
-        $content = LynxJournal_Notify_RunMessageContent::forRun($post_id, $link_count, $mode);
+        $content = LynxJournalNotifyRunMessageContent::forRun($post_id, $link_count, $mode);
 
         if ($content->published) {
             return "{$content->title}\n{$content->summary}\n{$content->url}";

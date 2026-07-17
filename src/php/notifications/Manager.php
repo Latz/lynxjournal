@@ -11,22 +11,22 @@ if (!defined('ABSPATH')) {
  *
  * @since 1.0.0
  */
-final class LynxJournal_Notify_Manager {
+final class LynxJournalNotifyManager {
 
-    /** @var LynxJournal_Notify_Channel[] Keyed by ->key(), in a fixed order. */
+    /** @var LynxJournalNotifyChannel[] Keyed by ->key(), in a fixed order. */
     private array $channels;
 
     public function __construct() {
         $this->channels = [];
         foreach ([
-            new LynxJournal_Notify_EmailChannel(),
-            new LynxJournal_Notify_DiscordChannel(),
-            new LynxJournal_Notify_SlackChannelChannel(),
-            new LynxJournal_Notify_SlackDmChannel(),
-            new LynxJournal_Notify_TelegramChannel(),
-            new LynxJournal_Notify_TelegramDmChannel(),
-            new LynxJournal_Notify_MastodonChannel(),
-            new LynxJournal_Notify_BlueskyChannel(),
+            new LynxJournalNotifyEmailChannel(),
+            new LynxJournalNotifyDiscordChannel(),
+            new LynxJournalNotifySlackChannelChannel(),
+            new LynxJournalNotifySlackDmChannel(),
+            new LynxJournalNotifyTelegramChannel(),
+            new LynxJournalNotifyTelegramDmChannel(),
+            new LynxJournalNotifyMastodonChannel(),
+            new LynxJournalNotifyBlueskyChannel(),
         ] as $channel) {
             $this->channels[$channel->key()] = $channel;
         }
@@ -194,9 +194,9 @@ final class LynxJournal_Notify_Manager {
      *
      * @since 1.0.0
      * @param string $key Channel key.
-     * @return LynxJournal_Notify_Channel|null The channel, or null if unknown.
+     * @return LynxJournalNotifyChannel|null The channel, or null if unknown.
      */
-    public function channel(string $key): ?LynxJournal_Notify_Channel {
+    public function channel(string $key): ?LynxJournalNotifyChannel {
         return $this->channels[$key] ?? null;
     }
 }

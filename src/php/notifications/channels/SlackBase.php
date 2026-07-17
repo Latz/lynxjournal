@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * @since 1.0.0
  */
-abstract class LynxJournal_Notify_SlackBase implements LynxJournal_Notify_Channel {
+abstract class LynxJournalNotifySlackBase implements LynxJournalNotifyChannel {
 
     /**
      * The `notify` field holding this target's Slack channel/user ID.
@@ -151,7 +151,7 @@ abstract class LynxJournal_Notify_SlackBase implements LynxJournal_Notify_Channe
      * @return true|\WP_Error True on success, WP_Error with the failure reason otherwise.
      */
     private function postToSlack(string $channel, array $blocks, string $token): true|\WP_Error {
-        $result = LynxJournal_Notify_Http::postJson(
+        $result = LynxJournalNotifyHttp::postJson(
             'https://slack.com/api/chat.postMessage',
             ['channel' => $channel, 'blocks' => $blocks],
             ['Authorization' => 'Bearer ' . $token],
@@ -200,7 +200,7 @@ abstract class LynxJournal_Notify_SlackBase implements LynxJournal_Notify_Channe
      * @return array Slack Block Kit blocks array.
      */
     private function buildBlocks(int|null $post_id, int $link_count, string $mode): array {
-        $content = LynxJournal_Notify_RunMessageContent::forRun($post_id, $link_count, $mode);
+        $content = LynxJournalNotifyRunMessageContent::forRun($post_id, $link_count, $mode);
 
         if ($content->published) {
             return [

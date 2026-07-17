@@ -22,7 +22,7 @@ class LynxJournal {
     public const DEFAULT_TIME          = '09:00';
     public const DEFAULT_POST_TEMPLATE = "[category_start]\n### [category_name]\n  - [link] [link_description]\n  \n[category_end]";
 
-    private ?LynxJournal_Notify_Manager $notificationManager = null;
+    private ?LynxJournalNotifyManager $notificationManager = null;
 
     use LynxJournal_PostType;
     use LynxJournal_MetaBoxes;
@@ -123,10 +123,10 @@ class LynxJournal {
      * only needed on requests that actually touch notifications.
      *
      * @since 1.0.0
-     * @return LynxJournal_Notify_Manager
+     * @return LynxJournalNotifyManager
      */
-    private function notifications(): LynxJournal_Notify_Manager {
-        return $this->notificationManager ??= new LynxJournal_Notify_Manager();
+    private function notifications(): LynxJournalNotifyManager {
+        return $this->notificationManager ??= new LynxJournalNotifyManager();
     }
 
     /**

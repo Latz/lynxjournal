@@ -12,13 +12,13 @@ beforeEach(function (): void {
     Functions\when('__')->returnArg();
 });
 
-describe('LynxJournal_Notify_RunMessageContent::forRun()', function (): void {
+describe('LynxJournalNotifyRunMessageContent::forRun()', function (): void {
 
     it('builds published content from the post when post_id is given', function (): void {
         Functions\when('get_the_title')->justReturn('Links: April 15, 2026');
         Functions\when('get_permalink')->justReturn('https://site.example/roundup-42');
 
-        $content = LynxJournal_Notify_RunMessageContent::forRun(42, 3, 'daily');
+        $content = LynxJournalNotifyRunMessageContent::forRun(42, 3, 'daily');
 
         expect($content->published)->toBeTrue();
         expect($content->title)->toBe('Links: April 15, 2026');
@@ -27,7 +27,7 @@ describe('LynxJournal_Notify_RunMessageContent::forRun()', function (): void {
     });
 
     it('builds a neutral summary with no title/url when post_id is null', function (): void {
-        $content = LynxJournal_Notify_RunMessageContent::forRun(null, 2, 'count');
+        $content = LynxJournalNotifyRunMessageContent::forRun(null, 2, 'count');
 
         expect($content->published)->toBeFalse();
         expect($content->title)->toBeNull();

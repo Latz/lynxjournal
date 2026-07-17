@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  *
  * @since 1.0.0
  */
-final class LynxJournal_Notify_SlackDmChannel extends LynxJournal_Notify_SlackBase {
+final class LynxJournalNotifySlackDmChannel extends LynxJournalNotifySlackBase {
 
     public function key(): string {
         return 'slack_dm';

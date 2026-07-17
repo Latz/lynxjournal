@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * @since 1.0.0
  */
-abstract class LynxJournal_Notify_TelegramBase implements LynxJournal_Notify_Channel {
+abstract class LynxJournalNotifyTelegramBase implements LynxJournalNotifyChannel {
 
     /**
      * The `notify` field holding this target's Telegram chat ID.
@@ -151,7 +151,7 @@ abstract class LynxJournal_Notify_TelegramBase implements LynxJournal_Notify_Cha
      * @return true|\WP_Error True on success, WP_Error with the failure reason otherwise.
      */
     private function postMessage(string $token, string $chatId, string $text): true|\WP_Error {
-        $result = LynxJournal_Notify_Http::postJson(
+        $result = LynxJournalNotifyHttp::postJson(
             "https://api.telegram.org/bot{$token}/sendMessage",
             ['chat_id' => $chatId, 'text' => $text, 'parse_mode' => 'HTML'],
             [],
@@ -181,7 +181,7 @@ abstract class LynxJournal_Notify_TelegramBase implements LynxJournal_Notify_Cha
      * @return string HTML-formatted message text.
      */
     private function buildMessage(int|null $post_id, int $link_count, string $mode): string {
-        $content = LynxJournal_Notify_RunMessageContent::forRun($post_id, $link_count, $mode);
+        $content = LynxJournalNotifyRunMessageContent::forRun($post_id, $link_count, $mode);
 
         if ($content->published) {
             $title = esc_html($content->title);

@@ -12,12 +12,12 @@ beforeEach(function (): void {
     Functions\when('is_wp_error')->alias(fn ($thing) => $thing instanceof WP_Error);
 });
 
-describe('LynxJournal_Notify_Http::postJson()', function (): void {
+describe('LynxJournalNotifyHttp::postJson()', function (): void {
     it('returns the raw response array on success', function (): void {
         Functions\when('wp_remote_retrieve_response_code')->justReturn(200);
         Functions\when('wp_remote_post')->justReturn(['response' => ['code' => 200], 'body' => '{}']);
 
-        $result = LynxJournal_Notify_Http::postJson('https://example.com/x', ['a' => 1], [], 'some_error');
+        $result = LynxJournalNotifyHttp::postJson('https://example.com/x', ['a' => 1], [], 'some_error');
 
         expect($result)->toBe(['response' => ['code' => 200], 'body' => '{}']);
     });
@@ -31,7 +31,7 @@ describe('LynxJournal_Notify_Http::postJson()', function (): void {
             return ['response' => ['code' => 200]];
         });
 
-        LynxJournal_Notify_Http::postJson('https://example.com/x', ['a' => 1], ['Authorization' => 'Bearer tok'], 'some_error');
+        LynxJournalNotifyHttp::postJson('https://example.com/x', ['a' => 1], ['Authorization' => 'Bearer tok'], 'some_error');
 
         expect($captured['url'])->toBe('https://example.com/x');
         expect($captured['args']['headers'])->toBe(['Content-Type' => 'application/json', 'Authorization' => 'Bearer tok']);
@@ -48,7 +48,7 @@ describe('LynxJournal_Notify_Http::postJson()', function (): void {
             return ['response' => ['code' => 200]];
         });
 
-        LynxJournal_Notify_Http::postJson('https://example.com/x', [], [], 'some_error', 20);
+        LynxJournalNotifyHttp::postJson('https://example.com/x', [], [], 'some_error', 20);
 
         expect($captured['args']['timeout'])->toBe(20);
     });
@@ -57,7 +57,7 @@ describe('LynxJournal_Notify_Http::postJson()', function (): void {
         $transportError = new WP_Error('http_request_failed', 'Could not resolve host');
         Functions\when('wp_remote_post')->justReturn($transportError);
 
-        $result = LynxJournal_Notify_Http::postJson('https://example.com/x', [], [], 'some_error');
+        $result = LynxJournalNotifyHttp::postJson('https://example.com/x', [], [], 'some_error');
 
         expect($result)->toBe($transportError);
     });
@@ -67,7 +67,7 @@ describe('LynxJournal_Notify_Http::postJson()', function (): void {
         Functions\when('wp_remote_retrieve_body')->justReturn('Not Found');
         Functions\when('wp_remote_post')->justReturn(['response' => ['code' => 404]]);
 
-        $result = LynxJournal_Notify_Http::postJson('https://example.com/x', [], [], 'my_custom_error_code');
+        $result = LynxJournalNotifyHttp::postJson('https://example.com/x', [], [], 'my_custom_error_code');
 
         expect($result)->toBeInstanceOf(WP_Error::class);
         expect($result->get_error_code())->toBe('my_custom_error_code');

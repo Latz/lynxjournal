@@ -11,7 +11,7 @@ use Brain\Monkey\Functions;
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
     Functions\when('add_query_arg')->alias(fn ($key, $value, $url) => $url . '?' . $key . '=' . $value);
-    $this->channel = new LynxJournal_Notify_BlueskyChannel();
+    $this->channel = new LynxJournalNotifyBlueskyChannel();
 });
 
 /**
@@ -48,7 +48,7 @@ function mockBlueskyHandshakeSuccess(array &$captured): void
     });
 }
 
-describe('LynxJournal_Notify_BlueskyChannel::send()', function (): void {
+describe('LynxJournalNotifyBlueskyChannel::send()', function (): void {
 
     it('does nothing when bluesky is disabled', function (): void {
         $called = false;

@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  *
  * @since 1.0.0
  */
-interface LynxJournal_Notify_Channel {
+interface LynxJournalNotifyChannel {
 
     /**
      * Stable identifier used in the `notify` option, REST payloads, and

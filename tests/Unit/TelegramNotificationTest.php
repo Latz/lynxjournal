@@ -10,11 +10,11 @@ use Brain\Monkey\Functions;
 
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
-    $this->channel = new LynxJournal_Notify_TelegramChannel();
-    $this->dmChannel = new LynxJournal_Notify_TelegramDmChannel();
+    $this->channel = new LynxJournalNotifyTelegramChannel();
+    $this->dmChannel = new LynxJournalNotifyTelegramDmChannel();
 });
 
-describe('LynxJournal_Notify_TelegramChannel::send()', function (): void {
+describe('LynxJournalNotifyTelegramChannel::send()', function (): void {
 
     it('does nothing when telegram is disabled', function (): void {
         $called = false;
@@ -122,7 +122,7 @@ describe('LynxJournal_Notify_TelegramChannel::send()', function (): void {
     });
 });
 
-describe('LynxJournal_Notify_TelegramDmChannel::send()', function (): void {
+describe('LynxJournalNotifyTelegramDmChannel::send()', function (): void {
 
     it('does nothing when the DM target is disabled', function (): void {
         $called = false;

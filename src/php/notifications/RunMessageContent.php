@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * @since 1.0.0
  */
-final class LynxJournal_Notify_RunMessageContent {
+final class LynxJournalNotifyRunMessageContent {
 
     /**
      * @since 1.0.0

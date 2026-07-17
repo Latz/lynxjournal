@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  *
  * @since 1.0.0
  */
-final class LynxJournal_Notify_EmailChannel implements LynxJournal_Notify_Channel {
+final class LynxJournalNotifyEmailChannel implements LynxJournalNotifyChannel {
 
     public function key(): string {
         return 'email';
@@ -74,7 +74,7 @@ final class LynxJournal_Notify_EmailChannel implements LynxJournal_Notify_Channe
      * @return string Message body.
      */
     private function buildMessage(int|null $post_id, int $link_count, string $mode): string {
-        $content = LynxJournal_Notify_RunMessageContent::forRun($post_id, $link_count, $mode);
+        $content = LynxJournalNotifyRunMessageContent::forRun($post_id, $link_count, $mode);
 
         if ($content->published) {
             /* translators: 1: run summary, 2: post URL */

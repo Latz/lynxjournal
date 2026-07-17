@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  *
  * @since 1.0.0
  */
-final class LynxJournal_Notify_DiscordChannel implements LynxJournal_Notify_Channel {
+final class LynxJournalNotifyDiscordChannel implements LynxJournalNotifyChannel {
 
     public function key(): string {
         return 'discord';
@@ -71,7 +71,7 @@ final class LynxJournal_Notify_DiscordChannel implements LynxJournal_Notify_Chan
      * @return true|\WP_Error True on success, WP_Error with the failure reason otherwise.
      */
     private function post(string $url, array $embed): true|\WP_Error {
-        $result = LynxJournal_Notify_Http::postJson($url, ['embeds' => [$embed]], [], 'discord_request_failed');
+        $result = LynxJournalNotifyHttp::postJson($url, ['embeds' => [$embed]], [], 'discord_request_failed');
         return is_wp_error($result) ? $result : true;
     }
 
@@ -85,7 +85,7 @@ final class LynxJournal_Notify_DiscordChannel implements LynxJournal_Notify_Chan
      * @return array Discord embed object.
      */
     private function buildEmbed(int|null $post_id, int $link_count, string $mode): array {
-        $content = LynxJournal_Notify_RunMessageContent::forRun($post_id, $link_count, $mode);
+        $content = LynxJournalNotifyRunMessageContent::forRun($post_id, $link_count, $mode);
 
         if ($content->published) {
             return [

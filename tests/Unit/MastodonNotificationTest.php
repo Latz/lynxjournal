@@ -10,10 +10,10 @@ use Brain\Monkey\Functions;
 
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
-    $this->channel = new LynxJournal_Notify_MastodonChannel();
+    $this->channel = new LynxJournalNotifyMastodonChannel();
 });
 
-describe('LynxJournal_Notify_MastodonChannel::send()', function (): void {
+describe('LynxJournalNotifyMastodonChannel::send()', function (): void {
 
     it('does nothing when mastodon is disabled', function (): void {
         $called = false;
