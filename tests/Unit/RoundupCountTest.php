@@ -21,6 +21,9 @@ beforeEach(function (): void {
     Functions\when('esc_html')->returnArg();
     Functions\when('esc_url')->returnArg();
     Functions\when('wp_kses_post')->returnArg();
+    Functions\when('get_the_date')->justReturn('2026-06-29');
+    Functions\when('get_bloginfo')->justReturn('Test Site');
+    Functions\when('wp_date')->justReturn('2026-06-29');
 
     // WP hooks / taxonomy
     Functions\when('apply_filters')->returnArg(2);
