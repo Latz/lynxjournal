@@ -534,6 +534,7 @@ describe('LynxJournal::dashboardPage()', function (): void { // NOSONAR
         ]);
         $this->plugin->shouldReceive('getCachedCategories')->andReturn([$term]);
         Functions\when('get_posts')->justReturn([]);
+        Functions\when('wp_kses')->returnArg(1);
 
         ob_start();
         $this->plugin->dashboardPage();

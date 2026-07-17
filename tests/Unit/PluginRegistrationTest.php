@@ -32,7 +32,7 @@ describe('LynxJournal::register()', function (): void {
 
         // Admin-only hooks must never be registered outside admin context.
         Functions\expect('add_action')->never()->with('add_meta_boxes', Mockery::any());
-        Functions\expect('add_filter')->never()->with('parent_file', Mockery::any());
+        Functions\expect('add_action')->never()->with('admin_menu', Mockery::any());
 
         expect(fn() => LynxJournal::register())->not->toThrow(Throwable::class);
     });
@@ -54,11 +54,11 @@ describe('LynxJournal::register()', function (): void {
         Functions\expect('add_action')->once()->with('add_meta_boxes', lynxjournalCallback('addMetaBoxes'));
         Functions\expect('add_action')->once()->with('save_post_lynx-journal', lynxjournalCallback('saveUrl'));
         Functions\expect('add_action')->once()->with('wp_ajax_lynxjournal_get_rest_nonce', lynxjournalCallback('handleGetRestNonce'));
+        Functions\expect('add_action')->once()->with('wp_ajax_lynxjournal_dismiss_notification_failures', lynxjournalCallback('handleDismissNotificationFailureNotice'));
         Functions\expect('add_action')->once()->with('admin_menu', lynxjournalCallback('adminMenu'));
         Functions\expect('add_action')->once()->with('admin_enqueue_scripts', lynxjournalCallback('enqueueAdminAssets'));
+        Functions\expect('add_action')->once()->with('admin_notices', lynxjournalCallback('renderNotificationFailureNotice'));
         Functions\expect('add_action')->once()->with('wp_dashboard_setup', lynxjournalCallback('addDashboardWidget'));
-        Functions\expect('add_filter')->once()->with('parent_file', lynxjournalCallback('parentFileFilter'));
-        Functions\expect('add_filter')->once()->with('submenu_file', lynxjournalCallback('submenuFileFilter'));
 
         expect(fn() => LynxJournal::register())->not->toThrow(Throwable::class);
     });
