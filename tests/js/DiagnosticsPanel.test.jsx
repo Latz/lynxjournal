@@ -72,7 +72,7 @@ describe('DiagnosticsPanel', () => {
             />
         );
 
-        expect(screen.getByText('success')).toBeInTheDocument();
+        expect(screen.getByText('Success')).toBeInTheDocument();
         const link = screen.getByRole('link', { name: '3 links' });
         expect(link).toHaveAttribute('href', '/wp-admin/post.php?post=42&action=edit');
     });

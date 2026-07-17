@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LynxJournal 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lynxjournal\n"
-"POT-Creation-Date: 2026-07-12T21:28:40+00:00\n"
+"POT-Creation-Date: 2026-07-17T16:40:47+00:00\n"
 "PO-Revision-Date: 2026-07-11 00:00+0000\n"
 "Last-Translator: Latz\n"
 "Language-Team: German\n"
@@ -25,13 +25,426 @@ msgstr "LynxJournal"
 
 #. Description of the plugin
 #: lynxjournal.php
-msgid "Save and publish links to your blog"
-msgstr "Links speichern und im Blog veröffentlichen"
+msgid ""
+"Self-hosted link aggregation and micro-blogging. Transform web references "
+"into structured blog posts."
+msgstr ""
+"Selbst gehostete Linksammlung und Mikroblogging. Verwandelt Web-"
+"Referenzen in strukturierte Blogbeiträge."
 
 #. Author of the plugin
 #: lynxjournal.php
 msgid "Latz"
 msgstr "Latz"
+
+#: src/php/class-lynxjournal.php:176 src/php/class-lynxjournal.php:195
+msgid "notify must be an object"
+msgstr "notify muss ein Objekt sein"
+
+#: src/php/class-lynxjournal.php:221 src/php/class-lynxjournal.php:249
+#: src/php/notifications/Manager.php:146 src/php/notifications/Manager.php:162
+msgid "Unknown notification channel."
+msgstr "Unbekannter Benachrichtigungskanal."
+
+#: src/php/notifications/channels/BlueskyChannel.php:48
+msgid "notify.bskyHandle must be a valid Bluesky handle, e.g. user.bsky.social"
+msgstr ""
+"notify.bskyHandle muss ein gültiges Bluesky-Handle sein, z. B. "
+"user.bsky.social"
+
+#: src/php/notifications/channels/BlueskyChannel.php:51
+msgid ""
+"notify.bskyAppPassword must be a valid Bluesky app password (xxxx-xxxx-xxxx-"
+"xxxx)"
+msgstr ""
+"notify.bskyAppPassword muss ein gültiges Bluesky-App-Passwort sein (xxxx-"
+"xxxx-xxxx-xxxx)"
+
+#: src/php/notifications/channels/BlueskyChannel.php:54
+msgid ""
+"notify.bskyRecipient must be a valid Bluesky handle, e.g. friend.bsky.social"
+msgstr ""
+"notify.bskyRecipient muss ein gültiges Bluesky-Handle sein, z. B. "
+"friend.bsky.social"
+
+#: src/php/notifications/channels/BlueskyChannel.php:59
+msgid "notify.bskyHandle is required when Bluesky notifications are enabled"
+msgstr ""
+"notify.bskyHandle ist erforderlich, wenn Bluesky-Benachrichtigungen "
+"aktiviert sind"
+
+#: src/php/notifications/channels/BlueskyChannel.php:62
+msgid ""
+"notify.bskyAppPassword is required when Bluesky notifications are enabled"
+msgstr ""
+"notify.bskyAppPassword ist erforderlich, wenn Bluesky-Benachrichtigungen "
+"aktiviert sind"
+
+#: src/php/notifications/channels/BlueskyChannel.php:65
+msgid "notify.bskyRecipient is required when Bluesky notifications are enabled"
+msgstr ""
+"notify.bskyRecipient ist erforderlich, wenn Bluesky-Benachrichtigungen "
+"aktiviert sind"
+
+#: src/php/notifications/channels/BlueskyChannel.php:81
+msgid ""
+"Enable Bluesky notifications and fill in the handle, app password, and "
+"recipient handle first."
+msgstr ""
+"Aktiviere zuerst Bluesky-Benachrichtigungen und trage Handle, App-Passwort "
+"und Empfänger-Handle ein."
+
+#: src/php/notifications/channels/BlueskyChannel.php:83
+#: src/php/notifications/channels/DiscordChannel.php:59
+#: src/php/notifications/channels/EmailChannel.php:61
+#: src/php/notifications/channels/MastodonChannel.php:84
+#: src/php/notifications/channels/SlackBase.php:136
+#: src/php/notifications/channels/TelegramBase.php:140
+msgid "This is a test notification from LynxJournal."
+msgstr "Dies ist eine Testbenachrichtigung von LynxJournal."
+
+#: src/php/notifications/channels/BlueskyChannel.php:148
+msgid ""
+"Bluesky did not return a valid session. Check the handle and app password."
+msgstr ""
+"Bluesky hat keine gültige Sitzung zurückgegeben. Überprüfe Handle und App-"
+"Passwort."
+
+#: src/php/notifications/channels/BlueskyChannel.php:172
+#: src/php/notifications/channels/BlueskyChannel.php:177
+msgid "Could not resolve the Bluesky recipient handle."
+msgstr "Das Bluesky-Empfänger-Handle konnte nicht aufgelöst werden."
+
+#: src/php/notifications/channels/BlueskyChannel.php:204
+msgid "Could not open a Bluesky DM conversation with the recipient."
+msgstr ""
+"Es konnte keine Bluesky-Direktnachrichten-Unterhaltung mit dem Empfänger "
+"geöffnet werden."
+
+#: src/php/notifications/channels/DiscordChannel.php:37
+msgid "notify.discordWebhookUrl must be a valid Discord webhook URL"
+msgstr "notify.discordWebhookUrl muss eine gültige Discord-Webhook-URL sein"
+
+#: src/php/notifications/channels/DiscordChannel.php:41
+msgid ""
+"notify.discordWebhookUrl is required when Discord notifications are enabled"
+msgstr ""
+"notify.discordWebhookUrl ist erforderlich, wenn Discord-Benachrichtigungen "
+"aktiviert sind"
+
+#: src/php/notifications/channels/DiscordChannel.php:55
+msgid "Enable Discord notifications and enter a webhook URL first."
+msgstr ""
+"Aktiviere zuerst Discord-Benachrichtigungen und gib eine Webhook-URL ein."
+
+#: src/php/notifications/channels/DiscordChannel.php:58
+#: src/php/notifications/channels/SlackBase.php:138
+msgid "Test notification"
+msgstr "Testbenachrichtigung"
+
+#: src/php/notifications/channels/DiscordChannel.php:97
+#: src/php/traits/Admin/TemplatePage.php:44 build/taxonomies.js:3
+#: build/taxonomies.js:5 src/categories/App.jsx:171 src/tags/App.jsx:171
+msgid "Links"
+msgstr "Links"
+
+#: src/php/notifications/channels/DiscordChannel.php:98 build/schedule.js:3
+#: src/schedule/App.jsx:269
+msgid "Mode"
+msgstr "Modus"
+
+#: src/php/notifications/channels/DiscordChannel.php:105
+#: src/php/notifications/channels/SlackBase.php:229
+msgid "LynxJournal schedule ran"
+msgstr "LynxJournal-Zeitplan wurde ausgeführt"
+
+#: src/php/notifications/channels/EmailChannel.php:36
+msgid "notify.email is not a valid email address"
+msgstr "notify.email ist keine gültige E-Mail-Adresse"
+
+#. translators: %d: number of links published
+#: src/php/notifications/channels/EmailChannel.php:49
+#, php-format
+msgid "[LynxJournal] Roundup published: %d links"
+msgstr "[LynxJournal] Zusammenfassung veröffentlicht: %d Links"
+
+#: src/php/notifications/channels/EmailChannel.php:53
+msgid "wp_mail() failed to send the notification email."
+msgstr "wp_mail() konnte die Benachrichtigungs-E-Mail nicht senden."
+
+#: src/php/notifications/channels/EmailChannel.php:58
+msgid "Enable email notifications first."
+msgstr "Aktiviere zuerst E-Mail-Benachrichtigungen."
+
+#: src/php/notifications/channels/EmailChannel.php:62
+msgid "[LynxJournal] Test notification"
+msgstr "[LynxJournal] Testbenachrichtigung"
+
+#: src/php/notifications/channels/EmailChannel.php:64
+msgid "wp_mail() failed to send the test email."
+msgstr "wp_mail() konnte die Test-E-Mail nicht senden."
+
+#. translators: 1: run summary, 2: post URL
+#: src/php/notifications/channels/EmailChannel.php:81
+#, php-format
+msgid ""
+"%1$s\n"
+"\n"
+"View: %2$s"
+msgstr ""
+"%1$s\n"
+"\n"
+"Ansehen: %2$s"
+
+#: src/php/notifications/channels/MastodonChannel.php:47
+msgid "notify.mastodonInstanceUrl must be a valid https:// URL"
+msgstr "notify.mastodonInstanceUrl muss eine gültige https://-URL sein"
+
+#: src/php/notifications/channels/MastodonChannel.php:55
+msgid ""
+"notify.mastodonRecipient must be a valid handle, e.g. @user@instance.social"
+msgstr ""
+"notify.mastodonRecipient muss ein gültiges Handle sein, z. B. "
+"@user@instance.social"
+
+#: src/php/notifications/channels/MastodonChannel.php:60
+msgid ""
+"notify.mastodonInstanceUrl is required when Mastodon notifications are "
+"enabled"
+msgstr ""
+"notify.mastodonInstanceUrl ist erforderlich, wenn Mastodon-"
+"Benachrichtigungen aktiviert sind"
+
+#: src/php/notifications/channels/MastodonChannel.php:63
+msgid ""
+"notify.mastodonAccessToken is required when Mastodon notifications are "
+"enabled"
+msgstr ""
+"notify.mastodonAccessToken ist erforderlich, wenn Mastodon-"
+"Benachrichtigungen aktiviert sind"
+
+#: src/php/notifications/channels/MastodonChannel.php:66
+msgid ""
+"notify.mastodonRecipient is required when Mastodon notifications are enabled"
+msgstr ""
+"notify.mastodonRecipient ist erforderlich, wenn Mastodon-Benachrichtigungen "
+"aktiviert sind"
+
+#: src/php/notifications/channels/MastodonChannel.php:82
+msgid ""
+"Enable Mastodon notifications and fill in the instance URL, access token, "
+"and recipient handle first."
+msgstr ""
+"Aktiviere zuerst Mastodon-Benachrichtigungen und trage Instanz-URL, "
+"Zugriffstoken und Empfänger-Handle ein."
+
+#: src/php/notifications/channels/SlackBase.php:103
+msgid ""
+"notify.slackBotToken must be a valid Slack bot token (starting with xoxb-)"
+msgstr ""
+"notify.slackBotToken muss ein gültiges Slack-Bot-Token sein (beginnend mit "
+"xoxb-)"
+
+#: src/php/notifications/channels/SlackBase.php:184
+msgid ""
+"The bot isn't a member of this channel. In Slack, open the channel and run "
+"\"/invite @YourBotName\", then try again."
+msgstr ""
+"Der Bot ist kein Mitglied dieses Kanals. Öffne den Kanal in Slack, führe \"/"
+"invite @DeinBotName\" aus und versuche es erneut."
+
+#: src/php/notifications/channels/SlackBase.php:185
+msgid "Slack channel not found. Double-check the channel ID."
+msgstr "Slack-Kanal nicht gefunden. Überprüfe die Kanal-ID."
+
+#: src/php/notifications/channels/SlackBase.php:186
+msgid ""
+"Slack bot token is invalid or has been revoked. Generate a new token and "
+"update it here."
+msgstr ""
+"Das Slack-Bot-Token ist ungültig oder wurde widerrufen. Erstelle ein neues "
+"Token und aktualisiere es hier."
+
+#: src/php/notifications/channels/SlackBase.php:187
+msgid ""
+"The Slack bot token is missing a required permission scope. Reinstall the "
+"Slack app with the chat:write scope."
+msgstr ""
+"Dem Slack-Bot-Token fehlt ein erforderlicher Berechtigungsbereich. "
+"Installiere die Slack-App mit dem Bereich chat:write neu."
+
+#: src/php/notifications/channels/SlackBase.php:188
+msgid "Unknown Slack API error"
+msgstr "Unbekannter Slack-API-Fehler"
+
+#. translators: 1: run summary, 2: post URL
+#: src/php/notifications/channels/SlackBase.php:213
+#, php-format
+msgid ""
+"%1$s\n"
+"<%2$s|View post>"
+msgstr ""
+"%1$s\n"
+"<%2$s|Beitrag ansehen>"
+
+#. translators: %d: number of links published
+#: src/php/notifications/channels/SlackBase.php:220
+#, php-format
+msgid "*Links:* %d"
+msgstr "*Links:* %d"
+
+#. translators: %s: schedule mode
+#: src/php/notifications/channels/SlackBase.php:222
+#, php-format
+msgid "*Mode:* %s"
+msgstr "*Modus:* %s"
+
+#: src/php/notifications/channels/SlackChannelChannel.php:29
+msgid ""
+"Enable Slack channel notifications and fill in the bot token and channel ID "
+"first."
+msgstr ""
+"Aktiviere zuerst Slack-Kanal-Benachrichtigungen und trage Bot-Token und "
+"Kanal-ID ein."
+
+#: src/php/notifications/channels/SlackChannelChannel.php:41
+msgid "notify.slackChannelId must be a valid Slack channel ID"
+msgstr "notify.slackChannelId muss eine gültige Slack-Kanal-ID sein"
+
+#: src/php/notifications/channels/SlackChannelChannel.php:45
+msgid ""
+"notify.slackBotToken is required when Slack channel notifications are enabled"
+msgstr ""
+"notify.slackBotToken ist erforderlich, wenn Slack-Kanal-Benachrichtigungen "
+"aktiviert sind"
+
+#: src/php/notifications/channels/SlackDmChannel.php:29
+msgid ""
+"Enable Slack DM notifications and fill in the bot token and user ID first."
+msgstr ""
+"Aktiviere zuerst Slack-Direktnachrichten und trage Bot-Token und Benutzer-ID "
+"ein."
+
+#: src/php/notifications/channels/SlackDmChannel.php:41
+msgid "notify.slackUserId must be a valid Slack user ID"
+msgstr "notify.slackUserId muss eine gültige Slack-Benutzer-ID sein"
+
+#: src/php/notifications/channels/SlackDmChannel.php:45
+msgid ""
+"notify.slackBotToken is required when Slack DM notifications are enabled"
+msgstr ""
+"notify.slackBotToken ist erforderlich, wenn Slack-Direktnachrichten "
+"aktiviert sind"
+
+#: src/php/notifications/channels/TelegramBase.php:103
+msgid "notify.telegramBotToken must be a valid Telegram bot token"
+msgstr "notify.telegramBotToken muss ein gültiges Telegram-Bot-Token sein"
+
+#: src/php/notifications/channels/TelegramBase.php:169
+msgid "Unknown Telegram API error"
+msgstr "Unbekannter Telegram-API-Fehler"
+
+#: src/php/notifications/channels/TelegramChannel.php:29
+msgid ""
+"Enable Telegram notifications and fill in the bot token and chat ID first."
+msgstr ""
+"Aktiviere zuerst Telegram-Benachrichtigungen und trage Bot-Token und Chat-ID "
+"ein."
+
+#: src/php/notifications/channels/TelegramChannel.php:37
+msgid "notify.telegramChatId must be a valid Telegram chat ID"
+msgstr "notify.telegramChatId muss eine gültige Telegram-Chat-ID sein"
+
+#: src/php/notifications/channels/TelegramChannel.php:41
+msgid ""
+"notify.telegramChatId is required when Telegram notifications are enabled"
+msgstr ""
+"notify.telegramChatId ist erforderlich, wenn Telegram-Benachrichtigungen "
+"aktiviert sind"
+
+#: src/php/notifications/channels/TelegramChannel.php:45
+msgid ""
+"notify.telegramBotToken is required when Telegram notifications are enabled"
+msgstr ""
+"notify.telegramBotToken ist erforderlich, wenn Telegram-Benachrichtigungen "
+"aktiviert sind"
+
+#: src/php/notifications/channels/TelegramDmChannel.php:29
+msgid ""
+"Enable Telegram DM notifications and fill in the bot token and user chat ID "
+"first."
+msgstr ""
+"Aktiviere zuerst Telegram-Direktnachrichten und trage Bot-Token und Benutzer-"
+"Chat-ID ein."
+
+#: src/php/notifications/channels/TelegramDmChannel.php:37
+msgid "notify.telegramDmChatId must be a valid Telegram chat ID"
+msgstr "notify.telegramDmChatId muss eine gültige Telegram-Chat-ID sein"
+
+#: src/php/notifications/channels/TelegramDmChannel.php:41
+msgid ""
+"notify.telegramDmChatId is required when Telegram DM notifications are "
+"enabled"
+msgstr ""
+"notify.telegramDmChatId ist erforderlich, wenn Telegram-Direktnachrichten "
+"aktiviert sind"
+
+#: src/php/notifications/channels/TelegramDmChannel.php:45
+msgid ""
+"notify.telegramBotToken is required when Telegram DM notifications are "
+"enabled"
+msgstr ""
+"notify.telegramBotToken ist erforderlich, wenn Telegram-Direktnachrichten "
+"aktiviert sind"
+
+#: src/php/notifications/Manager.php:105 build/schedule.js:1
+#: src/schedule/lib/notificationChannels.js:19
+msgid "Email"
+msgstr "E-Mail"
+
+#: src/php/notifications/Manager.php:106 src/php/traits/Admin/Menu.php:107
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:28
+msgid "Discord"
+msgstr "Discord"
+
+#: src/php/notifications/Manager.php:107
+msgid "Slack (Channel)"
+msgstr "Slack (Kanal)"
+
+#: src/php/notifications/Manager.php:108
+msgid "Slack (DM)"
+msgstr "Slack (Direktnachricht)"
+
+#: src/php/notifications/Manager.php:109 src/php/traits/Admin/Menu.php:125
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:64
+msgid "Telegram"
+msgstr "Telegram"
+
+#: src/php/notifications/Manager.php:110
+msgid "Telegram (DM)"
+msgstr "Telegram (Direktnachricht)"
+
+#: src/php/notifications/Manager.php:111 src/php/traits/Admin/Menu.php:133
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:91
+msgid "Mastodon"
+msgstr "Mastodon"
+
+#: src/php/notifications/Manager.php:112 src/php/traits/Admin/Menu.php:141
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:102
+msgid "Bluesky"
+msgstr "Bluesky"
+
+#. translators: %d: number of links published
+#: src/php/notifications/RunMessageContent.php:48
+#, php-format
+msgid "A new roundup was published with %d links."
+msgstr "Eine neue Zusammenfassung mit %d Links wurde veröffentlicht."
+
+#. translators: %s: schedule mode
+#: src/php/notifications/RunMessageContent.php:57
+#, php-format
+msgid "Schedule ran in %s mode but no post was published."
+msgstr "Zeitplan lief im Modus %s, aber es wurde kein Beitrag veröffentlicht."
 
 #: src/php/traits/Admin/AddLink.php:22 src/php/traits/trait-post-type.php:30
 msgid "Add New Link"
@@ -77,7 +490,7 @@ msgstr "Mehrere Schlagwörter mit Kommas trennen (z. B. tag1, tag2, tag3)"
 msgid "Add Link"
 msgstr "Link hinzufügen"
 
-#: src/php/traits/Admin/AddLink.php:92 src/php/traits/Admin/Menu.php:132
+#: src/php/traits/Admin/AddLink.php:92 src/php/traits/Admin/Menu.php:234
 #: build/taxonomies.js:1 build/taxonomies.js:3 src/categories/App.jsx:122
 #: src/tags/App.jsx:122
 msgid "Cancel"
@@ -107,7 +520,7 @@ msgid "Failed to add link."
 msgstr "Link konnte nicht hinzugefügt werden."
 
 #: src/php/traits/Admin/AddLink.php:213 src/php/traits/Admin/Dashboard.php:418
-#: src/php/traits/RestApi.php:486
+#: src/php/traits/RestApi.php:506
 msgid "Link added successfully!"
 msgstr "Link erfolgreich hinzugefügt!"
 
@@ -227,7 +640,7 @@ msgid "Links Roundup - %s"
 msgstr "Link-Zusammenfassung – %s"
 
 #: src/php/traits/Admin/Dashboard.php:316 build/schedule.js:3
-#: src/schedule/App.jsx:209
+#: src/schedule/App.jsx:290
 msgid "Publish"
 msgstr "Veröffentlichen"
 
@@ -250,7 +663,7 @@ msgstr "Entwurf ansehen"
 
 #: src/php/traits/Admin/Dashboard.php:377
 #: src/php/traits/Admin/LinksPage.php:341 build/schedule.js:3
-#: src/schedule/App.jsx:210
+#: src/schedule/App.jsx:291
 msgid "Draft"
 msgstr "Entwurf"
 
@@ -287,7 +700,7 @@ msgstr "Kein automatischer Zeitplan aktiv."
 msgid "Schedule settings →"
 msgstr "Zeitplaneinstellungen →"
 
-#: src/php/traits/Admin/Dashboard.php:511
+#: src/php/traits/Admin/Dashboard.php:511 src/php/traits/Admin/Menu.php:102
 msgid "Overview"
 msgstr "Übersicht"
 
@@ -426,33 +839,330 @@ msgstr "Dashboard"
 msgid "Show Links"
 msgstr "Links anzeigen"
 
-#: src/php/traits/Admin/Menu.php:32 src/php/traits/Admin/Menu.php:46
+#: src/php/traits/Admin/Menu.php:32 src/php/traits/Admin/Menu.php:51
 msgid "Browser Extension"
 msgstr "Browser-Erweiterung"
 
-#: src/php/traits/Admin/Menu.php:33
+#: src/php/traits/Admin/Menu.php:34
 msgid "Schedule"
 msgstr "Zeitplan"
 
-#: src/php/traits/Admin/Menu.php:34 src/php/traits/Admin/TemplatePage.php:62
+#: src/php/traits/Admin/Menu.php:39 src/php/traits/Admin/TemplatePage.php:62
 msgid "Post Template"
 msgstr "Beitragsvorlage"
 
-#: src/php/traits/Admin/Menu.php:61
+#: src/php/traits/Admin/Menu.php:66
 msgid "Schedule Configuration"
 msgstr "Zeitplankonfiguration"
 
-#: src/php/traits/Admin/Menu.php:130
+#: src/php/traits/Admin/Menu.php:103
+msgid ""
+"The Schedule page controls when LynxJournal automatically publishes a "
+"roundup post, and (optionally) who gets notified when it does."
+msgstr ""
+"Die Zeitplan-Seite legt fest, wann LynxJournal automatisch einen "
+"Zusammenfassungsbeitrag veröffentlicht und (optional) wer dabei "
+"benachrichtigt wird."
+
+#: src/php/traits/Admin/Menu.php:104
+msgid ""
+"Choose a Mode (a recurring schedule like Daily/Weekly/Monthly, a trigger "
+"condition like \"every N links\" or \"every N days\", or Manual for no "
+"automatic trigger), set the Recurrence or Condition for that mode, and pick "
+"one or more Execution Times. Each notification channel below is an "
+"independent, optional add-on — you can enable any combination of them, or "
+"none at all."
+msgstr ""
+"Wähle einen Modus (einen wiederkehrenden Zeitplan wie Täglich/Wöchentlich/"
+"Monatlich, eine Auslösebedingung wie \"alle N Links\" oder \"alle N Tage\", "
+"oder Manuell für keine automatische Auslösung), lege die Wiederholung oder "
+"Bedingung für diesen Modus fest und wähle eine oder mehrere "
+"Ausführungszeiten. Jeder Benachrichtigungskanal unten ist eine unabhängige, "
+"optionale Erweiterung — du kannst eine beliebige Kombination davon "
+"aktivieren oder keinen."
+
+#: src/php/traits/Admin/Menu.php:108
+msgid ""
+"Posts a rich embed to a Discord channel via a webhook every time a scheduled "
+"run actually publishes (or attempts to publish) a roundup."
+msgstr ""
+"Postet ein reichhaltiges Embed in einen Discord-Kanal über einen Webhook, "
+"jedes Mal wenn ein geplanter Lauf tatsächlich eine Zusammenfassung "
+"veröffentlicht (oder zu veröffentlichen versucht)."
+
+#: src/php/traits/Admin/Menu.php:109 src/php/traits/Admin/Menu.php:118
+#: src/php/traits/Admin/Menu.php:127 src/php/traits/Admin/Menu.php:135
+#: src/php/traits/Admin/Menu.php:143
+msgid "Setup:"
+msgstr "Einrichtung:"
+
+#: src/php/traits/Admin/Menu.php:109
+msgid ""
+"In Discord, open Server Settings → Integrations → Webhooks, click New "
+"Webhook, pick a channel, then Copy Webhook URL."
+msgstr ""
+"Öffne in Discord Servereinstellungen → Integrationen → Webhooks, klicke auf "
+"Neuer Webhook, wähle einen Kanal und dann Webhook-URL kopieren."
+
+#: src/php/traits/Admin/Menu.php:110
+msgid "Enable:"
+msgstr "Aktivieren:"
+
+#: src/php/traits/Admin/Menu.php:110
+msgid ""
+"Check \"Send a Discord notification after each run\", paste the webhook URL, "
+"then Save Schedule."
+msgstr ""
+"Aktiviere \"Discord-Benachrichtigung nach jedem Lauf senden\", füge die "
+"Webhook-URL ein und klicke dann auf Zeitplan speichern."
+
+#: src/php/traits/Admin/Menu.php:111
+msgid "Accepted URL:"
+msgstr "Akzeptierte URL:"
+
+#: src/php/traits/Admin/Menu.php:111
+msgid ""
+"must start with https:// and point to discord.com, discordapp.com, "
+"ptb.discord.com, or canary.discord.com with a path shaped like /api/webhooks/"
+"{id}/{token}."
+msgstr ""
+"muss mit https:// beginnen und auf discord.com, discordapp.com, "
+"ptb.discord.com oder canary.discord.com verweisen, mit einem Pfad in der "
+"Form /api/webhooks/{id}/{token}."
+
+#: src/php/traits/Admin/Menu.php:112
+msgid ""
+"Sending is fire-and-forget: a failed or unreachable webhook is silently "
+"skipped and never blocks the scheduled run itself. If messages stop "
+"arriving, re-copy a fresh webhook URL from Discord and re-save."
+msgstr ""
+"Das Senden erfolgt ohne Rückmeldung: Ein fehlgeschlagener oder nicht "
+"erreichbarer Webhook wird stillschweigend übersprungen und blockiert niemals "
+"den geplanten Lauf selbst. Falls keine Nachrichten mehr ankommen, kopiere "
+"eine neue Webhook-URL aus Discord und speichere erneut."
+
+#: src/php/traits/Admin/Menu.php:116 build/schedule.js:1
+#: src/schedule/lib/notificationChannels.js:37
+msgid "Slack"
+msgstr "Slack"
+
+#: src/php/traits/Admin/Menu.php:117
+msgid ""
+"Uses a single Slack Bot Token to post to a channel, DM a person, or both — "
+"independently — every time a scheduled run publishes (or attempts to "
+"publish) a roundup."
+msgstr ""
+"Verwendet ein einzelnes Slack-Bot-Token, um in einen Kanal zu posten, "
+"jemandem eine Direktnachricht zu senden, oder beides — unabhängig "
+"voneinander — jedes Mal wenn ein geplanter Lauf eine Zusammenfassung "
+"veröffentlicht (oder zu veröffentlichen versucht)."
+
+#: src/php/traits/Admin/Menu.php:118
+msgid ""
+"At api.slack.com/apps, create an app, add the chat:write Bot Token Scope "
+"under OAuth & Permissions, install the app to your workspace, and copy the "
+"Bot User OAuth Token (starts with xoxb-)."
+msgstr ""
+"Erstelle unter api.slack.com/apps eine App, füge unter OAuth & Permissions "
+"den Bot-Token-Bereich chat:write hinzu, installiere die App in deinem "
+"Workspace und kopiere das Bot User OAuth Token (beginnt mit xoxb-)."
+
+#: src/php/traits/Admin/Menu.php:119
+msgid ""
+"For a channel message: invite the bot to that channel and grab its channel "
+"ID. For a DM: get the recipient's Slack user ID from their profile."
+msgstr ""
+"Für eine Kanalnachricht: Lade den Bot in diesen Kanal ein und ermittle "
+"dessen Kanal-ID. Für eine Direktnachricht: Ermittle die Slack-Benutzer-ID "
+"des Empfängers aus dessen Profil."
+
+#: src/php/traits/Admin/Menu.php:120
+msgid "Accepted IDs:"
+msgstr "Akzeptierte IDs:"
+
+#: src/php/traits/Admin/Menu.php:120
+msgid ""
+"bot token starts with xoxb-; channel ID starts with C or G; user ID starts "
+"with U. Display names like #general or @someone are not accepted."
+msgstr ""
+"Bot-Token beginnt mit xoxb-; Kanal-ID beginnt mit C oder G; Benutzer-ID "
+"beginnt mit U. Anzeigenamen wie #general oder @jemand werden nicht "
+"akzeptiert."
+
+#: src/php/traits/Admin/Menu.php:121
+msgid ""
+"Sending is fire-and-forget and never blocks the scheduled run. If messages "
+"stop arriving, confirm the bot is still in the channel and the token/IDs are "
+"current."
+msgstr ""
+"Das Senden erfolgt ohne Rückmeldung und blockiert niemals den geplanten "
+"Lauf. Falls keine Nachrichten mehr ankommen, prüfe, ob der Bot noch im Kanal "
+"ist und ob Token/IDs aktuell sind."
+
+#: src/php/traits/Admin/Menu.php:126
+msgid ""
+"Uses a single Telegram bot token to post to a group/channel, DM you "
+"personally, or both — independently — every time a scheduled run publishes "
+"(or attempts to publish) a roundup."
+msgstr ""
+"Verwendet ein einzelnes Telegram-Bot-Token, um in eine Gruppe/einen Kanal zu "
+"posten, dir persönlich eine Direktnachricht zu senden, oder beides — "
+"unabhängig voneinander — jedes Mal wenn ein geplanter Lauf eine "
+"Zusammenfassung veröffentlicht (oder zu veröffentlichen versucht)."
+
+#: src/php/traits/Admin/Menu.php:127
+msgid ""
+"Message @BotFather in Telegram and run /newbot to get a bot token (looks "
+"like 123456789:AAH...). To find a chat ID: message the bot then visit "
+"https://api.telegram.org/bot<TOKEN>/getUpdates and read message.chat.id, or "
+"use a helper bot like @userinfobot for your own user ID. For groups/"
+"channels, add the bot first (channels need it as admin); group/channel chat "
+"IDs are negative numbers."
+msgstr ""
+"Schreibe in Telegram eine Nachricht an @BotFather und führe /newbot aus, um "
+"ein Bot-Token zu erhalten (sieht aus wie 123456789:AAH...). Um eine Chat-ID "
+"zu finden: Schreibe dem Bot eine Nachricht und rufe dann https://"
+"api.telegram.org/bot<TOKEN>/getUpdates auf, um message.chat.id abzulesen, "
+"oder nutze einen Hilfsbot wie @userinfobot für deine eigene Benutzer-ID. Für "
+"Gruppen/Kanäle füge den Bot zuerst hinzu (Kanäle benötigen ihn als Admin); "
+"Gruppen-/Kanal-Chat-IDs sind negative Zahlen."
+
+#: src/php/traits/Admin/Menu.php:128 src/php/traits/Admin/Menu.php:136
+#: src/php/traits/Admin/Menu.php:144
+msgid "Accepted formats:"
+msgstr "Akzeptierte Formate:"
+
+#: src/php/traits/Admin/Menu.php:128
+msgid ""
+"bot token is a numeric ID, a colon, and a secret; chat ID is any integer "
+"(negative for groups/channels, positive for a personal chat)."
+msgstr ""
+"Das Bot-Token besteht aus einer numerischen ID, einem Doppelpunkt und einem "
+"Geheimnis; die Chat-ID ist eine beliebige Ganzzahl (negativ für Gruppen/"
+"Kanäle, positiv für einen persönlichen Chat)."
+
+#: src/php/traits/Admin/Menu.php:129
+msgid ""
+"Sending is fire-and-forget and never blocks the scheduled run. If messages "
+"stop arriving, confirm the token is still valid and the bot is still a "
+"member of the target chat."
+msgstr ""
+"Das Senden erfolgt ohne Rückmeldung und blockiert niemals den geplanten "
+"Lauf. Falls keine Nachrichten mehr ankommen, prüfe, ob das Token noch gültig "
+"ist und der Bot noch Mitglied des Ziel-Chats ist."
+
+#: src/php/traits/Admin/Menu.php:134
+msgid ""
+"Sends a visibility-restricted status (Mastodon's equivalent of a DM) to a "
+"recipient handle every time a scheduled run publishes (or attempts to "
+"publish) a roundup."
+msgstr ""
+"Sendet einen sichtbarkeitseingeschränkten Status (Mastodons Entsprechung "
+"einer Direktnachricht) an ein Empfänger-Handle, jedes Mal wenn ein geplanter "
+"Lauf eine Zusammenfassung veröffentlicht (oder zu veröffentlichen versucht)."
+
+#: src/php/traits/Admin/Menu.php:135
+msgid ""
+"On your Mastodon instance, go to Settings → Development → New application, "
+"check only the write:statuses scope, save, then copy the Access Token and "
+"note your instance URL (e.g. https://mastodon.social)."
+msgstr ""
+"Gehe auf deiner Mastodon-Instanz zu Einstellungen → Entwicklung → Neue "
+"Anwendung, aktiviere nur den Bereich write:statuses, speichere, kopiere dann "
+"das Zugriffstoken und notiere deine Instanz-URL (z. B. https://"
+"mastodon.social)."
+
+#: src/php/traits/Admin/Menu.php:136
+msgid ""
+"instance URL must start with https:// and include a host; recipient handle "
+"must include both parts, e.g. @you@mastodon.social."
+msgstr ""
+"Die Instanz-URL muss mit https:// beginnen und einen Host enthalten; das "
+"Empfänger-Handle muss beide Teile enthalten, z. B. @du@mastodon.social."
+
+#: src/php/traits/Admin/Menu.php:137
+msgid ""
+"This is not end-to-end encrypted — it's a regular post restricted to the "
+"people mentioned. Sending is fire-and-forget and never blocks the scheduled "
+"run. If messages stop arriving, confirm the access token hasn't been revoked "
+"and the recipient handle is spelled exactly right."
+msgstr ""
+"Dies ist nicht Ende-zu-Ende-verschlüsselt — es ist ein normaler Beitrag, der "
+"auf die erwähnten Personen beschränkt ist. Das Senden erfolgt ohne "
+"Rückmeldung und blockiert niemals den geplanten Lauf. Falls keine "
+"Nachrichten mehr ankommen, prüfe, ob das Zugriffstoken nicht widerrufen "
+"wurde und das Empfänger-Handle exakt richtig geschrieben ist."
+
+#: src/php/traits/Admin/Menu.php:142
+msgid ""
+"Sends a genuine private direct message via Bluesky's Chat API to a recipient "
+"handle every time a scheduled run publishes (or attempts to publish) a "
+"roundup."
+msgstr ""
+"Sendet eine echte private Direktnachricht über Blueskys Chat-API an ein "
+"Empfänger-Handle, jedes Mal wenn ein geplanter Lauf eine Zusammenfassung "
+"veröffentlicht (oder zu veröffentlichen versucht)."
+
+#: src/php/traits/Admin/Menu.php:143
+msgid ""
+"In the Bluesky app, go to Settings → App Passwords → Add App Password, name "
+"it, and copy the generated password (format xxxx-xxxx-xxxx-xxxx) — you can't "
+"view it again after leaving that screen."
+msgstr ""
+"Gehe in der Bluesky-App zu Einstellungen → App-Passwörter → App-Passwort "
+"hinzufügen, benenne es und kopiere das erzeugte Passwort (Format xxxx-xxxx-"
+"xxxx-xxxx) — du kannst es nach Verlassen dieses Bildschirms nicht erneut "
+"einsehen."
+
+#: src/php/traits/Admin/Menu.php:144
+msgid ""
+"handles are bare, e.g. you.bsky.social (no @ prefix); the app password must "
+"be exactly four groups of four characters separated by hyphens."
+msgstr ""
+"Handles werden ohne Präfix angegeben, z. B. you.bsky.social (kein @ davor); "
+"das App-Passwort muss aus genau vier Gruppen zu je vier Zeichen bestehen, "
+"getrennt durch Bindestriche."
+
+#: src/php/traits/Admin/Menu.php:145
+msgid ""
+"Sending is fire-and-forget and never blocks the scheduled run. If messages "
+"stop arriving, confirm the app password hasn't been revoked and both handles "
+"are spelled exactly right."
+msgstr ""
+"Das Senden erfolgt ohne Rückmeldung und blockiert niemals den geplanten "
+"Lauf. Falls keine Nachrichten mehr ankommen, prüfe, ob das App-Passwort "
+"nicht widerrufen wurde und beide Handles exakt richtig geschrieben sind."
+
+#: src/php/traits/Admin/Menu.php:160
+msgid "Detailed instructions"
+msgstr "Ausführliche Anleitung"
+
+#: src/php/traits/Admin/Menu.php:232
 msgid "Delete?"
 msgstr "Löschen?"
 
-#: src/php/traits/Admin/Menu.php:131
+#: src/php/traits/Admin/Menu.php:233
 msgid "Yes"
 msgstr "Ja"
 
-#: src/php/traits/Admin/Menu.php:418
+#: src/php/traits/Admin/Menu.php:538
 msgid "LynxJournal Summary"
 msgstr "LynxJournal-Übersicht"
+
+#: src/php/traits/Admin/NotificationFailureNotice.php:34
+msgid "LynxJournal: a notification failed to send."
+msgstr "LynxJournal: Eine Benachrichtigung konnte nicht gesendet werden."
+
+#. translators: 1: channel name, 2: date/time, 3: error message
+#: src/php/traits/Admin/NotificationFailureNotice.php:38
+#, php-format
+msgid "%1$s on %2$s: %3$s"
+msgstr "%1$s am %2$s: %3$s"
+
+#: src/php/traits/Admin/NotificationFailureNotice.php:79
+#: src/php/traits/RestApi.php:326
+msgid "Forbidden"
+msgstr "Verboten"
 
 #: src/php/traits/Admin/TemplatePage.php:25
 msgid "Template saved."
@@ -501,11 +1211,6 @@ msgstr "Name der Website"
 #: src/php/traits/Admin/TemplatePage.php:42
 msgid "Number of roundups published so far"
 msgstr "Anzahl der bisher veröffentlichten Zusammenfassungen"
-
-#: src/php/traits/Admin/TemplatePage.php:44 build/taxonomies.js:3
-#: build/taxonomies.js:5 src/categories/App.jsx:171 src/tags/App.jsx:171
-msgid "Links"
-msgstr "Links"
 
 #: src/php/traits/Admin/TemplatePage.php:45
 msgid "Number of links in the roundup"
@@ -710,7 +1415,7 @@ msgstr "Link erfolgreich als Entwurf gespeichert."
 msgid "Link published successfully."
 msgstr "Link erfolgreich veröffentlicht."
 
-#: src/php/traits/Queries.php:94 src/php/traits/Scheduler.php:314
+#: src/php/traits/Queries.php:94 src/php/traits/Scheduler.php:313
 msgid "Uncategorized"
 msgstr "Unkategorisiert"
 
@@ -726,48 +1431,44 @@ msgstr "Link konnte nicht unveröffentlicht werden."
 msgid "Link unpublished successfully."
 msgstr "Link erfolgreich unveröffentlicht."
 
-#: src/php/traits/RestApi.php:258
+#: src/php/traits/RestApi.php:278
 msgid "No API key configured."
 msgstr "Kein API-Schlüssel konfiguriert."
 
-#: src/php/traits/RestApi.php:306
-msgid "Forbidden"
-msgstr "Verboten"
-
-#: src/php/traits/RestApi.php:321
+#: src/php/traits/RestApi.php:341
 msgid "Link not found"
 msgstr "Link nicht gefunden"
 
-#: src/php/traits/RestApi.php:325
+#: src/php/traits/RestApi.php:345
 msgid "Could not delete link"
 msgstr "Link konnte nicht gelöscht werden"
 
-#: src/php/traits/RestApi.php:363
+#: src/php/traits/RestApi.php:383
 msgid "Invalid schedule data"
 msgstr "Ungültige Zeitplandaten"
 
-#: src/php/traits/RestApi.php:416
+#: src/php/traits/RestApi.php:436
 msgid "A schedule run is already in progress"
 msgstr "Ein Zeitplanlauf läuft bereits"
 
-#: src/php/traits/RestApi.php:472
+#: src/php/traits/RestApi.php:492
 msgid "Failed to create link."
 msgstr "Link konnte nicht erstellt werden."
 
-#: src/php/traits/RestApi.php:507
+#: src/php/traits/RestApi.php:527
 msgid "Failed to fetch categories."
 msgstr "Kategorien konnten nicht abgerufen werden."
 
-#: src/php/traits/RestApi.php:603 build/taxonomies.js:3
+#: src/php/traits/RestApi.php:623 build/taxonomies.js:3
 #: src/categories/App.jsx:76
 msgid "Could not delete category."
 msgstr "Kategorie konnte nicht gelöscht werden."
 
-#: src/php/traits/RestApi.php:636
+#: src/php/traits/RestApi.php:681
 msgid "Failed to fetch tags."
 msgstr "Schlagwörter konnten nicht abgerufen werden."
 
-#: src/php/traits/RestApi.php:732 build/taxonomies.js:5 src/tags/App.jsx:76
+#: src/php/traits/RestApi.php:788 build/taxonomies.js:5 src/tags/App.jsx:76
 msgid "Could not delete tag."
 msgstr "Schlagwort konnte nicht gelöscht werden."
 
@@ -776,36 +1477,10 @@ msgid "This URL has already been saved."
 msgstr "Diese URL wurde bereits gespeichert."
 
 #. translators: %s is the formatted date (e.g. "April 15, 2026")
-#: src/php/traits/Scheduler.php:130
+#: src/php/traits/Scheduler.php:129
 #, php-format
 msgid "Links: %s"
 msgstr "Links: %s"
-
-#. translators: %d: number of links published
-#: src/php/traits/Scheduler.php:351
-#, php-format
-msgid "[LynxJournal] Roundup published: %d links"
-msgstr "[LynxJournal] Zusammenfassung veröffentlicht: %d Links"
-
-#. translators: 1: link count, 2: post URL
-#: src/php/traits/Scheduler.php:355
-#, php-format
-msgid ""
-"A new roundup was published.\n"
-"\n"
-"Links: %1$d\n"
-"View: %2$s"
-msgstr ""
-"Eine neue Zusammenfassung wurde veröffentlicht.\n"
-"\n"
-"Links: %1$d\n"
-"Ansehen: %2$s"
-
-#. translators: %s: schedule mode
-#: src/php/traits/Scheduler.php:362
-#, php-format
-msgid "Schedule ran in %s mode but no post was published."
-msgstr "Zeitplan lief im Modus %s, aber es wurde kein Beitrag veröffentlicht."
 
 #. translators: %s: comma-separated list of unrecognized field names
 #: src/php/traits/ScheduleValidator.php:35
@@ -854,14 +1529,6 @@ msgid "publishAs must refer to a user who can publish posts"
 msgstr ""
 "publishAs muss auf einen Benutzer verweisen, der Beiträge veröffentlichen "
 "darf"
-
-#: src/php/traits/ScheduleValidator.php:121
-msgid "notify must be an object"
-msgstr "notify muss ein Objekt sein"
-
-#: src/php/traits/ScheduleValidator.php:127
-msgid "notify.email is not a valid email address"
-msgstr "notify.email ist keine gültige E-Mail-Adresse"
 
 #: src/php/traits/trait-post-type.php:22
 msgctxt "Post Type General Name"
@@ -1156,120 +1823,368 @@ msgstr "Schlagwortliste"
 msgid "Tags list navigation"
 msgstr "Schlagwortlisten-Navigation"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:5
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:21
+msgid "Email me after each run"
+msgstr "Mich nach jedem Lauf per E-Mail benachrichtigen"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:23
+msgid "Email address"
+msgstr "E-Mail-Adresse"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:23
+msgid "Leave blank to use admin email"
+msgstr "Leer lassen, um die Admin-E-Mail zu verwenden"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:30
+msgid "Send a Discord notification after each run"
+msgstr "Discord-Benachrichtigung nach jedem Lauf senden"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:32
+msgid "Discord webhook URL"
+msgstr "Discord-Webhook-URL"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:32
+msgid "https://discord.com/api/webhooks/..."
+msgstr "https://discord.com/api/webhooks/..."
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:39
+msgid "Slack Bot Token"
+msgstr "Slack-Bot-Token"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:39
+msgid "xoxb-..."
+msgstr "xoxb-..."
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:45
+msgid "Channel"
+msgstr "Kanal"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:46
+msgid "Post to a Slack channel after each run"
+msgstr "Nach jedem Lauf in einen Slack-Kanal posten"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:48
+msgid "Slack channel ID"
+msgstr "Slack-Kanal-ID"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:48
+msgid "C0123456789"
+msgstr "C0123456789"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:54
+#: src/schedule/lib/notificationChannels.js:81
+msgid "Personal message"
+msgstr "Persönliche Nachricht"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:55
+msgid "Send me a Slack DM after each run"
+msgstr "Mir nach jedem Lauf eine Slack-Direktnachricht senden"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:57
+msgid "Slack user ID"
+msgstr "Slack-Benutzer-ID"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:57
+msgid "U0123456789"
+msgstr "U0123456789"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:66
+msgid "Telegram bot token"
+msgstr "Telegram-Bot-Token"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:66
+msgid "123456789:AAH..."
+msgstr "123456789:AAH..."
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:72
+msgid "Group or channel"
+msgstr "Gruppe oder Kanal"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:73
+msgid "Post to a Telegram group or channel after each run"
+msgstr "Nach jedem Lauf in eine Telegram-Gruppe oder einen Kanal posten"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:75
+msgid "Telegram group/channel chat ID"
+msgstr "Telegram-Gruppen-/Kanal-Chat-ID"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:75
+msgid "-1001234567890"
+msgstr "-1001234567890"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:82
+msgid "Send me a Telegram DM after each run"
+msgstr "Mir nach jedem Lauf eine Telegram-Direktnachricht senden"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:84
+msgid "Telegram personal chat ID"
+msgstr "Persönliche Telegram-Chat-ID"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:84
+msgid "123456789"
+msgstr "123456789"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:93
+msgid "Send a Mastodon direct message after each run"
+msgstr "Mastodon-Direktnachricht nach jedem Lauf senden"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:95
+msgid "Mastodon instance URL"
+msgstr "Mastodon-Instanz-URL"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:95
+msgid "https://mastodon.social"
+msgstr "https://mastodon.social"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:96
+msgid "Mastodon access token"
+msgstr "Mastodon-Zugriffstoken"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:96
+msgid "Access token from your Mastodon app"
+msgstr "Zugriffstoken aus deiner Mastodon-App"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:97
+#: src/schedule/lib/notificationChannels.js:108
+msgid "Recipient handle"
+msgstr "Empfänger-Handle"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:97
+msgid "@you@mastodon.social"
+msgstr "@you@mastodon.social"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:104
+msgid "Send a Bluesky direct message after each run"
+msgstr "Bluesky-Direktnachricht nach jedem Lauf senden"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:106
+msgid "Bluesky handle"
+msgstr "Bluesky-Handle"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:106
+msgid "you.bsky.social"
+msgstr "you.bsky.social"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:107
+msgid "Bluesky app password"
+msgstr "Bluesky-App-Passwort"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:107
+msgid "xxxx-xxxx-xxxx-xxxx"
+msgstr "xxxx-xxxx-xxxx-xxxx"
+
+#: build/schedule.js:1 src/schedule/lib/notificationChannels.js:108
+msgid "friend.bsky.social"
+msgstr "friend.bsky.social"
+
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:8
 msgid "Scheduled"
 msgstr "Geplant"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:7
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:10
 msgid "Daily"
 msgstr "Täglich"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:7
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:10
 msgid "Every N days"
 msgstr "Alle N Tage"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:8
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:11
 msgid "Weekly"
 msgstr "Wöchentlich"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:8
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:11
 msgid "Specific weekdays"
 msgstr "Bestimmte Wochentage"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:9
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:12
 msgid "Monthly"
 msgstr "Monatlich"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:9
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:12
 msgid "Calendar days"
 msgstr "Kalendertage"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:13
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:16
 msgid "Trigger-based"
 msgstr "Ereignisbasiert"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:15
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:18
 msgid "By Count"
 msgstr "Nach Anzahl"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:15
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:18
 msgid "When N links queue"
 msgstr "Wenn N Links warten"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:16
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:19
 msgid "By Age"
 msgstr "Nach Alter"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:16
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:19
 msgid "When oldest link ages"
 msgstr "Wenn der älteste Link zu alt wird"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:20
-#: src/schedule/components/ScheduleTypePicker.jsx:22
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:23
+#: src/schedule/components/ScheduleTypePicker.jsx:25
 msgid "Manual"
 msgstr "Manuell"
 
-#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:22
+#: build/schedule.js:1 src/schedule/components/ScheduleTypePicker.jsx:25
 msgid "No auto-publish"
 msgstr "Keine automatische Veröffentlichung"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:22
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:7
+#: src/schedule/components/RecurrenceConfig.jsx:9
+#: src/schedule/components/RecurrenceConfig.jsx:19
+msgid "Mon"
+msgstr "Mo"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:7
+#: src/schedule/components/RecurrenceConfig.jsx:10
+#: src/schedule/components/RecurrenceConfig.jsx:19
+msgid "Tue"
+msgstr "Di"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:7
+#: src/schedule/components/RecurrenceConfig.jsx:11
+#: src/schedule/components/RecurrenceConfig.jsx:19
+msgid "Wed"
+msgstr "Mi"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:8
+#: src/schedule/components/RecurrenceConfig.jsx:12
+#: src/schedule/components/RecurrenceConfig.jsx:19
+msgid "Thu"
+msgstr "Do"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:8
+#: src/schedule/components/RecurrenceConfig.jsx:13
+#: src/schedule/components/RecurrenceConfig.jsx:20
+msgid "Fri"
+msgstr "Fr"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:8
+#: src/schedule/components/RecurrenceConfig.jsx:14
+#: src/schedule/components/RecurrenceConfig.jsx:20
+msgid "Sat"
+msgstr "Sa"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:7
+#: src/schedule/components/RecurrenceConfig.jsx:15
+#: src/schedule/components/RecurrenceConfig.jsx:20
+msgid "Sun"
+msgstr "So"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:23
+msgid "Monday"
+msgstr "Montag"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:23
+msgid "Tuesday"
+msgstr "Dienstag"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:23
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:23
+msgid "Thursday"
+msgstr "Donnerstag"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:24
+msgid "Friday"
+msgstr "Freitag"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:24
+msgid "Saturday"
+msgstr "Samstag"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:24
+msgid "Sunday"
+msgstr "Sonntag"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:28
 msgid "first"
 msgstr "erste"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:23
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:29
 msgid "second"
 msgstr "zweite"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:24
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:30
 msgid "third"
 msgstr "dritte"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:25
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:31
 msgid "fourth"
 msgstr "vierte"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:51
-#: src/schedule/components/RecurrenceConfig.jsx:74
-#: src/schedule/components/RecurrenceConfig.jsx:212
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:57
+#: src/schedule/components/RecurrenceConfig.jsx:82
+#: src/schedule/components/RecurrenceConfig.jsx:224
 msgid "Every"
 msgstr "Jeden"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:58
-#: src/schedule/components/TriggerCondition.jsx:46
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:59
+msgid "Day interval"
+msgstr "Tagesintervall"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:66
+#: src/schedule/components/TriggerCondition.jsx:50
 msgid "day"
 msgstr "Tag"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:58
-#: src/schedule/components/TriggerCondition.jsx:46
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:66
+#: src/schedule/components/TriggerCondition.jsx:50
 msgid "days"
 msgstr "Tage"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:81
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:84
+msgid "Week interval"
+msgstr "Wochenintervall"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:91
 msgid "week"
 msgstr "Woche"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:81
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:91
 msgid "weeks"
 msgstr "Wochen"
 
 #: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:133
+msgid "Day of month"
+msgstr "Tag des Monats"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:144
 msgid "or"
 msgstr "oder"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:161
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:149
+msgid "Week of month"
+msgstr "Woche des Monats"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:158
+msgid "Weekday"
+msgstr "Wochentag"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:173
 msgid "Remove"
 msgstr "Entfernen"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:219
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:226
+msgid "Month interval"
+msgstr "Monatsintervall"
+
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:233
 msgid "month, on"
 msgstr "Monat, am"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:219
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:233
 msgid "months, on"
 msgstr "Monate, am"
 
-#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:237
+#: build/schedule.js:1 src/schedule/components/RecurrenceConfig.jsx:251
 msgid "Add day"
 msgstr "Tag hinzufügen"
 
@@ -1277,17 +2192,25 @@ msgstr "Tag hinzufügen"
 msgid "Post when there are at least"
 msgstr "Veröffentlichen, wenn mindestens"
 
-#: build/schedule.js:1 src/schedule/components/TriggerCondition.jsx:29
+#: build/schedule.js:1 src/schedule/components/TriggerCondition.jsx:24
+msgid "Link count threshold"
+msgstr "Schwellenwert für Linkanzahl"
+
+#: build/schedule.js:1 src/schedule/components/TriggerCondition.jsx:31
 msgid "link"
 msgstr "Link"
 
-#: build/schedule.js:1 src/schedule/components/TriggerCondition.jsx:29
+#: build/schedule.js:1 src/schedule/components/TriggerCondition.jsx:31
 msgid "links"
 msgstr "Links"
 
-#: build/schedule.js:1 src/schedule/components/TriggerCondition.jsx:37
+#: build/schedule.js:1 src/schedule/components/TriggerCondition.jsx:39
 msgid "Post when oldest link is older than"
 msgstr "Veröffentlichen, wenn der älteste Link älter ist als"
+
+#: build/schedule.js:1 src/schedule/components/TriggerCondition.jsx:43
+msgid "Age threshold in days"
+msgstr "Schwellenwert für Alter in Tagen"
 
 #: build/schedule.js:1 src/schedule/components/TimePicker.jsx:48
 msgid "Run time"
@@ -1301,15 +2224,63 @@ msgstr "Uhrzeit entfernen"
 msgid "Add time"
 msgstr "Uhrzeit hinzufügen"
 
-#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:64
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:11
+msgid "Jan"
+msgstr "Jan"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:11
+msgid "Feb"
+msgstr "Feb"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:11
+msgid "Mar"
+msgstr "Mär"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:11
+msgid "Apr"
+msgstr "Apr"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:12
+msgid "May"
+msgstr "Mai"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:12
+msgid "Jun"
+msgstr "Jun"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:12
+msgid "Jul"
+msgstr "Jul"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:12
+msgid "Aug"
+msgstr "Aug"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:13
+msgid "Sep"
+msgstr "Sep"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:13
+msgid "Oct"
+msgstr "Okt"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:13
+msgid "Nov"
+msgstr "Nov"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:13
+msgid "Dec"
+msgstr "Dez"
+
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:71
 msgid "Next 10 Schedules"
 msgstr "Nächste 10 geplante Zeitpunkte"
 
-#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:76
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:83
 msgid "No occurrences — check recurrence settings."
 msgstr "Keine Termine – Wiederholungseinstellungen prüfen."
 
-#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:81
+#: build/schedule.js:1 src/schedule/components/NextSchedules.jsx:88
 msgid "Times in %s"
 msgstr "Zeiten in %s"
 
@@ -1321,74 +2292,128 @@ msgstr "Bedingung nicht erfüllt"
 msgid "Run was locked"
 msgstr "Lauf war gesperrt"
 
+#: build/schedule.js:1 src/schedule/components/DiagnosticsPanel.jsx:42
+msgid "Success"
+msgstr "Erfolg"
+
+#: build/schedule.js:1 src/schedule/components/DiagnosticsPanel.jsx:43
+msgid "Skipped"
+msgstr "Übersprungen"
+
+#: build/schedule.js:1 src/schedule/components/DiagnosticsPanel.jsx:44
+msgid "Error"
+msgstr "Fehler"
+
 #. translators: %d: number of links in the published roundup
-#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:51
+#: build/schedule.js:2 src/schedule/components/DiagnosticsPanel.jsx:64
 msgid "%d links"
 msgstr "%d Links"
 
 #: build/schedule.js:2 build/schedule.js:3
-#: src/schedule/components/DiagnosticsPanel.jsx:75
 #: src/schedule/components/DiagnosticsPanel.jsx:88
+#: src/schedule/components/DiagnosticsPanel.jsx:101
 msgid "Next run"
 msgstr "Nächster Lauf"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:79
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:92
 msgid "%d links until post"
 msgstr "%d Links bis zum Beitrag"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:80
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:93
 msgid "Ready to post"
 msgstr "Bereit zum Posten"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:94
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:107
 msgid "Not scheduled"
 msgstr "Nicht geplant"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:97
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:110
 msgid "WP-Cron disabled"
 msgstr "WP-Cron deaktiviert"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:117
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:130
 msgid "Last run"
 msgstr "Letzter Lauf"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:130
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:143
 msgid "No runs yet"
 msgstr "Noch keine Läufe"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:151
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:164
 msgid "History (%d)"
 msgstr "Verlauf (%d)"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:191
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:204
 msgid "Diagnostics"
 msgstr "Diagnose"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:194
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:207
 msgid "Loading…"
 msgstr "Lädt…"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:203
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:216
 msgid "WP-Cron"
 msgstr "WP-Cron"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:206
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:219
 msgid "Disabled"
 msgstr "Deaktiviert"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:207
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:220
 msgid "Active"
 msgstr "Aktiv"
 
-#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:223
+#: build/schedule.js:3 src/schedule/components/DiagnosticsPanel.jsx:236
 msgid "Refresh"
 msgstr "Aktualisieren"
 
-#: build/schedule.js:3 src/schedule/App.jsx:49
+#: build/schedule.js:3 src/schedule/components/NotificationsSection.jsx:44
+msgid "Hide"
+msgstr "Verbergen"
+
+#: build/schedule.js:3 src/schedule/components/NotificationsSection.jsx:44
+msgid "Show"
+msgstr "Anzeigen"
+
+#: build/schedule.js:3 src/schedule/components/NotificationsSection.jsx:65
+msgid "On, incomplete"
+msgstr "Ein, unvollständig"
+
+#: build/schedule.js:3 src/schedule/components/NotificationsSection.jsx:66
+msgid "On"
+msgstr "Ein"
+
+#: build/schedule.js:3 src/schedule/components/NotificationsSection.jsx:63
+msgid "Off"
+msgstr "Aus"
+
+#: build/schedule.js:3 src/schedule/components/NotificationsSection.jsx:92
+msgid "Send test notification"
+msgstr "Testbenachrichtigung senden"
+
+#: build/schedule.js:3 build/taxonomies.js:1 build/taxonomies.js:3
+#: src/categories/App.jsx:118
+#: src/schedule/components/NotificationsSection.jsx:95 src/tags/App.jsx:118
+msgid "Save"
+msgstr "Speichern"
+
+#: build/schedule.js:3 src/schedule/components/NotificationsSection.jsx:220
+msgid "Scroll tabs left"
+msgstr "Tabs nach links scrollen"
+
+#: build/schedule.js:3 src/schedule/components/NotificationsSection.jsx:246
+msgid "Scroll tabs right"
+msgstr "Tabs nach rechts scrollen"
+
+#: build/schedule.js:3 src/schedule/components/NotificationsSection.jsx:268
+msgid "Help"
+msgstr "Hilfe"
+
+#: build/schedule.js:3 src/schedule/App.jsx:125
 msgid "WP-Cron is disabled."
 msgstr "WP-Cron ist deaktiviert."
 
-#: build/schedule.js:3 src/schedule/App.jsx:51
+#: build/schedule.js:3 src/schedule/App.jsx:127
 msgid ""
 "Scheduled runs will not fire automatically. Add a real server cron job or "
 "remove"
@@ -1396,64 +2421,64 @@ msgstr ""
 "Geplante Läufe werden nicht automatisch ausgelöst. Füge einen echten Server-"
 "Cronjob hinzu oder entferne"
 
-#: build/schedule.js:3 src/schedule/App.jsx:53
+#: build/schedule.js:3 src/schedule/App.jsx:129
 msgid "from"
 msgstr "von"
 
-#: build/schedule.js:3 src/schedule/App.jsx:146
+#: build/schedule.js:3 src/schedule/lib/notifications.js:47
+msgid "Test notification sent."
+msgstr "Testbenachrichtigung gesendet."
+
+#: build/schedule.js:3 src/schedule/lib/notifications.js:49
+msgid "Failed to send test notification."
+msgstr "Testbenachrichtigung konnte nicht gesendet werden."
+
+#: build/schedule.js:3 src/schedule/lib/notifications.js:66
+msgid "Saved."
+msgstr "Gespeichert."
+
+#: build/schedule.js:3 src/schedule/lib/notifications.js:69
+msgid "Failed to save."
+msgstr "Speichern fehlgeschlagen."
+
+#: build/schedule.js:3 src/schedule/App.jsx:227
 msgid "Recurrence"
 msgstr "Wiederholung"
 
-#: build/schedule.js:3 src/schedule/App.jsx:146
+#: build/schedule.js:3 src/schedule/App.jsx:227
 msgid "Condition"
 msgstr "Bedingung"
 
-#: build/schedule.js:3 src/schedule/App.jsx:188
-msgid "Mode"
-msgstr "Modus"
-
-#: build/schedule.js:3 src/schedule/App.jsx:158
+#: build/schedule.js:3 src/schedule/App.jsx:239
 msgid "No automatic trigger — posts must be triggered manually."
 msgstr ""
 "Kein automatischer Auslöser – Beiträge müssen manuell ausgelöst werden."
 
-#: build/schedule.js:3 src/schedule/App.jsx:197
+#: build/schedule.js:3 src/schedule/App.jsx:278
 msgid "Execution Times"
 msgstr "Ausführungszeiten"
 
-#: build/schedule.js:3 src/schedule/App.jsx:205
+#: build/schedule.js:3 src/schedule/App.jsx:286
 msgid "Post Status"
 msgstr "Beitragsstatus"
 
-#: build/schedule.js:3 src/schedule/App.jsx:217
+#: build/schedule.js:3 src/schedule/App.jsx:299
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
-#: build/schedule.js:3 src/schedule/App.jsx:219
-msgid "Email me after each run"
-msgstr "Mich nach jedem Lauf per E-Mail benachrichtigen"
-
-#: build/schedule.js:3 src/schedule/App.jsx:225
-msgid "Email address"
-msgstr "E-Mail-Adresse"
-
-#: build/schedule.js:3 src/schedule/App.jsx:228
-msgid "Leave blank to use admin email"
-msgstr "Leer lassen, um die Admin-E-Mail zu verwenden"
-
-#: build/schedule.js:3 src/schedule/App.jsx:107
+#: build/schedule.js:3 src/schedule/App.jsx:188
 msgid "Execution times must be unique."
 msgstr "Ausführungszeiten müssen eindeutig sein."
 
-#: build/schedule.js:3 src/schedule/App.jsx:114
+#: build/schedule.js:3 src/schedule/App.jsx:195
 msgid "Schedule saved."
 msgstr "Zeitplan gespeichert."
 
-#: build/schedule.js:3 src/schedule/App.jsx:117
+#: build/schedule.js:3 src/schedule/App.jsx:198
 msgid "Failed to save schedule."
 msgstr "Zeitplan konnte nicht gespeichert werden."
 
-#: build/schedule.js:3 src/schedule/App.jsx:237
+#: build/schedule.js:3 src/schedule/App.jsx:315
 msgid "Save Schedule"
 msgstr "Zeitplan speichern"
 
@@ -1612,11 +2637,6 @@ msgstr "Name ist erforderlich."
 msgid "Saving…"
 msgstr "Speichern…"
 
-#: build/taxonomies.js:1 build/taxonomies.js:3 src/categories/App.jsx:118
-#: src/tags/App.jsx:118
-msgid "Save"
-msgstr "Speichern"
-
 #. translators: %s: category name
 #. translators: %s: tag name
 #: build/taxonomies.js:3 build/taxonomies.js:5 src/categories/App.jsx:65
@@ -1695,6 +2715,38 @@ msgstr "Schlagwort hinzufügen"
 #: build/taxonomies.js:5 src/tags/App.jsx:284
 msgid "Failed to load tags."
 msgstr "Schlagwörter konnten nicht abgerufen werden."
+
+#~ msgid "Save and publish links to your blog"
+#~ msgstr "Links speichern und im Blog veröffentlichen"
+
+#, php-format
+#~ msgid ""
+#~ "A new roundup was published.\n"
+#~ "\n"
+#~ "Links: %1$d\n"
+#~ "View: %2$s"
+#~ msgstr ""
+#~ "Eine neue Zusammenfassung wurde veröffentlicht.\n"
+#~ "\n"
+#~ "Links: %1$d\n"
+#~ "Ansehen: %2$s"
+
+#~ msgid "Chrome Extension"
+#~ msgstr "Chrome-Erweiterung"
+
+#, php-format
+#~ msgid ""
+#~ "A new roundup was published.\n"
+#~ "<%s|View post>"
+#~ msgstr ""
+#~ "Eine neue Zusammenfassung wurde veröffentlicht.\n"
+#~ "<%s|Beitrag ansehen>"
+
+#~ msgid "Link Categories"
+#~ msgstr "Link-Kategorien"
+
+#~ msgid "LynxJournal Chrome Extension"
+#~ msgstr "LynxJournal Chrome-Erweiterung"
 
 #~ msgid "LynxJournal Browser Extension"
 #~ msgstr "LynxJournal-Browser-Erweiterung"

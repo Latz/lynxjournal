@@ -1,0 +1,195 @@
+/* Notification channel tabs (nested one level inside .lynxjournal-section) */
+
+/* Tab title colored by channel state. on/incomplete get a faux-bold via
+   text-shadow (not font-weight) so they pop against the plain "off" state
+   without changing the text's measured width — a real font-weight bump here
+   shifted the tab layout every time a channel's state toggled.
+   Colors contrast-checked >=4.5:1 on white and #f0f0f1 hover. */
+.lynxjournal-notify-tab-title.is-on {
+  color: var(--lynxjournal-color-success-text);
+  text-shadow: 0 0 0.5px currentColor;
+}
+
+.lynxjournal-notify-tab-title.is-off {
+  color: var(--lynxjournal-color-neutral-text);
+}
+
+.lynxjournal-notify-tab-title.is-incomplete {
+  color: #8a6100;
+  text-shadow: 0 0 0.5px currentColor;
+}
+
+.lynxjournal-notify-tabs-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* !important overrides components-button's own min-width/height rules,
+   which otherwise tie in specificity with our single-class selector. */
+.lynxjournal-notify-tabs-scroll {
+  flex-shrink: 0;
+  width: 20px !important;
+  min-width: 20px !important;
+  height: 32px !important;
+  padding: 0;
+}
+
+.lynxjournal-notify-tabs-row .lynxjournal-notify-tabs {
+  flex: 1;
+  min-width: 0;
+}
+
+.lynxjournal-notify-tabs .components-tab-panel__tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.lynxjournal-notify-tabs .components-tab-panel__tabs::after {
+  content: '';
+  flex: 1;
+  min-width: 0;
+  border-bottom: 1px solid #dcdcde;
+}
+
+.lynxjournal-notify-tabs .components-tab-panel__tabs-item {
+  border-inline-end: 1px solid #dcdcde;
+  border-bottom: 1px solid #dcdcde;
+  border-radius: 0;
+  height: 32px !important;
+  padding-block: 6px;
+  flex-shrink: 0;
+}
+
+.lynxjournal-notify-tabs .components-tab-panel__tabs-item:last-child {
+  border-inline-end: none;
+}
+
+.lynxjournal-notify-tabs .components-tab-panel__tabs-item:hover {
+  background: #f0f0f1;
+}
+
+.lynxjournal-notify-tabs .components-tab-panel__tabs-item.is-active {
+  background: #fff;
+  font-weight: 600;
+  border-bottom: none;
+  box-shadow: none;
+}
+
+/*
+ * All 5 channel panels are mounted at once, stacked in this shared grid cell,
+ * so the row auto-sizes to the tallest one and switching tabs never shifts
+ * the layout below. Inactive panels are hidden (not unmounted) via [inert].
+ */
+.lynxjournal-notify-tab-panel-stack {
+  display: grid;
+  padding-block-start: 8px;
+}
+
+.lynxjournal-notify-tab-panel {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lynxjournal-notify-tab-panel[inert] {
+  visibility: hidden;
+}
+
+.lynxjournal-notify-help-link {
+  align-self: flex-end;
+}
+
+.components-button.is-link.lynxjournal-notify-help-link {
+  text-decoration: none;
+  border: 1px solid #c3c4c7;
+  border-radius: 2px;
+  padding: 2px 8px;
+  background: #f6f7f7;
+}
+
+.components-button.is-link.lynxjournal-notify-help-link:hover {
+  background: #f0f0f1;
+  border-color: var(--wp-admin-theme-color, #2271b1);
+}
+
+.components-button.lynxjournal-notify-help-link:focus,
+.components-button.lynxjournal-notify-help-link:focus:not(:active) {
+  box-shadow: none;
+  outline: none;
+}
+
+.lynxjournal-channel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Without this, the panel's flex stretch makes the button row fill the
+   full width instead of hugging its two buttons. */
+.lynxjournal-channel-actions-buttons {
+  display: flex;
+  gap: 8px;
+  align-self: flex-start;
+}
+
+.lynxjournal-field-with-toggle {
+  position: relative;
+}
+
+/* Room for the reveal button so typed text/placeholder don't render under it. */
+.lynxjournal-field-with-toggle input {
+  padding-inline-end: 38px;
+}
+
+/* !important overrides components-button's own min-width/height/padding rules
+   (.components-button.has-icon sets padding: 6px at higher specificity than a
+   single class, which would otherwise shrink/offset the icon inside the box).
+   Height/bottom match .components-text-control__input's own 32px, border-box
+   height exactly, so the button's box is flush with and the same height as
+   the input itself — the control's label sits above, so this anchors to the
+   bottom of the control rather than its vertical center. */
+.lynxjournal-field-toggle-btn {
+  position: absolute;
+  inset-inline-end: 1px;
+  bottom: 0;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+}
+
+/* Suppress components-button's focus box-shadow/outline on mouse click (it
+   clips awkwardly against the input's edge here); keyboard focus still
+   shows it via :focus-visible, so this stays accessible. */
+.lynxjournal-field-toggle-btn:focus:not(:focus-visible) {
+  box-shadow: none;
+  outline: none;
+}
+
+/* Reset the browser default fieldset box (min-width, border, margin) so our
+   own border/padding/gap below are the only ones that apply. */
+.lynxjournal-notify-target-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #dcdcde;
+  border-radius: 4px;
+}
+
+/* Reset the browser default legend box (padding, position) so it lays out
+   as a normal flex child instead of overlapping the fieldset border. */
+.lynxjournal-notify-target-heading {
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--lynxjournal-color-neutral-text);
+}

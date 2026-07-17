@@ -18,7 +18,6 @@ trait LynxJournal_Scheduler {
      */
     public function registerSchedulerHooks(): void {
         add_action('lynxjournal_execute_schedule', function (): void { $this->executeSchedule(); });
-        add_action('lynxjournal_after_run', [$this, 'maybeSendRunNotification'], 10, 3);
     }
 
     /**
@@ -328,42 +327,6 @@ trait LynxJournal_Scheduler {
             'by_category'   => $by_category,
             'mode'          => $mode,
         ];
-    }
-
-    /**
-     * Send notification email after schedule runs, if enabled.
-     *
-     * @since 1.0.0
-     * @param int|null $post_id The published post ID, or null if nothing was published.
-     * @param array $link_ids Array of link post IDs that were published.
-     * @param string $mode The schedule mode that ran.
-     * @return void
-     */
-    public function maybeSendRunNotification(int|null $post_id, array $link_ids, string $mode): void {
-        $config = get_option('lynxjournal_schedule', []);
-        $notify = $config['notify'] ?? [];
-        if (empty($notify['enabled'])) {
-            return;
-        }
-        $to        = !empty($notify['email']) ? $notify['email'] : get_option('admin_email');
-        $link_count = count($link_ids);
-        /* translators: %d: number of links published */
-        $subject = sprintf(__('[LynxJournal] Roundup published: %d links', 'lynx-journal'), $link_count);
-        if ($post_id) {
-            $message = sprintf(
-                /* translators: 1: link count, 2: post URL */
-                __("A new roundup was published.\n\nLinks: %1\$d\nView: %2\$s", 'lynx-journal'),
-                $link_count,
-                get_permalink($post_id)
-            );
-        } else {
-            $message = sprintf(
-                /* translators: %s: schedule mode */
-                __('Schedule ran in %s mode but no post was published.', 'lynx-journal'),
-                $mode
-            );
-        }
-        wp_mail($to, $subject, $message);
     }
 
     /**

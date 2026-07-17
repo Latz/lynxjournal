@@ -36,7 +36,7 @@ trait LynxJournal_ScheduleValidator {
                 ['status' => 400]
             );
         }
-        $valid_modes = array_column(LynxJournal_ScheduleMode::cases(), 'value');
+        $valid_modes = array_column(ScheduleMode::cases(), 'value');
         if (!isset($data['mode']) || !in_array($data['mode'], $valid_modes, true)) {
             return new \WP_Error('invalid_mode', __('Invalid schedule mode', 'lynx-journal'), ['status' => 400]);
         }
@@ -112,20 +112,6 @@ trait LynxJournal_ScheduleValidator {
         }
         if ($publish_as > 0 && !user_can($publish_as, 'edit_posts')) {
             return new \WP_Error('invalid_publish_as', __('publishAs must refer to a user who can publish posts', 'lynx-journal'), ['status' => 400]);
-        }
-        return null;
-    }
-
-    private function validateNotify(array &$data): ?\WP_Error {
-        if (!isset($data['notify']) || !is_array($data['notify'])) {
-            return isset($data['notify']) ? new \WP_Error('invalid_notify', __('notify must be an object', 'lynx-journal'), ['status' => 400]) : null;
-        }
-        $data['notify']['enabled'] = (bool) ($data['notify']['enabled'] ?? false);
-        if (!empty($data['notify']['email'])) {
-            $data['notify']['email'] = sanitize_email($data['notify']['email']);
-            if (!is_email($data['notify']['email'])) {
-                return new \WP_Error('invalid_notify_email', __('notify.email is not a valid email address', 'lynx-journal'), ['status' => 400]);
-            }
         }
         return null;
     }

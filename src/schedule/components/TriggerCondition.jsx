@@ -21,6 +21,8 @@ export default function TriggerCondition({ mode, value, onChange }) {
       <div className="lynxjournal-rc-row">
         <span>{__('Post when there are at least', 'lynx-journal')}</span>
         <NumberControl
+          label={__('Link count threshold', 'lynx-journal')}
+          hideLabelFromVision
           value={String(value.count)}
           min={1}
           onChange={v => onChange({ ...value, count: Number.parseInt(v) || 1 })}
@@ -38,6 +40,8 @@ export default function TriggerCondition({ mode, value, onChange }) {
         {/* value.days can be absent on a freshly-initialised trigger object;
             default to 1 day so the control never renders an empty string. */}
         <NumberControl
+          label={__('Age threshold in days', 'lynx-journal')}
+          hideLabelFromVision
           value={String(value.days ?? 1)}
           min={1}
           onChange={v => onChange({ ...value, days: Number.parseInt(v) || 1 })}

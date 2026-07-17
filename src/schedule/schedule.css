@@ -58,6 +58,35 @@
   padding: 16px;
 }
 
+.lynxjournal-section-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  background: none;
+  border: none;
+  font: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.lynxjournal-section-chevron {
+  display: inline-block;
+  font-size: 16px;
+  transition: transform 0.15s ease;
+}
+
+.lynxjournal-section-chevron.is-collapsed {
+  transform: rotate(-90deg);
+}
+
+.lynxjournal-section.is-collapsed .lynxjournal-section-heading {
+  border-bottom: none;
+}
+
 /* Mode picker */
 .lynxjournal-mode-picker {
   display: flex;
@@ -77,7 +106,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #787c82;
+  color: #646970;
   padding-inline-start: 2px;
 }
 
@@ -145,7 +174,7 @@
 
 .lynxjournal-day-index {
   font-size: 11px;
-  color: #787c82;
+  color: #646970;
   width: 18px;
   text-align: end;
   flex-shrink: 0;
@@ -165,16 +194,11 @@
 
 .lynxjournal-opt--off {
   opacity: 0.3;
-  cursor: pointer;
-}
-
-.lynxjournal-opt--off * {
-  pointer-events: none;
 }
 
 .lynxjournal-opt-sep {
   font-size: 12px;
-  color: #787c82;
+  color: #646970;
 }
 
 /* TimePicker */
@@ -266,7 +290,7 @@
 }
 
 .lynxjournal-diag-row dt {
-  color: #787c82;
+  color: #646970;
   flex-shrink: 0;
 }
 
@@ -303,7 +327,7 @@
 
 .lynxjournal-diag-meta {
   font-size: 11px;
-  color: #787c82;
+  color: #646970;
 }
 
 .lynxjournal-diag-refresh {
@@ -364,14 +388,14 @@
 .lynxjournal-next-tz {
   margin-block-start: 8px;
   font-size: 11px;
-  color: #787c82;
+  color: #646970;
   text-align: end;
 }
 
 /* Diagnostics: reason note next to Not scheduled */
 .lynxjournal-diag-reason {
   font-size: 11px;
-  color: #787c82;
+  color: #646970;
 }
 
 /* Radio card picker */
@@ -393,7 +417,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #787c82;
+  color: #646970;
   padding-inline-start: 2px;
 }
 
@@ -446,11 +470,15 @@
 
 .lynxjournal-mode-cards {
   display: flex;
+  align-items: stretch;
   gap: 6px;
 }
 
 .lynxjournal-mode-card {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
   width: 96px;
   padding: 10px 12px;
   border: 2px solid #c3c4c7;
@@ -481,6 +509,6 @@
 
 .lynxjournal-mode-card__desc {
   font-size: 11px;
-  color: #787c82;
+  color: #646970;
   line-height: 1.4;
 }

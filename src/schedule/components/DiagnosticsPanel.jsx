@@ -38,11 +38,24 @@ function formatReason(reason) {
   return REASON_LABELS[reason] ?? reason;
 }
 
+const STATUS_LABELS = {
+  success: __('Success', 'lynx-journal'),
+  skipped: __('Skipped', 'lynx-journal'),
+  error:   __('Error', 'lynx-journal'),
+};
+
+/**
+ * Colored status badge for a single scheduler run.
+ *
+ * @param {Object} props
+ * @param {string} props.status Raw run status (e.g. 'success', 'skipped', 'error').
+ * @returns {JSX.Element}
+ */
 function RunBadge({ status }) {
   const cls = status === 'success'
     ? 'lynxjournal-diag-badge lynxjournal-diag-badge--success'
     : 'lynxjournal-diag-badge lynxjournal-diag-badge--neutral';
-  return <span className={cls}>{status}</span>;
+  return <span className={cls}>{STATUS_LABELS[status] ?? status}</span>;
 }
 
 function PostLink({ postId, linkCount }) {

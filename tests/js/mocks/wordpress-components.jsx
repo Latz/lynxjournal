@@ -9,6 +9,8 @@
  * component tests can interact with them via @testing-library/react.
  */
 
+import { useState } from 'react';
+
 export function Button({ children, onClick, disabled, isBusy, className, variant, size, 'aria-label': ariaLabel, title, type = 'button', ...rest }) {
     return (
         <button
@@ -75,6 +77,36 @@ export function SelectControl({ label, value, options = [], onChange }) {
                 ))}
             </select>
         </label>
+    );
+}
+
+export function TabPanel({ tabs = [], initialTabName, onSelect, children }) {
+    const [active, setActive] = useState(initialTabName ?? tabs[0]?.name);
+    const activeTab = tabs.find(t => t.name === active) ?? tabs[0];
+
+    function handleSelect(name) {
+        setActive(name);
+        onSelect?.(name);
+    }
+
+    return (
+        <div className="components-tab-panel">
+            <div className="components-tab-panel__tabs" role="tablist">
+                {tabs.map(tab => (
+                    <button
+                        key={tab.name}
+                        type="button"
+                        role="tab"
+                        aria-selected={tab.name === active}
+                        className={`components-tab-panel__tabs-item${tab.name === active ? ' is-active' : ''}`}
+                        onClick={() => handleSelect(tab.name)}
+                    >
+                        {tab.title}
+                    </button>
+                ))}
+            </div>
+            {activeTab && children ? children(activeTab) : null}
+        </div>
     );
 }
 

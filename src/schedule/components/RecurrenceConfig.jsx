@@ -6,17 +6,23 @@ import { __experimentalNumberControl as NumberControl, SelectControl, Button } f
 import { __ } from '@wordpress/i18n';
 
 const WEEKDAYS = [
-  { value: 'MO', label: 'Mon' },
-  { value: 'TU', label: 'Tue' },
-  { value: 'WE', label: 'Wed' },
-  { value: 'TH', label: 'Thu' },
-  { value: 'FR', label: 'Fri' },
-  { value: 'SA', label: 'Sat' },
-  { value: 'SU', label: 'Sun' },
+  { value: 'MO', label: __('Mon', 'lynx-journal') },
+  { value: 'TU', label: __('Tue', 'lynx-journal') },
+  { value: 'WE', label: __('Wed', 'lynx-journal') },
+  { value: 'TH', label: __('Thu', 'lynx-journal') },
+  { value: 'FR', label: __('Fri', 'lynx-journal') },
+  { value: 'SA', label: __('Sat', 'lynx-journal') },
+  { value: 'SU', label: __('Sun', 'lynx-journal') },
 ];
 
-const WEEKDAY_SHORT = { MO: 'Mon', TU: 'Tue', WE: 'Wed', TH: 'Thu', FR: 'Fri', SA: 'Sat', SU: 'Sun' };
-const WEEKDAY_FULL  = { MO: 'Monday', TU: 'Tuesday', WE: 'Wednesday', TH: 'Thursday', FR: 'Friday', SA: 'Saturday', SU: 'Sunday' };
+const WEEKDAY_SHORT = {
+  MO: __('Mon', 'lynx-journal'), TU: __('Tue', 'lynx-journal'), WE: __('Wed', 'lynx-journal'), TH: __('Thu', 'lynx-journal'),
+  FR: __('Fri', 'lynx-journal'), SA: __('Sat', 'lynx-journal'), SU: __('Sun', 'lynx-journal'),
+};
+const WEEKDAY_FULL = {
+  MO: __('Monday', 'lynx-journal'), TU: __('Tuesday', 'lynx-journal'), WE: __('Wednesday', 'lynx-journal'), TH: __('Thursday', 'lynx-journal'),
+  FR: __('Friday', 'lynx-journal'), SA: __('Saturday', 'lynx-journal'), SU: __('Sunday', 'lynx-journal'),
+};
 
 const NTH_OPTIONS = [
   { label: __('first',  'lynx-journal'), value: '1' },
@@ -50,6 +56,8 @@ function DailyRecurrence({ value, onChange }) {
     <div className="lynxjournal-rc-row">
       <span>{__('Every', 'lynx-journal')}</span>
       <NumberControl
+        label={__('Day interval', 'lynx-journal')}
+        hideLabelFromVision
         value={String(value.interval)}
         min={1} max={365}
         onChange={v => onChange({ ...value, interval: Number.parseInt(v) || 1 })}
@@ -73,6 +81,8 @@ function WeeklyRecurrence({ value, onChange }) {
       <div className="lynxjournal-rc-row">
         <span>{__('Every', 'lynx-journal')}</span>
         <NumberControl
+          label={__('Week interval', 'lynx-journal')}
+          hideLabelFromVision
           value={String(value.interval)}
           min={1} max={52}
           onChange={v => onChange({ ...value, interval: Number.parseInt(v) || 1 })}
@@ -99,7 +109,7 @@ function WeeklyRecurrence({ value, onChange }) {
 
 /**
  * Renders one row of the monthly recurrence entry list: a "day of month" or
- * "nth weekday" trigger, selectable via two mutually-exclusive toggle buttons.
+ * "nth weekday" trigger, selectable via two mutually-exclusive toggle zones.
  *
  * @param {number}   index         - Entry's position within monthDays.
  * @param {object}   entry         - The month-day entry ({ id?, type, value, nth, weekday }).
@@ -113,45 +123,47 @@ function MonthDayRow({ index, entry, canRemove, onUpdateEntry, onRemoveEntry }) 
     <div className="lynxjournal-month-day-row">
       <span className="lynxjournal-day-index">{String(index + 1).padStart(2, '0')}</span>
 
-      {/* Outer <button> acts as a clickable selection zone that also
-          activates the 'day' mode. Clicking when already active is a
-          no-op so the inner NumberControl stays interactive. */}
-      <button
-        className={`lynxjournal-opt ${entry.type === 'day' ? 'lynxjournal-opt--on' : 'lynxjournal-opt--off'}`}
-        onClick={() => entry.type !== 'day' && onUpdateEntry(index, { type: 'day' })}
-        aria-pressed={entry.type === 'day'}
-      >
+      {/* Plain <div> (not a <button>) so the NumberControl's own <input>
+          remains the only interactive element — nesting a native control
+          inside a <button> is invalid HTML and ambiguous for screen
+          readers. Activation happens when the input receives focus
+          (covers both mouse clicks and keyboard/Tab navigation). */}
+      <div className={`lynxjournal-opt ${entry.type === 'day' ? 'lynxjournal-opt--on' : 'lynxjournal-opt--off'}`}>
         <NumberControl
+          label={__('Day of month', 'lynx-journal')}
+          hideLabelFromVision
           value={String(entry.value ?? 1)}
           min={1} max={31}
           autoFocus={index === 0 && entry.type === 'day'}
+          onFocus={() => entry.type !== 'day' && onUpdateEntry(index, { type: 'day' })}
           onChange={v => onUpdateEntry(index, { value: Number.parseInt(v) || 1 })}
           style={{ width: '72px' }}
         />
-      </button>
+      </div>
 
       <span className="lynxjournal-opt-sep">{__('or', 'lynx-journal')}</span>
 
-      {/* Same pattern for 'nth' mode — clicking activates it; the inner
-          SelectControls remain interactive once the mode is active. */}
-      <button
-        className={`lynxjournal-opt ${entry.type === 'nth' ? 'lynxjournal-opt--on' : 'lynxjournal-opt--off'}`}
-        onClick={() => entry.type !== 'nth' && onUpdateEntry(index, { type: 'nth' })}
-        aria-pressed={entry.type === 'nth'}
-      >
+      {/* Same pattern for 'nth' mode — focusing either SelectControl activates it. */}
+      <div className={`lynxjournal-opt ${entry.type === 'nth' ? 'lynxjournal-opt--on' : 'lynxjournal-opt--off'}`}>
         <SelectControl
+          label={__('Week of month', 'lynx-journal')}
+          hideLabelFromVision
           value={String(entry.nth ?? 1)}
           options={NTH_OPTIONS}
+          onFocus={() => entry.type !== 'nth' && onUpdateEntry(index, { type: 'nth' })}
           onChange={v => onUpdateEntry(index, { nth: Number.parseInt(v) })}
           __nextHasNoMarginBottom
         />
         <SelectControl
+          label={__('Weekday', 'lynx-journal')}
+          hideLabelFromVision
           value={entry.weekday ?? 'MO'}
           options={WEEKDAY_OPTIONS}
+          onFocus={() => entry.type !== 'nth' && onUpdateEntry(index, { type: 'nth' })}
           onChange={v => onUpdateEntry(index, { weekday: v })}
           __nextHasNoMarginBottom
         />
-      </button>
+      </div>
 
       {canRemove && (
         <Button
@@ -211,6 +223,8 @@ function MonthlyRecurrence({ value, onChange }) {
       <div className="lynxjournal-rc-row">
         <span>{__('Every', 'lynx-journal')}</span>
         <NumberControl
+          label={__('Month interval', 'lynx-journal')}
+          hideLabelFromVision
           value={String(value.interval)}
           min={1} max={12}
           onChange={v => onChange({ ...value, interval: Number.parseInt(v) || 1 })}

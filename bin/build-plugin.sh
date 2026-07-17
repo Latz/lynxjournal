@@ -85,14 +85,18 @@ cp "$PROJECT_DIR/composer.json" "$STAGE_DIR/composer.json"
 # Flatten PHP into includes/ (src/ is excluded by .distignore above)
 echo "Flattening PHP into includes/..."
 mkdir -p "$STAGE_DIR/includes"
-cp "$PROJECT_DIR/src/php/schedule-mode.php" "$STAGE_DIR/includes/"
+cp "$PROJECT_DIR/src/php/ScheduleMode.php" "$STAGE_DIR/includes/"
 cp "$PROJECT_DIR/src/php/traits/"*.php "$STAGE_DIR/includes/"
 cp "$PROJECT_DIR/src/php/traits/Admin/"*.php "$STAGE_DIR/includes/"
 cp "$PROJECT_DIR/src/php/class-lynxjournal.php" "$STAGE_DIR/includes/"
+cp "$PROJECT_DIR/src/php/notifications/"*.php "$STAGE_DIR/includes/"
+cp "$PROJECT_DIR/src/php/notifications/channels/"*.php "$STAGE_DIR/includes/"
 
 # Patch require_once paths in the staged lynxjournal.php
 sed -i \
-    -e "s|src/php/schedule-mode\.php|includes/schedule-mode.php|g" \
+    -e "s|src/php/ScheduleMode\.php|includes/ScheduleMode.php|g" \
+    -e "s|src/php/notifications/channels/\([A-Za-z]*\)\.php|includes/\1.php|g" \
+    -e "s|src/php/notifications/\([A-Za-z]*\)\.php|includes/\1.php|g" \
     -e "s|src/php/traits/Admin/Menu\.php|includes/Menu.php|g" \
     -e "s|src/php/traits/Admin/Dashboard\.php|includes/Dashboard.php|g" \
     -e "s|src/php/traits/Admin/LinksPage\.php|includes/LinksPage.php|g" \
@@ -109,6 +113,7 @@ sed -i \
     -e "s|src/php/traits/RestApiSupport\.php|includes/RestApiSupport.php|g" \
     -e "s|src/php/traits/Admin/DashboardActions\.php|includes/DashboardActions.php|g" \
     -e "s|src/php/traits/Admin/TemplatePage\.php|includes/TemplatePage.php|g" \
+    -e "s|src/php/traits/Admin/NotificationFailureNotice\.php|includes/NotificationFailureNotice.php|g" \
     -e "s|src/php/traits/Scheduler\.php|includes/Scheduler.php|g" \
     -e "s|src/php/class-lynxjournal\.php|includes/class-lynxjournal.php|g" \
     "$STAGE_DIR/lynxjournal.php"

@@ -209,6 +209,26 @@ trait LynxJournal_RestApi {
             'permission_callback' => fn() => current_user_can('edit_posts'),
         ));
 
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/schedule/test-notification', array(
+            'methods'             => 'POST',
+            'callback'            => [$this, 'restTestNotification'],
+            'permission_callback' => function() { return current_user_can('manage_options'); },
+            'args'                => array(
+                'channel' => array('required' => true, 'type' => 'string'),
+                'notify'  => array('required' => true, 'type' => 'object'),
+            ),
+        ));
+
+        register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/schedule/save-notification', array(
+            'methods'             => 'POST',
+            'callback'            => [$this, 'restSaveNotification'],
+            'permission_callback' => function() { return current_user_can('manage_options'); },
+            'args'                => array(
+                'channel' => array('required' => true, 'type' => 'string'),
+                'notify'  => array('required' => true, 'type' => 'object'),
+            ),
+        ));
+
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/schedule/dismiss-cron-notice', array(
             'methods'             => 'POST',
             'callback'            => function() {

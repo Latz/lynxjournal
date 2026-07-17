@@ -98,6 +98,7 @@ describe('App', () => {
         await waitFor(() => expect(apiFetch).toHaveBeenCalledWith({ path: '/lynxjournal/v1/schedule' }));
         expect(screen.queryByLabelText('Email address')).not.toBeInTheDocument();
 
+        await user.click(screen.getByRole('button', { name: /Notifications/ }));
         await user.click(screen.getByLabelText('Email me after each run'));
 
         expect(screen.getByLabelText('Email address')).toBeInTheDocument();

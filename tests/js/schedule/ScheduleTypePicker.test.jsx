@@ -1,8 +1,25 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import ScheduleTypePicker from '../../../src/schedule/components/ScheduleTypePicker.jsx';
+
+/**
+ * Stubs getBoundingClientRect so each mode card reports a distinguishable
+ * natural height, keyed by a substring of its text content, to verify the
+ * cross-group height-equalization logic without real browser layout.
+ *
+ * @param {Record<string, number>} heightsByText Map of text substring to height.
+ * @param {number} defaultHeight Height for cards not matching any key.
+ * @returns {void}
+ */
+function stubCardHeights(heightsByText, defaultHeight) {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function () {
+        const match = Object.entries(heightsByText).find(([text]) => this.textContent.includes(text));
+        const height = match ? match[1] : defaultHeight;
+        return { height, width: 96, top: 0, left: 0, right: 96, bottom: height, x: 0, y: 0, toJSON: () => ({}) };
+    });
+}
 
 describe('ScheduleTypePicker', () => {
     it('renders all 6 mode buttons', () => {
@@ -39,5 +56,39 @@ describe('ScheduleTypePicker', () => {
         expect(screen.getByText('Trigger-based')).toBeInTheDocument();
         // "Manual" appears both as a group label and as a button title — verify at least one
         expect(screen.getAllByText('Manual').length).toBeGreaterThanOrEqual(1);
+    });
+
+    describe('cross-group height equalization', () => {
+        afterEach(() => {
+            vi.restoreAllMocks();
+        });
+
+        it('sizes every card — across all 3 groups — to the tallest one\'s natural height', () => {
+            // "By Age" lives in the "Trigger-based" group; simulate it wrapping to
+            // more lines (as it does in German) than any card in "Scheduled" or "Manual".
+            stubCardHeights({ 'By Age': 120 }, 40);
+
+            render(<ScheduleTypePicker value="daily" onChange={() => {}} />);
+
+            for (const radio of screen.getAllByRole('radio')) {
+                expect(radio.style.height).toBe('120px');
+            }
+        });
+
+        it('re-equalizes on window resize when rewrapping changes which card is tallest', () => {
+            stubCardHeights({ 'By Age': 120 }, 40);
+            render(<ScheduleTypePicker value="daily" onChange={() => {}} />);
+            expect(screen.getByRole('radio', { name: /monthly/i }).style.height).toBe('120px');
+
+            // Narrower viewport: now "Monthly" wraps onto more lines than "By Age".
+            stubCardHeights({ Monthly: 150 }, 40);
+            act(() => {
+                window.dispatchEvent(new Event('resize'));
+            });
+
+            for (const radio of screen.getAllByRole('radio')) {
+                expect(radio.style.height).toBe('150px');
+            }
+        });
     });
 });

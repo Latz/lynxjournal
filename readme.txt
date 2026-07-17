@@ -4,7 +4,7 @@ Tags: links, blogging, roundup, curation
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.0.2
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -172,3 +172,5 @@ https://github.com/Latz/lynxjournal
 = 1.0.2 =
 * Initial release.
 * Added a Post Template editor for customising the layout of roundup posts.
+* Added Discord, Slack, Telegram, Mastodon, and Bluesky notification channels alongside Email.
+* Moved the Slack field reveal/hide toggle inside the input box instead of beside it.

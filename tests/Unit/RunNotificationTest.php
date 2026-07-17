@@ -10,45 +10,36 @@ use Brain\Monkey\Functions;
 
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
-    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
+    $this->channel = new LynxJournal_Notify_EmailChannel();
 });
 
-describe('LynxJournal::maybeSendRunNotification()', function (): void {
+describe('LynxJournal_Notify_EmailChannel::send()', function (): void {
 
     it('does nothing when notify is disabled', function (): void {
-        Functions\when('get_option')->justReturn(['notify' => ['enabled' => false]]);
-
         $mailSent = false;
         Functions\when('wp_mail')->alias(function () use (&$mailSent): bool {
             $mailSent = true;
             return true;
         });
 
-        $this->plugin->maybeSendRunNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['enabled' => false]);
 
         expect($mailSent)->toBeFalse();
     });
 
-    it('does nothing when notify key is absent', function (): void {
-        Functions\when('get_option')->justReturn([]);
-
+    it('does nothing when notify is empty', function (): void {
         $mailSent = false;
         Functions\when('wp_mail')->alias(function () use (&$mailSent): bool {
             $mailSent = true;
             return true;
         });
 
-        $this->plugin->maybeSendRunNotification(null, [], 'daily');
+        $this->channel->send(null, [], 'daily', []);
 
         expect($mailSent)->toBeFalse();
     });
 
     it('sends email with post URL when notify is enabled and post_id is given', function (): void {
-        Functions\when('get_option')->alias(fn($key, $default = false) =>
-            $key === 'lynxjournal_schedule'
-                ? ['notify' => ['enabled' => true, 'email' => 'editor@example.com']]
-                : $default
-        );
         Functions\when('get_permalink')->justReturn('https://site.example/roundup-42');
 
         $captured = [];
@@ -57,7 +48,7 @@ describe('LynxJournal::maybeSendRunNotification()', function (): void {
             return true;
         });
 
-        $this->plugin->maybeSendRunNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['enabled' => true, 'email' => 'editor@example.com']);
 
         expect($captured['to'])->toBe('editor@example.com');
         expect($captured['message'])->toContain('https://site.example/roundup-42');
@@ -65,30 +56,20 @@ describe('LynxJournal::maybeSendRunNotification()', function (): void {
     });
 
     it('sends fallback message without URL when post_id is null', function (): void {
-        Functions\when('get_option')->alias(fn($key, $default = false) =>
-            $key === 'lynxjournal_schedule'
-                ? ['notify' => ['enabled' => true, 'email' => 'editor@example.com']]
-                : $default
-        );
-
         $captured = [];
         Functions\when('wp_mail')->alias(function (mixed $to, string $subject, string $message) use (&$captured): bool {
             $captured = compact('to', 'subject', 'message');
             return true;
         });
 
-        $this->plugin->maybeSendRunNotification(null, [1, 2], 'count');
+        $this->channel->send(null, [1, 2], 'count', ['enabled' => true, 'email' => 'editor@example.com']);
 
         expect($captured['message'])->toContain('count');
     });
 
     it('falls back to admin_email when no email is configured', function (): void {
         Functions\when('get_option')->alias(fn($key, $default = false) =>
-            match($key) {
-                'lynxjournal_schedule' => ['notify' => ['enabled' => true]],
-                'admin_email'          => 'admin@example.com',
-                default                => $default,
-            }
+            $key === 'admin_email' ? 'admin@example.com' : $default
         );
         Functions\when('get_permalink')->justReturn('https://site.example/post');
 
@@ -98,7 +79,7 @@ describe('LynxJournal::maybeSendRunNotification()', function (): void {
             return true;
         });
 
-        $this->plugin->maybeSendRunNotification(10, [1], 'daily');
+        $this->channel->send(10, [1], 'daily', ['enabled' => true]);
 
         expect($capturedTo)->toBe('admin@example.com');
     });

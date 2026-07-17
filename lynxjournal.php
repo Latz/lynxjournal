@@ -7,6 +7,7 @@
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: lynx-journal
+ * Domain Path: /languages
  */
 
 // Exit if accessed directly
@@ -27,7 +28,7 @@ define('LYNXJOURNAL_PLUGIN_FILE', __FILE__);
 // Composer dependencies (league/commonmark, used by TemplateRenderer.php).
 require_once __DIR__ . '/vendor/autoload.php';
 
-require_once __DIR__ . '/src/php/schedule-mode.php';
+require_once __DIR__ . '/src/php/ScheduleMode.php';
 
 // Traits (must be required before the class)
 require_once __DIR__ . '/src/php/traits/trait-post-type.php';
@@ -46,7 +47,25 @@ require_once __DIR__ . '/src/php/traits/Admin/LinksPage.php';
 require_once __DIR__ . '/src/php/traits/Admin/AddLink.php';
 require_once __DIR__ . '/src/php/traits/Admin/Categories.php';
 require_once __DIR__ . '/src/php/traits/Admin/TemplatePage.php';
+require_once __DIR__ . '/src/php/traits/Admin/NotificationFailureNotice.php';
 require_once __DIR__ . '/src/php/traits/Scheduler.php';
+
+// Notification channels (must be required before the class)
+require_once __DIR__ . '/src/php/notifications/Channel.php';
+require_once __DIR__ . '/src/php/notifications/Http.php';
+require_once __DIR__ . '/src/php/notifications/RunMessageContent.php';
+require_once __DIR__ . '/src/php/notifications/channels/EmailChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/DiscordChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/SlackBase.php';
+require_once __DIR__ . '/src/php/notifications/channels/SlackChannelChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/SlackDmChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/TelegramBase.php';
+require_once __DIR__ . '/src/php/notifications/channels/TelegramChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/TelegramDmChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/MastodonChannel.php';
+require_once __DIR__ . '/src/php/notifications/channels/BlueskyChannel.php';
+require_once __DIR__ . '/src/php/notifications/Manager.php';
+
 require_once __DIR__ . '/src/php/class-lynxjournal.php';
 
 register_deactivation_hook(LYNXJOURNAL_PLUGIN_FILE, function() {

@@ -1,30 +1,106 @@
 import { useState, useEffect, useMemo, useCallback } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-import { Button, Notice, CheckboxControl, TextControl, SelectControl } from '@wordpress/components';
+import { Button, Notice, SelectControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { buildRRule } from './lib/rrule';
 import { SCHEDULE_MODES } from './lib/modes';
+import { useNotifications } from './lib/notifications';
 import ScheduleTypePicker from './components/ScheduleTypePicker';
 import RecurrenceConfig from './components/RecurrenceConfig';
 import TriggerCondition from './components/TriggerCondition';
 import TimePicker from './components/TimePicker';
 import NextSchedules from './components/NextSchedules';
 import DiagnosticsPanel from './components/DiagnosticsPanel';
+import NotificationsSection, { TabTitleWithBadge } from './components/NotificationsSection';
 
 const DEFAULT_FORM = {
   mode: 'daily',
   recurrence: { interval: 1, weekdays: [], monthDays: [{ type: 'day', value: 1, nth: 1, weekday: 'MO' }], nthWeek: null },
   trigger: { count: 10, tag_id: null, days: 7 },
   times: [],
-  notify: { enabled: false, email: '' },
+  notify: {
+    enabled: false, email: '',
+    discordEnabled: false, discordWebhookUrl: '',
+    slackBotToken: '',
+    slackChannelEnabled: false, slackChannelId: '',
+    slackDmEnabled: false, slackUserId: '',
+    telegramBotToken: '',
+    telegramEnabled: false, telegramChatId: '',
+    telegramDmEnabled: false, telegramDmChatId: '',
+    mastodonEnabled: false, mastodonInstanceUrl: '', mastodonAccessToken: '', mastodonRecipient: '',
+    bskyEnabled: false, bskyHandle: '', bskyAppPassword: '', bskyRecipient: '',
+  },
   post_status: 'publish',
 };
 
-function Section({ title, children }) {
+/**
+ * Reads a collapsed/expanded boolean previously stored for a section, if any.
+ *
+ * @param {string} storageKey localStorage key to read.
+ * @returns {boolean|null} The stored value, or null if unset/unavailable.
+ */
+function readStoredCollapsed(storageKey) {
+  try {
+    const stored = window.localStorage.getItem(storageKey);
+    return stored === null ? null : stored === '1';
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * A titled section box. Optionally collapsible, toggled by clicking the heading.
+ *
+ * @param {Object}   props
+ * @param {string}   props.title             Section heading text.
+ * @param {*}        props.children          Section body content.
+ * @param {boolean}  [props.collapsible]     Whether the section can be collapsed.
+ * @param {boolean}  [props.defaultCollapsed] Initial collapsed state, if collapsible and nothing is stored yet.
+ * @param {string}   [props.storageKey]      localStorage key to remember the collapsed state across page loads.
+ * @param {Function} [props.onToggle]        Called with the new collapsed state after each toggle.
+ * @returns {JSX.Element}
+ */
+function Section({ title, children, collapsible, defaultCollapsed, storageKey, onToggle }) {
+  const [collapsed, setCollapsed] = useState(() => {
+    if (!collapsible) return false;
+    const stored = storageKey ? readStoredCollapsed(storageKey) : null;
+    return stored ?? !!defaultCollapsed;
+  });
+
+  if (!collapsible) {
+    return (
+      <div className="lynxjournal-section">
+        <h2 className="lynxjournal-section-heading">{title}</h2>
+        <div className="lynxjournal-section-body">{children}</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="lynxjournal-section">
-      <h3 className="lynxjournal-section-heading">{title}</h3>
-      <div className="lynxjournal-section-body">{children}</div>
+    <div className={`lynxjournal-section ${collapsed ? 'is-collapsed' : ''}`}>
+      <h2 className="lynxjournal-section-heading">
+        <button
+          type="button"
+          className="lynxjournal-section-toggle"
+          aria-expanded={!collapsed}
+          onClick={() => {
+            const next = !collapsed;
+            setCollapsed(next);
+            if (storageKey) {
+              try {
+                window.localStorage.setItem(storageKey, next ? '1' : '0');
+              } catch {
+                // localStorage unavailable (private browsing, etc.) — collapsed state just won't persist.
+              }
+            }
+            onToggle?.(next);
+          }}
+        >
+          <span className={`lynxjournal-section-chevron ${collapsed ? 'is-collapsed' : ''}`} aria-hidden="true">▾</span>
+          {title}
+        </button>
+      </h2>
+      {!collapsed && <div className="lynxjournal-section-body">{children}</div>}
     </div>
   );
 }
@@ -92,6 +168,11 @@ export default function App() {
   useEffect(refreshDiag, [refreshDiag]);
 
   const isDirty = savedForm !== null && JSON.stringify(form) !== JSON.stringify(savedForm);
+  // Once the real schedule config has loaded, jump the notification tabs to
+  // whichever channel is already enabled (handled inside useNotifications).
+  const configLoaded = savedForm !== null;
+
+  const notifications = useNotifications(form, setForm, setSavedForm, configLoaded);
 
   useEffect(() => {
     if (!isDirty) return;
@@ -214,22 +295,19 @@ export default function App() {
           />
         </Section>
 
-        <Section title={__('Notifications', 'lynx-journal')}>
-          <CheckboxControl
-            label={__('Email me after each run', 'lynx-journal')}
-            checked={form.notify?.enabled ?? false}
-            onChange={enabled => setForm(f => ({ ...f, notify: { ...f.notify, enabled } }))}
+        <Section
+          title={<TabTitleWithBadge label={__('Notifications', 'lynx-journal')} enabled={notifications.anyNotifyEnabled} />}
+          collapsible
+          defaultCollapsed
+          storageKey="lynxjournal_notify_section_collapsed"
+          onToggle={notifications.handleNotifySectionToggle}
+        >
+          <NotificationsSection
+            form={form}
+            setForm={setForm}
+            configLoaded={configLoaded}
+            {...notifications}
           />
-          {form.notify?.enabled && (
-            <TextControl
-              label={__('Email address', 'lynx-journal')}
-              type="email"
-              value={form.notify?.email ?? ''}
-              placeholder={__('Leave blank to use admin email', 'lynx-journal')}
-              onChange={email => setForm(f => ({ ...f, notify: { ...f.notify, email } }))}
-              __nextHasNoMarginBottom
-            />
-          )}
         </Section>
 
         <div className="lynxjournal-schedule-actions">

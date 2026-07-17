@@ -129,7 +129,7 @@ describe('LynxJournal::enqueueAdminAssets()', function (): void { // NOSONAR
         Functions\when('wp_timezone_string')->justReturn('UTC');
     });
 
-    it('does nothing beyond the dashboard CSS for a non-lynxjournal hook', function (): void {
+    it('only enqueues the global notification-failure-notice script for a non-lynxjournal hook', function (): void {
         $enqueued_scripts = [];
         Functions\when('wp_enqueue_script')->alias(function (...$a) use (&$enqueued_scripts) {
             $enqueued_scripts[] = $a[0];
@@ -138,7 +138,7 @@ describe('LynxJournal::enqueueAdminAssets()', function (): void { // NOSONAR
 
         $this->plugin->enqueueAdminAssets('edit.php');
 
-        expect($enqueued_scripts)->toBe([]);
+        expect($enqueued_scripts)->toBe(['lynxjournal-notification-failure-notice']);
     });
 
     it('loads the dashboard CSS on the WP core dashboard (index.php)', function (): void {
@@ -216,6 +216,8 @@ describe('LynxJournal::enqueueAdminAssets()', function (): void { // NOSONAR
             $styles[] = $a;
             return null;
         });
+        Functions\when('wp_register_style')->justReturn(true);
+        Functions\when('wp_add_inline_style')->justReturn(true);
 
         $this->plugin->enqueueAdminAssets('lynxjournal-dashboard_page_lynxjournal-schedule');
 
