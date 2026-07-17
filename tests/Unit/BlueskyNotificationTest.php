@@ -11,7 +11,7 @@ use Brain\Monkey\Functions;
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
     Functions\when('add_query_arg')->alias(fn ($key, $value, $url) => $url . '?' . $key . '=' . $value);
-    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
+    $this->channel = new LynxJournal_Notify_BlueskyChannel();
 });
 
 /**
@@ -48,83 +48,64 @@ function mockBlueskyHandshakeSuccess(array &$captured): void
     });
 }
 
-describe('LynxJournal::maybeSendBlueskyNotification()', function (): void {
+describe('LynxJournal_Notify_BlueskyChannel::send()', function (): void {
 
     it('does nothing when bluesky is disabled', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['bskyEnabled' => false, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social'],
-        ]);
-
         $called = false;
         Functions\when('wp_remote_post')->alias(function () use (&$called): array {
             $called = true;
             return [];
         });
 
-        $this->plugin->maybeSendBlueskyNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['bskyEnabled' => false, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social']);
 
         expect($called)->toBeFalse();
     });
 
     it('does nothing when enabled but handle is missing', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['bskyEnabled' => true, 'bskyHandle' => '', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social'],
-        ]);
-
         $called = false;
         Functions\when('wp_remote_post')->alias(function () use (&$called): array {
             $called = true;
             return [];
         });
 
-        $this->plugin->maybeSendBlueskyNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['bskyEnabled' => true, 'bskyHandle' => '', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social']);
 
         expect($called)->toBeFalse();
     });
 
     it('does nothing when enabled but app password is missing', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => '', 'bskyRecipient' => 'friend.bsky.social'],
-        ]);
-
         $called = false;
         Functions\when('wp_remote_post')->alias(function () use (&$called): array {
             $called = true;
             return [];
         });
 
-        $this->plugin->maybeSendBlueskyNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => '', 'bskyRecipient' => 'friend.bsky.social']);
 
         expect($called)->toBeFalse();
     });
 
     it('does nothing when enabled but recipient is missing', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => ''],
-        ]);
-
         $called = false;
         Functions\when('wp_remote_post')->alias(function () use (&$called): array {
             $called = true;
             return [];
         });
 
-        $this->plugin->maybeSendBlueskyNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => '']);
 
         expect($called)->toBeFalse();
     });
 
     it('sends the raw post title, not HTML-entity-escaped, since Bluesky DMs are plain text', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social'],
-        ]);
         Functions\when('get_permalink')->justReturn('https://site.example/roundup-42');
         Functions\when('get_the_title')->justReturn('Coffee & Code roundup');
 
         $captured = [];
         mockBlueskyHandshakeSuccess($captured);
 
-        $this->plugin->maybeSendBlueskyNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social']);
 
         $sendCall = $captured['https://bsky.chat/xrpc/chat.bsky.convo.sendMessage'];
         $sendBody = json_decode($sendCall['args']['body'], true);
@@ -133,16 +114,13 @@ describe('LynxJournal::maybeSendBlueskyNotification()', function (): void {
     });
 
     it('runs the full handshake and sends the DM when enabled with a post_id', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social'],
-        ]);
         Functions\when('get_permalink')->justReturn('https://site.example/roundup-42');
         Functions\when('get_the_title')->justReturn('Links: April 15, 2026');
 
         $captured = [];
         mockBlueskyHandshakeSuccess($captured);
 
-        $this->plugin->maybeSendBlueskyNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social']);
 
         $sessionCall = $captured['https://bsky.social/xrpc/com.atproto.server.createSession'];
         $sessionBody = json_decode($sessionCall['args']['body'], true);
@@ -162,34 +140,26 @@ describe('LynxJournal::maybeSendBlueskyNotification()', function (): void {
     });
 
     it('builds a neutral message when post_id is null', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social'],
-        ]);
-
         $captured = [];
         mockBlueskyHandshakeSuccess($captured);
 
-        $this->plugin->maybeSendBlueskyNotification(null, [1, 2], 'count');
+        $this->channel->send(null, [1, 2], 'count', ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social']);
 
         $sendCall = $captured['https://bsky.chat/xrpc/chat.bsky.convo.sendMessage'];
         $sendBody = json_decode($sendCall['args']['body'], true);
         expect($sendBody['message']['text'])->toContain('count');
     });
 
-    it('silently returns when session creation fails', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social'],
-        ]);
+    it('returns a WP_Error when session creation fails', function (): void {
         Functions\when('wp_remote_post')->justReturn(Mockery::mock('WP_Error'));
         Functions\when('is_wp_error')->justReturn(true);
 
-        $this->plugin->maybeSendBlueskyNotification(42, [1], 'daily');
-    })->throwsNoExceptions();
+        $result = $this->channel->send(42, [1], 'daily', ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social']);
 
-    it('silently returns when handle resolution fails', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social'],
-        ]);
+        expect($result)->toBeInstanceOf(WP_Error::class);
+    });
+
+    it('returns a WP_Error when handle resolution fails', function (): void {
         Functions\when('wp_remote_post')->alias(function ($url) {
             if (str_contains($url, 'createSession')) {
                 return ['body' => json_encode(['accessJwt' => 'jwt123', 'did' => 'did:plc:sender'])];
@@ -201,6 +171,8 @@ describe('LynxJournal::maybeSendBlueskyNotification()', function (): void {
         Functions\when('wp_remote_retrieve_response_code')->justReturn(200);
         Functions\when('wp_remote_retrieve_body')->alias(fn ($response) => $response['body'] ?? '');
 
-        $this->plugin->maybeSendBlueskyNotification(42, [1], 'daily');
-    })->throwsNoExceptions();
+        $result = $this->channel->send(42, [1], 'daily', ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social']);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+    });
 });

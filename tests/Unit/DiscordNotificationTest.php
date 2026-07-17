@@ -10,43 +10,36 @@ use Brain\Monkey\Functions;
 
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
-    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
+    $this->channel = new LynxJournal_Notify_DiscordChannel();
 });
 
-describe('LynxJournal::maybeSendDiscordNotification()', function (): void {
+describe('LynxJournal_Notify_DiscordChannel::send()', function (): void {
 
     it('does nothing when discord is disabled', function (): void {
-        Functions\when('get_option')->justReturn(['notify' => ['discordEnabled' => false, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc']]);
-
         $called = false;
         Functions\when('wp_remote_post')->alias(function () use (&$called): array {
             $called = true;
             return [];
         });
 
-        $this->plugin->maybeSendDiscordNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['discordEnabled' => false, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc']);
 
         expect($called)->toBeFalse();
     });
 
     it('does nothing when webhook url is missing even if enabled', function (): void {
-        Functions\when('get_option')->justReturn(['notify' => ['discordEnabled' => true, 'discordWebhookUrl' => '']]);
-
         $called = false;
         Functions\when('wp_remote_post')->alias(function () use (&$called): array {
             $called = true;
             return [];
         });
 
-        $this->plugin->maybeSendDiscordNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['discordEnabled' => true, 'discordWebhookUrl' => '']);
 
         expect($called)->toBeFalse();
     });
 
     it('posts an embed to the webhook when enabled with a post_id', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/123/abc'],
-        ]);
         Functions\when('get_permalink')->justReturn('https://site.example/roundup-42');
         Functions\when('get_the_title')->justReturn('Links: April 15, 2026');
         Functions\when('is_wp_error')->justReturn(false);
@@ -58,7 +51,7 @@ describe('LynxJournal::maybeSendDiscordNotification()', function (): void {
             return ['response' => ['code' => 204]];
         });
 
-        $this->plugin->maybeSendDiscordNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/123/abc']);
 
         expect($captured['url'])->toBe('https://discord.com/api/webhooks/123/abc');
         $body = json_decode($captured['args']['body'], true);
@@ -67,9 +60,6 @@ describe('LynxJournal::maybeSendDiscordNotification()', function (): void {
     });
 
     it('posts a neutral embed when post_id is null', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/123/abc'],
-        ]);
         Functions\when('is_wp_error')->justReturn(false);
         Functions\when('wp_remote_retrieve_response_code')->justReturn(204);
 
@@ -79,30 +69,28 @@ describe('LynxJournal::maybeSendDiscordNotification()', function (): void {
             return ['response' => ['code' => 204]];
         });
 
-        $this->plugin->maybeSendDiscordNotification(null, [1, 2], 'count');
+        $this->channel->send(null, [1, 2], 'count', ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/123/abc']);
 
         $body = json_decode($captured['args']['body'], true);
         expect($body['embeds'][0]['description'])->toContain('count');
     });
 
-    it('silently returns when wp_remote_post returns a WP_Error', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/123/abc'],
-        ]);
+    it('returns a WP_Error when wp_remote_post returns a WP_Error', function (): void {
         Functions\when('wp_remote_post')->justReturn(Mockery::mock('WP_Error'));
         Functions\when('is_wp_error')->justReturn(true);
 
-        $this->plugin->maybeSendDiscordNotification(42, [1], 'daily');
-    })->throwsNoExceptions();
+        $result = $this->channel->send(42, [1], 'daily', ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/123/abc']);
 
-    it('silently returns when the response code is not a 2xx', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/123/abc'],
-        ]);
+        expect($result)->toBeInstanceOf(WP_Error::class);
+    });
+
+    it('returns a WP_Error when the response code is not a 2xx', function (): void {
         Functions\when('wp_remote_post')->justReturn(['response' => ['code' => 401]]);
-        Functions\when('is_wp_error')->justReturn(false);
+        Functions\when('is_wp_error')->alias(fn ($v) => $v instanceof WP_Error);
         Functions\when('wp_remote_retrieve_response_code')->justReturn(401);
 
-        $this->plugin->maybeSendDiscordNotification(42, [1], 'daily');
-    })->throwsNoExceptions();
+        $result = $this->channel->send(42, [1], 'daily', ['discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/123/abc']);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+    });
 });

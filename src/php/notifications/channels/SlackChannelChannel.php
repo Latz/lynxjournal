@@ -28,4 +28,20 @@ final class LynxJournal_Notify_SlackChannelChannel extends LynxJournal_Notify_Sl
     protected function testMissingFieldMessage(): string {
         return __('Enable Slack channel notifications and fill in the bot token and channel ID first.', 'lynx-journal');
     }
+
+    protected function targetIdPattern(): string {
+        return '/^[CG][A-Z0-9]+$/';
+    }
+
+    protected function targetIdErrorCode(): string {
+        return 'invalid_notify_slack_channel';
+    }
+
+    protected function invalidTargetIdMessage(): string {
+        return __('notify.slackChannelId must be a valid Slack channel ID', 'lynx-journal');
+    }
+
+    protected function tokenRequiredMessage(): string {
+        return __('notify.slackBotToken is required when Slack channel notifications are enabled', 'lynx-journal');
+    }
 }

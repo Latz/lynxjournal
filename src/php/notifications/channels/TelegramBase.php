@@ -39,6 +39,38 @@ abstract class LynxJournal_Notify_TelegramBase implements LynxJournal_Notify_Cha
      */
     abstract protected function testMissingFieldMessage(): string;
 
+    /**
+     * WP_Error code used for both a malformed and a missing chat ID.
+     *
+     * @since 1.0.0
+     * @return string Error code.
+     */
+    abstract protected function chatIdErrorCode(): string;
+
+    /**
+     * Error message for a malformed chat ID.
+     *
+     * @since 1.0.0
+     * @return string Translated message.
+     */
+    abstract protected function invalidChatIdMessage(): string;
+
+    /**
+     * Error message when the chat ID is missing but this target is enabled.
+     *
+     * @since 1.0.0
+     * @return string Translated message.
+     */
+    abstract protected function chatIdRequiredMessage(): string;
+
+    /**
+     * Error message when the bot token is missing but this target is enabled.
+     *
+     * @since 1.0.0
+     * @return string Translated message.
+     */
+    abstract protected function tokenRequiredMessage(): string;
+
     public function fields(): array {
         return ['telegramBotToken', $this->enabledField(), $this->chatIdField()];
     }
@@ -52,56 +84,42 @@ abstract class LynxJournal_Notify_TelegramBase implements LynxJournal_Notify_Cha
     }
 
     /**
-     * Validates the full Telegram field set (bot token, group/channel
-     * target, DM target) regardless of which target this instance
-     * represents — mirrors the original single validateNotifyTelegram()
-     * which always sanitized both targets together since they share the
-     * bot token.
+     * Validates the shared bot token plus only this instance's own target
+     * field (group/channel chat ID or DM chat ID). Each target is
+     * validated independently so that invalid/incomplete input in the
+     * *other* Telegram target never blocks testing or saving this one —
+     * the two targets are otherwise-unrelated settings that merely share
+     * a bot token field.
      *
      * @since 1.0.0
      * @param array $notify The `notify` option array, modified in place.
      * @return \WP_Error|null Error if invalid, null if valid.
      */
     public function validate(array &$notify): ?\WP_Error {
-        $notify['telegramEnabled'] = (bool) ($notify['telegramEnabled'] ?? false);
         $notify['telegramBotToken'] = !empty($notify['telegramBotToken'])
             ? sanitize_text_field(trim((string) $notify['telegramBotToken']))
             : '';
-        $notify['telegramChatId'] = !empty($notify['telegramChatId'])
-            ? sanitize_text_field(trim((string) $notify['telegramChatId']))
-            : '';
-
         if ($notify['telegramBotToken'] !== '' && !preg_match('/^\d+:[\w-]{20,}$/', $notify['telegramBotToken'])) {
             return new \WP_Error('invalid_notify_telegram_token', __('notify.telegramBotToken must be a valid Telegram bot token', 'lynx-journal'), ['status' => 400]);
         }
-        if ($notify['telegramChatId'] !== '' && !preg_match('/^-?\d+$/', $notify['telegramChatId'])) {
-            return new \WP_Error('invalid_notify_telegram_chat_id', __('notify.telegramChatId must be a valid Telegram chat ID', 'lynx-journal'), ['status' => 400]);
-        }
 
-        if (!empty($notify['telegramEnabled'])) {
-            if ($notify['telegramBotToken'] === '') {
-                return new \WP_Error('invalid_notify_telegram_token', __('notify.telegramBotToken is required when Telegram notifications are enabled', 'lynx-journal'), ['status' => 400]);
-            }
-            if ($notify['telegramChatId'] === '') {
-                return new \WP_Error('invalid_notify_telegram_chat_id', __('notify.telegramChatId is required when Telegram notifications are enabled', 'lynx-journal'), ['status' => 400]);
-            }
-        }
-
-        $notify['telegramDmEnabled'] = (bool) ($notify['telegramDmEnabled'] ?? false);
-        $notify['telegramDmChatId'] = !empty($notify['telegramDmChatId'])
-            ? sanitize_text_field(trim((string) $notify['telegramDmChatId']))
+        $enabledField = $this->enabledField();
+        $chatIdField = $this->chatIdField();
+        $notify[$enabledField] = (bool) ($notify[$enabledField] ?? false);
+        $notify[$chatIdField] = !empty($notify[$chatIdField])
+            ? sanitize_text_field(trim((string) $notify[$chatIdField]))
             : '';
 
-        if ($notify['telegramDmChatId'] !== '' && !preg_match('/^-?\d+$/', $notify['telegramDmChatId'])) {
-            return new \WP_Error('invalid_notify_telegram_dm_chat_id', __('notify.telegramDmChatId must be a valid Telegram chat ID', 'lynx-journal'), ['status' => 400]);
+        if ($notify[$chatIdField] !== '' && !preg_match('/^-?\d+$/', $notify[$chatIdField])) {
+            return new \WP_Error($this->chatIdErrorCode(), $this->invalidChatIdMessage(), ['status' => 400]);
         }
 
-        if (!empty($notify['telegramDmEnabled'])) {
+        if (!empty($notify[$enabledField])) {
             if ($notify['telegramBotToken'] === '') {
-                return new \WP_Error('invalid_notify_telegram_token', __('notify.telegramBotToken is required when Telegram DM notifications are enabled', 'lynx-journal'), ['status' => 400]);
+                return new \WP_Error('invalid_notify_telegram_token', $this->tokenRequiredMessage(), ['status' => 400]);
             }
-            if ($notify['telegramDmChatId'] === '') {
-                return new \WP_Error('invalid_notify_telegram_dm_chat_id', __('notify.telegramDmChatId is required when Telegram DM notifications are enabled', 'lynx-journal'), ['status' => 400]);
+            if ($notify[$chatIdField] === '') {
+                return new \WP_Error($this->chatIdErrorCode(), $this->chatIdRequiredMessage(), ['status' => 400]);
             }
         }
         return null;

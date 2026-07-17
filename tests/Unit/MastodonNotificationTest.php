@@ -10,79 +10,60 @@ use Brain\Monkey\Functions;
 
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
-    $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
+    $this->channel = new LynxJournal_Notify_MastodonChannel();
 });
 
-describe('LynxJournal::maybeSendMastodonNotification()', function (): void {
+describe('LynxJournal_Notify_MastodonChannel::send()', function (): void {
 
     it('does nothing when mastodon is disabled', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['mastodonEnabled' => false, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social'],
-        ]);
-
         $called = false;
         Functions\when('wp_remote_post')->alias(function () use (&$called): array {
             $called = true;
             return [];
         });
 
-        $this->plugin->maybeSendMastodonNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['mastodonEnabled' => false, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social']);
 
         expect($called)->toBeFalse();
     });
 
     it('does nothing when enabled but instance url is missing', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => '', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social'],
-        ]);
-
         $called = false;
         Functions\when('wp_remote_post')->alias(function () use (&$called): array {
             $called = true;
             return [];
         });
 
-        $this->plugin->maybeSendMastodonNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['mastodonEnabled' => true, 'mastodonInstanceUrl' => '', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social']);
 
         expect($called)->toBeFalse();
     });
 
     it('does nothing when enabled but access token is missing', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => '', 'mastodonRecipient' => '@you@mastodon.social'],
-        ]);
-
         $called = false;
         Functions\when('wp_remote_post')->alias(function () use (&$called): array {
             $called = true;
             return [];
         });
 
-        $this->plugin->maybeSendMastodonNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => '', 'mastodonRecipient' => '@you@mastodon.social']);
 
         expect($called)->toBeFalse();
     });
 
     it('does nothing when enabled but recipient is missing', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => ''],
-        ]);
-
         $called = false;
         Functions\when('wp_remote_post')->alias(function () use (&$called): array {
             $called = true;
             return [];
         });
 
-        $this->plugin->maybeSendMastodonNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '']);
 
         expect($called)->toBeFalse();
     });
 
     it('sends the raw post title, not HTML-entity-escaped, since Mastodon DMs are plain text', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social'],
-        ]);
         Functions\when('get_permalink')->justReturn('https://site.example/roundup-42');
         Functions\when('get_the_title')->justReturn('Coffee & Code roundup');
         Functions\when('is_wp_error')->justReturn(false);
@@ -94,7 +75,7 @@ describe('LynxJournal::maybeSendMastodonNotification()', function (): void {
             return ['response' => ['code' => 200]];
         });
 
-        $this->plugin->maybeSendMastodonNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social']);
 
         $body = json_decode($captured['args']['body'], true);
         expect($body['status'])->toContain('Coffee & Code roundup');
@@ -102,9 +83,6 @@ describe('LynxJournal::maybeSendMastodonNotification()', function (): void {
     });
 
     it('posts a direct status to the instance API when enabled with a post_id', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social'],
-        ]);
         Functions\when('get_permalink')->justReturn('https://site.example/roundup-42');
         Functions\when('get_the_title')->justReturn('Links: April 15, 2026');
         Functions\when('is_wp_error')->justReturn(false);
@@ -116,7 +94,7 @@ describe('LynxJournal::maybeSendMastodonNotification()', function (): void {
             return ['response' => ['code' => 200]];
         });
 
-        $this->plugin->maybeSendMastodonNotification(42, [1, 2, 3], 'daily');
+        $this->channel->send(42, [1, 2, 3], 'daily', ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social']);
 
         expect($captured['url'])->toBe('https://mastodon.social/api/v1/statuses');
         expect($captured['args']['headers']['Authorization'])->toBe('Bearer token123');
@@ -128,9 +106,6 @@ describe('LynxJournal::maybeSendMastodonNotification()', function (): void {
     });
 
     it('strips a trailing slash from the instance url', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social/', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social'],
-        ]);
         Functions\when('is_wp_error')->justReturn(false);
         Functions\when('wp_remote_retrieve_response_code')->justReturn(200);
 
@@ -140,15 +115,12 @@ describe('LynxJournal::maybeSendMastodonNotification()', function (): void {
             return ['response' => ['code' => 200]];
         });
 
-        $this->plugin->maybeSendMastodonNotification(null, [1], 'count');
+        $this->channel->send(null, [1], 'count', ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social/', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social']);
 
         expect($captured['url'])->toBe('https://mastodon.social/api/v1/statuses');
     });
 
     it('builds a neutral message when post_id is null', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social'],
-        ]);
         Functions\when('is_wp_error')->justReturn(false);
         Functions\when('wp_remote_retrieve_response_code')->justReturn(200);
 
@@ -158,30 +130,28 @@ describe('LynxJournal::maybeSendMastodonNotification()', function (): void {
             return ['response' => ['code' => 200]];
         });
 
-        $this->plugin->maybeSendMastodonNotification(null, [1, 2], 'count');
+        $this->channel->send(null, [1, 2], 'count', ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social']);
 
         $body = json_decode($captured['args']['body'], true);
         expect($body['status'])->toContain('count');
     });
 
-    it('silently returns when wp_remote_post returns a WP_Error', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social'],
-        ]);
+    it('returns a WP_Error when wp_remote_post returns a WP_Error', function (): void {
         Functions\when('wp_remote_post')->justReturn(Mockery::mock('WP_Error'));
         Functions\when('is_wp_error')->justReturn(true);
 
-        $this->plugin->maybeSendMastodonNotification(42, [1], 'daily');
-    })->throwsNoExceptions();
+        $result = $this->channel->send(42, [1], 'daily', ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social']);
 
-    it('silently returns when the response code is not a 2xx', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social'],
-        ]);
+        expect($result)->toBeInstanceOf(WP_Error::class);
+    });
+
+    it('returns a WP_Error when the response code is not a 2xx', function (): void {
         Functions\when('wp_remote_post')->justReturn(['response' => ['code' => 401]]);
-        Functions\when('is_wp_error')->justReturn(false);
+        Functions\when('is_wp_error')->alias(fn ($v) => $v instanceof WP_Error);
         Functions\when('wp_remote_retrieve_response_code')->justReturn(401);
 
-        $this->plugin->maybeSendMastodonNotification(42, [1], 'daily');
-    })->throwsNoExceptions();
+        $result = $this->channel->send(42, [1], 'daily', ['mastodonEnabled' => true, 'mastodonInstanceUrl' => 'https://mastodon.social', 'mastodonAccessToken' => 'token123', 'mastodonRecipient' => '@you@mastodon.social']);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+    });
 });

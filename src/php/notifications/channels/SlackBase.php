@@ -39,6 +39,38 @@ abstract class LynxJournal_Notify_SlackBase implements LynxJournal_Notify_Channe
      */
     abstract protected function testMissingFieldMessage(): string;
 
+    /**
+     * Regex this target's ID field must match (e.g. Slack channel vs. user IDs).
+     *
+     * @since 1.0.0
+     * @return string PCRE pattern.
+     */
+    abstract protected function targetIdPattern(): string;
+
+    /**
+     * WP_Error code used for both a malformed and a missing target ID.
+     *
+     * @since 1.0.0
+     * @return string Error code.
+     */
+    abstract protected function targetIdErrorCode(): string;
+
+    /**
+     * Error message for a malformed target ID.
+     *
+     * @since 1.0.0
+     * @return string Translated message.
+     */
+    abstract protected function invalidTargetIdMessage(): string;
+
+    /**
+     * Error message when the bot token is missing but this target is enabled.
+     *
+     * @since 1.0.0
+     * @return string Translated message.
+     */
+    abstract protected function tokenRequiredMessage(): string;
+
     public function fields(): array {
         return ['slackBotToken', $this->enabledField(), $this->targetIdField()];
     }
@@ -52,10 +84,12 @@ abstract class LynxJournal_Notify_SlackBase implements LynxJournal_Notify_Channe
     }
 
     /**
-     * Validates the full Slack field set (bot token, channel target, DM
-     * target) regardless of which target this instance represents — this
-     * mirrors the original single validateNotifySlack() which always
-     * sanitized both targets together since they share the bot token.
+     * Validates the shared bot token plus only this instance's own target
+     * field (channel ID or user ID). Each target is validated
+     * independently so that invalid/incomplete input in the *other*
+     * Slack target never blocks testing or saving this one — the two
+     * targets are otherwise-unrelated settings that merely share a bot
+     * token field.
      *
      * @since 1.0.0
      * @param array $notify The `notify` option array, modified in place.
@@ -69,29 +103,19 @@ abstract class LynxJournal_Notify_SlackBase implements LynxJournal_Notify_Channe
             return new \WP_Error('invalid_notify_slack_token', __('notify.slackBotToken must be a valid Slack bot token (starting with xoxb-)', 'lynx-journal'), ['status' => 400]);
         }
 
-        $notify['slackChannelEnabled'] = (bool) ($notify['slackChannelEnabled'] ?? false);
-        $notify['slackChannelId'] = !empty($notify['slackChannelId'])
-            ? strtoupper(sanitize_text_field(trim((string) $notify['slackChannelId'])))
+        $enabledField = $this->enabledField();
+        $targetIdField = $this->targetIdField();
+        $notify[$enabledField] = (bool) ($notify[$enabledField] ?? false);
+        $notify[$targetIdField] = !empty($notify[$targetIdField])
+            ? strtoupper(sanitize_text_field(trim((string) $notify[$targetIdField])))
             : '';
-        if (!empty($notify['slackChannelEnabled'])) {
-            if ($notify['slackBotToken'] === '') {
-                return new \WP_Error('invalid_notify_slack_token', __('notify.slackBotToken is required when Slack channel notifications are enabled', 'lynx-journal'), ['status' => 400]);
-            }
-            if (!preg_match('/^[CG][A-Z0-9]+$/', $notify['slackChannelId'])) {
-                return new \WP_Error('invalid_notify_slack_channel', __('notify.slackChannelId must be a valid Slack channel ID', 'lynx-journal'), ['status' => 400]);
-            }
-        }
 
-        $notify['slackDmEnabled'] = (bool) ($notify['slackDmEnabled'] ?? false);
-        $notify['slackUserId'] = !empty($notify['slackUserId'])
-            ? strtoupper(sanitize_text_field(trim((string) $notify['slackUserId'])))
-            : '';
-        if (!empty($notify['slackDmEnabled'])) {
+        if (!empty($notify[$enabledField])) {
             if ($notify['slackBotToken'] === '') {
-                return new \WP_Error('invalid_notify_slack_token', __('notify.slackBotToken is required when Slack DM notifications are enabled', 'lynx-journal'), ['status' => 400]);
+                return new \WP_Error('invalid_notify_slack_token', $this->tokenRequiredMessage(), ['status' => 400]);
             }
-            if (!preg_match('/^U[A-Z0-9]+$/', $notify['slackUserId'])) {
-                return new \WP_Error('invalid_notify_slack_user', __('notify.slackUserId must be a valid Slack user ID', 'lynx-journal'), ['status' => 400]);
+            if (!preg_match($this->targetIdPattern(), $notify[$targetIdField])) {
+                return new \WP_Error($this->targetIdErrorCode(), $this->invalidTargetIdMessage(), ['status' => 400]);
             }
         }
         return null;
