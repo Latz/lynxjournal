@@ -119,17 +119,12 @@ final class LynxJournal_Notify_MastodonChannel implements LynxJournal_Notify_Cha
      * @return string Status text.
      */
     private function buildMessage(string $recipient, int|null $post_id, int $link_count, string $mode): string {
-        if ($post_id) {
-            $title = get_the_title($post_id);
-            $url   = get_permalink($post_id);
-            /* translators: %d: number of links published */
-            $body  = sprintf(__('A new roundup was published with %d links.', 'lynx-journal'), $link_count);
-            return "{$recipient}\n{$title}\n{$body}\n{$url}";
-        }
+        $content = LynxJournal_Notify_RunMessageContent::forRun($post_id, $link_count, $mode);
 
-        /* translators: %s: schedule mode */
-        $body = sprintf(__('Schedule ran in %s mode but no post was published.', 'lynx-journal'), $mode);
-        return "{$recipient}\n{$body}";
+        if ($content->published) {
+            return "{$recipient}\n{$content->title}\n{$content->summary}\n{$content->url}";
+        }
+        return "{$recipient}\n{$content->summary}";
     }
 
     /**

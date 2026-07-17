@@ -46,6 +46,7 @@ require_once __DIR__ . '/src/php/traits/Scheduler.php';
 // Notification channels (must be required before the class)
 require_once __DIR__ . '/src/php/notifications/Channel.php';
 require_once __DIR__ . '/src/php/notifications/Http.php';
+require_once __DIR__ . '/src/php/notifications/RunMessageContent.php';
 require_once __DIR__ . '/src/php/notifications/channels/EmailChannel.php';
 require_once __DIR__ . '/src/php/notifications/channels/DiscordChannel.php';
 require_once __DIR__ . '/src/php/notifications/channels/SlackBase.php';

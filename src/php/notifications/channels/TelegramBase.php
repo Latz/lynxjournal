@@ -181,15 +181,13 @@ abstract class LynxJournal_Notify_TelegramBase implements LynxJournal_Notify_Cha
      * @return string HTML-formatted message text.
      */
     private function buildMessage(int|null $post_id, int $link_count, string $mode): string {
-        if ($post_id) {
-            $title = esc_html(get_the_title($post_id));
-            $url   = esc_url(get_permalink($post_id));
-            /* translators: %d: number of links published */
-            $body  = sprintf(__('A new roundup was published with %d links.', 'lynx-journal'), $link_count);
-            return "<b>{$title}</b>\n{$body}\n{$url}";
-        }
+        $content = LynxJournal_Notify_RunMessageContent::forRun($post_id, $link_count, $mode);
 
-        /* translators: %s: schedule mode */
-        return sprintf(__('Schedule ran in %s mode but no post was published.', 'lynx-journal'), $mode);
+        if ($content->published) {
+            $title = esc_html($content->title);
+            $url   = esc_url($content->url);
+            return "<b>{$title}</b>\n{$content->summary}\n{$url}";
+        }
+        return $content->summary;
     }
 }

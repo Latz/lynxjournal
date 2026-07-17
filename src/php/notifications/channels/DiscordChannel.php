@@ -85,12 +85,13 @@ final class LynxJournal_Notify_DiscordChannel implements LynxJournal_Notify_Chan
      * @return array Discord embed object.
      */
     private function buildEmbed(int|null $post_id, int $link_count, string $mode): array {
-        if ($post_id) {
+        $content = LynxJournal_Notify_RunMessageContent::forRun($post_id, $link_count, $mode);
+
+        if ($content->published) {
             return [
-                'title'       => get_the_title($post_id),
-                'url'         => get_permalink($post_id),
-                /* translators: %d: number of links published */
-                'description' => sprintf(__('A new roundup was published with %d links.', 'lynx-journal'), $link_count),
+                'title'       => $content->title,
+                'url'         => $content->url,
+                'description' => $content->summary,
                 'color'       => 0x5865F2, // Discord blurple
                 'fields'      => [
                     ['name' => __('Links', 'lynx-journal'), 'value' => (string) $link_count, 'inline' => true],
@@ -102,8 +103,7 @@ final class LynxJournal_Notify_DiscordChannel implements LynxJournal_Notify_Chan
 
         return [
             'title'       => __('LynxJournal schedule ran', 'lynx-journal'),
-            /* translators: %s: schedule mode */
-            'description' => sprintf(__('Schedule ran in %s mode but no post was published.', 'lynx-journal'), $mode),
+            'description' => $content->summary,
             'color'       => 0x99AAB5, // neutral grey
             'timestamp'   => gmdate('c'),
         ];

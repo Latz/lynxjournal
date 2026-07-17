@@ -200,15 +200,17 @@ abstract class LynxJournal_Notify_SlackBase implements LynxJournal_Notify_Channe
      * @return array Slack Block Kit blocks array.
      */
     private function buildBlocks(int|null $post_id, int $link_count, string $mode): array {
-        if ($post_id) {
+        $content = LynxJournal_Notify_RunMessageContent::forRun($post_id, $link_count, $mode);
+
+        if ($content->published) {
             return [
-                ['type' => 'header', 'text' => ['type' => 'plain_text', 'text' => get_the_title($post_id), 'emoji' => true]],
+                ['type' => 'header', 'text' => ['type' => 'plain_text', 'text' => $content->title, 'emoji' => true]],
                 [
                     'type' => 'section',
                     'text' => [
                         'type' => 'mrkdwn',
-                        /* translators: %s: post URL */
-                        'text' => sprintf(__("A new roundup was published.\n<%s|View post>", 'lynx-journal'), get_permalink($post_id)),
+                        /* translators: 1: run summary, 2: post URL */
+                        'text' => sprintf(__("%1\$s\n<%2\$s|View post>", 'lynx-journal'), $content->summary, $content->url),
                     ],
                 ],
                 [
@@ -229,8 +231,7 @@ abstract class LynxJournal_Notify_SlackBase implements LynxJournal_Notify_Channe
                 'type' => 'section',
                 'text' => [
                     'type' => 'mrkdwn',
-                    /* translators: %s: schedule mode */
-                    'text' => sprintf(__('Schedule ran in %s mode but no post was published.', 'lynx-journal'), $mode),
+                    'text' => $content->summary,
                 ],
             ],
         ];

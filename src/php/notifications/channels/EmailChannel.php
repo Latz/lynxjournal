@@ -74,15 +74,12 @@ final class LynxJournal_Notify_EmailChannel implements LynxJournal_Notify_Channe
      * @return string Message body.
      */
     private function buildMessage(int|null $post_id, int $link_count, string $mode): string {
-        if ($post_id) {
-            return sprintf(
-                /* translators: 1: link count, 2: post URL */
-                __("A new roundup was published.\n\nLinks: %1\$d\nView: %2\$s", 'lynx-journal'),
-                $link_count,
-                get_permalink($post_id)
-            );
+        $content = LynxJournal_Notify_RunMessageContent::forRun($post_id, $link_count, $mode);
+
+        if ($content->published) {
+            /* translators: 1: run summary, 2: post URL */
+            return sprintf(__("%1\$s\n\nView: %2\$s", 'lynx-journal'), $content->summary, $content->url);
         }
-        /* translators: %s: schedule mode */
-        return sprintf(__('Schedule ran in %s mode but no post was published.', 'lynx-journal'), $mode);
+        return $content->summary;
     }
 }
