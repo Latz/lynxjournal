@@ -52,10 +52,9 @@ class LynxJournal {
     public static function register(): void {
         $instance = new self();
 
-        // Load translations before any translated strings (e.g. post type labels) are built.
-        add_action('plugins_loaded', [$instance, 'loadTextdomain']);
-
         // Universal hooks: run on every request (front-end, admin, REST, cron, CLI)
+        // loadTextdomain() runs first (priority 0) so translations are loaded
+        // before any translated strings (e.g. post type labels) are built below.
         add_action('init', [$instance, 'loadTextdomain'],         0);
         add_action('init', [$instance, 'register_post_type'],    0);
         add_action('init', [$instance, 'register_taxonomies'],   0);

@@ -48,6 +48,11 @@ function lynxjournal_uninstall(): void {
         'lynxjournal_last_run',
         'lynxjournal_run_history',
         'lynxjournal_api_key',
+        'lynxjournal_notification_failures',
+        'lynxjournal_notification_failures_dismissed_at',
+        'lynxjournal_post_template',
+        'lynxjournal_roundup_count',
+        'lynxjournal_x_settings',
     ) as $option ) {
         delete_option( $option );
     }
@@ -57,7 +62,11 @@ function lynxjournal_uninstall(): void {
         'lynxjournal_run_lock',
         'lynxjournal_publish_stats',
         'lynxjournal_categories_terms',
+        'lynxjournal_tags_terms',
         'lynxjournal_api_categories_list',
+        'lynxjournal_api_tags_list',
+        'lynxjournal_category_link_counts',
+        'lynxjournal_tag_link_counts',
     ) as $transient ) {
         delete_transient( $transient );
     }
