@@ -35,22 +35,22 @@ function buildPopupDOM() {
 describe('checkSettings', () => {
     beforeEach(buildPopupDOM);
 
-    it('returns false and shows setup message when credentials are missing', async () => {
+    it('returns null and shows setup message when credentials are missing', async () => {
         browser.storage.sync.get.mockResolvedValue({});
 
         const result = await checkSettings();
 
-        expect(result).toBe(false);
+        expect(result).toBeNull();
         expect(document.getElementById('setupMessage').style.display).toBe('block');
         expect(document.getElementById('mainForm').style.display).toBe('none');
     });
 
-    it('returns true and shows main form when credentials are present', async () => {
+    it('returns the settings object and shows main form when credentials are present', async () => {
         browser.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
 
         const result = await checkSettings();
 
-        expect(result).toBe(true);
+        expect(result).toEqual({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
         expect(document.getElementById('mainForm').style.display).toBe('block');
         expect(document.getElementById('setupMessage').style.display).toBe('none');
     });
@@ -84,16 +84,17 @@ describe('renderCategories', () => {
 describe('loadCategories', () => {
     beforeEach(buildPopupDOM);
 
+    const settings = { apiEndpoint: ENDPOINT, apiKey: API_KEY };
+
     it('fetches categories and renders them', async () => {
         const cats = [{ id: 1, name: 'Tech' }];
         browser.storage.local.get.mockResolvedValue({});
-        browser.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
         global.fetch = vi.fn().mockResolvedValue({
             ok:   true,
             json: async () => cats,
         });
 
-        await loadCategories();
+        await loadCategories(settings);
 
         expect(fetch).toHaveBeenCalledWith(`${ENDPOINT}/categories`, expect.any(Object));
         expect(document.querySelector('.category-label').textContent).toBe('Tech');
@@ -102,23 +103,21 @@ describe('loadCategories', () => {
     it('renders cached categories immediately before fetching', async () => {
         const cached = [{ id: 2, name: 'Cached' }];
         browser.storage.local.get.mockResolvedValue({ categories: cached });
-        browser.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
         global.fetch = vi.fn().mockResolvedValue({
             ok:   true,
             json: async () => [],
         });
 
-        await loadCategories();
+        await loadCategories(settings);
 
         expect(browser.storage.local.get).toHaveBeenCalled();
     });
 
     it('shows error message when fetch fails and no cache exists', async () => {
         browser.storage.local.get.mockResolvedValue({});
-        browser.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
         global.fetch = vi.fn().mockRejectedValue(new Error('network'));
 
-        await loadCategories();
+        await loadCategories(settings);
 
         expect(document.getElementById('categoriesList').innerHTML).toContain('Failed to load categories');
     });

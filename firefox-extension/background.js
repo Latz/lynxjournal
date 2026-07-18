@@ -29,7 +29,7 @@ export async function refreshCategories() {
         });
         if (!response.ok) return;
         const categories = await response.json();
-        await browser.storage.local.set({ categories, categoriesTimestamp: Date.now() });
+        await browser.storage.local.set({ categories });
     } catch {
         // Fail silently — popup will fetch on next open if cache is missing
     }
