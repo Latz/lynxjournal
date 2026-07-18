@@ -308,16 +308,7 @@ trait LynxJournal_Scheduler {
         if ($would_publish && !empty($batch_ids)) {
             // Prime post + term caches once so the per-link get_the_terms() calls
             // below are cache hits instead of a query per link.
-            get_posts([
-                'post__in'               => $batch_ids,
-                'posts_per_page'         => -1,
-                'post_type'              => 'lynx-journal',
-                'post_status'            => 'any',
-                'no_found_rows'          => true,
-                'update_post_meta_cache' => false,
-                'update_post_term_cache' => false,
-            ]);
-            update_object_term_cache($batch_ids, 'lynx-journal');
+            $this->primeLinkCaches($batch_ids);
 
             foreach ($batch_ids as $id) {
                 $terms    = get_the_terms($id, 'lynxjournal_category');

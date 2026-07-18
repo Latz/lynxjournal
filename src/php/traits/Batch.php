@@ -65,17 +65,7 @@ trait LynxJournal_Batch {
         }
 
         // Prime caches: 4 queries instead of ~5×N in the batch publishing path
-        get_posts([
-            'post__in'               => $link_ids,
-            'posts_per_page'         => -1,
-            'post_type'              => 'any',
-            'post_status'            => 'any',
-            'no_found_rows'          => true,
-            'update_post_meta_cache' => false,
-            'update_post_term_cache' => false,
-        ]);
-        update_meta_cache('post', $link_ids);
-        update_object_term_cache($link_ids, 'lynx-journal');
+        $this->primeLinkCaches($link_ids, true);
 
         if (empty($post_title)) {
             /* translators: %s: formatted date, e.g. "April 15, 2026" */
@@ -96,6 +86,32 @@ trait LynxJournal_Batch {
         );
 
         return $this->executeRoundupInsertion($post_title, $as_draft, $grouped_links, $mode, $author_id);
+    }
+
+    /**
+     * Prime the post and term caches for a batch of link IDs, so subsequent
+     * get_post()/get_the_terms() calls are cache hits instead of a query
+     * per link. Shared by createRoundupPost() and Scheduler::previewSchedule().
+     *
+     * @since 1.1.0
+     * @param array $link_ids Array of link post IDs.
+     * @param bool $primeMeta Whether to also prime the postmeta cache (only needed by callers that read link meta).
+     * @return void
+     */
+    private function primeLinkCaches(array $link_ids, bool $primeMeta = false): void {
+        get_posts([
+            'post__in'               => $link_ids,
+            'posts_per_page'         => -1,
+            'post_type'              => 'any',
+            'post_status'            => 'any',
+            'no_found_rows'          => true,
+            'update_post_meta_cache' => false,
+            'update_post_term_cache' => false,
+        ]);
+        if ($primeMeta) {
+            update_meta_cache('post', $link_ids);
+        }
+        update_object_term_cache($link_ids, 'lynx-journal');
     }
 
     /**

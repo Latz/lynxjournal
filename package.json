@@ -8,7 +8,7 @@
     "env:stop": "wp-env stop",
     "env:clean": "wp-env clean all",
     "env:logs": "wp-env logs",
-    "test:all": "vendor/bin/pest --testsuite=Unit && vitest run",
+    "test:all": "vendor/bin/pest --testsuite=Unit && vitest run && npm run lint:ext-scripts && npm run lint:ext",
     "test:js": "vitest run",
     "test:js:watch": "vitest",
     "test:js:coverage": "vitest run --coverage",
@@ -16,7 +16,9 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:api": "playwright test tests/e2e/api",
     "test:e2e:ext": "playwright test --config=playwright.extension.config.mjs",
-    "test:e2e:debug": "playwright test --debug"
+    "test:e2e:debug": "playwright test --debug",
+    "lint:ext-scripts": "node bin/check-extension-scripts.mjs",
+    "lint:ext": "web-ext lint --source-dir=firefox-extension --no-config-discovery"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
@@ -30,7 +32,8 @@
     "@wordpress/scripts": "^30.0.0",
     "msw": "^2.14.6",
     "vitest": "^3.2.6",
-    "vitest-axe": "^0.1.0"
+    "vitest-axe": "^0.1.0",
+    "web-ext": "^10.5.0"
   },
   "dependencies": {
     "rrule": "^2.8.1"
