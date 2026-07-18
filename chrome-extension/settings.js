@@ -70,7 +70,7 @@ export async function handleSubmit(e) {
         });
 
         if (Array.isArray(categories)) {
-            await chrome.storage.local.set({ categories, categoriesTimestamp: Date.now() });
+            await chrome.storage.local.set({ categories });
         }
 
         showMessage(chrome.i18n.getMessage('msgSettingsSaved'), 'success');

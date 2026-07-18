@@ -1,19 +1,21 @@
 import { applyI18n } from './i18n.js';
 import { renderCategories as renderCategoriesUtil } from './popup-utils.js';
 
-// Check if settings are configured
+// Check if settings are configured. Returns the settings object when
+// configured (so callers can reuse it instead of re-reading storage), or
+// null when setup is incomplete.
 export async function checkSettings() {
     const settings = await chrome.storage.sync.get(['apiEndpoint', 'apiKey']);
 
     if (!settings.apiEndpoint || !settings.apiKey) {
         document.getElementById('setupMessage').style.display = 'block';
         document.getElementById('mainForm').style.display = 'none';
-        return false;
+        return null;
     }
 
     document.getElementById('setupMessage').style.display = 'none';
     document.getElementById('mainForm').style.display = 'block';
-    return true;
+    return settings;
 }
 
 // Extract description from page meta tags (runs inside the tab's context).
@@ -81,7 +83,7 @@ export function renderCategories(categories) {
 }
 
 // Load categories from WordPress
-export async function loadCategories() {
+export async function loadCategories(settings) {
     const categoriesList = document.getElementById('categoriesList');
 
     // Show cached data immediately if available (optimistic)
@@ -92,7 +94,6 @@ export async function loadCategories() {
 
     // Always fetch fresh
     try {
-        const settings = await chrome.storage.sync.get(['apiEndpoint', 'apiKey']);
         const response = await fetch(`${settings.apiEndpoint}/categories`, {
             method: 'GET',
             cache: 'no-store',
@@ -108,7 +109,7 @@ export async function loadCategories() {
         }
         if (!response.ok) throw new Error('Failed to load categories');
         const categories = await response.json();
-        await chrome.storage.local.set({ categories, categoriesTimestamp: Date.now() });
+        await chrome.storage.local.set({ categories });
         renderCategories(categories);
     } catch {
         if (!cached.categories) {
@@ -227,9 +228,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('openSettings')?.addEventListener('click', openSettings);
 
     // Check settings
-    const hasSettings = await checkSettings();
+    const settings = await checkSettings();
 
-    if (hasSettings) {
+    if (settings) {
         // Hide settings button when connected
         const settingsBtn = document.getElementById('settingsBtn');
         if (settingsBtn) {
@@ -254,7 +255,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Load page info and categories in parallel (non-blocking)
         Promise.all([
             loadPageInfo(),
-            loadCategories()
+            loadCategories(settings)
         ]).catch(() => {});
     }
 });
