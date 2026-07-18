@@ -232,7 +232,7 @@ trait LynxJournal_RestApi {
         register_rest_route(LYNXJOURNAL_REST_NAMESPACE, '/schedule/dismiss-cron-notice', array(
             'methods'             => 'POST',
             'callback'            => function() {
-                update_option('lynxjournal_cron_notice_dismissed', true);
+                update_option('lynxjournal_cron_notice_dismissed', true, false);
                 return rest_ensure_response(array('success' => true));
             },
             'permission_callback' => fn() => current_user_can('manage_options'),
@@ -288,7 +288,7 @@ trait LynxJournal_RestApi {
      */
     public function restGenerateApiKey(): mixed {
         $key = wp_generate_password(32, false);
-        update_option('lynxjournal_api_key', $key);
+        update_option('lynxjournal_api_key', $key, false);
         return rest_ensure_response(['key' => $key]);
     }
 

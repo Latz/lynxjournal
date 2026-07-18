@@ -26,14 +26,21 @@ trait LynxJournal_Admin_LinksPage {
         $has_links     = $this->hasLinks($grouped_links);
         $is_filtered   = $search !== '' || $month > 0 || $cat > 0;
 
-        // Date options: distinct year/month from lynxjournal posts.
-        $date_options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-            "SELECT DISTINCT YEAR(post_date) AS year, MONTH(post_date) AS month
-             FROM {$wpdb->posts}
-             WHERE post_type = 'lynx-journal'
-               AND post_status IN ('lynxjournal_pending','lynxjournal_pub','lynxjournal_draft')
-             ORDER BY post_date DESC"
-        );
+        // Date options: distinct year/month from lynxjournal posts. Transient-cached
+        // for 5 minutes (like getCategoryLinkCounts()) — these only change when links
+        // are added, but wiring invalidation into every write path isn't worth it for
+        // a filter dropdown that can be briefly stale.
+        $date_options = get_transient('lynxjournal_date_options');
+        if ($date_options === false) {
+            $date_options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+                "SELECT DISTINCT YEAR(post_date) AS year, MONTH(post_date) AS month
+                 FROM {$wpdb->posts}
+                 WHERE post_type = 'lynx-journal'
+                   AND post_status IN ('lynxjournal_pending','lynxjournal_pub','lynxjournal_draft')
+                 ORDER BY post_date DESC"
+            );
+            set_transient('lynxjournal_date_options', $date_options, 5 * MINUTE_IN_SECONDS);
+        }
 
         $categories = $this->getCachedCategories();
 

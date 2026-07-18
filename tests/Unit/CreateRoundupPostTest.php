@@ -24,6 +24,7 @@ beforeEach(function (): void {
     Functions\when('get_posts')->justReturn([]);
     Functions\when('update_meta_cache')->justReturn(true);
     Functions\when('update_object_term_cache')->justReturn(true);
+    Functions\when('clean_post_cache')->justReturn(null);
     Functions\when('current_time')->justReturn('2026-04-13 10:00:00');
     // Needed by the templated-rendering path (buildTemplateTokenData()) that
     // now runs whenever get_option('lynxjournal_post_template') is non-empty

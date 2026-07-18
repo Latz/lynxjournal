@@ -39,7 +39,9 @@
                 return 0;
             });
 
-            rows.forEach(function(row) { tbody.appendChild(row); });
+            var fragment = document.createDocumentFragment();
+            rows.forEach(function(row) { fragment.appendChild(row); });
+            tbody.appendChild(fragment);
         });
     });
 })();

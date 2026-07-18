@@ -79,7 +79,7 @@ trait LynxJournal_Admin_NotificationFailureNotice {
             wp_send_json_error(__('Forbidden', 'lynx-journal'), 403);
         }
 
-        update_option('lynxjournal_notification_failures_dismissed_at', time());
+        update_option('lynxjournal_notification_failures_dismissed_at', time(), false);
         wp_send_json_success();
     }
 }

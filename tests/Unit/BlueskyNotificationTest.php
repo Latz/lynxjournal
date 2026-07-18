@@ -11,6 +11,9 @@ use Brain\Monkey\Functions;
 beforeEach(function (): void {
     Functions\when('__')->returnArg();
     Functions\when('add_query_arg')->alias(fn ($key, $value, $url) => $url . '?' . $key . '=' . $value);
+    Functions\when('get_transient')->justReturn(false);
+    Functions\when('set_transient')->justReturn(true);
+    Functions\when('delete_transient')->justReturn(true);
     $this->channel = new LynxJournalNotifyBlueskyChannel();
 });
 
@@ -137,6 +140,40 @@ describe('LynxJournalNotifyBlueskyChannel::send()', function (): void {
         expect($sendBody['convoId'])->toBe('convo123');
         expect($sendBody['message']['text'])->toContain('Links: April 15, 2026');
         expect($sendBody['message']['text'])->toContain('https://site.example/roundup-42');
+    });
+
+    it('reuses a cached session instead of re-authenticating', function (): void {
+        Functions\when('get_permalink')->justReturn('https://site.example/roundup-42');
+        Functions\when('get_the_title')->justReturn('Links: April 15, 2026');
+        Functions\when('get_transient')->justReturn(['accessJwt' => 'cached-jwt', 'did' => 'did:plc:sender']);
+
+        $captured = [];
+        mockBlueskyHandshakeSuccess($captured);
+
+        $this->channel->send(42, [1, 2, 3], 'daily', ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social']);
+
+        expect($captured)->not->toHaveKey('https://bsky.social/xrpc/com.atproto.server.createSession');
+
+        $convoCall = $captured['https://bsky.chat/xrpc/chat.bsky.convo.getConvoForMembers'];
+        expect($convoCall['args']['headers']['Authorization'])->toBe('Bearer cached-jwt');
+    });
+
+    it('drops the cached session when the send fails downstream, so the next attempt re-authenticates', function (): void {
+        Functions\when('get_transient')->justReturn(['accessJwt' => 'stale-jwt', 'did' => 'did:plc:sender']);
+        Functions\when('wp_remote_get')->justReturn(Mockery::mock('WP_Error'));
+        Functions\when('is_wp_error')->alias(fn ($v) => $v instanceof \Mockery\MockInterface);
+
+        $deletedKeys = [];
+        Functions\when('delete_transient')->alias(function ($key) use (&$deletedKeys): bool {
+            $deletedKeys[] = $key;
+            return true;
+        });
+
+        $result = $this->channel->send(42, [1], 'daily', ['bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social']);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($deletedKeys)->toHaveCount(1);
+        expect($deletedKeys[0])->toContain('lynxjournal_bsky_session_');
     });
 
     it('builds a neutral message when post_id is null', function (): void {

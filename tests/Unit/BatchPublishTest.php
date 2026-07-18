@@ -20,6 +20,7 @@ beforeEach(function (): void {
     Functions\when('__')->returnArg();
     Functions\when('get_the_terms')->justReturn(false);
     Functions\when('current_time')->justReturn('2026-04-13 10:00:00');
+    Functions\when('clean_post_cache')->justReturn(null);
     $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
 });
 

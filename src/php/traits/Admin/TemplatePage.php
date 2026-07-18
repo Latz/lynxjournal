@@ -21,7 +21,7 @@ trait LynxJournal_Admin_TemplatePage {
             current_user_can('edit_posts')
         ) {
             $template = sanitize_textarea_field(wp_unslash($_POST['lynxjournal_post_template']));
-            update_option('lynxjournal_post_template', $template);
+            update_option('lynxjournal_post_template', $template, false);
             echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('Template saved.', 'lynx-journal') . '</p></div>';
         }
 

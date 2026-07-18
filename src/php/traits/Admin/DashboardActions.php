@@ -11,7 +11,14 @@ trait LynxJournal_Admin_Dashboard_Actions {
      * @return array Array of unpublished link post IDs.
      */
     public function getUnpublishedLinkIds(): array {
-        return get_posts( array(
+        // Static cache: several code paths (batch publish, roundup request, schedule
+        // preview/execute, diagnostics) can call this in the same request.
+        static $cache = null;
+        if ($cache !== null) {
+            return $cache;
+        }
+
+        return $cache = get_posts( array(
             'post_type'      => 'lynx-journal',
             'post_status'    => 'lynxjournal_pending',
             'posts_per_page' => self::UNPUBLISHED_PAGE_SIZE,

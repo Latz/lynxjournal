@@ -75,8 +75,7 @@ trait LynxJournal_Batch {
             'update_post_term_cache' => false,
         ]);
         update_meta_cache('post', $link_ids);
-        update_object_term_cache($link_ids, 'lynxjournal_category');
-        update_object_term_cache($link_ids, 'lynxjournal_tag');
+        update_object_term_cache($link_ids, 'lynx-journal');
 
         if (empty($post_title)) {
             /* translators: %s: formatted date, e.g. "April 15, 2026" */
@@ -461,6 +460,7 @@ trait LynxJournal_Batch {
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         foreach ($link_ids as $link_id) {
+            clean_post_cache($link_id);
             $link = get_post($link_id);
             if (!$link || $link->post_type !== 'lynx-journal') {
                 continue;

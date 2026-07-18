@@ -40,10 +40,17 @@ final class LynxJournalNotifyManager {
      */
     public function registerHooks(): void {
         add_action('lynxjournal_after_run', [$this, 'runAfterPublish'], 10, 3);
+        add_action('lynxjournal_send_notification', [$this, 'dispatchChannelNotification'], 10, 4);
     }
 
     /**
-     * Dispatch a run notification to every enabled, complete channel.
+     * Schedule a notification dispatch for every enabled, complete channel.
+     *
+     * Each channel is sent from its own scheduled event (see
+     * dispatchChannelNotification()) rather than synchronously here, so a
+     * slow or unreachable channel (Bluesky's multi-request handshake, a
+     * timed-out webhook, ...) can't block the publish request or delay the
+     * remaining channels.
      *
      * @since 1.0.0
      * @param int|null $post_id The published post ID, or null if nothing was published.
@@ -57,11 +64,36 @@ final class LynxJournalNotifyManager {
 
         foreach ($this->channels as $channel) {
             if ($channel->isEnabled($notify)) {
-                $result = $channel->send($post_id, $link_ids, $mode, $notify);
-                if (is_wp_error($result)) {
-                    $this->recordChannelFailure($channel->key(), $result);
-                }
+                wp_schedule_single_event(time(), 'lynxjournal_send_notification', [$channel->key(), $post_id, $link_ids, $mode]);
             }
+        }
+    }
+
+    /**
+     * Send one channel's run notification and record a failure if it errors.
+     *
+     * Runs from the lynxjournal_send_notification scheduled event registered
+     * in registerHooks(), one per enabled channel per run.
+     *
+     * @since 1.0.0
+     * @param string $channelKey Channel key to send from.
+     * @param int|null $post_id The published post ID, or null if nothing was published.
+     * @param array $link_ids Array of link post IDs that were published.
+     * @param string $mode The schedule mode that ran.
+     * @return void
+     */
+    public function dispatchChannelNotification(string $channelKey, int|null $post_id, array $link_ids, string $mode): void {
+        $channel = $this->channels[$channelKey] ?? null;
+        if (!$channel) {
+            return;
+        }
+
+        $config = get_option('lynxjournal_schedule', []);
+        $notify = is_array($config) && isset($config['notify']) && is_array($config['notify']) ? $config['notify'] : [];
+
+        $result = $channel->send($post_id, $link_ids, $mode, $notify);
+        if (is_wp_error($result)) {
+            $this->recordChannelFailure($channel->key(), $result);
         }
     }
 
@@ -87,7 +119,7 @@ final class LynxJournalNotifyManager {
             'label'   => $this->channelLabel($key),
             'message' => $message,
         ]);
-        update_option('lynxjournal_notification_failures', array_slice($failures, 0, 10));
+        update_option('lynxjournal_notification_failures', array_slice($failures, 0, 10), false);
 
         // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
         error_log(sprintf('LynxJournal: %s notification failed: %s', $key, $message));

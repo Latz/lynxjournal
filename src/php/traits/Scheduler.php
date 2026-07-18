@@ -108,7 +108,7 @@ trait LynxJournal_Scheduler {
         update_option('lynxjournal_last_run', $run_record);
         $history = get_option('lynxjournal_run_history', []);
         array_unshift($history, $run_record);
-        update_option('lynxjournal_run_history', array_slice($history, 0, 25));
+        update_option('lynxjournal_run_history', array_slice($history, 0, 25), false);
 
         return $result;
     }
@@ -306,10 +306,23 @@ trait LynxJournal_Scheduler {
 
         $by_category = [];
         if ($would_publish && !empty($batch_ids)) {
+            // Prime post + term caches once so the per-link get_the_terms() calls
+            // below are cache hits instead of a query per link.
+            get_posts([
+                'post__in'               => $batch_ids,
+                'posts_per_page'         => -1,
+                'post_type'              => 'lynx-journal',
+                'post_status'            => 'any',
+                'no_found_rows'          => true,
+                'update_post_meta_cache' => false,
+                'update_post_term_cache' => false,
+            ]);
+            update_object_term_cache($batch_ids, 'lynx-journal');
+
             foreach ($batch_ids as $id) {
-                $terms    = wp_get_object_terms($id, 'lynxjournal_category', ['fields' => 'names']);
+                $terms    = get_the_terms($id, 'lynxjournal_category');
                 $cat_name = (!is_wp_error($terms) && !empty($terms))
-                    ? $terms[0]
+                    ? $terms[0]->name
                     : __('Uncategorized', 'lynx-journal');
                 $by_category[$cat_name] = ($by_category[$cat_name] ?? 0) + 1;
             }

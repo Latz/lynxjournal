@@ -15,6 +15,10 @@ final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel 
 
     private const BEARER_PREFIX = 'Bearer ';
 
+    // Conservative vs. Bluesky's ~2h access token lifetime, so a cached
+    // session is never used right up against its real expiry.
+    private const SESSION_TTL = 50 * MINUTE_IN_SECONDS;
+
     public function key(): string {
         return 'bluesky';
     }
@@ -107,10 +111,9 @@ final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel 
     /**
      * Send a Bluesky direct message to a recipient handle.
      *
-     * Performs the full AT Protocol handshake: create a session, resolve the
-     * recipient handle to a DID, open the DM conversation, then send the
-     * message. A fresh session is created per send since Bluesky sessions
-     * are short-lived and sends only happen on cron runs or test clicks.
+     * Performs the AT Protocol handshake: reuse a cached session (or create
+     * and cache a new one, see getOrCreateSession()), resolve the recipient
+     * handle to a DID, open the DM conversation, then send the message.
      *
      * @since 1.0.0
      * @param string $handle Bluesky handle (identifier) of the sending account.
@@ -120,11 +123,59 @@ final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel 
      * @return true|\WP_Error True on success, WP_Error with the failure reason otherwise.
      */
     private function postDm(string $handle, string $appPassword, string $recipientHandle, string $text): true|\WP_Error {
+        $sessionKey = $this->sessionCacheKey($handle, $appPassword);
+        $session    = $this->getOrCreateSession($sessionKey, $handle, $appPassword);
+        if (is_wp_error($session)) {
+            return $session;
+        }
+
+        $result = $this->sendToRecipient($session, $recipientHandle, $text);
+        if (is_wp_error($result)) {
+            // Cached session may be stale/expired; drop it so the next send
+            // re-authenticates instead of retrying with the same token.
+            delete_transient($sessionKey);
+        }
+        return $result;
+    }
+
+    /**
+     * Cache key for a Bluesky session, scoped to this account's credentials.
+     *
+     * @since 1.0.0
+     * @param string $handle Bluesky handle (identifier) of the sending account.
+     * @param string $appPassword Bluesky app password.
+     * @return string Transient key.
+     */
+    private function sessionCacheKey(string $handle, string $appPassword): string {
+        return 'lynxjournal_bsky_session_' . md5($handle . $appPassword);
+    }
+
+    /**
+     * Get a cached session for this account, or create and cache a new one.
+     *
+     * Sessions are cached for SESSION_TTL since Bluesky access tokens are
+     * valid for ~2 hours, so repeated sends within that window (multiple
+     * scheduled channel dispatches, repeated test clicks) skip the
+     * createSession() round-trip entirely.
+     *
+     * @since 1.0.0
+     * @param string $sessionKey Transient cache key from sessionCacheKey().
+     * @param string $handle Bluesky handle (identifier) of the sending account.
+     * @param string $appPassword Bluesky app password.
+     * @return array{accessJwt: string, did: string}|\WP_Error Session data on success, WP_Error otherwise.
+     */
+    private function getOrCreateSession(string $sessionKey, string $handle, string $appPassword): array|\WP_Error {
+        $cached = get_transient($sessionKey);
+        if (is_array($cached) && !empty($cached['accessJwt']) && !empty($cached['did'])) {
+            return $cached;
+        }
+
         $session = $this->createSession($handle, $appPassword);
         if (is_wp_error($session)) {
             return $session;
         }
-        return $this->sendToRecipient($session, $recipientHandle, $text);
+        set_transient($sessionKey, $session, self::SESSION_TTL);
+        return $session;
     }
 
     /**

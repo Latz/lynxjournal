@@ -82,7 +82,64 @@ describe('LynxJournalNotifyManager::validateChannel()', function (): void {
 });
 
 describe('LynxJournalNotifyManager::runAfterPublish()', function (): void {
-    it('sends only to enabled channels, skipping disabled ones', function (): void {
+    it('schedules a dispatch event only for enabled channels, skipping disabled ones', function (): void {
+        Functions\when('get_option')->justReturn([
+            'notify' => [
+                'discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc',
+                'mastodonEnabled' => false,
+            ],
+        ]);
+
+        $scheduled = [];
+        Functions\when('wp_schedule_single_event')->alias(function ($ts, $hook, $args) use (&$scheduled): bool {
+            $scheduled[] = $args;
+            return true;
+        });
+
+        $this->manager->runAfterPublish(42, [1, 2], 'daily');
+
+        expect($scheduled)->toBe([['discord', 42, [1, 2], 'daily']]);
+    });
+
+    it('schedules one dispatch event per enabled channel when more than one is configured', function (): void {
+        Functions\when('get_option')->justReturn([
+            'notify' => [
+                'discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc',
+                'slackChannelEnabled' => true, 'slackBotToken' => 'xoxb-123', 'slackChannelId' => 'C0123456789',
+            ],
+        ]);
+
+        $scheduledHooks = [];
+        $scheduledChannels = [];
+        Functions\when('wp_schedule_single_event')->alias(function ($ts, $hook, $args) use (&$scheduledHooks, &$scheduledChannels): bool {
+            $scheduledHooks[] = $hook;
+            $scheduledChannels[] = $args[0];
+            return true;
+        });
+
+        $this->manager->runAfterPublish(42, [1], 'daily');
+
+        expect($scheduledHooks)->toBe(['lynxjournal_send_notification', 'lynxjournal_send_notification']);
+        expect($scheduledChannels)->toBe(['discord', 'slack_channel']);
+    });
+
+    it('schedules nothing when no channel is enabled', function (): void {
+        Functions\when('get_option')->justReturn(['notify' => []]);
+
+        $scheduled = [];
+        Functions\when('wp_schedule_single_event')->alias(function () use (&$scheduled): bool {
+            $scheduled[] = true;
+            return true;
+        });
+
+        $this->manager->runAfterPublish(42, [1], 'daily');
+
+        expect($scheduled)->toBe([]);
+    });
+});
+
+describe('LynxJournalNotifyManager::dispatchChannelNotification()', function (): void {
+    it('sends the named channel using the current notify settings', function (): void {
         Functions\when('get_option')->justReturn([
             'notify' => [
                 'discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc',
@@ -97,36 +154,24 @@ describe('LynxJournalNotifyManager::runAfterPublish()', function (): void {
             return ['response' => ['code' => 204]];
         });
 
-        $this->manager->runAfterPublish(42, [1, 2], 'daily');
+        $this->manager->dispatchChannelNotification('discord', 42, [1, 2], 'daily');
 
         expect($calledUrls)->toBe(['https://discord.com/api/webhooks/1/abc']);
     });
 
-    it('sends to every enabled channel when more than one is configured', function (): void {
-        Functions\when('get_option')->justReturn([
-            'notify' => [
-                'discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc',
-                'slackChannelEnabled' => true, 'slackBotToken' => 'xoxb-123', 'slackChannelId' => 'C0123456789',
-            ],
-        ]);
-        Functions\when('wp_remote_retrieve_response_code')->justReturn(200);
-        Functions\when('wp_remote_retrieve_body')->justReturn(json_encode(['ok' => true]));
-
-        $calledUrls = [];
-        Functions\when('wp_remote_post')->alias(function ($url) use (&$calledUrls): array {
-            $calledUrls[] = $url;
-            return ['response' => ['code' => 200]];
+    it('does nothing for an unknown channel key', function (): void {
+        $called = false;
+        Functions\when('wp_remote_post')->alias(function () use (&$called): array {
+            $called = true;
+            return [];
         });
 
-        $this->manager->runAfterPublish(42, [1], 'daily');
+        $this->manager->dispatchChannelNotification('not_a_channel', 42, [1], 'daily');
 
-        expect($calledUrls)->toBe([
-            'https://discord.com/api/webhooks/1/abc',
-            'https://slack.com/api/chat.postMessage',
-        ]);
+        expect($called)->toBeFalse();
     });
 
-    it('records a failure when a channel send() returns a WP_Error', function (): void {
+    it('records a failure when the channel send() returns a WP_Error', function (): void {
         Functions\when('get_option')->alias(function ($key, $default = false) {
             if ($key === 'lynxjournal_schedule') {
                 return [
@@ -150,7 +195,7 @@ describe('LynxJournalNotifyManager::runAfterPublish()', function (): void {
             return true;
         });
 
-        $this->manager->runAfterPublish(42, [1], 'daily');
+        $this->manager->dispatchChannelNotification('discord', 42, [1], 'daily');
 
         expect($captured)->toHaveCount(1);
         expect($captured[0]['channel'])->toBe('discord');
@@ -159,7 +204,7 @@ describe('LynxJournalNotifyManager::runAfterPublish()', function (): void {
         expect($captured[0]['ts'])->toBeInt();
     });
 
-    it('records every failing channel from the same run, newest first', function (): void {
+    it('appends to existing failures, newest first, across separate dispatch calls', function (): void {
         $stored = [];
         Functions\when('get_option')->alias(function ($key, $default = false) use (&$stored) {
             if ($key === 'lynxjournal_schedule') {
@@ -184,7 +229,8 @@ describe('LynxJournalNotifyManager::runAfterPublish()', function (): void {
             return true;
         });
 
-        $this->manager->runAfterPublish(42, [1], 'daily');
+        $this->manager->dispatchChannelNotification('discord', 42, [1], 'daily');
+        $this->manager->dispatchChannelNotification('slack_channel', 42, [1], 'daily');
 
         expect($stored)->toHaveCount(2);
         expect($stored[0]['channel'])->toBe('slack_channel');
@@ -220,14 +266,14 @@ describe('LynxJournalNotifyManager::runAfterPublish()', function (): void {
             return true;
         });
 
-        $this->manager->runAfterPublish(42, [1], 'daily');
+        $this->manager->dispatchChannelNotification('discord', 42, [1], 'daily');
 
         expect($captured)->toHaveCount(10);
         expect($captured[0]['channel'])->toBe('discord');
         expect(array_column($captured, 'channel'))->not->toContain('old_9');
     });
 
-    it('does not touch the failures option when every channel send() succeeds', function (): void {
+    it('does not touch the failures option when send() succeeds', function (): void {
         Functions\when('get_option')->alias(function ($key, $default = false) {
             if ($key === 'lynxjournal_schedule') {
                 return [
@@ -247,7 +293,7 @@ describe('LynxJournalNotifyManager::runAfterPublish()', function (): void {
             return true;
         });
 
-        $this->manager->runAfterPublish(42, [1], 'daily');
+        $this->manager->dispatchChannelNotification('discord', 42, [1], 'daily');
 
         expect($updatedKeys)->not->toContain('lynxjournal_notification_failures');
     });

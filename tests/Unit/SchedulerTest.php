@@ -446,6 +446,8 @@ describe('LynxJournal::previewSchedule()', function (): void {
 
     beforeEach(function (): void {
         Functions\when('__')->returnArg();
+        Functions\when('get_posts')->justReturn([]);
+        Functions\when('update_object_term_cache')->justReturn(true);
         $this->plugin = Mockery::mock(LynxJournal::class)->makePartial();
     });
 
@@ -453,7 +455,7 @@ describe('LynxJournal::previewSchedule()', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
             $k === 'lynxjournal_schedule' ? ['mode' => 'daily'] : $d
         );
-        Functions\when('wp_get_object_terms')->justReturn([]);
+        Functions\when('get_the_terms')->justReturn([]);
         $this->plugin->shouldReceive('getUnpublishedLinkIds')->andReturn([1, 2, 3]);
 
         $result = $this->plugin->previewSchedule();
@@ -495,7 +497,7 @@ describe('LynxJournal::previewSchedule()', function (): void {
                 ? ['mode' => 'count', 'trigger' => ['count' => 2]]
                 : $d
         );
-        Functions\when('wp_get_object_terms')->justReturn([]);
+        Functions\when('get_the_terms')->justReturn([]);
         $this->plugin->shouldReceive('getUnpublishedLinkIds')->andReturn([1, 2]);
 
         $result = $this->plugin->previewSchedule();
@@ -519,11 +521,11 @@ describe('LynxJournal::previewSchedule()', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
             $k === 'lynxjournal_schedule' ? ['mode' => 'daily'] : $d
         );
-        Functions\when('wp_get_object_terms')->alias(function ($id) {
+        Functions\when('get_the_terms')->alias(function ($id) {
             // Link 1 → Tech, Link 2 → Tech, Link 3 → News
             return match ((int) $id) {
-                1, 2 => ['Tech'],
-                3    => ['News'],
+                1, 2 => [(object) ['name' => 'Tech']],
+                3    => [(object) ['name' => 'News']],
                 default => [],
             };
         });
@@ -541,7 +543,7 @@ describe('LynxJournal::previewSchedule()', function (): void {
         Functions\when('get_option')->alias(fn($k, $d = false) =>
             $k === 'lynxjournal_schedule' ? ['mode' => 'daily'] : $d
         );
-        Functions\when('wp_get_object_terms')->justReturn([]); // no terms
+        Functions\when('get_the_terms')->justReturn([]); // no terms
         $this->plugin->shouldReceive('getUnpublishedLinkIds')->andReturn([1]);
 
         $result = $this->plugin->previewSchedule();
