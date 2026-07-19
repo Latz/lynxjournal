@@ -23,10 +23,10 @@ final class LynxJournalNotifyRunMessageContent {
      * @param bool $published Whether a post was actually published this run.
      */
     public function __construct(
-        public readonly ?string $title,
-        public readonly ?string $url,
-        public readonly string $summary,
-        public readonly bool $published,
+        public ?string $title,
+        public ?string $url,
+        public string $summary,
+        public bool $published,
     ) {
     }
 

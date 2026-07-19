@@ -426,9 +426,9 @@ trait LynxJournal_Admin_Menu {
         $this->enqueuePageScriptTranslations('lynxjournal-schedule');
 
         wp_localize_script('lynxjournal-schedule', 'lynxjournalSchedule', array(
-            'allModes'     => array_column(ScheduleMode::cases(), 'value'),
-            'timeModes'    => array_column(ScheduleMode::timeBased(), 'value'),
-            'triggerModes' => array_column(ScheduleMode::triggerBased(), 'value'),
+            'allModes'     => ScheduleMode::cases(),
+            'timeModes'    => ScheduleMode::timeBased(),
+            'triggerModes' => ScheduleMode::triggerBased(),
             'timezone'     => wp_timezone_string(),
         ));
 
