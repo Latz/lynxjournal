@@ -40,7 +40,7 @@ export default function TimePicker({ times, onChange }) {
   return (
     <div className="lynxjournal-timepicker">
       {times.map((t, i) => (
-        <div key={`time-${t}`} className="lynxjournal-time-row">
+        <div key={`time-${i}`} className="lynxjournal-time-row">
           <input
             type="time"
             className="lynxjournal-time-input"

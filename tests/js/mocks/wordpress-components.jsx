@@ -52,7 +52,7 @@ export function CheckboxControl({ label, checked, onChange }) {
     );
 }
 
-export function TextControl({ label, value, onChange, type = 'text', placeholder, ...rest }) {
+export function TextControl({ label, value, onChange, type = 'text', placeholder, __nextHasNoMarginBottom, ...rest }) {
     return (
         <label>
             {label}
