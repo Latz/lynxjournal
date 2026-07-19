@@ -236,12 +236,10 @@ trait LynxJournal_Scheduler {
      * @param array $rec The recurrence settings with weekdays.
      * @return bool True if date is on a scheduled weekday.
      */
-    private const WEEKDAY_MAP = ['MO' => 1, 'TU' => 2, 'WE' => 3, 'TH' => 4, 'FR' => 5, 'SA' => 6, 'SU' => 7];
-
     private function matchesWeeklySchedule(\DateTime $date, array $rec): bool {
         $dow = (int) $date->format('N');
         foreach ($rec['weekdays'] ?? [] as $wd) {
-            if ((self::WEEKDAY_MAP[$wd] ?? 0) === $dow) {
+            if ((self::weekdayMap()[$wd] ?? 0) === $dow) {
                 return true;
             }
         }
@@ -264,7 +262,7 @@ trait LynxJournal_Scheduler {
                 return true;
             }
             if ($type === 'weekday') {
-                $target_dow = self::WEEKDAY_MAP[$md['weekday'] ?? ''] ?? 0;
+                $target_dow = self::weekdayMap()[$md['weekday'] ?? ''] ?? 0;
                 $nth        = (int) ($md['nth'] ?? 0);
                 if ($target_dow === 0 || $nth === 0) {
                     continue;
@@ -351,5 +349,19 @@ trait LynxJournal_Scheduler {
         }
         $cutoff = gmdate('Y-m-d H:i:s', strtotime("-{$days} days"));
         return $post->post_date_gmt < $cutoff;
+    }
+
+    /**
+     * ISO-8601 weekday abbreviation to DateTime::format('N') weekday number.
+     *
+     * Traits cannot declare `const` on PHP < 8.2, so this is a static
+     * accessor instead of a trait constant (this project's minimum
+     * supported PHP version is 8.0).
+     *
+     * @since 1.0.0
+     * @return array<string,int>
+     */
+    private static function weekdayMap(): array {
+        return ['MO' => 1, 'TU' => 2, 'WE' => 3, 'TH' => 4, 'FR' => 5, 'SA' => 6, 'SU' => 7];
     }
 }

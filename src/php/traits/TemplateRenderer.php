@@ -25,10 +25,6 @@ use League\CommonMark\CommonMarkConverter;
  */
 trait LynxJournal_TemplateRenderer {
 
-    private const LINK_TOKENS = ['[link]', '[link_description]', '[link_domain]', '[link_date]'];
-    private const INDENT_RE = '/^( {2,})(?:(-|\d+\.) )?(.+)/';
-    private const TOP_LEVEL_LIST_RE = '/^(-|\d+\.)\s/';
-
     private ?CommonMarkConverter $templateMarkdownConverter = null;
 
     /**
@@ -170,7 +166,7 @@ trait LynxJournal_TemplateRenderer {
     /**
      * Union of tags across every link in the roundup, deduplicated, in
      * first-seen order. [tags] is a flat roundup-wide scalar (confirmed
-     * absent from LINK_TOKENS), not a per-link loop token.
+     * absent from linkTokens()), not a per-link loop token.
      *
      * @param array $links_by_category
      * @param array $uncategorized_links
@@ -298,7 +294,7 @@ trait LynxJournal_TemplateRenderer {
      * @return bool
      */
     private function lineHasLinkToken(string $line): bool {
-        foreach (self::LINK_TOKENS as $token) {
+        foreach (self::linkTokens() as $token) {
             if (str_contains($line, $token)) {
                 return true;
             }
@@ -361,7 +357,7 @@ trait LynxJournal_TemplateRenderer {
         $n = count($lines);
 
         while ($i < $n) {
-            if (!preg_match(self::INDENT_RE, $lines[$i])) {
+            if (!preg_match(self::indentRe(), $lines[$i])) {
                 $result[] = $lines[$i];
                 $i++;
                 continue;
@@ -370,7 +366,7 @@ trait LynxJournal_TemplateRenderer {
             $prev_raw_line = $i > 0 ? $lines[$i - 1] : '';
             [$group, $i] = $this->collectIndentedRun($lines, $i, $n);
 
-            if (preg_match(self::TOP_LEVEL_LIST_RE, $prev_raw_line)) {
+            if (preg_match(self::topLevelListRe(), $prev_raw_line)) {
                 foreach ($group as $g) {
                     $result[] = $g[0];
                 }
@@ -387,7 +383,7 @@ trait LynxJournal_TemplateRenderer {
 
     /**
      * Collects the contiguous run of lines starting at $start that match
-     * INDENT_RE, stopping at the first non-matching (or missing) line.
+     * indentRe(), stopping at the first non-matching (or missing) line.
      *
      * @param list<string> $lines
      * @param int $start
@@ -397,7 +393,7 @@ trait LynxJournal_TemplateRenderer {
     private function collectIndentedRun(array $lines, int $start, int $n): array {
         $matches = [];
         $i = $start;
-        while ($i < $n && preg_match(self::INDENT_RE, $lines[$i], $m)) {
+        while ($i < $n && preg_match(self::indentRe(), $lines[$i], $m)) {
             $matches[] = $m;
             $i++;
         }
@@ -576,5 +572,41 @@ trait LynxJournal_TemplateRenderer {
             $html .= (string) $node->ownerDocument?->saveHTML($child);
         }
         return $html;
+    }
+
+    /**
+     * Traits cannot declare `const` on PHP < 8.2, so this is a static
+     * accessor instead of a trait constant (this project's minimum
+     * supported PHP version is 8.0).
+     *
+     * @since 1.0.0
+     * @return list<string>
+     */
+    private static function linkTokens(): array {
+        return ['[link]', '[link_description]', '[link_domain]', '[link_date]'];
+    }
+
+    /**
+     * Traits cannot declare `const` on PHP < 8.2, so this is a static
+     * accessor instead of a trait constant (this project's minimum
+     * supported PHP version is 8.0).
+     *
+     * @since 1.0.0
+     * @return string
+     */
+    private static function indentRe(): string {
+        return '/^( {2,})(?:(-|\d+\.) )?(.+)/';
+    }
+
+    /**
+     * Traits cannot declare `const` on PHP < 8.2, so this is a static
+     * accessor instead of a trait constant (this project's minimum
+     * supported PHP version is 8.0).
+     *
+     * @since 1.0.0
+     * @return string
+     */
+    private static function topLevelListRe(): string {
+        return '/^(-|\d+\.)\s/';
     }
 }
