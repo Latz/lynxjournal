@@ -5,16 +5,16 @@
  *
  * @since 1.0.0
  */
-(function() {
+(() => {
     // Make table headers sortable
-    document.querySelectorAll('th[data-col]').forEach(function(th) {
-        th.addEventListener('click', function(e) {
+    document.querySelectorAll('th[data-col]').forEach((th) => {
+        th.addEventListener('click', (e) => {
             e.preventDefault();
             const table = th.closest('table');
             const col   = parseInt(th.dataset.col, 10);
             const asc   = !(th.classList.contains('sorted') && th.classList.contains('asc'));
 
-            table.querySelectorAll('th[data-col]').forEach(function(h) {
+            table.querySelectorAll('th[data-col]').forEach((h) => {
                 h.classList.remove('sorted', 'asc', 'desc');
                 h.classList.add('sortable', 'desc');
             });
@@ -25,7 +25,7 @@
             const tbody = table.querySelector('tbody');
             const rows  = Array.from(tbody.querySelectorAll('tr'));
 
-            rows.sort(function(a, b) {
+            rows.sort((a, b) => {
                 const cellA = a.cells[col];
                 const cellB = b.cells[col];
                 const valA  = (cellA.dataset.sortVal !== undefined) ? cellA.dataset.sortVal : cellA.textContent.trim().toLowerCase();
@@ -40,7 +40,7 @@
             });
 
             const fragment = document.createDocumentFragment();
-            rows.forEach(function(row) { fragment.appendChild(row); });
+            rows.forEach((row) => { fragment.appendChild(row); });
             tbody.appendChild(fragment);
         });
     });

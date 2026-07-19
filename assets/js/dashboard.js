@@ -25,13 +25,13 @@ function savePostboxState(state) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     if (typeof postboxes !== 'undefined') {
         postboxes.add_postbox_toggles(pagenow);
     }
 
     const postboxState = loadPostboxState();
-    document.querySelectorAll('.postbox[id]').forEach(function(box) {
+    document.querySelectorAll('.postbox[id]').forEach((box) => {
         if (postboxState[box.id] !== true) { return; }
         box.classList.add('closed');
         const handle = box.querySelector('.handlediv');
@@ -40,15 +40,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (typeof jQuery !== 'undefined') {
         /** @listens postbox-toggled Persists a postbox's collapsed state after WP core toggles it. */
-        jQuery(document).on('postbox-toggled', function(event, postbox) {
-            const box = postbox && postbox.jquery ? postbox[0] : postbox;
+        jQuery(document).on('postbox-toggled', (event, postbox) => {
+            const box = postbox?.jquery ? postbox[0] : postbox;
             if (!box || !box.id) { return; }
             postboxState[box.id] = box.classList.contains('closed');
             savePostboxState(postboxState);
         });
     }
 
-    document.querySelectorAll('.lynxjournal-date-time').forEach(function(element) {
+    document.querySelectorAll('.lynxjournal-date-time').forEach((element) => {
         const timestamp = Number.parseInt(element.dataset.timestamp);
         if (!timestamp) return;
         const date = new Date(timestamp * 1000);
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-document.addEventListener('click', async function(e) {
+document.addEventListener('click', async (e) => {
     if (e.target.closest('.lynxjournal-delete-cancel')) {
         const li = e.target.closest('li');
         li.querySelector('.lynxjournal-delete-confirm-row').remove();
@@ -80,7 +80,7 @@ document.addEventListener('click', async function(e) {
             });
             if (res.ok || res.status === 204) {
                 li.remove();
-                ['lynxjournal-stat-total', 'lynxjournal-stat-unpublished'].forEach(function(id) {
+                ['lynxjournal-stat-total', 'lynxjournal-stat-unpublished'].forEach((id) => {
                     const el = document.getElementById(id);
                     if (el) { el.textContent = Math.max(0, parseInt(el.textContent.replace(/,/g, ''), 10) - 1).toLocaleString(); }
                 });
