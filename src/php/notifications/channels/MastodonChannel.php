@@ -12,6 +12,7 @@ if (!defined('ABSPATH')) {
  * @since 1.0.0
  */
 final class LynxJournalNotifyMastodonChannel implements LynxJournalNotifyChannel {
+    use LynxJournalNotifyRequiredFieldsValidation;
 
     public function key(): string {
         return 'mastodon';
@@ -69,20 +70,11 @@ final class LynxJournalNotifyMastodonChannel implements LynxJournalNotifyChannel
      * @return \WP_Error|null Error for the first missing required field, or null if valid.
      */
     private function validateRequiredWhenEnabled(array $notify): ?\WP_Error {
-        if (empty($notify['mastodonEnabled'])) {
-            return null;
-        }
-        $required = [
+        return $this->validateRequiredFields($notify, !empty($notify['mastodonEnabled']), [
             'mastodonInstanceUrl'  => ['invalid_notify_mastodon_instance', __('notify.mastodonInstanceUrl is required when Mastodon notifications are enabled', 'lynx-journal')],
             'mastodonAccessToken'  => ['invalid_notify_mastodon_token', __('notify.mastodonAccessToken is required when Mastodon notifications are enabled', 'lynx-journal')],
             'mastodonRecipient'    => ['invalid_notify_mastodon_recipient', __('notify.mastodonRecipient is required when Mastodon notifications are enabled', 'lynx-journal')],
-        ];
-        foreach ($required as $field => [$code, $message]) {
-            if ($notify[$field] === '') {
-                return new \WP_Error($code, $message, ['status' => 400]);
-            }
-        }
-        return null;
+        ]);
     }
 
     public function send(int|null $post_id, array $link_ids, string $mode, array $notify): true|\WP_Error {

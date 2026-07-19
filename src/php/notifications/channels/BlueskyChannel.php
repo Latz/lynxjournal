@@ -12,6 +12,7 @@ if (!defined('ABSPATH')) {
  * @since 1.0.0
  */
 final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel {
+    use LynxJournalNotifyRequiredFieldsValidation;
 
     private const BEARER_PREFIX = 'Bearer ';
 
@@ -76,20 +77,11 @@ final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel 
      * @return \WP_Error|null Error for the first missing required field, or null if valid.
      */
     private function validateRequiredWhenEnabled(array $notify): ?\WP_Error {
-        if (empty($notify['bskyEnabled'])) {
-            return null;
-        }
-        $required = [
+        return $this->validateRequiredFields($notify, !empty($notify['bskyEnabled']), [
             'bskyHandle'      => ['invalid_notify_bsky_handle', __('notify.bskyHandle is required when Bluesky notifications are enabled', 'lynx-journal')],
             'bskyAppPassword' => ['invalid_notify_bsky_password', __('notify.bskyAppPassword is required when Bluesky notifications are enabled', 'lynx-journal')],
             'bskyRecipient'   => ['invalid_notify_bsky_recipient', __('notify.bskyRecipient is required when Bluesky notifications are enabled', 'lynx-journal')],
-        ];
-        foreach ($required as $field => [$code, $message]) {
-            if ($notify[$field] === '') {
-                return new \WP_Error($code, $message, ['status' => 400]);
-            }
-        }
-        return null;
+        ]);
     }
 
     public function send(int|null $post_id, array $link_ids, string $mode, array $notify): true|\WP_Error {
