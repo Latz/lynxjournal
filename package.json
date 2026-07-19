@@ -18,7 +18,7 @@
     "test:e2e:ext": "playwright test --config=playwright.extension.config.mjs",
     "test:e2e:debug": "playwright test --debug",
     "lint:ext-scripts": "node bin/check-extension-scripts.mjs",
-    "lint:ext": "web-ext lint --source-dir=firefox-extension --no-config-discovery"
+    "lint:ext": "web-ext lint --source-dir=firefox-extension --no-config-discovery --ignore-files=**/*.min.js --ignore-files=tagify.css"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
