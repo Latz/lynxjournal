@@ -14,6 +14,7 @@ exclude_patterns = [
   "chrome-extension/tagify.min.js",
   "firefox-extension/tagify.min.js",
   "docs/**",
+  "tests/**/*.php",
 ]
 
 [[analyzers]]
