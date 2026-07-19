@@ -3,25 +3,26 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import TimePicker from '../../../src/schedule/components/TimePicker.jsx';
+import { noop } from '../test-utils.js';
 
 describe('TimePicker', () => {
     it('has no accessibility violations', async () => {
-        const { container } = render(<TimePicker times={['09:00']} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        const { container } = render(<TimePicker times={['09:00']} onChange={noop} />);
         expect(await axe(container)).toHaveNoViolations();
     });
 
     it('renders one time input per initial time', () => {
-        render(<TimePicker times={['09:00', '18:00']} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<TimePicker times={['09:00', '18:00']} onChange={noop} />);
         expect(screen.getAllByDisplayValue(/\d{2}:\d{2}/)).toHaveLength(2);
     });
 
     it('does not show remove button when only one time exists', () => {
-        render(<TimePicker times={['09:00']} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<TimePicker times={['09:00']} onChange={noop} />);
         expect(screen.queryByLabelText(/remove time/i)).not.toBeInTheDocument();
     });
 
     it('shows remove buttons when multiple times exist', () => {
-        render(<TimePicker times={['09:00', '18:00']} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<TimePicker times={['09:00', '18:00']} onChange={noop} />);
         expect(screen.getAllByLabelText(/remove time/i)).toHaveLength(2);
     });
 

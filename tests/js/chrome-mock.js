@@ -1,6 +1,7 @@
 import { vi, afterEach, beforeEach, beforeAll, afterAll } from 'vitest';
 import enMessages from '../../chrome-extension/_locales/en/messages.json';
 import { server } from './server.js';
+import { noop } from './test-utils.js';
 
 function getMessage(key, substitutions) {
     const entry = enMessages[key];
@@ -63,7 +64,7 @@ afterAll(() => server.close());
 
 // Prevent window.close() from destroying the jsdom window between tests
 beforeEach(() => {
-    vi.spyOn(window, 'close').mockImplementation(() => {});  // skipcq: JS-0057 - intentional no-op test stub
+    vi.spyOn(window, 'close').mockImplementation(noop);
 });
 
 afterEach(() => {

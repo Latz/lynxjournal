@@ -2,6 +2,7 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 import NotificationsSection from '../../../src/schedule/components/NotificationsSection.jsx';
 import { openHelpTab } from '../../../src/schedule/lib/helpPanel';
+import { noop } from '../test-utils.js';
 
 vi.mock('../../../src/schedule/lib/helpPanel', () => ({ openHelpTab: vi.fn() }));
 
@@ -9,14 +10,14 @@ const baseProps = {
     configLoaded: true,
     initialNotifyTab: 'email',
     activeNotifyTab: 'email',
-    setActiveNotifyTab: () => {},  // skipcq: JS-0057 - intentional no-op test stub
+    setActiveNotifyTab: noop,
     testState: {},
     channelSaveState: {},
-    handleTest: () => {},  // skipcq: JS-0057 - intentional no-op test stub
-    handleSaveChannel: () => {},  // skipcq: JS-0057 - intentional no-op test stub
+    handleTest: noop,
+    handleSaveChannel: noop,
     tabsWrapRef: { current: null },
     tabsOverflow: false,
-    scrollNotifyTabs: () => {},  // skipcq: JS-0057 - intentional no-op test stub
+    scrollNotifyTabs: noop,
 };
 
 function renderSection(notify = {}, extraProps = {}) {

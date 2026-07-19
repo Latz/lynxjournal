@@ -2,22 +2,23 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TimePicker from '../../src/schedule/components/TimePicker.jsx';
+import { noop } from './test-utils.js';
 
 describe('TimePicker', () => {
     it('renders one time input per entry', () => {
-        render(<TimePicker times={['09:00', '17:00']} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<TimePicker times={['09:00', '17:00']} onChange={noop} />);
 
         expect(screen.getAllByDisplayValue(/09:00|17:00/)).toHaveLength(2);
     });
 
     it('hides the remove button when only one time remains', () => {
-        render(<TimePicker times={['09:00']} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<TimePicker times={['09:00']} onChange={noop} />);
 
         expect(screen.queryByRole('button', { name: 'Remove time' })).not.toBeInTheDocument();
     });
 
     it('shows remove buttons when more than one time exists', () => {
-        render(<TimePicker times={['09:00', '17:00']} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<TimePicker times={['09:00', '17:00']} onChange={noop} />);
 
         expect(screen.getAllByRole('button', { name: 'Remove time' })).toHaveLength(2);
     });

@@ -1,17 +1,18 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import TriggerCondition from '../../src/schedule/components/TriggerCondition.jsx';
+import { noop } from './test-utils.js';
 
 describe('TriggerCondition', () => {
     it('renders the count control with the singular label for 1 link', () => {
-        render(<TriggerCondition mode="count" value={{ count: 1 }} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<TriggerCondition mode="count" value={{ count: 1 }} onChange={noop} />);
 
         expect(screen.getByText('link')).toBeInTheDocument();
         expect(screen.getByDisplayValue('1')).toBeInTheDocument();
     });
 
     it('renders the count control with the plural label for multiple links', () => {
-        render(<TriggerCondition mode="count" value={{ count: 5 }} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<TriggerCondition mode="count" value={{ count: 5 }} onChange={noop} />);
 
         expect(screen.getByText('links')).toBeInTheDocument();
     });
@@ -35,19 +36,19 @@ describe('TriggerCondition', () => {
     });
 
     it('renders the age control with the singular label for 1 day', () => {
-        render(<TriggerCondition mode="age" value={{ days: 1 }} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<TriggerCondition mode="age" value={{ days: 1 }} onChange={noop} />);
 
         expect(screen.getByText('day')).toBeInTheDocument();
     });
 
     it('renders the age control with the plural label for multiple days', () => {
-        render(<TriggerCondition mode="age" value={{ days: 7 }} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<TriggerCondition mode="age" value={{ days: 7 }} onChange={noop} />);
 
         expect(screen.getByText('days')).toBeInTheDocument();
     });
 
     it('defaults days to 1 when value.days is absent', () => {
-        render(<TriggerCondition mode="age" value={{}} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<TriggerCondition mode="age" value={{}} onChange={noop} />);
 
         expect(screen.getByDisplayValue('1')).toBeInTheDocument();
         expect(screen.getByText('day')).toBeInTheDocument();
@@ -63,7 +64,7 @@ describe('TriggerCondition', () => {
     });
 
     it('renders nothing for an unrecognized mode', () => {
-        const { container } = render(<TriggerCondition mode="manual" value={{}} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        const { container } = render(<TriggerCondition mode="manual" value={{}} onChange={noop} />);
 
         expect(container).toBeEmptyDOMElement();
     });

@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach, expect } from 'vitest';
 import { toHaveNoViolations } from 'vitest-axe/matchers';
+import { noop } from './test-utils.js';
 
 expect.extend({ toHaveNoViolations });
 
@@ -10,8 +11,8 @@ expect.extend({ toHaveNoViolations });
 HTMLCanvasElement.prototype.getContext = () => ({
     font: '',
     measureText: () => ({ width: 0 }),
-    fillText: () => {},  // skipcq: JS-0057 - intentional no-op test stub
-    clearRect: () => {},  // skipcq: JS-0057 - intentional no-op test stub
+    fillText: noop,
+    clearRect: noop,
     getImageData: () => ({ data: new Uint8ClampedArray(4) }),
 });
 

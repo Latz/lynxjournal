@@ -2,10 +2,11 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ScheduleTypePicker from '../../src/schedule/components/ScheduleTypePicker.jsx';
+import { noop } from './test-utils.js';
 
 describe('ScheduleTypePicker', () => {
     it('renders all mode cards grouped by category', () => {
-        render(<ScheduleTypePicker value="daily" onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<ScheduleTypePicker value="daily" onChange={noop} />);
 
         expect(screen.getByText('Scheduled')).toBeInTheDocument();
         expect(screen.getByText('Trigger-based')).toBeInTheDocument();
@@ -16,7 +17,7 @@ describe('ScheduleTypePicker', () => {
     });
 
     it('marks the current value as the checked radio', () => {
-        render(<ScheduleTypePicker value="weekly" onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
+        render(<ScheduleTypePicker value="weekly" onChange={noop} />);
 
         const weeklyCard = screen.getByRole('radio', { name: /Weekly/ });
         expect(weeklyCard).toHaveAttribute('aria-checked', 'true');
