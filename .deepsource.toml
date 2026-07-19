@@ -30,4 +30,5 @@ enabled = true
 
   [analyzers.meta]
   module_system = "es-modules"
-  environment = ["nodejs", "browser", "webextensions", "vitest"]
+  environment = ["nodejs", "browser", "vitest"]
+  globals = ["chrome", "browser", "Tagify"]
