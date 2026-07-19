@@ -203,7 +203,9 @@ function defineTokenOverlay() {
 			window.wp.CodeMirror.getMode( config, { name: 'null' } ),
 			{
 				token( stream ) {
-					if ( stream.match( /\[[^\]]*\]/ ) ) { return 'lynxjournal-token'; }
+					// stream is CodeMirror's StringStream; .match() consumes matched chars
+					// as a side effect (no RegExp#test equivalent exists here).
+					if ( stream.match( /\[[^\]]*\]/ ) ) { return 'lynxjournal-token'; } // skipcq: JS-D007
 					stream.next();
 					return null;
 				},
