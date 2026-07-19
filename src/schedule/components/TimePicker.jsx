@@ -41,7 +41,7 @@ export default function TimePicker({ times, onChange }) {
     <div className="lynxjournal-timepicker">
       {times.map((t, i) => (
         // skipcq: JS-0437 - times[] holds plain strings with no stable id; index is safe here (no reordering, only append/remove)
-        <div key={`time-${i}`} className="lynxjournal-time-row">
+        <div key={`time-${i}`} className="lynxjournal-time-row"> {/* NOSONAR javascript:S6479 - see skipcq comment above */}
           <input
             type="time"
             className="lynxjournal-time-input"
