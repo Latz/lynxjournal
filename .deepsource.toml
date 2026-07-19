@@ -30,4 +30,4 @@ enabled = true
 
   [analyzers.meta]
   module_system = "es-modules"
-  environment = ["nodejs", "browser", "vitest"]
+  environment = ["nodejs", "browser", "webextensions", "vitest"]
