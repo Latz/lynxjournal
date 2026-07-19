@@ -38,7 +38,17 @@ describe('LynxJournal::getSchedule()', function (): void {
         expect($result)->toHaveKey('mode');
         expect($result['mode'])->toBe('daily');
         expect($result)->toHaveKey('times');
+        expect($result['times'])->toBe(['09:00']);
         expect($result)->toHaveKey('trigger');
+    });
+
+    it('defaults times to 09:00 when the stored option has an empty times array', function (): void {
+        $stored = ['mode' => 'weekly', 'times' => []];
+        Functions\when('get_option')->justReturn($stored);
+
+        $result = $this->plugin->getSchedule();
+
+        expect($result['times'])->toBe(['09:00']);
     });
 });
 

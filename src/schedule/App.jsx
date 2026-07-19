@@ -17,7 +17,7 @@ const DEFAULT_FORM = {
   mode: 'daily',
   recurrence: { interval: 1, weekdays: [], monthDays: [{ type: 'day', value: 1, nth: 1, weekday: 'MO' }], nthWeek: null },
   trigger: { count: 10, tag_id: null, days: 7 },
-  times: [],
+  times: ['09:00'],
   notify: {
     enabled: false, email: '',
     discordEnabled: false, discordWebhookUrl: '',

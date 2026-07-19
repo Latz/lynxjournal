@@ -364,9 +364,12 @@ trait LynxJournal_RestApi {
                 'nthWeek'   => null,
             ),
             'trigger' => array('count' => 10, 'tag_id' => null, 'days' => 7),
-            'times'   => array(),
+            'times'   => array(self::DEFAULT_TIME),
         );
         $config = get_option('lynxjournal_schedule', $default);
+        if (empty($config['times'])) {
+            $config['times'] = array(self::DEFAULT_TIME);
+        }
         return rest_ensure_response($config);
     }
 
