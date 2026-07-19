@@ -88,7 +88,7 @@ document.addEventListener('click', async function(e) {
                 li.querySelector('.lynxjournal-delete-confirm-row').remove();
                 li.querySelector('.lynxjournal-delete-btn').style.display = '';
             }
-        } catch (err) {
+        } catch {
             li.querySelector('.lynxjournal-delete-confirm-row').remove();
             li.querySelector('.lynxjournal-delete-btn').style.display = '';
         }

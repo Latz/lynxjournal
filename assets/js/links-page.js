@@ -10,9 +10,9 @@
     document.querySelectorAll('th[data-col]').forEach(function(th) {
         th.addEventListener('click', function(e) {
             e.preventDefault();
-            var table = th.closest('table');
-            var col   = parseInt(th.dataset.col, 10);
-            var asc   = !(th.classList.contains('sorted') && th.classList.contains('asc'));
+            const table = th.closest('table');
+            const col   = parseInt(th.dataset.col, 10);
+            const asc   = !(th.classList.contains('sorted') && th.classList.contains('asc'));
 
             table.querySelectorAll('th[data-col]').forEach(function(h) {
                 h.classList.remove('sorted', 'asc', 'desc');
@@ -22,14 +22,14 @@
             th.classList.remove('sortable');
             th.classList.add('sorted', asc ? 'asc' : 'desc');
 
-            var tbody = table.querySelector('tbody');
-            var rows  = Array.from(tbody.querySelectorAll('tr'));
+            const tbody = table.querySelector('tbody');
+            const rows  = Array.from(tbody.querySelectorAll('tr'));
 
             rows.sort(function(a, b) {
-                var cellA = a.cells[col];
-                var cellB = b.cells[col];
-                var valA  = (cellA.dataset.sortVal !== undefined) ? cellA.dataset.sortVal : cellA.textContent.trim().toLowerCase();
-                var valB  = (cellB.dataset.sortVal !== undefined) ? cellB.dataset.sortVal : cellB.textContent.trim().toLowerCase();
+                const cellA = a.cells[col];
+                const cellB = b.cells[col];
+                const valA  = (cellA.dataset.sortVal !== undefined) ? cellA.dataset.sortVal : cellA.textContent.trim().toLowerCase();
+                const valB  = (cellB.dataset.sortVal !== undefined) ? cellB.dataset.sortVal : cellB.textContent.trim().toLowerCase();
 
                 if (valA === '-' && valB !== '-') return 1;
                 if (valB === '-' && valA !== '-') return -1;
@@ -39,7 +39,7 @@
                 return 0;
             });
 
-            var fragment = document.createDocumentFragment();
+            const fragment = document.createDocumentFragment();
             rows.forEach(function(row) { fragment.appendChild(row); });
             tbody.appendChild(fragment);
         });
