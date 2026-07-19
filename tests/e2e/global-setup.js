@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import constants from '../../constants.json' assert { type: 'json' };
+import constants from '../../constants.json' with { type: 'json' };
 
 const baseURL = process.env.WP_BASE_URL ?? constants.WP_ENV.BASE_URL;
 

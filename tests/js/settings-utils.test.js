@@ -37,7 +37,7 @@ describe('normalizeEndpoint()', () => {
 
     it('returns empty string for null/undefined', () => {
         expect(normalizeEndpoint(null)).toBe('');
-        expect(normalizeEndpoint(undefined)).toBe('');
+        expect(normalizeEndpoint(undefined)).toBe(''); // skipcq: JS-W1042 - undefined is the meaningful test input here
     });
 
     it('trims trailing whitespace and removes trailing slash', () => {

@@ -1,6 +1,6 @@
 // Undo/redo history for the plain-textarea fallback path (no CodeMirror).
 // State lives at module scope since only one template editor exists per page.
-let undoStack = [];
+const undoStack = [];
 let redoStack = [];
 const MAX_HIST = 100;
 
@@ -72,7 +72,7 @@ function applyLinePrefix( value, start, getLineStart, prefix ) {
  */
 function applyIndent( value, start, getLineStart ) {
 	const lineStart = getLineStart( value, start );
-	const newVal    = value.slice( 0, lineStart ) + '  ' + value.slice( lineStart );
+	const newVal    = `${ value.slice( 0, lineStart ) }  ${ value.slice( lineStart ) }`;
 	return { newVal, cursor: start + 2 };
 }
 
@@ -120,7 +120,7 @@ function computeFormatResult( action, value, start, end, sel, getLineStart ) {
 	if ( action === 'italic' ) { return applyInlineWrap( value, start, end, sel, '*', '*', 'italic text' ); }
 	if ( action === 'underline' ) { return applyInlineWrap( value, start, end, sel, '<u>', '</u>', 'underlined text' ); }
 	if ( /^h[1-6]$/.test( action ) ) {
-		return applyLinePrefix( value, start, getLineStart, '#'.repeat( Number.parseInt( action[ 1 ], 10 ) ) + ' ' );
+		return applyLinePrefix( value, start, getLineStart, `${ '#'.repeat( Number.parseInt( action[ 1 ], 10 ) ) } ` );
 	}
 	if ( action === 'list' ) { return applyLinePrefix( value, start, getLineStart, '- ' ); }
 	if ( action === 'ol' ) { return applyLinePrefix( value, start, getLineStart, '1. ' ); }

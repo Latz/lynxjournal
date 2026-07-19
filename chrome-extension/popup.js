@@ -1,6 +1,9 @@
 import { applyI18n } from './i18n.js';
 import { renderCategories as renderCategoriesUtil } from './popup-utils.js';
 
+// Tagify instance
+let tagify;
+
 // Check if settings are configured. Returns the settings object when
 // configured (so callers can reuse it instead of re-reading storage), or
 // null when setup is incomplete.
@@ -164,7 +167,7 @@ export async function handleSubmit(e) {
             url: document.getElementById('url').value,
             content: document.getElementById('content').value,
             categories: selectedCategories,
-            tags: tags
+            tags
         };
 
         const response = await fetch(`${settings.apiEndpoint}/add-link`, {
@@ -215,9 +218,6 @@ export function openSettings() {
     chrome.runtime.openOptionsPage();
 }
 
-// Tagify instance
-let tagify;
-
 // Wires up the popup: i18n, event listeners, settings check, Tagify, and
 // the initial page-info/categories load. Runs once on DOMContentLoaded.
 export async function initPopup() {
@@ -257,7 +257,7 @@ export async function initPopup() {
         Promise.all([
             loadPageInfo(),
             loadCategories(settings)
-        ]).catch(() => {});
+        ]).catch(() => { /* individual loaders report their own errors */ });
     }
 }
 

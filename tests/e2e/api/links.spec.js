@@ -10,7 +10,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-import constants from '../../../constants.json' assert { type: 'json' };
+import constants from '../../../constants.json' with { type: 'json' };
 
 const { REST_NAMESPACE, ROUTES } = constants;
 

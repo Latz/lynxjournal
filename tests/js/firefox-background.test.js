@@ -14,7 +14,7 @@ describe('refreshCategories', () => {
         browser.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
         global.fetch = vi.fn().mockResolvedValue({
             ok:   true,
-            json: async () => categories,
+            json: async () => categories,  // skipcq: JS-0116 - mimics real Response.json() promise shape
         });
 
         await refreshCategories();
@@ -74,7 +74,7 @@ describe('handleContextMenuClick', () => {
 
     it('calls refreshCategories on refresh menu item click', async () => {
         browser.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
-        global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => [] });
+        global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => [] });  // skipcq: JS-0116 - mimics real Response.json() promise shape
 
         await handleContextMenuClick({ menuItemId: 'lynxjournal-refresh-categories' });
 

@@ -104,7 +104,7 @@ export function getActiveFormatsAtCursor( line, ch ) {
 	const active = new Set();
 
 	const heading = /^(#{1,6})\s/.exec( line );
-	if ( heading ) { active.add( 'h' + heading[ 1 ].length ); }
+	if ( heading ) { active.add( `h${ heading[ 1 ].length }` ); }
 	if ( /^-\s/.test( line ) ) { active.add( 'list' ); }
 	if ( /^\d+\.\s/.test( line ) ) { active.add( 'ol' ); }
 

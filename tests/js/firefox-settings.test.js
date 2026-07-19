@@ -63,7 +63,7 @@ describe('testConnection', () => {
         const cats = [{ id: 1, name: 'Tech' }];
         global.fetch = vi.fn().mockResolvedValue({
             ok:   true,
-            json: async () => cats,
+            json: async () => cats,  // skipcq: JS-0116 - mimics real Response.json() promise shape
         });
 
         const result = await testConnection(ENDPOINT, API_KEY);
@@ -100,7 +100,7 @@ describe('handleSubmit', () => {
         document.getElementById('apiKey').value = API_KEY;
         global.fetch = vi.fn().mockResolvedValue({
             ok:   true,
-            json: async () => [{ id: 1, name: 'Tech' }],
+            json: async () => [{ id: 1, name: 'Tech' }],  // skipcq: JS-0116 - mimics real Response.json() promise shape
         });
 
         const event = { preventDefault: vi.fn() };
@@ -151,7 +151,7 @@ describe('checkWpLogin', () => {
             .mockResolvedValueOnce({
                 ok:   true,
                 url:  'https://example.com/wp-json/',
-                json: async () => ({ namespaces: ['lynxjournal/v1'] }),
+                json: async () => ({ namespaces: ['lynxjournal/v1'] }),  // skipcq: JS-0116 - mimics real Response.json() promise shape
             })
             .mockRejectedValue(new Error('nonce fetch not mocked'));
         browser.cookies.getAll.mockResolvedValueOnce([{ name: 'wordpress_sec_abc123' }]);
@@ -166,7 +166,7 @@ describe('checkWpLogin', () => {
         global.fetch = vi.fn().mockResolvedValue({
             ok:   true,
             url:  'https://example.com/wp-json/',
-            json: async () => ({ namespaces: ['lynxjournal/v1'] }),
+            json: async () => ({ namespaces: ['lynxjournal/v1'] }),  // skipcq: JS-0116 - mimics real Response.json() promise shape
         });
         browser.cookies.getAll.mockResolvedValueOnce([]);
 

@@ -323,7 +323,7 @@ function applyFormat( action ) {
 	} else if ( action === 'underline' ) {
 		editor.replaceSelection( `<u>${ sel || 'underlined text' }</u>` );
 	} else if ( /^h[1-6]$/.test( action ) ) {
-		applyLinePrefix( '#'.repeat( parseInt( action[ 1 ], 10 ) ) + ' ' );
+		applyLinePrefix( `${ '#'.repeat( parseInt( action[ 1 ], 10 ) ) } ` );
 	} else if ( action === 'list' ) {
 		applyLinePrefix( '- ' );
 	} else if ( action === 'ol' ) {
@@ -456,7 +456,7 @@ function initEditorBackend() {
 	btnUndo = document.querySelector( '.lynxjournal-format-btn[data-action="undo"]' );
 	btnRedo = document.querySelector( '.lynxjournal-format-btn[data-action="redo"]' );
 
-	if ( window.wp && window.wp.codeEditor && window.wp.CodeMirror ) {
+	if ( window.wp?.codeEditor && window.wp?.CodeMirror ) {
 		defineTokenOverlay();
 		const settings = window.lynxjournalEditorSettings ?? {};
 		if ( !settings.codemirror ) { settings.codemirror = {}; }

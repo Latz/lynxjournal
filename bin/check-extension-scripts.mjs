@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Verifies that each browser extension's background script actually parses
  * under the loading mode its manifest.json declares.
@@ -50,7 +49,8 @@ function checkExtension(extensionDir) {
         const fullPath = path.join(extensionDir, file);
         const source = readFileSync(fullPath, 'utf8');
         try {
-            new Function(source); // eslint-disable-line no-new-func -- syntax check only, never called
+            // eslint-disable-next-line no-new-func -- syntax check only, never called
+            new Function(source); // skipcq: JS-R1002 - syntax check only, never called
         } catch (e) {
             errors.push(
                 `${path.relative(ROOT, fullPath)}: fails to parse as a classic (non-module) script, ` +
@@ -70,7 +70,7 @@ if (allErrors.length > 0) {
     for (const err of allErrors) {
         console.error(`  ✗ ${err}\n`);
     }
-    process.exit(1);
+    process.exit(1); // skipcq: JS-0263 - CI-style check script, exit code is the pass/fail signal
 }
 
 console.log('Background-script module-parity check: OK');

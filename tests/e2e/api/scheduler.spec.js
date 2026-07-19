@@ -13,7 +13,7 @@
 
 import { execSync } from 'child_process';
 import { test, expect } from '@playwright/test';
-import constants from '../../../constants.json' assert { type: 'json' };
+import constants from '../../../constants.json' with { type: 'json' };
 
 // Run all scheduler tests serially — each test calls /schedule/run which sets a 5-min lock.
 test.describe.configure({ mode: 'serial' });

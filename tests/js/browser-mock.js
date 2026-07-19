@@ -20,11 +20,11 @@ global.browser = {
     storage: {
         sync: {
             get: vi.fn().mockResolvedValue({}),
-            set: vi.fn().mockResolvedValue(undefined),
+            set: vi.fn().mockResolvedValue(),
         },
         local: {
             get: vi.fn().mockResolvedValue({}),
-            set: vi.fn().mockResolvedValue(undefined),
+            set: vi.fn().mockResolvedValue(),
         },
         onChanged: { addListener: vi.fn() },
     },
@@ -66,9 +66,9 @@ afterEach(() => {
     vi.clearAllMocks();
     // Restore default resolved values after clearing
     browser.storage.sync.get.mockResolvedValue({});
-    browser.storage.sync.set.mockResolvedValue(undefined);
+    browser.storage.sync.set.mockResolvedValue();
     browser.storage.local.get.mockResolvedValue({});
-    browser.storage.local.set.mockResolvedValue(undefined);
+    browser.storage.local.set.mockResolvedValue();
     browser.tabs.query.mockResolvedValue([]);
     browser.scripting.executeScript.mockResolvedValue([{ result: '' }]);
     browser.cookies.getAll.mockResolvedValue([]);

@@ -95,7 +95,7 @@ describe('loadCategories', () => {
         browser.storage.local.get.mockResolvedValue({});
         global.fetch = vi.fn().mockResolvedValue({
             ok:   true,
-            json: async () => cats,
+            json: async () => cats,  // skipcq: JS-0116 - mimics real Response.json() promise shape
         });
 
         await loadCategories(settings);
@@ -109,7 +109,7 @@ describe('loadCategories', () => {
         browser.storage.local.get.mockResolvedValue({ categories: cached });
         global.fetch = vi.fn().mockResolvedValue({
             ok:   true,
-            json: async () => [],
+            json: async () => [],  // skipcq: JS-0116 - mimics real Response.json() promise shape
         });
 
         await loadCategories(settings);
@@ -184,7 +184,7 @@ describe('handleSubmit', () => {
         global.fetch = vi.fn().mockResolvedValue({
             ok:     true,
             status: 200,
-            json:   async () => ({ id: 1 }),
+            json:   async () => ({ id: 1 }),  // skipcq: JS-0116 - mimics real Response.json() promise shape
         });
 
         const event = { preventDefault: vi.fn() };
@@ -205,7 +205,7 @@ describe('handleSubmit', () => {
         global.fetch = vi.fn().mockResolvedValue({
             ok:     false,
             status: 409,
-            json:   async () => ({ message: 'Already saved' }),
+            json:   async () => ({ message: 'Already saved' }),  // skipcq: JS-0116 - mimics real Response.json() promise shape
         });
 
         const event = { preventDefault: vi.fn() };
@@ -230,7 +230,7 @@ describe('handleSubmit', () => {
         global.fetch = vi.fn().mockResolvedValue({
             ok:     false,
             status: 500,
-            json:   async () => ({ message: 'Server exploded' }),
+            json:   async () => ({ message: 'Server exploded' }),  // skipcq: JS-0116 - mimics real Response.json() promise shape
         });
 
         const event = { preventDefault: vi.fn() };
@@ -289,7 +289,7 @@ describe('initPopup', () => {
         browser.tabs.query.mockResolvedValue([{ id: 1, title: 'My Page', url: 'https://example.com/page' }]);
         global.fetch = vi.fn().mockResolvedValue({
             ok:   true,
-            json: async () => cats,
+            json: async () => cats,  // skipcq: JS-0116 - mimics real Response.json() promise shape
         });
 
         await initPopup();

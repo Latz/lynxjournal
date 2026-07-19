@@ -32,3 +32,4 @@ enabled = true
   module_system = "es-modules"
   environment = ["nodejs", "browser", "vitest"]
   globals = ["chrome", "browser", "Tagify"]
+  plugins = ["react"]

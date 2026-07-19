@@ -15,7 +15,8 @@ import fs from 'fs';
 const EXT_PATH = path.resolve(process.cwd(), 'chrome-extension');
 
 const test = base.extend({
-    context: async ({}, use) => {
+    // eslint-disable-next-line no-empty-pattern -- Playwright's fixture-override idiom, no fixtures needed here
+    context: async ({}, use) => { // skipcq: JS-0058 - Playwright's fixture-override idiom, no fixtures needed here
         const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pw-ext-'));
         const context = await chromium.launchPersistentContext(userDataDir, {
             // Use the full Chromium binary (not headless shell) so extensions load.

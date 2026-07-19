@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 /**
  * saveSnapshot()/fallbackApplyFormat() keep undo/redo history at module
@@ -8,7 +8,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
  *
  * @returns {Promise<{ saveSnapshot: Function, fallbackApplyFormat: Function }>}
  */
-async function freshModule() {
+function freshModule() {
     vi.resetModules();
     return import( '../../src/js/template-toolbar-fallback.js' );
 }

@@ -66,7 +66,7 @@ export async function handleSubmit(e) {
     try {
         await browser.storage.sync.set({
             apiEndpoint: cleanEndpoint,
-            apiKey: apiKey
+            apiKey
         });
 
         if (Array.isArray(categories)) {

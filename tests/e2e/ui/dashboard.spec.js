@@ -7,7 +7,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-import constants from '../../../constants.json' assert { type: 'json' };
+import constants from '../../../constants.json' with { type: 'json' };
 
 // All UI tests share a login session — run serially to avoid concurrent login conflicts.
 test.describe.configure({ mode: 'serial' });

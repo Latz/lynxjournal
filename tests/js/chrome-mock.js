@@ -21,11 +21,11 @@ global.chrome = {
     storage: {
         sync: {
             get: vi.fn().mockResolvedValue({}),
-            set: vi.fn().mockResolvedValue(undefined),
+            set: vi.fn().mockResolvedValue(),
         },
         local: {
             get: vi.fn().mockResolvedValue({}),
-            set: vi.fn().mockResolvedValue(undefined),
+            set: vi.fn().mockResolvedValue(),
         },
         onChanged: { addListener: vi.fn() },
     },
@@ -71,9 +71,9 @@ afterEach(() => {
     vi.clearAllMocks();
     // Restore default resolved values after clearing
     chrome.storage.sync.get.mockResolvedValue({});
-    chrome.storage.sync.set.mockResolvedValue(undefined);
+    chrome.storage.sync.set.mockResolvedValue();
     chrome.storage.local.get.mockResolvedValue({});
-    chrome.storage.local.set.mockResolvedValue(undefined);
+    chrome.storage.local.set.mockResolvedValue();
     chrome.tabs.query.mockResolvedValue([]);
     chrome.scripting.executeScript.mockResolvedValue([{ result: '' }]);
     chrome.cookies.getAll.mockResolvedValue([]);

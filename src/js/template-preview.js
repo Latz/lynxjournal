@@ -154,9 +154,9 @@ function collectIndentedRun( lines, start ) {
 	const matches = [];
 	let i = start;
 	while ( i < lines.length ) {
-		const m = INDENT_RE.exec( lines[ i ] );
-		if ( !m ) { break; }
-		matches.push( m );
+		const match = INDENT_RE.exec( lines[ i ] );
+		if ( !match ) { break; }
+		matches.push( match );
 		i++;
 	}
 	return { matches, nextIndex: i };
@@ -181,9 +181,7 @@ function renderIndentedGroup( group, parseInline ) {
 		const { type, level, items, start } = listBuffer;
 		const startAttr = type === 'ol' && start !== 1 ? ` start="${ start }"` : '';
 		output.push(
-			`<${ type } style="padding-left:${ level * 1.5 }em"${ startAttr }>` +
-			items.map( item => `<li>${ item }</li>` ).join( '' ) +
-			`</${ type }>`
+			`<${ type } style="padding-left:${ level * 1.5 }em"${ startAttr }>${ items.map( item => `<li>${ item }</li>` ).join( '' ) }</${ type }>`
 		);
 		listBuffer = null;
 	};
