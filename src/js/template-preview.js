@@ -179,8 +179,9 @@ function renderIndentedGroup( group, parseInline ) {
 		if ( !listBuffer ) { return; }
 		const { type, level, items, start } = listBuffer;
 		const startAttr = type === 'ol' && start !== 1 ? ` start="${ start }"` : '';
+		const listItems = items.map( item => `<li>${ item }</li>` ).join( '' );
 		output.push(
-			`<${ type } style="padding-left:${ level * 1.5 }em"${ startAttr }>${ items.map( item => `<li>${ item }</li>` ).join( '' ) }</${ type }>`
+			`<${ type } style="padding-left:${ level * 1.5 }em"${ startAttr }>${ listItems }</${ type }>`
 		);
 		listBuffer = null;
 	};
