@@ -74,13 +74,13 @@ test.describe('Scheduler — daily mode', () => {
         expect(body.link_count).toBeGreaterThan(0);
 
         // Roundup post was created
-        const postsRes = await request.get(wpApi('/posts') + '&search=Links%3A');
+        const postsRes = await request.get(`${wpApi('/posts')}&search=Links%3A`);
         expect(postsRes.status()).toBe(200);
         const posts = await postsRes.json();
         expect(posts.length).toBeGreaterThan(0);
 
         // Link was marked as published via meta (still written alongside the custom status)
-        const linkRes = await request.get(wpApi(`/lynx-journal/${linkId}`) + '&context=edit');
+        const linkRes = await request.get(`${wpApi(`/lynx-journal/${linkId}`)}&context=edit`);
         expect(linkRes.status()).toBe(200);
         const link = await linkRes.json();
         expect(link.meta._lynxjournal_publish_status).toBe('published');

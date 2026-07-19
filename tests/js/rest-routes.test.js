@@ -52,7 +52,7 @@ describe('buildRestUrl()', () => {
     });
 
     it('tolerates a trailing slash on baseUrl', () => {
-        expect(buildRestUrl(base + '/', REST_NAMESPACE, ROUTES.ADD_LINK))
+        expect(buildRestUrl(`${base}/`, REST_NAMESPACE, ROUTES.ADD_LINK))
             .toBe('http://localhost:8888/wp-json/lynxjournal/v1/add-link');
     });
 });

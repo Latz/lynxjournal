@@ -160,7 +160,7 @@ function TargetFields({ entry, target, notify, setForm, testState, channelSaveSt
     <>
       <CheckboxControl
         label={target.checkboxLabel}
-        checked={!!notify?.[target.enabledField]}
+        checked={Boolean(notify?.[target.enabledField])}
         onChange={checked => setForm(f => ({ ...f, notify: { ...f.notify, [target.enabledField]: checked } }))}
       />
       {target.fields.map(field => renderField(field, notify, setForm))}

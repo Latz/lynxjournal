@@ -67,7 +67,7 @@ function TagRow({ tag, count, onUpdated, onDeleted }) {
       ? __('link will lose this tag.', 'lynx-journal')
       : __('links will lose this tag.', 'lynx-journal');
     const message = count > 0 ? `${deleteConfirm} ${count} ${linkCountLabel}` : deleteConfirm;
-    if (!window.confirm(message)) return;
+    if (!window.confirm(message)) return;  // skipcq: JS-0052 - intentional native confirm() before a destructive delete
 
     try {
       await apiFetch({ path: `${TAGS_PATH}/${tag.id}`, method: 'DELETE' });
@@ -86,7 +86,7 @@ function TagRow({ tag, count, onUpdated, onDeleted }) {
             className="lynxjournal-cat-inline-input"
             value={draft.name}
             onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
-            autoFocus
+            autoFocus  // skipcq: JS-0757 - intentional: focus the input when the inline edit form appears
           />
         </td>
         <td className="lynxjournal-cat-cell-description lynxjournal-cat-desc">
@@ -222,7 +222,7 @@ function AddTagForm({ onCreated }) {
   }
 
   return (
-    <div className="postbox">
+    <div className="postbox">  {/* skipcq: JS-0415 - postbox/form structure, not excess nesting */}
       <div className="postbox-header">
         <h2 className="hndle">{__('Add New Tag', 'lynx-journal')}</h2>
       </div>

@@ -119,7 +119,7 @@ export const NOTIFICATION_CHANNELS = [
  * @returns {boolean}
  */
 export function isTargetEnabled(target, notify) {
-  return !!notify?.[target.enabledField];
+  return Boolean(notify?.[target.enabledField]);
 }
 
 /**
@@ -135,7 +135,7 @@ export function isTargetComplete(entry, target, notify) {
     ...(entry.sharedFields ?? []).filter(f => f.required).map(f => f.name),
     ...target.fields.filter(f => f.required).map(f => f.name),
   ];
-  return isTargetEnabled(target, notify) && requiredNames.every(name => !!notify?.[name]);
+  return isTargetEnabled(target, notify) && requiredNames.every(name => Boolean(notify?.[name]));
 }
 
 /**

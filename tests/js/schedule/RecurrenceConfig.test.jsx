@@ -13,22 +13,22 @@ const baseValue = {
 
 describe('RecurrenceConfig — daily', () => {
     it('has no accessibility violations', async () => {
-        const { container } = render(<RecurrenceConfig type="daily" value={baseValue} onChange={() => {}} />);
+        const { container } = render(<RecurrenceConfig type="daily" value={baseValue} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(await axe(container)).toHaveNoViolations();
     });
 
     it('renders an interval number input', () => {
-        render(<RecurrenceConfig type="daily" value={baseValue} onChange={() => {}} />);
+        render(<RecurrenceConfig type="daily" value={baseValue} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(screen.getByRole('spinbutton')).toBeInTheDocument();
     });
 
     it('shows singular "day" when interval is 1', () => {
-        render(<RecurrenceConfig type="daily" value={{ ...baseValue, interval: 1 }} onChange={() => {}} />);
+        render(<RecurrenceConfig type="daily" value={{ ...baseValue, interval: 1 }} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(screen.getByText('day')).toBeInTheDocument();
     });
 
     it('shows plural "days" when interval is > 1', () => {
-        render(<RecurrenceConfig type="daily" value={{ ...baseValue, interval: 3 }} onChange={() => {}} />);
+        render(<RecurrenceConfig type="daily" value={{ ...baseValue, interval: 3 }} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(screen.getByText('days')).toBeInTheDocument();
     });
 
@@ -42,7 +42,7 @@ describe('RecurrenceConfig — daily', () => {
 
 describe('RecurrenceConfig — weekly', () => {
     it('renders 7 weekday toggle buttons', () => {
-        render(<RecurrenceConfig type="weekly" value={baseValue} onChange={() => {}} />);
+        render(<RecurrenceConfig type="weekly" value={baseValue} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         const weekdayButtons = screen.getAllByRole('button');
         // 7 day buttons
         expect(weekdayButtons.length).toBeGreaterThanOrEqual(7);
@@ -63,19 +63,19 @@ describe('RecurrenceConfig — weekly', () => {
     });
 
     it('shows singular "week" when interval is 1', () => {
-        render(<RecurrenceConfig type="weekly" value={{ ...baseValue, interval: 1 }} onChange={() => {}} />);
+        render(<RecurrenceConfig type="weekly" value={{ ...baseValue, interval: 1 }} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(screen.getByText('week')).toBeInTheDocument();
     });
 
     it('shows plural "weeks" when interval is > 1', () => {
-        render(<RecurrenceConfig type="weekly" value={{ ...baseValue, interval: 2 }} onChange={() => {}} />);
+        render(<RecurrenceConfig type="weekly" value={{ ...baseValue, interval: 2 }} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(screen.getByText('weeks')).toBeInTheDocument();
     });
 });
 
 describe('RecurrenceConfig — monthly', () => {
     it('renders an interval number input and an Add day button', () => {
-        render(<RecurrenceConfig type="monthly" value={baseValue} onChange={() => {}} />);
+        render(<RecurrenceConfig type="monthly" value={baseValue} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(screen.getByText(/add day/i)).toBeInTheDocument();
         expect(screen.getAllByRole('spinbutton').length).toBeGreaterThanOrEqual(1);
     });
@@ -89,7 +89,7 @@ describe('RecurrenceConfig — monthly', () => {
     });
 
     it('hides the Remove button when only one month-day entry exists', () => {
-        render(<RecurrenceConfig type="monthly" value={baseValue} onChange={() => {}} />);
+        render(<RecurrenceConfig type="monthly" value={baseValue} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(screen.queryByLabelText('Remove')).not.toBeInTheDocument();
     });
 
@@ -101,7 +101,7 @@ describe('RecurrenceConfig — monthly', () => {
                 { type: 'day', value: 5, nth: 1, weekday: 'MO' },
             ],
         };
-        render(<RecurrenceConfig type="monthly" value={value} onChange={() => {}} />);
+        render(<RecurrenceConfig type="monthly" value={value} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(screen.getAllByLabelText('Remove')).toHaveLength(2);
     });
 
@@ -126,7 +126,7 @@ describe('RecurrenceConfig — monthly', () => {
             ...baseValue,
             monthDays: [{ type: 'nth', value: 1, nth: 2, weekday: 'FR' }],
         };
-        render(<RecurrenceConfig type="monthly" value={value} onChange={() => {}} />);
+        render(<RecurrenceConfig type="monthly" value={value} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         const selects = screen.getAllByRole('combobox');
         expect(selects.length).toBeGreaterThanOrEqual(2);
     });
@@ -135,7 +135,7 @@ describe('RecurrenceConfig — monthly', () => {
 describe('RecurrenceConfig — unknown type', () => {
     it('renders nothing for an unrecognised type', () => {
         const { container } = render(
-            <RecurrenceConfig type="unknown" value={baseValue} onChange={() => {}} />
+            <RecurrenceConfig type="unknown" value={baseValue} onChange={() => {}} />  // skipcq: JS-0057 - intentional no-op test stub
         );
         expect(container).toBeEmptyDOMElement();
     });

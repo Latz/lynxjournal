@@ -205,7 +205,7 @@ export default function App() {
 
   /** @listens click Regenerates the API key, confirming first when one already exists. */
   const handleGenerate = useCallback(() => {
-    if (apiKey && !window.confirm(__(
+    if (apiKey && !window.confirm(__(  // skipcq: JS-0052 - intentional native confirm() before invalidating the current API key
       'This will permanently invalidate your current API key. You will need to update your browser extension with the new key. Continue?',
       'lynx-journal'
     ))) {

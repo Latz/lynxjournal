@@ -125,7 +125,7 @@ export function __experimentalNumberControl({ value, onChange, min, max, style, 
                 min={min}
                 max={max}
                 style={style}
-                autoFocus={autoFocus}
+                autoFocus={autoFocus} // skipcq: JS-0757 - test mock forwards whatever the real component receives
                 onChange={e => onChange(e.target.value)}
             />
         </>

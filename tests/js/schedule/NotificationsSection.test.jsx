@@ -9,14 +9,14 @@ const baseProps = {
     configLoaded: true,
     initialNotifyTab: 'email',
     activeNotifyTab: 'email',
-    setActiveNotifyTab: () => {},
+    setActiveNotifyTab: () => {},  // skipcq: JS-0057 - intentional no-op test stub
     testState: {},
     channelSaveState: {},
-    handleTest: () => {},
-    handleSaveChannel: () => {},
+    handleTest: () => {},  // skipcq: JS-0057 - intentional no-op test stub
+    handleSaveChannel: () => {},  // skipcq: JS-0057 - intentional no-op test stub
     tabsWrapRef: { current: null },
     tabsOverflow: false,
-    scrollNotifyTabs: () => {},
+    scrollNotifyTabs: () => {},  // skipcq: JS-0057 - intentional no-op test stub
 };
 
 function renderSection(notify = {}, extraProps = {}) {

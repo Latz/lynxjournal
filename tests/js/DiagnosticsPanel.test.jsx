@@ -9,55 +9,55 @@ describe('DiagnosticsPanel', () => {
     });
 
     it('shows a loading message while loading', () => {
-        render(<DiagnosticsPanel data={null} loading={true} onRefresh={() => {}} mode="daily" />);
+        render(<DiagnosticsPanel data={null} loading onRefresh={() => {}} mode="daily" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.getByText('Loading…')).toBeInTheDocument();
     });
 
     it('does not show the refresh button while loading', () => {
-        render(<DiagnosticsPanel data={null} loading={true} onRefresh={() => {}} mode="daily" />);
+        render(<DiagnosticsPanel data={null} loading onRefresh={() => {}} mode="daily" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.queryByRole('button', { name: 'Refresh' })).not.toBeInTheDocument();
     });
 
     it('shows "Not scheduled" when there is no next_scheduled and mode is not count', () => {
-        render(<DiagnosticsPanel data={{}} loading={false} onRefresh={() => {}} mode="daily" />);
+        render(<DiagnosticsPanel data={{}} loading={false} onRefresh={() => {}} mode="daily" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.getByText('Not scheduled')).toBeInTheDocument();
     });
 
     it('shows a WP-Cron-disabled reason next to "Not scheduled" when applicable', () => {
-        render(<DiagnosticsPanel data={{ wp_cron_disabled: true }} loading={false} onRefresh={() => {}} mode="daily" />);
+        render(<DiagnosticsPanel data={{ wp_cron_disabled: true }} loading={false} onRefresh={() => {}} mode="daily" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.getByText(/WP-Cron disabled/)).toBeInTheDocument();
     });
 
     it('formats next_scheduled as a date when present', () => {
-        render(<DiagnosticsPanel data={{ next_scheduled: 1700000000 }} loading={false} onRefresh={() => {}} mode="daily" />);
+        render(<DiagnosticsPanel data={{ next_scheduled: 1700000000 }} loading={false} onRefresh={() => {}} mode="daily" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.queryByText('Not scheduled')).not.toBeInTheDocument();
     });
 
     it('shows a links-until-post message for count mode', () => {
-        render(<DiagnosticsPanel data={{ links_until_post: 4 }} loading={false} onRefresh={() => {}} mode="count" />);
+        render(<DiagnosticsPanel data={{ links_until_post: 4 }} loading={false} onRefresh={() => {}} mode="count" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.getByText('4 links until post')).toBeInTheDocument();
     });
 
     it('shows "Ready to post" for count mode when links_until_post is 0', () => {
-        render(<DiagnosticsPanel data={{ links_until_post: 0 }} loading={false} onRefresh={() => {}} mode="count" />);
+        render(<DiagnosticsPanel data={{ links_until_post: 0 }} loading={false} onRefresh={() => {}} mode="count" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.getByText('Ready to post')).toBeInTheDocument();
     });
 
     it('does not show the next-run row for count mode when links_until_post is undefined', () => {
-        render(<DiagnosticsPanel data={{}} loading={false} onRefresh={() => {}} mode="count" />);
+        render(<DiagnosticsPanel data={{}} loading={false} onRefresh={() => {}} mode="count" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.queryByText('Next run')).not.toBeInTheDocument();
     });
 
     it('shows "No runs yet" when there is no last run', () => {
-        render(<DiagnosticsPanel data={{}} loading={false} onRefresh={() => {}} mode="daily" />);
+        render(<DiagnosticsPanel data={{}} loading={false} onRefresh={() => {}} mode="daily" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.getByText('No runs yet')).toBeInTheDocument();
     });
@@ -67,7 +67,7 @@ describe('DiagnosticsPanel', () => {
             <DiagnosticsPanel
                 data={{ last_run: { status: 'success', ts: 1700000000, post_id: 42, link_count: 3 } }}
                 loading={false}
-                onRefresh={() => {}}
+                onRefresh={() => {}}  // skipcq: JS-0057 - intentional no-op test stub
                 mode="daily"
             />
         );
@@ -82,7 +82,7 @@ describe('DiagnosticsPanel', () => {
             <DiagnosticsPanel
                 data={{ last_run: { status: 'success', ts: 1700000000, link_count: 2 } }}
                 loading={false}
-                onRefresh={() => {}}
+                onRefresh={() => {}}  // skipcq: JS-0057 - intentional no-op test stub
                 mode="daily"
             />
         );
@@ -96,7 +96,7 @@ describe('DiagnosticsPanel', () => {
             <DiagnosticsPanel
                 data={{ last_run: { status: 'skipped', ts: 1700000000, reason: 'condition_not_met' } }}
                 loading={false}
-                onRefresh={() => {}}
+                onRefresh={() => {}}  // skipcq: JS-0057 - intentional no-op test stub
                 mode="daily"
             />
         );
@@ -109,7 +109,7 @@ describe('DiagnosticsPanel', () => {
             <DiagnosticsPanel
                 data={{ last_run: { status: 'skipped', ts: 1700000000, reason: 'weird_reason' } }}
                 loading={false}
-                onRefresh={() => {}}
+                onRefresh={() => {}}  // skipcq: JS-0057 - intentional no-op test stub
                 mode="daily"
             />
         );
@@ -118,19 +118,19 @@ describe('DiagnosticsPanel', () => {
     });
 
     it('shows the WP-Cron Active badge when not disabled', () => {
-        render(<DiagnosticsPanel data={{ wp_cron_disabled: false }} loading={false} onRefresh={() => {}} mode="daily" />);
+        render(<DiagnosticsPanel data={{ wp_cron_disabled: false }} loading={false} onRefresh={() => {}} mode="daily" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.getByText('Active')).toBeInTheDocument();
     });
 
     it('shows the WP-Cron Disabled badge when disabled', () => {
-        render(<DiagnosticsPanel data={{ wp_cron_disabled: true }} loading={false} onRefresh={() => {}} mode="daily" />);
+        render(<DiagnosticsPanel data={{ wp_cron_disabled: true }} loading={false} onRefresh={() => {}} mode="daily" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.getAllByText('Disabled').length).toBeGreaterThan(0);
     });
 
     it('does not show a history toggle when run_history is empty', () => {
-        render(<DiagnosticsPanel data={{ run_history: [] }} loading={false} onRefresh={() => {}} mode="daily" />);
+        render(<DiagnosticsPanel data={{ run_history: [] }} loading={false} onRefresh={() => {}} mode="daily" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.queryByRole('button', { name: /History/ })).not.toBeInTheDocument();
     });
@@ -141,7 +141,7 @@ describe('DiagnosticsPanel', () => {
             { ts: 1700000000, status: 'success', post_id: 1, link_count: 2 },
             { ts: 1700003600, status: 'skipped', reason: 'locked' },
         ];
-        render(<DiagnosticsPanel data={{ run_history }} loading={false} onRefresh={() => {}} mode="daily" />);
+        render(<DiagnosticsPanel data={{ run_history }} loading={false} onRefresh={() => {}} mode="daily" />);  // skipcq: JS-0057 - intentional no-op test stub
 
         const toggle = screen.getByText('History (2)');
         const details = toggle.closest('details');

@@ -5,7 +5,7 @@ import ScheduleTypePicker from '../../src/schedule/components/ScheduleTypePicker
 
 describe('ScheduleTypePicker', () => {
     it('renders all mode cards grouped by category', () => {
-        render(<ScheduleTypePicker value="daily" onChange={() => {}} />);
+        render(<ScheduleTypePicker value="daily" onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
 
         expect(screen.getByText('Scheduled')).toBeInTheDocument();
         expect(screen.getByText('Trigger-based')).toBeInTheDocument();
@@ -16,7 +16,7 @@ describe('ScheduleTypePicker', () => {
     });
 
     it('marks the current value as the checked radio', () => {
-        render(<ScheduleTypePicker value="weekly" onChange={() => {}} />);
+        render(<ScheduleTypePicker value="weekly" onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
 
         const weeklyCard = screen.getByRole('radio', { name: /Weekly/ });
         expect(weeklyCard).toHaveAttribute('aria-checked', 'true');

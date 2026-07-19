@@ -63,7 +63,7 @@ afterAll(() => server.close());
 
 // Prevent window.close() from destroying the jsdom window between tests
 beforeEach(() => {
-    vi.spyOn(window, 'close').mockImplementation(() => {});
+    vi.spyOn(window, 'close').mockImplementation(() => {});  // skipcq: JS-0057 - intentional no-op test stub
 });
 
 afterEach(() => {

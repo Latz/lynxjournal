@@ -92,6 +92,7 @@ export function buildTemplateText( rawText, categoryVariants, scalarData, utils 
 }
 
 const TOP_LEVEL_LIST_RE = /^(-|\d+\.)\s/;
+const INDENT_RE = /^( {2,})(?:(-|\d+\.) )?(.+)/;
 
 /**
  * Converts indented lines (2+ leading spaces) into padded `<div>` wrappers so
@@ -139,8 +140,6 @@ export function convertIndentedLines( text, parseInline ) {
 
 	return result.join( '\n' );
 }
-
-const INDENT_RE = /^( {2,})(?:(-|\d+\.) )?(.+)/;
 
 /**
  * Collects the contiguous run of lines starting at `start` that match

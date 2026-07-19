@@ -40,14 +40,14 @@ const test = base.extend({
                 route.continue();
             }
         });
-        await use(context);
+        await use(context);  // skipcq: JS-0820 - Playwright fixture parameter conventionally named `use`, not a React Hook
         await context.close();
         fs.rmSync(userDataDir, { recursive: true, force: true });
     },
     extensionId: async ({ context }, use) => {
         let [sw] = context.serviceWorkers();
         if (!sw) sw = await context.waitForEvent('serviceworker');
-        await use(sw.url().split('/')[2]);
+        await use(sw.url().split('/')[2]);  // skipcq: JS-0820 - Playwright fixture parameter conventionally named `use`, not a React Hook
     },
 });
 

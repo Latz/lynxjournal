@@ -10,8 +10,8 @@ expect.extend({ toHaveNoViolations });
 HTMLCanvasElement.prototype.getContext = () => ({
     font: '',
     measureText: () => ({ width: 0 }),
-    fillText: () => {},
-    clearRect: () => {},
+    fillText: () => {},  // skipcq: JS-0057 - intentional no-op test stub
+    clearRect: () => {},  // skipcq: JS-0057 - intentional no-op test stub
     getImageData: () => ({ data: new Uint8ClampedArray(4) }),
 });
 

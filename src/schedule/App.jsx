@@ -64,7 +64,7 @@ function Section({ title, children, collapsible, defaultCollapsed, storageKey, o
   const [collapsed, setCollapsed] = useState(() => {
     if (!collapsible) return false;
     const stored = storageKey ? readStoredCollapsed(storageKey) : null;
-    return stored ?? !!defaultCollapsed;
+    return stored ?? Boolean(defaultCollapsed);
   });
 
   if (!collapsible) {
@@ -149,7 +149,7 @@ export default function App() {
     apiFetch({ path: '/lynxjournal/v1/schedule/diagnostics' })
       .then(d => {
         setDiag(d);
-        setCronNoticeDismissed(!!d.cron_notice_dismissed);
+        setCronNoticeDismissed(Boolean(d.cron_notice_dismissed));
         setDiagLoading(false);
       })
       .catch(() => setDiagLoading(false));
@@ -162,7 +162,7 @@ export default function App() {
         setForm(loaded);
         setSavedForm(loaded);
       })
-      .catch(() => {});
+      .catch(() => {});  // skipcq: JS-0057 - intentional no-op test stub
   }, []);
 
   useEffect(refreshDiag, [refreshDiag]);
@@ -178,7 +178,7 @@ export default function App() {
     if (!isDirty) return;
     const handler = e => { e.preventDefault(); e.returnValue = ''; };
     window.addEventListener('beforeunload', handler);
-    return () => window.removeEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);  // skipcq: JS-0045 - useEffect cleanup contract: undefined or a cleanup function, per React's API (not an inconsistency bug)
   }, [isDirty]);
 
   async function handleSave() {

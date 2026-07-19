@@ -6,22 +6,22 @@ import TimePicker from '../../../src/schedule/components/TimePicker.jsx';
 
 describe('TimePicker', () => {
     it('has no accessibility violations', async () => {
-        const { container } = render(<TimePicker times={['09:00']} onChange={() => {}} />);
+        const { container } = render(<TimePicker times={['09:00']} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(await axe(container)).toHaveNoViolations();
     });
 
     it('renders one time input per initial time', () => {
-        render(<TimePicker times={['09:00', '18:00']} onChange={() => {}} />);
+        render(<TimePicker times={['09:00', '18:00']} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(screen.getAllByDisplayValue(/\d{2}:\d{2}/)).toHaveLength(2);
     });
 
     it('does not show remove button when only one time exists', () => {
-        render(<TimePicker times={['09:00']} onChange={() => {}} />);
+        render(<TimePicker times={['09:00']} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(screen.queryByLabelText(/remove time/i)).not.toBeInTheDocument();
     });
 
     it('shows remove buttons when multiple times exist', () => {
-        render(<TimePicker times={['09:00', '18:00']} onChange={() => {}} />);
+        render(<TimePicker times={['09:00', '18:00']} onChange={() => {}} />);  // skipcq: JS-0057 - intentional no-op test stub
         expect(screen.getAllByLabelText(/remove time/i)).toHaveLength(2);
     });
 
