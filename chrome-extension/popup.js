@@ -218,8 +218,9 @@ export function openSettings() {
 // Tagify instance
 let tagify;
 
-// Initialize
-document.addEventListener('DOMContentLoaded', async () => {
+// Wires up the popup: i18n, event listeners, settings check, Tagify, and
+// the initial page-info/categories load. Runs once on DOMContentLoaded.
+export async function initPopup() {
     applyI18n();
 
     // Add event listeners immediately
@@ -258,4 +259,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             loadCategories(settings)
         ]).catch(() => {});
     }
-});
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', initPopup);

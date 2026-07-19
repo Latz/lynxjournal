@@ -5,7 +5,11 @@ import {
     checkSettings,
     renderCategories,
     loadCategories,
+    loadPageInfo,
     handleSubmit,
+    showMessage,
+    openSettings,
+    initPopup,
     extractPageDescription,
 } from '../../chrome-extension/popup.js';
 
@@ -113,6 +117,55 @@ describe('loadCategories', () => {
 
         expect(document.getElementById('categoriesList').innerHTML).toContain('Failed to load categories');
     });
+
+    it.each([401, 403, 404])('shows the setup message and hides the form on a %i response', async status => {
+        chrome.storage.local.get.mockResolvedValue({});
+        server.use(http.get(`${ENDPOINT}/categories`, () => new HttpResponse(null, { status })));
+
+        await loadCategories(settings);
+
+        expect(document.getElementById('setupMessage').style.display).toBe('block');
+        expect(document.getElementById('mainForm').style.display).toBe('none');
+    });
+});
+
+describe('loadPageInfo', () => {
+    beforeEach(buildPopupDOM);
+
+    it('fills title, url, and description from the active tab', async () => {
+        chrome.tabs.query.mockResolvedValue([{ id: 1, title: 'My Page', url: 'https://example.com/page' }]);
+        chrome.scripting.executeScript.mockResolvedValue([{ result: 'Page description' }]);
+
+        await loadPageInfo();
+
+        expect(document.getElementById('title').value).toBe('My Page');
+        expect(document.getElementById('url').value).toBe('https://example.com/page');
+        expect(document.getElementById('content').value).toBe('Page description');
+    });
+
+    it('fills title and url but leaves content untouched when description extraction throws', async () => {
+        chrome.tabs.query.mockResolvedValue([{ id: 1, title: 'My Page', url: 'https://example.com/page' }]);
+        chrome.scripting.executeScript.mockRejectedValue(new Error('restricted page'));
+
+        await loadPageInfo();
+
+        expect(document.getElementById('title').value).toBe('My Page');
+        expect(document.getElementById('url').value).toBe('https://example.com/page');
+        expect(document.getElementById('content').value).toBe('A description');
+    });
+
+    it('does nothing when there is no active tab', async () => {
+        chrome.tabs.query.mockResolvedValue([]);
+
+        await expect(loadPageInfo()).resolves.toBeUndefined();
+        expect(document.getElementById('title').value).toBe('My Link');
+    });
+
+    it('fails silently when chrome.tabs.query itself throws', async () => {
+        chrome.tabs.query.mockRejectedValue(new Error('boom'));
+
+        await expect(loadPageInfo()).resolves.toBeUndefined();
+    });
 });
 
 describe('handleSubmit', () => {
@@ -134,6 +187,99 @@ describe('handleSubmit', () => {
         await handleSubmit(event);
 
         expect(document.getElementById('message').className).toContain('error');
+    });
+
+    it('shows an "already saved" notification and closes the popup on a 409 response', async () => {
+        chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
+        server.use(http.post(`${ENDPOINT}/add-link`, () =>
+            HttpResponse.json({ message: 'Already saved' }, { status: 409 })
+        ));
+
+        const event = { preventDefault: vi.fn() };
+        await handleSubmit(event);
+
+        expect(chrome.notifications.create).toHaveBeenCalledWith(
+            expect.objectContaining({ message: 'Already saved' })
+        );
+        expect(window.close).toHaveBeenCalled();
+    });
+
+    it('shows an error message when the API returns a non-ok, non-409 response', async () => {
+        chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
+        server.use(http.post(`${ENDPOINT}/add-link`, () =>
+            HttpResponse.json({ message: 'Server exploded' }, { status: 500 })
+        ));
+
+        const event = { preventDefault: vi.fn() };
+        await handleSubmit(event);
+
+        const messageEl = document.getElementById('message');
+        expect(messageEl.className).toContain('error');
+        expect(messageEl.textContent).toBe('Server exploded');
+    });
+
+    it('shows an error message when the request itself throws', async () => {
+        chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
+        server.use(http.post(`${ENDPOINT}/add-link`, () => HttpResponse.error()));
+
+        const event = { preventDefault: vi.fn() };
+        await handleSubmit(event);
+
+        expect(document.getElementById('message').className).toContain('error');
+    });
+});
+
+describe('showMessage', () => {
+    beforeEach(buildPopupDOM);
+
+    it('sets the text and class immediately, then removes "show" after 5 seconds', () => {
+        vi.useFakeTimers();
+        try {
+            showMessage('Saved!', 'success');
+
+            const messageEl = document.getElementById('message');
+            expect(messageEl.textContent).toBe('Saved!');
+            expect(messageEl.className).toBe('message success show');
+
+            vi.advanceTimersByTime(5000);
+            expect(messageEl.className).not.toContain('show');
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+});
+
+describe('openSettings', () => {
+    it('opens the extension options page', () => {
+        openSettings();
+        expect(chrome.runtime.openOptionsPage).toHaveBeenCalled();
+    });
+});
+
+describe('initPopup', () => {
+    beforeEach(buildPopupDOM);
+
+    it('initializes Tagify, hides the settings button, and loads page info + categories when configured', async () => {
+        chrome.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
+        chrome.storage.local.get.mockResolvedValue({});
+        chrome.tabs.query.mockResolvedValue([{ id: 1, title: 'My Page', url: 'https://example.com/page' }]);
+
+        await initPopup();
+        await vi.waitFor(() => expect(document.querySelector('.category-label')).not.toBeNull());
+
+        expect(Tagify).toHaveBeenCalled();
+        expect(document.getElementById('settingsBtn').style.display).toBe('none');
+        expect(document.getElementById('title').value).toBe('My Page');
+        expect(document.querySelector('.category-label').textContent).toBe('Tech');
+    });
+
+    it('does not load page info or categories when settings are missing', async () => {
+        chrome.storage.sync.get.mockResolvedValue({});
+
+        await initPopup();
+
+        expect(chrome.tabs.query).not.toHaveBeenCalled();
+        expect(document.getElementById('setupMessage').style.display).toBe('block');
     });
 });
 

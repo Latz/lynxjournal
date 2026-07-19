@@ -3,7 +3,11 @@ import {
     checkSettings,
     renderCategories,
     loadCategories,
+    loadPageInfo,
     handleSubmit,
+    showMessage,
+    openSettings,
+    initPopup,
     extractPageDescription,
 } from '../../firefox-extension/popup.js';
 
@@ -121,6 +125,55 @@ describe('loadCategories', () => {
 
         expect(document.getElementById('categoriesList').innerHTML).toContain('Failed to load categories');
     });
+
+    it.each([401, 403, 404])('shows the setup message and hides the form on a %i response', async status => {
+        browser.storage.local.get.mockResolvedValue({});
+        global.fetch = vi.fn().mockResolvedValue({ ok: false, status });
+
+        await loadCategories(settings);
+
+        expect(document.getElementById('setupMessage').style.display).toBe('block');
+        expect(document.getElementById('mainForm').style.display).toBe('none');
+    });
+});
+
+describe('loadPageInfo', () => {
+    beforeEach(buildPopupDOM);
+
+    it('fills title, url, and description from the active tab', async () => {
+        browser.tabs.query.mockResolvedValue([{ id: 1, title: 'My Page', url: 'https://example.com/page' }]);
+        browser.scripting.executeScript.mockResolvedValue([{ result: 'Page description' }]);
+
+        await loadPageInfo();
+
+        expect(document.getElementById('title').value).toBe('My Page');
+        expect(document.getElementById('url').value).toBe('https://example.com/page');
+        expect(document.getElementById('content').value).toBe('Page description');
+    });
+
+    it('fills title and url but leaves content untouched when description extraction throws', async () => {
+        browser.tabs.query.mockResolvedValue([{ id: 1, title: 'My Page', url: 'https://example.com/page' }]);
+        browser.scripting.executeScript.mockRejectedValue(new Error('restricted page'));
+
+        await loadPageInfo();
+
+        expect(document.getElementById('title').value).toBe('My Page');
+        expect(document.getElementById('url').value).toBe('https://example.com/page');
+        expect(document.getElementById('content').value).toBe('A description');
+    });
+
+    it('does nothing when there is no active tab', async () => {
+        browser.tabs.query.mockResolvedValue([]);
+
+        await expect(loadPageInfo()).resolves.toBeUndefined();
+        expect(document.getElementById('title').value).toBe('My Link');
+    });
+
+    it('fails silently when browser.tabs.query itself throws', async () => {
+        browser.tabs.query.mockRejectedValue(new Error('boom'));
+
+        await expect(loadPageInfo()).resolves.toBeUndefined();
+    });
 });
 
 describe('handleSubmit', () => {
@@ -170,6 +223,91 @@ describe('handleSubmit', () => {
 
         expect(document.getElementById('message').className).toContain('error');
         expect(fetch).not.toHaveBeenCalled();
+    });
+
+    it('shows an error message when the API returns a non-ok, non-409 response', async () => {
+        browser.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
+        global.fetch = vi.fn().mockResolvedValue({
+            ok:     false,
+            status: 500,
+            json:   async () => ({ message: 'Server exploded' }),
+        });
+
+        const event = { preventDefault: vi.fn() };
+        await handleSubmit(event);
+
+        const messageEl = document.getElementById('message');
+        expect(messageEl.className).toContain('error');
+        expect(messageEl.textContent).toBe('Server exploded');
+    });
+
+    it('shows an error message when the request itself throws', async () => {
+        browser.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
+        global.fetch = vi.fn().mockRejectedValue(new Error('network'));
+
+        const event = { preventDefault: vi.fn() };
+        await handleSubmit(event);
+
+        expect(document.getElementById('message').className).toContain('error');
+    });
+});
+
+describe('showMessage', () => {
+    beforeEach(buildPopupDOM);
+
+    it('sets the text and class immediately, then removes "show" after 5 seconds', () => {
+        vi.useFakeTimers();
+        try {
+            showMessage('Saved!', 'success');
+
+            const messageEl = document.getElementById('message');
+            expect(messageEl.textContent).toBe('Saved!');
+            expect(messageEl.className).toBe('message success show');
+
+            vi.advanceTimersByTime(5000);
+            expect(messageEl.className).not.toContain('show');
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+});
+
+describe('openSettings', () => {
+    it('opens the extension options page', () => {
+        openSettings();
+        expect(browser.runtime.openOptionsPage).toHaveBeenCalled();
+    });
+});
+
+describe('initPopup', () => {
+    beforeEach(buildPopupDOM);
+
+    it('initializes Tagify, hides the settings button, and loads page info + categories when configured', async () => {
+        const cats = [{ id: 1, name: 'Tech' }];
+        browser.storage.sync.get.mockResolvedValue({ apiEndpoint: ENDPOINT, apiKey: API_KEY });
+        browser.storage.local.get.mockResolvedValue({});
+        browser.tabs.query.mockResolvedValue([{ id: 1, title: 'My Page', url: 'https://example.com/page' }]);
+        global.fetch = vi.fn().mockResolvedValue({
+            ok:   true,
+            json: async () => cats,
+        });
+
+        await initPopup();
+        await vi.waitFor(() => expect(document.querySelector('.category-label')).not.toBeNull());
+
+        expect(Tagify).toHaveBeenCalled();
+        expect(document.getElementById('settingsBtn').style.display).toBe('none');
+        expect(document.getElementById('title').value).toBe('My Page');
+        expect(document.querySelector('.category-label').textContent).toBe('Tech');
+    });
+
+    it('does not load page info or categories when settings are missing', async () => {
+        browser.storage.sync.get.mockResolvedValue({});
+
+        await initPopup();
+
+        expect(browser.tabs.query).not.toHaveBeenCalled();
+        expect(document.getElementById('setupMessage').style.display).toBe('block');
     });
 });
 
