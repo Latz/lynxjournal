@@ -147,7 +147,7 @@ final class LynxJournalNotifyBlueskyChannel implements LynxJournalNotifyChannel 
      * @return string Transient key.
      */
     private function sessionCacheKey(string $handle, string $appPassword): string {
-        return 'lynxjournal_bsky_session_' . md5($handle . $appPassword);
+        return 'lynxjournal_bsky_session_' . hash('sha256', $handle . $appPassword);
     }
 
     /**
