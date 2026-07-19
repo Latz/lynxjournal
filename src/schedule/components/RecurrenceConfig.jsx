@@ -134,7 +134,7 @@ function MonthDayRow({ index, entry, canRemove, onUpdateEntry, onRemoveEntry }) 
           hideLabelFromVision
           value={String(entry.value ?? 1)}
           min={1} max={31}
-          autoFocus={index === 0 && entry.type === 'day'}
+          autoFocus={index === 0 && entry.type === 'day'} // skipcq: JS-0757 - intentional: focus the first day-of-month field when it becomes the active option
           onFocus={() => entry.type !== 'day' && onUpdateEntry(index, { type: 'day' })}
           onChange={v => onUpdateEntry(index, { value: Number.parseInt(v) || 1 })}
           style={{ width: '72px' }}
