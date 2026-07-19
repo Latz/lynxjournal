@@ -129,13 +129,15 @@ abstract class LynxJournalNotifyTelegramBase implements LynxJournalNotifyChannel
         if (empty($notify[$enabledField])) {
             return null;
         }
+
+        $error = null;
         if ($notify['telegramBotToken'] === '') {
-            return new \WP_Error('invalid_notify_telegram_token', $this->tokenRequiredMessage(), ['status' => 400]);
+            $error = new \WP_Error('invalid_notify_telegram_token', $this->tokenRequiredMessage(), ['status' => 400]);
+        } elseif ($notify[$chatIdField] === '') {
+            $error = new \WP_Error($this->chatIdErrorCode(), $this->chatIdRequiredMessage(), ['status' => 400]);
         }
-        if ($notify[$chatIdField] === '') {
-            return new \WP_Error($this->chatIdErrorCode(), $this->chatIdRequiredMessage(), ['status' => 400]);
-        }
-        return null;
+
+        return $error;
     }
 
     public function send(int|null $post_id, array $link_ids, string $mode, array $notify): true|\WP_Error {
