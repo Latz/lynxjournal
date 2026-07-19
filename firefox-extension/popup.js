@@ -68,12 +68,22 @@ export async function loadPageInfo() {
     }
 }
 
+// Replace a container's content with a single ".loading" message, without
+// using innerHTML (the message text is always a locale string, but building
+// it via DOM APIs avoids web-ext lint's unsafe-innerHTML warning entirely).
+function renderLoadingMessage(container, text) {
+    const div = document.createElement('div');
+    div.className = 'loading';
+    div.textContent = text;
+    container.replaceChildren(div);
+}
+
 // Render categories to DOM with sorting and i18n
 export function renderCategories(categories) {
     const categoriesList = document.getElementById('categoriesList');
 
     if (!categories || categories.length === 0) {
-        categoriesList.innerHTML = `<div class="loading">${browser.i18n.getMessage('msgNoCategories')}</div>`;
+        renderLoadingMessage(categoriesList, browser.i18n.getMessage('msgNoCategories'));
         return;
     }
 
@@ -113,7 +123,7 @@ export async function loadCategories(settings) {
         renderCategories(categories);
     } catch {
         if (!cached.categories) {
-            categoriesList.innerHTML = `<div class="loading">${browser.i18n.getMessage('msgFailedCategories')}</div>`;
+            renderLoadingMessage(categoriesList, browser.i18n.getMessage('msgFailedCategories'));
         }
     }
 }
