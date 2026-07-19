@@ -169,6 +169,19 @@ https://github.com/Latz/lynxjournal
 
 == Changelog ==
 
+= 1.1.0 =
+* Added Slack, Telegram, and Mastodon notification channels, joining Email and Discord (all six channels: Email, Discord, Slack, Telegram, Mastodon, Bluesky).
+* Added an independent second Telegram target to DM a personal chat, alongside the existing group/channel target.
+* Added per-channel "Send test notification" buttons and On/Off/Incomplete status badges on the Schedule notifications tabs.
+* Added a dismissible admin notice, plus an optional admin email alert, when a notification channel fails to send.
+* Added contextual Help tabs on the Schedule page with per-channel setup instructions and links to hosted setup guides.
+* Added a reveal toggle to show/hide sensitive Slack fields (bot token, channel ID, user ID).
+* Fixed: the Schedule page now shows the actual default execution time (09:00) instead of an empty time picker when no time has been set.
+* Fixed: testing or saving one Slack or Telegram target no longer fails because an unrelated, incomplete target is also enabled.
+* Fixed: notification field validation is now scoped per channel, and each channel saves independently.
+* Fixed: German translations now load correctly, including the notification-failure notice.
+* Fixed: Slack API errors show friendlier messages for common failures (e.g. bot not invited to the channel).
+
 = 1.0.2 =
 * Initial release.
 * Added a Post Template editor for customising the layout of roundup posts.
