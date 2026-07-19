@@ -126,13 +126,15 @@ abstract class LynxJournalNotifySlackBase implements LynxJournalNotifyChannel {
         if (empty($notify[$enabledField])) {
             return null;
         }
+
+        $error = null;
         if ($notify['slackBotToken'] === '') {
-            return new \WP_Error('invalid_notify_slack_token', $this->tokenRequiredMessage(), ['status' => 400]);
+            $error = new \WP_Error('invalid_notify_slack_token', $this->tokenRequiredMessage(), ['status' => 400]);
+        } elseif (!preg_match($this->targetIdPattern(), $notify[$targetIdField])) {
+            $error = new \WP_Error($this->targetIdErrorCode(), $this->invalidTargetIdMessage(), ['status' => 400]);
         }
-        if (!preg_match($this->targetIdPattern(), $notify[$targetIdField])) {
-            return new \WP_Error($this->targetIdErrorCode(), $this->invalidTargetIdMessage(), ['status' => 400]);
-        }
-        return null;
+
+        return $error;
     }
 
     public function send(int|null $post_id, array $link_ids, string $mode, array $notify): true|\WP_Error {
