@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- **[Major]** Optional email alert to the site admin when a notification channel fails to send,
+  independent of the admin address (opt-in, with its own alert-email field) — complements the
+  dismissible admin notice below.
 - **[Major]** Dismissible WordPress admin notice when a notification channel fails to send — whether
   from a scheduled run or a "Send test notification" click — naming the channel, the time, and the
   reason, so failures are no longer silent.

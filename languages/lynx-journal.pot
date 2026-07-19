@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-17T16:40:47+00:00\n"
+"POT-Creation-Date: 2026-07-19T21:59:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: lynx-journal\n"
@@ -31,65 +31,63 @@ msgstr ""
 msgid "Latz"
 msgstr ""
 
-#: src/php/class-lynxjournal.php:176
-#: src/php/class-lynxjournal.php:195
+#: src/php/class-lynxjournal.php:170
+#: src/php/class-lynxjournal.php:189
 msgid "notify must be an object"
 msgstr ""
 
-#: src/php/class-lynxjournal.php:221
-#: src/php/class-lynxjournal.php:249
-#: src/php/notifications/Manager.php:146
-#: src/php/notifications/Manager.php:162
+#: src/php/class-lynxjournal.php:215
+#: src/php/notifications/Manager.php:228
+#: src/php/notifications/Manager.php:244
 msgid "Unknown notification channel."
 msgstr ""
 
-#: src/php/notifications/channels/BlueskyChannel.php:48
+#: src/php/notifications/channels/BlueskyChannel.php:60
 msgid "notify.bskyHandle must be a valid Bluesky handle, e.g. user.bsky.social"
 msgstr ""
 
-#: src/php/notifications/channels/BlueskyChannel.php:51
+#: src/php/notifications/channels/BlueskyChannel.php:61
 msgid "notify.bskyAppPassword must be a valid Bluesky app password (xxxx-xxxx-xxxx-xxxx)"
 msgstr ""
 
-#: src/php/notifications/channels/BlueskyChannel.php:54
+#: src/php/notifications/channels/BlueskyChannel.php:62
 msgid "notify.bskyRecipient must be a valid Bluesky handle, e.g. friend.bsky.social"
 msgstr ""
 
-#: src/php/notifications/channels/BlueskyChannel.php:59
+#: src/php/notifications/channels/BlueskyChannel.php:81
 msgid "notify.bskyHandle is required when Bluesky notifications are enabled"
 msgstr ""
 
-#: src/php/notifications/channels/BlueskyChannel.php:62
+#: src/php/notifications/channels/BlueskyChannel.php:82
 msgid "notify.bskyAppPassword is required when Bluesky notifications are enabled"
 msgstr ""
 
-#: src/php/notifications/channels/BlueskyChannel.php:65
+#: src/php/notifications/channels/BlueskyChannel.php:83
 msgid "notify.bskyRecipient is required when Bluesky notifications are enabled"
 msgstr ""
 
-#: src/php/notifications/channels/BlueskyChannel.php:81
+#: src/php/notifications/channels/BlueskyChannel.php:97
 msgid "Enable Bluesky notifications and fill in the handle, app password, and recipient handle first."
 msgstr ""
 
-#: src/php/notifications/channels/BlueskyChannel.php:83
+#: src/php/notifications/channels/BlueskyChannel.php:99
 #: src/php/notifications/channels/DiscordChannel.php:59
 #: src/php/notifications/channels/EmailChannel.php:61
-#: src/php/notifications/channels/MastodonChannel.php:84
-#: src/php/notifications/channels/SlackBase.php:136
-#: src/php/notifications/channels/TelegramBase.php:140
+#: src/php/notifications/channels/MastodonChannel.php:92
+#: src/php/notifications/channels/SlackBase.php:152
+#: src/php/notifications/channels/TelegramBase.php:155
 msgid "This is a test notification from LynxJournal."
 msgstr ""
 
-#: src/php/notifications/channels/BlueskyChannel.php:148
+#: src/php/notifications/channels/BlueskyChannel.php:223
 msgid "Bluesky did not return a valid session. Check the handle and app password."
 msgstr ""
 
-#: src/php/notifications/channels/BlueskyChannel.php:172
-#: src/php/notifications/channels/BlueskyChannel.php:177
+#: src/php/notifications/channels/BlueskyChannel.php:250
 msgid "Could not resolve the Bluesky recipient handle."
 msgstr ""
 
-#: src/php/notifications/channels/BlueskyChannel.php:204
+#: src/php/notifications/channels/BlueskyChannel.php:277
 msgid "Could not open a Bluesky DM conversation with the recipient."
 msgstr ""
 
@@ -106,7 +104,7 @@ msgid "Enable Discord notifications and enter a webhook URL first."
 msgstr ""
 
 #: src/php/notifications/channels/DiscordChannel.php:58
-#: src/php/notifications/channels/SlackBase.php:138
+#: src/php/notifications/channels/SlackBase.php:154
 msgid "Test notification"
 msgstr ""
 
@@ -126,7 +124,7 @@ msgid "Mode"
 msgstr ""
 
 #: src/php/notifications/channels/DiscordChannel.php:105
-#: src/php/notifications/channels/SlackBase.php:229
+#: src/php/notifications/channels/SlackBase.php:245
 msgid "LynxJournal schedule ran"
 msgstr ""
 
@@ -165,56 +163,56 @@ msgid ""
 "View: %2$s"
 msgstr ""
 
-#: src/php/notifications/channels/MastodonChannel.php:47
+#: src/php/notifications/channels/MastodonChannel.php:57
 msgid "notify.mastodonInstanceUrl must be a valid https:// URL"
 msgstr ""
 
-#: src/php/notifications/channels/MastodonChannel.php:55
+#: src/php/notifications/channels/MastodonChannel.php:60
 msgid "notify.mastodonRecipient must be a valid handle, e.g. @user@instance.social"
 msgstr ""
 
-#: src/php/notifications/channels/MastodonChannel.php:60
+#: src/php/notifications/channels/MastodonChannel.php:74
 msgid "notify.mastodonInstanceUrl is required when Mastodon notifications are enabled"
 msgstr ""
 
-#: src/php/notifications/channels/MastodonChannel.php:63
+#: src/php/notifications/channels/MastodonChannel.php:75
 msgid "notify.mastodonAccessToken is required when Mastodon notifications are enabled"
 msgstr ""
 
-#: src/php/notifications/channels/MastodonChannel.php:66
+#: src/php/notifications/channels/MastodonChannel.php:76
 msgid "notify.mastodonRecipient is required when Mastodon notifications are enabled"
 msgstr ""
 
-#: src/php/notifications/channels/MastodonChannel.php:82
+#: src/php/notifications/channels/MastodonChannel.php:90
 msgid "Enable Mastodon notifications and fill in the instance URL, access token, and recipient handle first."
 msgstr ""
 
-#: src/php/notifications/channels/SlackBase.php:103
+#: src/php/notifications/channels/SlackBase.php:111
 msgid "notify.slackBotToken must be a valid Slack bot token (starting with xoxb-)"
 msgstr ""
 
-#: src/php/notifications/channels/SlackBase.php:184
+#: src/php/notifications/channels/SlackBase.php:200
 msgid "The bot isn't a member of this channel. In Slack, open the channel and run \"/invite @YourBotName\", then try again."
 msgstr ""
 
-#: src/php/notifications/channels/SlackBase.php:185
+#: src/php/notifications/channels/SlackBase.php:201
 msgid "Slack channel not found. Double-check the channel ID."
 msgstr ""
 
-#: src/php/notifications/channels/SlackBase.php:186
+#: src/php/notifications/channels/SlackBase.php:202
 msgid "Slack bot token is invalid or has been revoked. Generate a new token and update it here."
 msgstr ""
 
-#: src/php/notifications/channels/SlackBase.php:187
+#: src/php/notifications/channels/SlackBase.php:203
 msgid "The Slack bot token is missing a required permission scope. Reinstall the Slack app with the chat:write scope."
 msgstr ""
 
-#: src/php/notifications/channels/SlackBase.php:188
+#: src/php/notifications/channels/SlackBase.php:204
 msgid "Unknown Slack API error"
 msgstr ""
 
 #. translators: 1: run summary, 2: post URL
-#: src/php/notifications/channels/SlackBase.php:213
+#: src/php/notifications/channels/SlackBase.php:229
 #, php-format
 msgid ""
 "%1$s\n"
@@ -222,13 +220,13 @@ msgid ""
 msgstr ""
 
 #. translators: %d: number of links published
-#: src/php/notifications/channels/SlackBase.php:220
+#: src/php/notifications/channels/SlackBase.php:236
 #, php-format
 msgid "*Links:* %d"
 msgstr ""
 
 #. translators: %s: schedule mode
-#: src/php/notifications/channels/SlackBase.php:222
+#: src/php/notifications/channels/SlackBase.php:238
 #, php-format
 msgid "*Mode:* %s"
 msgstr ""
@@ -261,7 +259,7 @@ msgstr ""
 msgid "notify.telegramBotToken must be a valid Telegram bot token"
 msgstr ""
 
-#: src/php/notifications/channels/TelegramBase.php:169
+#: src/php/notifications/channels/TelegramBase.php:184
 msgid "Unknown Telegram API error"
 msgstr ""
 
@@ -297,50 +295,69 @@ msgstr ""
 msgid "notify.telegramBotToken is required when Telegram DM notifications are enabled"
 msgstr ""
 
-#: src/php/notifications/Manager.php:105
+#. translators: %s: channel name
+#: src/php/notifications/Manager.php:150
+#, php-format
+msgid "[LynxJournal] %s notification failed to send"
+msgstr ""
+
+#. translators: 1: channel name, 2: error message
+#: src/php/notifications/Manager.php:152
+#, php-format
+msgid ""
+"The %1$s notification failed to send:\n"
+"\n"
+"%2$s"
+msgstr ""
+
+#: src/php/notifications/Manager.php:169
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:19
 msgid "Email"
 msgstr ""
 
-#: src/php/notifications/Manager.php:106
+#: src/php/notifications/Manager.php:170
 #: src/php/traits/Admin/Menu.php:107
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:28
 msgid "Discord"
 msgstr ""
 
-#: src/php/notifications/Manager.php:107
+#: src/php/notifications/Manager.php:171
 msgid "Slack (Channel)"
 msgstr ""
 
-#: src/php/notifications/Manager.php:108
+#: src/php/notifications/Manager.php:172
 msgid "Slack (DM)"
 msgstr ""
 
-#: src/php/notifications/Manager.php:109
+#: src/php/notifications/Manager.php:173
 #: src/php/traits/Admin/Menu.php:125
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:64
 msgid "Telegram"
 msgstr ""
 
-#: src/php/notifications/Manager.php:110
+#: src/php/notifications/Manager.php:174
 msgid "Telegram (DM)"
 msgstr ""
 
-#: src/php/notifications/Manager.php:111
+#: src/php/notifications/Manager.php:175
 #: src/php/traits/Admin/Menu.php:133
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:91
 msgid "Mastodon"
 msgstr ""
 
-#: src/php/notifications/Manager.php:112
+#: src/php/notifications/Manager.php:176
 #: src/php/traits/Admin/Menu.php:141
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:102
 msgid "Bluesky"
+msgstr ""
+
+#: src/php/notifications/Manager.php:211
+msgid "notify.adminAlertEmail is not a valid email address"
 msgstr ""
 
 #. translators: %d: number of links published
@@ -362,15 +379,15 @@ msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:42
 #: src/php/traits/Admin/Dashboard.php:423
-#: src/php/traits/Admin/LinksPage.php:161
-#: src/php/traits/Admin/LinksPage.php:192
+#: src/php/traits/Admin/LinksPage.php:168
+#: src/php/traits/Admin/LinksPage.php:199
 msgid "Title"
 msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:51
 #: src/php/traits/Admin/Dashboard.php:428
-#: src/php/traits/Admin/LinksPage.php:162
-#: src/php/traits/Admin/LinksPage.php:193
+#: src/php/traits/Admin/LinksPage.php:169
+#: src/php/traits/Admin/LinksPage.php:200
 msgid "URL"
 msgstr ""
 
@@ -453,15 +470,15 @@ msgstr ""
 
 #: src/php/traits/Admin/Dashboard.php:34
 #: src/php/traits/Admin/Dashboard.php:646
-#: src/php/traits/Admin/LinksPage.php:164
-#: src/php/traits/Admin/LinksPage.php:195
-#: src/php/traits/Admin/LinksPage.php:340
+#: src/php/traits/Admin/LinksPage.php:171
+#: src/php/traits/Admin/LinksPage.php:202
+#: src/php/traits/Admin/LinksPage.php:347
 msgid "Published"
 msgstr ""
 
 #: src/php/traits/Admin/Dashboard.php:38
 #: src/php/traits/Admin/Dashboard.php:651
-#: src/php/traits/Admin/LinksPage.php:342
+#: src/php/traits/Admin/LinksPage.php:349
 msgid "Unpublished"
 msgstr ""
 
@@ -487,8 +504,8 @@ msgstr ""
 
 #: src/php/traits/Admin/Dashboard.php:97
 #: src/php/traits/Admin/Dashboard.php:349
-#: src/php/traits/Admin/LinksPage.php:327
-#: src/php/traits/Admin/LinksPage.php:352
+#: src/php/traits/Admin/LinksPage.php:334
+#: src/php/traits/Admin/LinksPage.php:359
 msgid "View Post"
 msgstr ""
 
@@ -553,7 +570,7 @@ msgstr ""
 #. translators: %s is the current date (e.g. "April 15, 2026")
 #. translators: %s: formatted date, e.g. "April 15, 2026"
 #: src/php/traits/Admin/Dashboard.php:311
-#: src/php/traits/Batch.php:83
+#: src/php/traits/Batch.php:72
 #, php-format
 msgid "Links Roundup - %s"
 msgstr ""
@@ -573,12 +590,12 @@ msgid "No pending links to publish. Add links first, then come back here to publ
 msgstr ""
 
 #: src/php/traits/Admin/Dashboard.php:349
-#: src/php/traits/Admin/LinksPage.php:356
+#: src/php/traits/Admin/LinksPage.php:363
 msgid "View Draft"
 msgstr ""
 
 #: src/php/traits/Admin/Dashboard.php:377
-#: src/php/traits/Admin/LinksPage.php:341
+#: src/php/traits/Admin/LinksPage.php:348
 #: build/schedule.js:3
 #: src/schedule/App.jsx:291
 msgid "Draft"
@@ -648,68 +665,68 @@ msgstr ""
 msgid "Total Links"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:62
+#: src/php/traits/Admin/LinksPage.php:69
 #: src/php/traits/Admin/Menu.php:29
 #: src/php/traits/trait-post-type.php:29
 msgid "All Links"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:100
+#: src/php/traits/Admin/LinksPage.php:107
 msgid "Filter by date"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:102
+#: src/php/traits/Admin/LinksPage.php:109
 msgid "All dates"
 msgstr ""
 
 #. translators: 1: month name, 2: year
-#: src/php/traits/Admin/LinksPage.php:107
+#: src/php/traits/Admin/LinksPage.php:114
 #, php-format
 msgctxt "month year"
 msgid "%1$s %2$d"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:116
+#: src/php/traits/Admin/LinksPage.php:123
 msgid "Filter by category"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:118
+#: src/php/traits/Admin/LinksPage.php:125
 msgid "All categories"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:124
+#: src/php/traits/Admin/LinksPage.php:131
 msgid "Filter"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:128
-#: src/php/traits/Admin/LinksPage.php:130
+#: src/php/traits/Admin/LinksPage.php:135
+#: src/php/traits/Admin/LinksPage.php:137
 msgid "Search Links"
 msgstr ""
 
 #. translators: %s: number of items in the list table
-#: src/php/traits/Admin/LinksPage.php:138
+#: src/php/traits/Admin/LinksPage.php:145
 #, php-format
 msgid "%s item"
 msgid_plural "%s items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/php/traits/Admin/LinksPage.php:154
+#: src/php/traits/Admin/LinksPage.php:161
 msgid "No links found. Add your first link!"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:163
-#: src/php/traits/Admin/LinksPage.php:194
+#: src/php/traits/Admin/LinksPage.php:170
+#: src/php/traits/Admin/LinksPage.php:201
 msgid "Status"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:165
-#: src/php/traits/Admin/LinksPage.php:196
+#: src/php/traits/Admin/LinksPage.php:172
+#: src/php/traits/Admin/LinksPage.php:203
 msgid "Date"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:166
-#: src/php/traits/Admin/LinksPage.php:197
+#: src/php/traits/Admin/LinksPage.php:173
+#: src/php/traits/Admin/LinksPage.php:204
 #: build/taxonomies.js:3
 #: build/taxonomies.js:5
 #: src/categories/App.jsx:172
@@ -717,29 +734,29 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:170
+#: src/php/traits/Admin/LinksPage.php:177
 msgid "No links found."
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:316
+#: src/php/traits/Admin/LinksPage.php:323
 msgid "Link deleted successfully."
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:325
+#: src/php/traits/Admin/LinksPage.php:332
 msgid "Edit Draft"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:353
-#: src/php/traits/Admin/LinksPage.php:357
+#: src/php/traits/Admin/LinksPage.php:360
+#: src/php/traits/Admin/LinksPage.php:364
 msgid "Are you sure you want to unpublish this link?"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:353
-#: src/php/traits/Admin/LinksPage.php:357
+#: src/php/traits/Admin/LinksPage.php:360
+#: src/php/traits/Admin/LinksPage.php:364
 msgid "Unpublish"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:360
+#: src/php/traits/Admin/LinksPage.php:367
 #: build/taxonomies.js:1
 #: build/taxonomies.js:3
 #: src/categories/App.jsx:138
@@ -747,11 +764,11 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:361
+#: src/php/traits/Admin/LinksPage.php:368
 msgid "Are you sure you want to delete this link?"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:361
+#: src/php/traits/Admin/LinksPage.php:368
 #: build/taxonomies.js:3
 #: build/taxonomies.js:5
 #: src/categories/App.jsx:142
@@ -1136,24 +1153,24 @@ msgstr ""
 msgid "Failed to publish \"%1$s\": %2$s"
 msgstr ""
 
-#: src/php/traits/Batch.php:89
+#: src/php/traits/Batch.php:78
 msgid "No valid links to publish."
 msgstr ""
 
-#: src/php/traits/Batch.php:130
+#: src/php/traits/Batch.php:145
 msgid "Failed to create roundup post."
 msgstr ""
 
 #. translators: %d: number of links included in the roundup post
-#: src/php/traits/Batch.php:147
+#: src/php/traits/Batch.php:162
 #, php-format
 msgid "Roundup post created successfully with %d link."
 msgid_plural "Roundup post created successfully with %d links."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/php/traits/Batch.php:214
-#: src/php/traits/TemplateRenderer.php:93
+#: src/php/traits/Batch.php:229
+#: src/php/traits/TemplateRenderer.php:89
 msgid "Other"
 msgstr ""
 
@@ -1198,7 +1215,7 @@ msgid "Link published successfully."
 msgstr ""
 
 #: src/php/traits/Queries.php:94
-#: src/php/traits/Scheduler.php:313
+#: src/php/traits/Scheduler.php:315
 msgid "Uncategorized"
 msgstr ""
 
@@ -1248,11 +1265,11 @@ msgstr ""
 msgid "Could not delete category."
 msgstr ""
 
-#: src/php/traits/RestApi.php:681
+#: src/php/traits/RestApi.php:656
 msgid "Failed to fetch tags."
 msgstr ""
 
-#: src/php/traits/RestApi.php:788
+#: src/php/traits/RestApi.php:752
 #: build/taxonomies.js:5
 #: src/tags/App.jsx:76
 msgid "Could not delete tag."
@@ -1621,6 +1638,8 @@ msgid "Email address"
 msgstr ""
 
 #: build/schedule.js:1
+#: build/schedule.js:3
+#: src/schedule/components/NotificationsSection.jsx:318
 #: src/schedule/lib/notificationChannels.js:23
 msgid "Leave blank to use admin email"
 msgstr ""
@@ -2092,17 +2111,17 @@ msgid "Age threshold in days"
 msgstr ""
 
 #: build/schedule.js:1
-#: src/schedule/components/TimePicker.jsx:48
+#: src/schedule/components/TimePicker.jsx:49
 msgid "Run time"
 msgstr ""
 
 #: build/schedule.js:1
-#: src/schedule/components/TimePicker.jsx:57
+#: src/schedule/components/TimePicker.jsx:58
 msgid "Remove time"
 msgstr ""
 
 #: build/schedule.js:1
-#: src/schedule/components/TimePicker.jsx:65
+#: src/schedule/components/TimePicker.jsx:66
 msgid "Add time"
 msgstr ""
 
@@ -2299,22 +2318,22 @@ msgid "Show"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/NotificationsSection.jsx:65
-msgid "On, incomplete"
-msgstr ""
-
-#: build/schedule.js:3
-#: src/schedule/components/NotificationsSection.jsx:66
+#: src/schedule/components/NotificationsSection.jsx:62
 msgid "On"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/NotificationsSection.jsx:63
+#: src/schedule/components/NotificationsSection.jsx:68
+msgid "On, incomplete"
+msgstr ""
+
+#: build/schedule.js:3
+#: src/schedule/components/NotificationsSection.jsx:65
 msgid "Off"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/NotificationsSection.jsx:92
+#: src/schedule/components/NotificationsSection.jsx:95
 msgid "Send test notification"
 msgstr ""
 
@@ -2322,24 +2341,34 @@ msgstr ""
 #: build/taxonomies.js:1
 #: build/taxonomies.js:3
 #: src/categories/App.jsx:118
-#: src/schedule/components/NotificationsSection.jsx:95
+#: src/schedule/components/NotificationsSection.jsx:98
 #: src/tags/App.jsx:118
 msgid "Save"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/NotificationsSection.jsx:220
+#: src/schedule/components/NotificationsSection.jsx:223
 msgid "Scroll tabs left"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/NotificationsSection.jsx:246
+#: src/schedule/components/NotificationsSection.jsx:249
 msgid "Scroll tabs right"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/components/NotificationsSection.jsx:268
+#: src/schedule/components/NotificationsSection.jsx:271
 msgid "Help"
+msgstr ""
+
+#: build/schedule.js:3
+#: src/schedule/components/NotificationsSection.jsx:310
+msgid "Email me if a notification fails to send"
+msgstr ""
+
+#: build/schedule.js:3
+#: src/schedule/components/NotificationsSection.jsx:315
+msgid "Alert email address"
 msgstr ""
 
 #: build/schedule.js:3

@@ -304,6 +304,22 @@ export default function NotificationsSection({
           </div>
         ))}
       </div>
+
+      <div className="lynxjournal-notify-admin-alert">
+        <CheckboxControl
+          label={__('Email me if a notification fails to send', 'lynx-journal')}
+          checked={Boolean(notify?.adminAlertEnabled)}
+          onChange={checked => setForm(f => ({ ...f, notify: { ...f.notify, adminAlertEnabled: checked } }))}
+        />
+        <TextControl
+          label={__('Alert email address', 'lynx-journal')}
+          type="email"
+          value={notify?.adminAlertEmail ?? ''}
+          placeholder={__('Leave blank to use admin email', 'lynx-journal')}
+          onChange={value => setForm(f => ({ ...f, notify: { ...f.notify, adminAlertEmail: value } }))}
+          __nextHasNoMarginBottom
+        />
+      </div>
     </>
   );
 }

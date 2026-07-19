@@ -98,6 +98,17 @@
   visibility: hidden;
 }
 
+.lynxjournal-notify-admin-alert {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-block-start: 24px;
+  padding: 12px;
+  background: #f6f7f7;
+  border: 1px solid #c3c4c7;
+  border-radius: 2px;
+}
+
 .lynxjournal-notify-help-link {
   align-self: flex-end;
 }

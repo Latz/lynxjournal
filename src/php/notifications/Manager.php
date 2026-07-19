@@ -93,20 +93,22 @@ final class LynxJournalNotifyManager {
 
         $result = $channel->send($post_id, $link_ids, $mode, $notify);
         if (is_wp_error($result)) {
-            $this->recordChannelFailure($channel->key(), $result);
+            $this->recordChannelFailure($channel->key(), $result, $notify);
         }
     }
 
     /**
      * Persist a channel send failure so it can surface as an admin notice,
-     * and log it for site admins who monitor debug.log.
+     * log it for site admins who monitor debug.log, and email the admin
+     * if they've opted into failure alerts.
      *
      * @since 1.0.0
      * @param string $key Channel key that failed.
      * @param \WP_Error $error The error returned by the channel's send().
+     * @param array $notify The `notify` option array, for the admin-alert opt-in/address.
      * @return void
      */
-    private function recordChannelFailure(string $key, \WP_Error $error): void {
+    private function recordChannelFailure(string $key, \WP_Error $error, array $notify = []): void {
         $message = $error->get_error_message();
 
         $failures = get_option('lynxjournal_notification_failures', []);
@@ -123,6 +125,36 @@ final class LynxJournalNotifyManager {
 
         // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
         error_log(sprintf('LynxJournal: %s notification failed: %s', $key, $message));
+
+        if (!empty($notify['adminAlertEnabled'])) {
+            $this->sendAdminFailureAlert($key, $message, $notify);
+        }
+    }
+
+    /**
+     * Email the admin that a notification channel failed to send.
+     *
+     * Sent directly via wp_mail() rather than through LynxJournalNotifyEmailChannel,
+     * so a failure of the Email channel itself can't recurse back into
+     * recordChannelFailure(). A failure of this alert is only logged, never recorded.
+     *
+     * @since 1.0.0
+     * @param string $key Channel key that failed.
+     * @param string $message The channel's error message.
+     * @param array $notify The `notify` option array, for the alert address.
+     * @return void
+     */
+    private function sendAdminFailureAlert(string $key, string $message, array $notify): void {
+        $to = !empty($notify['adminAlertEmail']) ? $notify['adminAlertEmail'] : get_option('admin_email');
+        /* translators: %s: channel name */
+        $subject = sprintf(__('[LynxJournal] %s notification failed to send', 'lynx-journal'), $this->channelLabel($key));
+        /* translators: 1: channel name, 2: error message */
+        $body = sprintf(__("The %1\$s notification failed to send:\n\n%2\$s", 'lynx-journal'), $this->channelLabel($key), $message);
+
+        if (!wp_mail($to, $subject, $body)) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            error_log(sprintf('LynxJournal: failed to send admin failure-alert email for %s', $key));
+        }
     }
 
     /**
@@ -161,6 +193,24 @@ final class LynxJournalNotifyManager {
                 return $error;
             }
         }
+        return $this->validateAdminAlert($notify);
+    }
+
+    /**
+     * Validate/sanitize the admin failure-alert fields in place.
+     *
+     * @since 1.0.0
+     * @param array $notify The `notify` option array, modified in place.
+     * @return \WP_Error|null Error if the alert email is invalid, null if valid.
+     */
+    private function validateAdminAlert(array &$notify): ?\WP_Error {
+        $notify['adminAlertEnabled'] = (bool) ($notify['adminAlertEnabled'] ?? false);
+        if (!empty($notify['adminAlertEmail'])) {
+            $notify['adminAlertEmail'] = sanitize_email($notify['adminAlertEmail']);
+            if (!is_email($notify['adminAlertEmail'])) {
+                return new \WP_Error('invalid_admin_alert_email', __('notify.adminAlertEmail is not a valid email address', 'lynx-journal'), ['status' => 400]);
+            }
+        }
         return null;
     }
 
@@ -195,7 +245,7 @@ final class LynxJournalNotifyManager {
         }
         $result = $channel->sendTest($notify);
         if (is_wp_error($result)) {
-            $this->recordChannelFailure($key, $result);
+            $this->recordChannelFailure($key, $result, $notify);
         }
         return $result;
     }

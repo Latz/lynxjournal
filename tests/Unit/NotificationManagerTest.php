@@ -65,6 +65,25 @@ describe('LynxJournalNotifyManager::validateAll()', function (): void {
         $notify = ['email' => 'a@example.com'];
         expect($this->manager->validateAll($notify))->toBeNull();
     });
+
+    it('sets notify.adminAlertEnabled to a strict bool', function (): void {
+        $notify = [];
+        $this->manager->validateAll($notify);
+        expect($notify['adminAlertEnabled'])->toBeFalse();
+    });
+
+    it('sanitizes a valid notify.adminAlertEmail', function (): void {
+        $notify = ['adminAlertEmail' => 'admin@example.com'];
+        expect($this->manager->validateAll($notify))->toBeNull();
+        expect($notify['adminAlertEmail'])->toBe('admin@example.com');
+    });
+
+    it('rejects an invalid notify.adminAlertEmail', function (): void {
+        $notify = ['adminAlertEmail' => 'not-an-email'];
+        $error = $this->manager->validateAll($notify);
+        expect($error)->toBeInstanceOf(WP_Error::class);
+        expect($error->get_error_code())->toBe('invalid_admin_alert_email');
+    });
 });
 
 describe('LynxJournalNotifyManager::validateChannel()', function (): void {
@@ -271,6 +290,97 @@ describe('LynxJournalNotifyManager::dispatchChannelNotification()', function ():
         expect($captured)->toHaveCount(10);
         expect($captured[0]['channel'])->toBe('discord');
         expect(array_column($captured, 'channel'))->not->toContain('old_9');
+    });
+
+    it('emails the admin-alert address when notify.adminAlertEnabled is true', function (): void {
+        Functions\when('get_option')->alias(function ($key, $default = false) {
+            if ($key === 'lynxjournal_schedule') {
+                return [
+                    'notify' => [
+                        'discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc',
+                        'adminAlertEnabled' => true, 'adminAlertEmail' => 'alerts@example.com',
+                    ],
+                ];
+            }
+            if ($key === 'lynxjournal_notification_failures') {
+                return [];
+            }
+            return $default;
+        });
+        Functions\when('wp_remote_post')->justReturn(new WP_Error('http_request_failed', 'Could not resolve host'));
+        Functions\when('update_option')->justReturn(true);
+
+        $captured = null;
+        Functions\when('wp_mail')->alias(function ($to, $subject, $message) use (&$captured): bool {
+            $captured = compact('to', 'subject', 'message');
+            return true;
+        });
+
+        $this->manager->dispatchChannelNotification('discord', 42, [1], 'daily');
+
+        expect($captured['to'])->toBe('alerts@example.com');
+        expect($captured['subject'])->toContain('Discord');
+        expect($captured['message'])->toContain('Could not resolve host');
+    });
+
+    it('falls back to admin_email when notify.adminAlertEmail is blank', function (): void {
+        Functions\when('get_option')->alias(function ($key, $default = false) {
+            if ($key === 'lynxjournal_schedule') {
+                return [
+                    'notify' => [
+                        'discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc',
+                        'adminAlertEnabled' => true,
+                    ],
+                ];
+            }
+            if ($key === 'lynxjournal_notification_failures') {
+                return [];
+            }
+            if ($key === 'admin_email') {
+                return 'site-admin@example.com';
+            }
+            return $default;
+        });
+        Functions\when('wp_remote_post')->justReturn(new WP_Error('http_request_failed', 'boom'));
+        Functions\when('update_option')->justReturn(true);
+
+        $captured = null;
+        Functions\when('wp_mail')->alias(function ($to, $subject, $message) use (&$captured): bool {
+            $captured = compact('to', 'subject', 'message');
+            return true;
+        });
+
+        $this->manager->dispatchChannelNotification('discord', 42, [1], 'daily');
+
+        expect($captured['to'])->toBe('site-admin@example.com');
+    });
+
+    it('does not email the admin when notify.adminAlertEnabled is false', function (): void {
+        Functions\when('get_option')->alias(function ($key, $default = false) {
+            if ($key === 'lynxjournal_schedule') {
+                return [
+                    'notify' => [
+                        'discordEnabled' => true, 'discordWebhookUrl' => 'https://discord.com/api/webhooks/1/abc',
+                    ],
+                ];
+            }
+            if ($key === 'lynxjournal_notification_failures') {
+                return [];
+            }
+            return $default;
+        });
+        Functions\when('wp_remote_post')->justReturn(new WP_Error('http_request_failed', 'boom'));
+        Functions\when('update_option')->justReturn(true);
+
+        $mailed = false;
+        Functions\when('wp_mail')->alias(function () use (&$mailed): bool {
+            $mailed = true;
+            return true;
+        });
+
+        $this->manager->dispatchChannelNotification('discord', 42, [1], 'daily');
+
+        expect($mailed)->toBeFalse();
     });
 
     it('does not touch the failures option when send() succeeds', function (): void {
