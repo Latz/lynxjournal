@@ -50,12 +50,11 @@ bin/*~
 bin/*.bak
 
 # Personal notes / context
-/docs/resume.txt
 /fixed.md
 
-# Planning & design notes (archived, not tracked)
-/docs/plans/
-/docs/design/.env
+# Local docs (not tracked)
+/docs/
+
 /ftp.login
 /nimbalyst-local
 /bin/ftp.login
