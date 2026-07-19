@@ -1,0 +1,32 @@
+version = 1
+
+test_patterns = [
+  "tests/**",
+  "**/*.test.js",
+]
+
+exclude_patterns = [
+  "vendor/**",
+  "node_modules/**",
+  "build/**",
+  "dist/**",
+  "languages/**",
+  "chrome-extension/tagify.min.js",
+  "firefox-extension/tagify.min.js",
+  "docs/**",
+]
+
+[[analyzers]]
+name = "php"
+enabled = true
+
+  [analyzers.meta]
+  skip_doc_coverage = ["magic", "nonpublic"]
+
+[[analyzers]]
+name = "javascript"
+enabled = true
+
+  [analyzers.meta]
+  module_system = "es-modules"
+  environment = ["nodejs", "browser", "vitest"]
