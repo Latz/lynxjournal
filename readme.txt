@@ -47,7 +47,7 @@ The LynxJournal dashboard (LynxJournal › Dashboard) gives you an at-a-glance o
 
 * Title (required)
 * URL
-* Description (rich text)
+* Description
 * Categories — assign to one or more existing categories
 * Tags — comma-separated keywords
 
@@ -57,19 +57,17 @@ The LynxJournal dashboard (LynxJournal › Dashboard) gives you an at-a-glance o
 
 === Managing Links ===
 
-LynxJournal › All Links shows every saved link in a table:
+LynxJournal › All Links shows your saved links in a paginated table, grouped by category. Use the search box, or filter by date or category, to narrow the list.
 
 * **Status badges** — Unpublished, Draft, or Published
-* **Publish** — creates a WordPress post immediately for that single link
-* **Delete** — removes the link permanently (shows an inline confirmation first)
+* **View** — open the published post or draft (published/draft links only)
+* **Unpublish** — revert a published or draft link back to unpublished (published/draft links only)
+* **Edit** — open the link in the standard WordPress post editor
+* **Delete** — removes the link permanently (confirmation required)
 
 === Publishing ===
 
-**Individual post:** Click Publish on any link in All Links. A new WordPress post is created with the link's title, description, and a "Read more" link to the source URL.
-
-**Roundup post:** Click Publish on the Dashboard. All unpublished links are bundled into one post, grouped by category. Enter a custom title or leave the default ("Links Roundup – [date]"). Choose to publish immediately or save as draft.
-
-Both flows support draft mode — use the Draft toggle before confirming.
+Click **Publish** on the Dashboard. All unpublished links are bundled into one post, grouped by category. Enter a custom title or leave the default ("Links Roundup – [date]"). Choose to publish immediately or save as draft, using the Draft toggle before confirming.
 
 === Post Template ===
 
