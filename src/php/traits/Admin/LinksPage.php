@@ -356,7 +356,7 @@ trait LynxJournal_Admin_LinksPage {
         $delete_url    = esc_url( wp_nonce_url( admin_url( self::ADMIN_LINKS_PAGE . '&action=delete&link_id=' . $link->ID ), 'delete_link_' . $link->ID ) );
 
         if ( $publish_status === 'published' ) {
-            echo '<a href="' . esc_url( get_permalink( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View Post', 'lynx-journal' ) . '</a> | ';
+            echo '<a href="' . esc_url( get_permalink( $published_post_id ) ) . '" target="_blank">' . esc_html__( 'View', 'lynx-journal' ) . '</a> | ';
             $this->renderConfirmLink( $unpublish_url, esc_js( __( 'Are you sure you want to unpublish this link?', 'lynx-journal' ) ), esc_html__( 'Unpublish', 'lynx-journal' ) );
             echo ' | ';
         } elseif ( $publish_status === 'draft' ) {
