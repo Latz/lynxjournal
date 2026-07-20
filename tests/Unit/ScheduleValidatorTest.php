@@ -63,11 +63,26 @@ describe('LynxJournal::validateScheduleConfig()', function (): void {
     });
 
     it('accepts recurrence as a valid array', function (): void {
-        $data   = ['mode' => 'weekly', 'recurrence' => ['freq' => 'weekly', 'days' => ['mon']]];
+        $data   = ['mode' => 'weekly', 'recurrence' => ['weekdays' => ['MO']]];
         $result = $this->plugin->validateScheduleConfig($data);
 
         expect($result)->toBeArray();
-        expect($result['recurrence'])->toBe(['freq' => 'weekly', 'days' => ['mon']]);
+        expect($result['recurrence'])->toBe(['weekdays' => ['MO']]);
+    });
+
+    it('returns 400 invalid_recurrence when weekly mode has no weekdays selected', function (): void {
+        $result = $this->plugin->validateScheduleConfig(['mode' => 'weekly', 'recurrence' => ['weekdays' => []]]);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_recurrence');
+        expect($result->get_error_data()['status'])->toBe(400);
+    });
+
+    it('returns 400 invalid_recurrence when weekly mode has no recurrence at all', function (): void {
+        $result = $this->plugin->validateScheduleConfig(['mode' => 'weekly']);
+
+        expect($result)->toBeInstanceOf(WP_Error::class);
+        expect($result->get_error_code())->toBe('invalid_recurrence');
     });
 
     it('accepts an empty trigger object with neither count nor days', function (): void {

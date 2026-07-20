@@ -189,6 +189,11 @@ export default function App() {
       setSaving(false);
       return;
     }
+    if (form.mode === 'weekly' && (form.recurrence?.weekdays ?? []).length === 0) {
+      setNotice({ status: 'error', message: __('Select at least one day for weekly schedules.', 'lynx-journal') });
+      setSaving(false);
+      return;
+    }
     try {
       await apiFetch({ path: '/lynxjournal/v1/schedule', method: 'POST', data: form });
       setSavedForm(form);

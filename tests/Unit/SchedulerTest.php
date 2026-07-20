@@ -355,37 +355,37 @@ describe('LynxJournal::matchesMonthlySchedule()', function (): void {
         expect($result)->toBeFalse();
     });
 
-    it('type=weekday: returns true for the first Monday of the month', function (): void {
+    it('type=nth: returns true for the first Monday of the month', function (): void {
         // April 2026: first Monday is the 6th
         $date   = new \DateTime('2026-04-06', new \DateTimeZone('UTC'));
         $result = $this->method->invoke($this->plugin, $date, [
-            'monthDays' => [['type' => 'weekday', 'nth' => 1, 'weekday' => 'MO', 'value' => 1]],
+            'monthDays' => [['type' => 'nth', 'nth' => 1, 'weekday' => 'MO', 'value' => 1]],
         ]);
         expect($result)->toBeTrue();
     });
 
-    it('type=weekday: returns false for the second Monday when first Monday is configured', function (): void {
+    it('type=nth: returns false for the second Monday when first Monday is configured', function (): void {
         // April 2026: second Monday is the 13th
         $date   = new \DateTime('2026-04-13', new \DateTimeZone('UTC'));
         $result = $this->method->invoke($this->plugin, $date, [
-            'monthDays' => [['type' => 'weekday', 'nth' => 1, 'weekday' => 'MO', 'value' => 1]],
+            'monthDays' => [['type' => 'nth', 'nth' => 1, 'weekday' => 'MO', 'value' => 1]],
         ]);
         expect($result)->toBeFalse();
     });
 
-    it('type=weekday: returns true for the third Friday of the month', function (): void {
+    it('type=nth: returns true for the third Friday of the month', function (): void {
         // April 2026 Fridays: 3rd, 10th, 17th, 24th → 3rd Friday = 17th
         $date   = new \DateTime('2026-04-17', new \DateTimeZone('UTC'));
         $result = $this->method->invoke($this->plugin, $date, [
-            'monthDays' => [['type' => 'weekday', 'nth' => 3, 'weekday' => 'FR', 'value' => 1]],
+            'monthDays' => [['type' => 'nth', 'nth' => 3, 'weekday' => 'FR', 'value' => 1]],
         ]);
         expect($result)->toBeTrue();
     });
 
-    it('type=weekday: skips entries with invalid nth or weekday', function (): void {
+    it('type=nth: skips entries with invalid nth or weekday', function (): void {
         $date   = new \DateTime('2026-04-06', new \DateTimeZone('UTC'));
         $result = $this->method->invoke($this->plugin, $date, [
-            'monthDays' => [['type' => 'weekday', 'nth' => 0, 'weekday' => 'MO', 'value' => 1]],
+            'monthDays' => [['type' => 'nth', 'nth' => 0, 'weekday' => 'MO', 'value' => 1]],
         ]);
         expect($result)->toBeFalse();
     });

@@ -155,6 +155,23 @@ describe('App', () => {
         expect(apiFetch).not.toHaveBeenCalledWith(expect.objectContaining({ method: 'POST' }));
     });
 
+    it('blocks saving with a validation error when weekly mode has no weekdays selected', async () => {
+        apiFetch.mockImplementation(({ path }) => {
+            if (path === '/lynxjournal/v1/schedule') {
+                return Promise.resolve({ mode: 'weekly', recurrence: { interval: 1, weekdays: [], monthDays: [], nthWeek: null } });
+            }
+            return Promise.resolve({});
+        });
+        const user = userEvent.setup();
+        render(<App />);
+
+        await waitFor(() => expect(apiFetch).toHaveBeenCalledWith({ path: '/lynxjournal/v1/schedule' }));
+        await user.click(screen.getByRole('button', { name: 'Save Schedule' }));
+
+        expect(await screen.findByText('Select at least one day for weekly schedules.')).toBeInTheDocument();
+        expect(apiFetch).not.toHaveBeenCalledWith(expect.objectContaining({ method: 'POST' }));
+    });
+
     it('resets recurrence to defaults when switching between schedule modes', async () => {
         mockScheduleAndDiagnostics({ mode: 'weekly', recurrence: { interval: 3, weekdays: ['MO'], monthDays: [], nthWeek: null } });
         const user = userEvent.setup();

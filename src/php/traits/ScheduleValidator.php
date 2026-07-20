@@ -61,6 +61,9 @@ trait LynxJournal_ScheduleValidator {
         if (isset($data['recurrence']) && !is_array($data['recurrence'])) {
             return new \WP_Error('invalid_recurrence', __('recurrence must be an object', 'lynx-journal'), ['status' => 400]);
         }
+        if (($data['mode'] ?? '') === 'weekly' && empty($data['recurrence']['weekdays'])) {
+            return new \WP_Error('invalid_recurrence', __('At least one weekday must be selected for weekly schedules.', 'lynx-journal'), ['status' => 400]);
+        }
         return null;
     }
 

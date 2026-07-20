@@ -261,7 +261,7 @@ trait LynxJournal_Scheduler {
             if ($type === 'day' && (int) ($md['value'] ?? 0) === $dom) {
                 return true;
             }
-            if ($type === 'weekday') {
+            if ($type === 'nth') {
                 $target_dow = self::weekdayMap()[$md['weekday'] ?? ''] ?? 0;
                 $nth        = (int) ($md['nth'] ?? 0);
                 if ($target_dow === 0 || $nth === 0) {

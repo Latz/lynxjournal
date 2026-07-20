@@ -91,7 +91,7 @@ LynxJournal › Schedule lets automatic roundup publishing run without manual ac
 
 **Modes**
 
-* **Daily** — Publishes at a fixed time every days, provided at least one unpublished link exists.
+* **Daily** — Publishes at a fixed time every day, provided at least one unpublished link exists.
 * **Weekly** — Publishes on specific days of the week. Toggle any combination of Mon–Sun. At least one day must be selected.
 * **Monthly** — Publishes on dates you define, every month. Each "day entry" is either a fixed calendar day (1–31) or an ordinal weekday ("the first Monday"). Multiple entries produce multiple runs per month. If a month is shorter than the configured day (e.g. 31st in a 30-day month), that entry is skipped for that month.
 * **By Count** — Publishes when the number of unpublished links reaches or exceeds a threshold. The check runs at every configured execution time.
@@ -100,7 +100,7 @@ LynxJournal › Schedule lets automatic roundup publishing run without manual ac
 
 **Execution Times**
 
-Applies to all modes except Manual. Specify one or more 24-hour times (HH:MM) at which the scheduler wakes up. Click **+ Add time** to add a row; click **✕** to remove one. At least one time must remain. Duplicate values are rejected on save. Adding multiple times means the scheduler can publish more than once per day.
+Applies to all modes except Manual. Specify one or more 24-hour times (HH:MM) at which the scheduler wakes up. Click **+ Add time** to add a row; click **✕** to remove one. At least one time must remain. Duplicate values are silently removed on save. Adding multiple times means the scheduler can publish more than once per day.
 
 **Previewing upcoming runs**
 
@@ -116,7 +116,7 @@ The **Run Now** button on the LynxJournal dashboard triggers an immediate publis
 
 **What a roundup post looks like**
 
-Each run creates one WordPress post titled `Links: [Full Date]` (e.g. `Links: April 28, 2026`), published immediately as a standard post. The body contains one section per category, each with a list of links. Each link shows its title (linked to the saved URL, opening in a new tab) and, optionally, a description below it. Uncategorised links appear in their own section at the end. Every included link is marked as published and excluded from future digests.
+Each run creates one WordPress post titled `Links: [Full Date]` (e.g. `Links: April 28, 2026`), published immediately as a standard post by default — or saved as a draft instead if you set Post Status to Draft on the Schedule page. The body contains one section per category, each with a list of links. Each link shows its title (linked to the saved URL, opening in a new tab) and, optionally, a description below it. Uncategorised links appear in their own section at the end. Every included link is marked accordingly (published, or draft if Post Status is set to Draft) and excluded from future digests either way.
 
 **Edge cases and caveats**
 
