@@ -37,7 +37,9 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm install -g npm@11
+          npm ci
       - name: Run ESLint
         # This generates the actual file needed for the next step
         run: npx eslint . --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
