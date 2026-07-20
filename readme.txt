@@ -18,8 +18,9 @@ LynxJournal is a WordPress plugin for managing and publishing curated link diges
 
 * Save links with title, URL, description, categories, and tags
 * Organise links by category (inspired by frankysnotes.com)
-* REST API for integration with browser extensions
-* Schedule automatic roundup publishing (daily, weekly, monthly, or by count/age)
+* REST API for integration with browser extensions (Chrome/Firefox)
+* Schedule automatic digest publishing (daily, weekly, monthly, or by count/age)
+* Notify Email, Discord, Slack, Telegram, Mastodon, or Bluesky when a digest is published, with admin alerts on delivery failures
 * Customise the layout of roundup posts with a Post Template editor
 * Chrome extension support
 
@@ -125,7 +126,7 @@ Each run creates one WordPress post titled `Links: [Full Date]` (e.g. `Links: Ap
 * **Timezone and DST** — Execution times use your WordPress site timezone (Settings › General › Timezone). On daylight-saving transitions, spring-forward runs may be delayed by ~1 hour; fall-back runs fire once at the first occurrence of the repeated local time.
 * **Backfill after downtime** — Missed events are not backfilled. As soon as WordPress runs again, a single catch-up run executes and the next slot is computed from the current time. Use **Run Now** to force a catch-up immediately.
 * **Deactivating the plugin** — Deactivation automatically cancels any pending cron event. No event is re-registered until you save the schedule again after reactivation.
-* **Uninstalling the plugin** — Uninstall does not delete saved links or the `lynxjournal_schedule` option. To clean up, run `wp option delete lynxjournal_schedule` before reinstalling.
+* **Uninstalling the plugin** — Deleting the plugin (not just deactivating it) permanently removes everything: all saved links, categories, and tags, all plugin options (including the schedule), all transients, and the pending cron event. No manual cleanup is needed.
 
 **Server-side cron setup**
 
