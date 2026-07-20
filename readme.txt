@@ -37,8 +37,8 @@ LynxJournal is a WordPress plugin for managing and publishing curated link diges
 The LynxJournal dashboard (LynxJournal › Dashboard) gives you an at-a-glance overview:
 
 * **Stats bar** — total links, categories, published, and unpublished counts
-* **Quick Add** — enter a title and URL to save a link in seconds without leaving the dashboard
-* **Recent Unpublished** — the last five unsaved links; delete any of them directly from this list
+* **Quick Add** — enter a title, URL, and category to save a link in seconds without leaving the dashboard
+* **Recent Unpublished** — the last five unpublished links; delete any of them directly from this list
 * **Recently Published** — the last five published roundup posts with their status
 
 === Adding Links ===
@@ -51,7 +51,7 @@ The LynxJournal dashboard (LynxJournal › Dashboard) gives you an at-a-glance o
 * Categories — assign to one or more existing categories
 * Tags — comma-separated keywords
 
-**Quick add:** Use the Quick Add box on the Dashboard for a bare-minimum title + URL entry.
+**Quick add:** Use the Quick Add box on the Dashboard for a fast title + URL + category entry.
 
 **Via Chrome extension:** Browse to any page and click the extension icon. The title and URL are pre-filled; add a description, pick a category, and click Save Link.
 
@@ -75,7 +75,7 @@ By default, roundup posts use a fixed look: a heading for each category followed
 
 **How it works:** You write your layout as plain text. Special placeholders written in square brackets — such as `[title]`, `[link]`, or `[category_name]` — get swapped for the real post, link, and category information whenever a roundup post is published. A live preview below the editor shows exactly what your layout will look like as you type — nothing is ever saved or published from the preview. Use the Theme/Default switch to see it styled with your site's active theme or with a plain generic look, and the Desktop/Mobile switch to check both widths. (Theme styling only applies to the post content itself — it doesn't show your site's header, footer, or sidebar.)
 
-**Formatting toolbar:** Above the editor is a simple toolbar — Bold, Italic, Underline, headings, bullet and numbered lists, indent, and a horizontal rule — much like a basic word processor. Clicking a button inserts the matching formatting at your cursor.
+**Formatting toolbar:** Above the editor is a simple toolbar — Undo, Redo, Bold, Italic, Underline, headings, bullet and numbered lists, indent, outdent, and a horizontal rule — much like a basic word processor. Clicking a button inserts the matching formatting at your cursor.
 
 **Available tokens:** Click **Available tokens** to open a reference panel listing every placeholder you can use, grouped by what it represents (post details, links, categories, tags). Click any one to insert it at the cursor.
 
@@ -157,9 +157,9 @@ Viewing the Schedule page, saving the schedule, and triggering Run Now all requi
 === Chrome Extension ===
 
 1. install the Chrome Extension "LynxJournal" from https://chromewebstore.google.com/detail/link-digest/majjnembpebmpoaeoildijhhgbjfgjmn
-4. In WordPress, go to LynxJournal › Settings, generate an API key, and copy the API Endpoint URL and key
-5. Click the extension icon › **Settings**, paste both values, and save
-6. From now on, click the extension icon on any page to save the current URL directly to your WordPress site
+2. In WordPress, go to LynxJournal › Browser Extension, generate an API key, and copy the API Endpoint URL and key
+3. Click the extension icon › **Settings**, paste both values, and save
+4. From now on, click the extension icon on any page to save the current URL directly to your WordPress site
 
 == Source Code & Build Tools ==
 The production JavaScript assets in `schedule/schedule.js` are compiled from React components. 
