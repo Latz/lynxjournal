@@ -1,6 +1,10 @@
 {
   "name": "lynxjournal",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=22",
+    "npm": ">=11"
+  },
   "scripts": {
     "build": "wp-scripts build",
     "start": "wp-scripts start",
