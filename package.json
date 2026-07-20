@@ -18,7 +18,8 @@
     "test:e2e:ext": "playwright test --config=playwright.extension.config.mjs",
     "test:e2e:debug": "playwright test --debug",
     "lint:ext-scripts": "node bin/check-extension-scripts.mjs",
-    "lint:ext": "web-ext lint --source-dir=firefox-extension --no-config-discovery --ignore-files=**/*.min.js --ignore-files=tagify.css"
+    "lint:ext": "web-ext lint --source-dir=firefox-extension --no-config-discovery --ignore-files=**/*.min.js --ignore-files=tagify.css",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
@@ -30,6 +31,7 @@
     "@vitest/coverage-v8": "^3.2.6",
     "@wordpress/env": "^10.0.0",
     "@wordpress/scripts": "^30.0.0",
+    "husky": "^9.1.7",
     "msw": "^2.14.6",
     "vitest": "^3.2.6",
     "vitest-axe": "^0.1.0",

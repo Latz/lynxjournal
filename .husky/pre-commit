@@ -1,0 +1,8 @@
+if git diff --cached --name-only | grep -qE '^package(-lock)?\.json$'; then
+  echo "package.json/package-lock.json changed, verifying npm ci..."
+  npm ci --dry-run || {
+    echo "npm ci --dry-run failed: package-lock.json is out of sync with package.json." >&2
+    echo "Run 'npm install' to regenerate the lock file, then re-stage it." >&2
+    exit 1
+  }
+fi
