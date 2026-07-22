@@ -20,7 +20,7 @@ LynxJournal is a WordPress plugin for managing and publishing curated link diges
 * Organise links by category (inspired by frankysnotes.com)
 * REST API for integration with browser extensions (Chrome/Firefox)
 * Schedule automatic digest publishing (daily, weekly, monthly, or by count/age)
-* Notify Email, Discord, Slack, Telegram, Mastodon, or Bluesky when a digest is published, with admin alerts on delivery failures
+* Notify Email, Discord, Slack, Telegram, or Mastodon when a digest is published, with admin alerts on delivery failures
 * Customise the layout of roundup posts with a Post Template editor
 * Chrome extension support
 

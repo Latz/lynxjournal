@@ -17,7 +17,7 @@ import { initialTabFor, anyChannelEnabled } from './notificationChannels';
  * @returns {Object} Everything NotificationsSection needs to render and respond to input.
  */
 export function useNotifications(form, setForm, setSavedForm, configLoaded) {
-  // Keyed by channel ('email' | 'discord' | 'slack_channel' | 'slack_dm' | 'telegram' | 'mastodon' | 'bluesky').
+  // Keyed by channel ('email' | 'discord' | 'slack_channel' | 'slack_dm' | 'telegram' | 'mastodon').
   const [testState, setTestState] = useState({});
   // Keyed the same way as testState, but for the per-channel Save button.
   const [channelSaveState, setChannelSaveState] = useState({});
@@ -37,7 +37,7 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
    * Send a one-off test notification for a single channel using the
    * currently-entered (possibly unsaved) notify settings.
    *
-   * @param {string} channel One of email|discord|slack_channel|slack_dm|telegram|mastodon|bluesky.
+   * @param {string} channel One of email|discord|slack_channel|slack_dm|telegram|mastodon.
    * @returns {Promise<void>}
    */
   async function handleTest(channel) {
@@ -54,7 +54,7 @@ export function useNotifications(form, setForm, setSavedForm, configLoaded) {
    * Persist just one notification channel's current field values,
    * independent of any other unsaved changes elsewhere on the page.
    *
-   * @param {string} channel One of email|discord|slack_channel|slack_dm|telegram|mastodon|bluesky.
+   * @param {string} channel One of email|discord|slack_channel|slack_dm|telegram|mastodon.
    * @returns {Promise<void>}
    */
   async function handleSaveChannel(channel) {

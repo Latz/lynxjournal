@@ -137,14 +137,6 @@ trait LynxJournal_Admin_Menu {
                 . '<p>' . __('This is not end-to-end encrypted — it\'s a regular post restricted to the people mentioned. Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the access token hasn\'t been revoked and the recipient handle is spelled exactly right.', 'lynx-journal') . '</p>'
                 . $this->helpDocLink('mastodon'),
             ],
-            'bluesky' => [
-                __('Bluesky', 'lynx-journal'),
-                '<p>' . __('Sends a genuine private direct message via Bluesky\'s Chat API to a recipient handle every time a scheduled run publishes (or attempts to publish) a roundup.', 'lynx-journal') . '</p>'
-                . '<p><strong>' . __('Setup:', 'lynx-journal') . '</strong> ' . __('In the Bluesky app, go to Settings → App Passwords → Add App Password, name it, and copy the generated password (format xxxx-xxxx-xxxx-xxxx) — you can\'t view it again after leaving that screen.', 'lynx-journal') . '</p>'
-                . '<p><strong>' . __('Accepted formats:', 'lynx-journal') . '</strong> ' . __('handles are bare, e.g. you.bsky.social (no @ prefix); the app password must be exactly four groups of four characters separated by hyphens.', 'lynx-journal') . '</p>'
-                . '<p>' . __('Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the app password hasn\'t been revoked and both handles are spelled exactly right.', 'lynx-journal') . '</p>'
-                . $this->helpDocLink('bluesky'),
-            ],
         ];
     }
 

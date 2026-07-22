@@ -35,7 +35,7 @@ describe('NotificationsSection', () => {
 
     it('renders a tab for every notification channel', () => {
         renderSection();
-        for (const label of ['Email', 'Discord', 'Slack', 'Telegram', 'Mastodon', 'Bluesky']) {
+        for (const label of ['Email', 'Discord', 'Slack', 'Telegram', 'Mastodon']) {
             expect(screen.getByRole('tab', { name: new RegExp(label) })).toBeInTheDocument();
         }
     });

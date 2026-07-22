@@ -97,17 +97,6 @@ export const NOTIFICATION_CHANNELS = [
       { name: 'mastodonRecipient', type: 'text', label: __('Recipient handle', 'lynx-journal'), placeholder: __('@you@mastodon.social', 'lynx-journal'), required: true },
     ],
   },
-  {
-    key: 'bluesky',
-    tabLabel: __('Bluesky', 'lynx-journal'),
-    enabledField: 'bskyEnabled',
-    checkboxLabel: __('Send a Bluesky direct message after each run', 'lynx-journal'),
-    fields: [
-      { name: 'bskyHandle', type: 'text', label: __('Bluesky handle', 'lynx-journal'), placeholder: __('you.bsky.social', 'lynx-journal'), required: true },
-      { name: 'bskyAppPassword', type: 'revealable', label: __('Bluesky app password', 'lynx-journal'), placeholder: __('xxxx-xxxx-xxxx-xxxx', 'lynx-journal'), required: true },
-      { name: 'bskyRecipient', type: 'text', label: __('Recipient handle', 'lynx-journal'), placeholder: __('friend.bsky.social', 'lynx-journal'), required: true },
-    ],
-  },
 ];
 
 /**

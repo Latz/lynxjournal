@@ -15,9 +15,9 @@ beforeEach(function (): void {
 });
 
 describe('LynxJournalNotifyManager::knownChannelKeys()', function (): void {
-    it('returns all 8 channel keys in the fixed registration order', function (): void {
+    it('returns all 7 channel keys in the fixed registration order', function (): void {
         expect($this->manager->knownChannelKeys())->toBe([
-            'email', 'discord', 'slack_channel', 'slack_dm', 'telegram', 'telegram_dm', 'mastodon', 'bluesky',
+            'email', 'discord', 'slack_channel', 'slack_dm', 'telegram', 'telegram_dm', 'mastodon',
         ]);
     });
 });
@@ -418,7 +418,6 @@ describe('LynxJournalNotifyManager::channelLabel()', function (): void {
         expect($this->manager->channelLabel('telegram'))->toBe('Telegram');
         expect($this->manager->channelLabel('telegram_dm'))->toBe('Telegram (DM)');
         expect($this->manager->channelLabel('mastodon'))->toBe('Mastodon');
-        expect($this->manager->channelLabel('bluesky'))->toBe('Bluesky');
     });
 
     it('falls back to the raw key for an unknown channel', function (): void {

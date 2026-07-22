@@ -26,7 +26,6 @@ final class LynxJournalNotifyManager {
             new LynxJournalNotifyTelegramChannel(),
             new LynxJournalNotifyTelegramDmChannel(),
             new LynxJournalNotifyMastodonChannel(),
-            new LynxJournalNotifyBlueskyChannel(),
         ] as $channel) {
             $this->channels[$channel->key()] = $channel;
         }
@@ -48,8 +47,8 @@ final class LynxJournalNotifyManager {
      *
      * Each channel is sent from its own scheduled event (see
      * dispatchChannelNotification()) rather than synchronously here, so a
-     * slow or unreachable channel (Bluesky's multi-request handshake, a
-     * timed-out webhook, ...) can't block the publish request or delay the
+     * slow or unreachable channel (a timed-out webhook, a slow API, ...)
+     * can't block the publish request or delay the
      * remaining channels.
      *
      * @since 1.0.0
@@ -173,7 +172,6 @@ final class LynxJournalNotifyManager {
             'telegram'      => __('Telegram', 'lynx-journal'),
             'telegram_dm'   => __('Telegram (DM)', 'lynx-journal'),
             'mastodon'      => __('Mastodon', 'lynx-journal'),
-            'bluesky'       => __('Bluesky', 'lynx-journal'),
         ];
         return $labels[$key] ?? $key;
     }

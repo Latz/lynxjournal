@@ -17,7 +17,6 @@ You get to pick where your little notes are delivered. Here are all the mailboxe
 - **Slack** — like passing a note to your team at school or work.
 - **Telegram** — another chat room, just a different app for it.
 - **Mastodon** — like shouting "guess what happened!" where everyone walking by can hear.
-- **Bluesky** — same idea as Mastodon, a different town square to shout in.
 
 You don't have to pick just one. You can turn on as many as you like!
 
@@ -51,7 +50,7 @@ Don't worry! It's not scary. It's just your website politely saying, "One of you
 
 - Your website saves your links and makes a roundup post sometimes.
 - A notification is a tiny note that says "it happened!"
-- You choose which mailboxes get the note: Email, Discord, Slack, Telegram, Mastodon, or Bluesky.
+- You choose which mailboxes get the note: Email, Discord, Slack, Telegram, or Mastodon.
 - Press **Send Test** first to make sure it works.
 - After that, notes get delivered all by themselves — no extra clicking needed.
 - If something breaks, a friendly red message tells you, and you can click X to make it go away.

@@ -62,14 +62,14 @@ describe('LynxJournal::restSaveNotification()', function (): void {
     });
 
     it('passes through a validation error for malformed fields', function (): void {
-        $request = lynxjournal_make_request(['channel' => 'bluesky', 'notify' => [
-            'bskyEnabled' => true, 'bskyHandle' => 'not a handle',
+        $request = lynxjournal_make_request(['channel' => 'mastodon', 'notify' => [
+            'mastodonEnabled' => true, 'mastodonRecipient' => 'not a handle',
         ]]);
 
         $result = $this->plugin->restSaveNotification($request);
 
         expect($result)->toBeInstanceOf(WP_Error::class);
-        expect($result->get_error_code())->toBe('invalid_notify_bsky_handle');
+        expect($result->get_error_code())->toBe('invalid_notify_mastodon_recipient');
     });
 
     it('saves only the given channel\'s fields, leaving its sibling target and unrelated channels untouched', function (): void {

@@ -64,7 +64,6 @@ require_once __DIR__ . '/src/php/notifications/channels/TelegramBase.php';
 require_once __DIR__ . '/src/php/notifications/channels/TelegramChannel.php';
 require_once __DIR__ . '/src/php/notifications/channels/TelegramDmChannel.php';
 require_once __DIR__ . '/src/php/notifications/channels/MastodonChannel.php';
-require_once __DIR__ . '/src/php/notifications/channels/BlueskyChannel.php';
 require_once __DIR__ . '/src/php/notifications/Manager.php';
 
 require_once __DIR__ . '/src/php/class-lynxjournal.php';

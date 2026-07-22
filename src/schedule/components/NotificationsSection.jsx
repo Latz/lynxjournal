@@ -177,8 +177,8 @@ function TargetFields({ entry, target, notify, setForm, testState, channelSaveSt
 
 /**
  * The Notifications section of the Schedule admin page: one tab per
- * NOTIFICATION_CHANNELS entry (Email/Discord/Slack/Telegram/Mastodon/
- * Bluesky), each rendered generically from its field config.
+ * NOTIFICATION_CHANNELS entry (Email/Discord/Slack/Telegram/Mastodon),
+ * each rendered generically from its field config.
  *
  * @param {Object}   props
  * @param {Object}   props.form                Schedule form state (reads form.notify).

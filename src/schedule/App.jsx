@@ -28,7 +28,6 @@ const DEFAULT_FORM = {
     telegramEnabled: false, telegramChatId: '',
     telegramDmEnabled: false, telegramDmChatId: '',
     mastodonEnabled: false, mastodonInstanceUrl: '', mastodonAccessToken: '', mastodonRecipient: '',
-    bskyEnabled: false, bskyHandle: '', bskyAppPassword: '', bskyRecipient: '',
   },
   post_status: 'publish',
 };

@@ -38,7 +38,6 @@ describe('LynxJournal::scheduleHelpTabs()', function (): void { // NOSONAR
             'lynxjournal-help-slack',
             'lynxjournal-help-telegram',
             'lynxjournal-help-mastodon',
-            'lynxjournal-help-bluesky',
         ]);
 
         foreach ($tabs as $tab) {

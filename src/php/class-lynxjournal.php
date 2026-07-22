@@ -145,7 +145,7 @@ class LynxJournal {
      * (possibly unsaved) notify settings rather than the stored option.
      *
      * @since 1.0.0
-     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon|bluesky.
+     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon.
      * @param array $notify Notify settings to test with (already sanitized by validateNotifyChannel()).
      * @return true|\WP_Error True on success, WP_Error describing why the test couldn't be sent.
      */
@@ -180,7 +180,7 @@ class LynxJournal {
      * testing the channel currently being configured.
      *
      * @since 1.0.0
-     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon|bluesky.
+     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon.
      * @param array $data The request data containing a 'notify' key.
      * @return \WP_Error|null Error if invalid, null if valid.
      */
@@ -195,7 +195,7 @@ class LynxJournal {
      * The notify field names that belong to one notification channel.
      *
      * @since 1.0.0
-     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon|bluesky.
+     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon.
      * @return string[] Field names within notify.
      */
     private function notifyChannelFields(string $channel): array {
@@ -206,7 +206,7 @@ class LynxJournal {
      * Check that $channel is known and validate/sanitize $data['notify'] for it.
      *
      * @since 1.0.0
-     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon|bluesky.
+     * @param string $channel One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon.
      * @param array $data The request data containing a 'notify' key, modified in place.
      * @return \WP_Error|null Error if invalid, null if valid.
      */

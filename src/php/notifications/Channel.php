@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * A single notification target (e.g. Discord, Slack DM, Bluesky DM).
+ * A single notification target (e.g. Discord, Slack DM, Mastodon DM).
  *
  * Each implementation is self-contained: it knows which `notify` option
  * fields it owns, how to validate/sanitize them, whether it's ready to
@@ -22,7 +22,7 @@ interface LynxJournalNotifyChannel {
      * the notification hooks system. Must never change once released.
      *
      * @since 1.0.0
-     * @return string One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon|bluesky.
+     * @return string One of email|discord|slack_channel|slack_dm|telegram|telegram_dm|mastodon.
      */
     public function key(): string;
 

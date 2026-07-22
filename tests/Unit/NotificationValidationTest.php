@@ -172,41 +172,6 @@ describe('LynxJournal::validateNotifyChannel() — mastodon', function (): void 
     });
 });
 
-describe('LynxJournal::validateNotifyChannel() — bluesky', function (): void {
-    it('accepts valid fields', function (): void {
-        expect(validateChannel($this->plugin, 'bluesky', [
-            'bskyEnabled' => true,
-            'bskyHandle' => 'you.bsky.social',
-            'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd',
-            'bskyRecipient' => 'friend.bsky.social',
-        ]))->toBeNull();
-    });
-
-    it('rejects a malformed handle', function (): void {
-        $error = validateChannel($this->plugin, 'bluesky', ['bskyHandle' => 'not a handle']);
-        expect($error->get_error_code())->toBe('invalid_notify_bsky_handle');
-    });
-
-    it('rejects a malformed app password', function (): void {
-        $error = validateChannel($this->plugin, 'bluesky', ['bskyAppPassword' => 'wrongformat']);
-        expect($error->get_error_code())->toBe('invalid_notify_bsky_password');
-    });
-
-    it('rejects a malformed recipient handle', function (): void {
-        $error = validateChannel($this->plugin, 'bluesky', ['bskyRecipient' => 'not a handle']);
-        expect($error->get_error_code())->toBe('invalid_notify_bsky_recipient');
-    });
-
-    it('requires handle, app password, and recipient when enabled', function (): void {
-        $error = validateChannel($this->plugin, 'bluesky', ['bskyEnabled' => true]);
-        expect($error->get_error_code())->toBe('invalid_notify_bsky_handle');
-    });
-
-    it('allows empty fields when disabled', function (): void {
-        expect(validateChannel($this->plugin, 'bluesky', ['bskyEnabled' => false]))->toBeNull();
-    });
-});
-
 describe('LynxJournal::validateNotifyChannel() — unknown channel', function (): void {
     it('returns invalid_channel for an unrecognized channel key', function (): void {
         $error = validateChannel($this->plugin, 'not_a_real_channel', []);

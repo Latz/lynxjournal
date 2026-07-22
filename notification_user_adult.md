@@ -23,9 +23,6 @@ Also available as a group/channel post or a direct message, sharing one bot toke
 **Mastodon**
 Posts publicly from your account on a Mastodon instance. Requires your instance URL and an access token, generated from your Mastodon account's *Development* settings.
 
-**Bluesky**
-Posts publicly from your Bluesky account. Requires your handle and an app password (not your main account password), generated from Bluesky's account settings.
-
 ## Setting Up a Channel
 
 1. Open the Schedule settings screen and locate the **Notifications** section.
@@ -65,7 +62,7 @@ If a destination isn't working, check the following:
 
 - **Discord**: Confirm the webhook URL was copied in full and hasn't been regenerated or deleted in Discord's channel settings.
 - **Slack / Telegram**: Confirm the bot token is still valid and the bot has permission to post to the specified channel or has been messaged first (for direct messages, some platforms require the bot to be initiated by the user).
-- **Mastodon / Bluesky**: Confirm the instance URL is correct and the access token or app password hasn't expired or been revoked.
+- **Mastodon**: Confirm the instance URL is correct and the access token hasn't expired or been revoked.
 - **Email**: Confirm the address is correctly typed and check spam/junk folders.
 - For any destination, re-run **Send Test** after making changes to confirm the fix worked.
 

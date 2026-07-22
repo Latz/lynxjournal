@@ -16,9 +16,9 @@ import {
 } from '../../src/schedule/lib/notificationChannels.js';
 
 describe('NOTIFICATION_CHANNELS shape', () => {
-    it('has 6 top-level entries with unique keys', () => {
+    it('has 5 top-level entries with unique keys', () => {
         const keys = NOTIFICATION_CHANNELS.map(c => c.key);
-        expect(keys).toEqual(['email', 'discord', 'slack', 'telegram', 'mastodon', 'bluesky']);
+        expect(keys).toEqual(['email', 'discord', 'slack', 'telegram', 'mastodon']);
         expect(new Set(keys).size).toBe(keys.length);
     });
 
@@ -33,7 +33,7 @@ describe('NOTIFICATION_CHANNELS shape', () => {
     });
 
     it('non-grouped entries have their own fields, not targets', () => {
-        for (const key of ['email', 'discord', 'mastodon', 'bluesky']) {
+        for (const key of ['email', 'discord', 'mastodon']) {
             const entry = NOTIFICATION_CHANNELS.find(c => c.key === key);
             expect(entry.targets).toBeUndefined();
             expect(Array.isArray(entry.fields)).toBe(true);
@@ -120,12 +120,11 @@ describe('isChannelEnabled() / isChannelComplete() / isChannelIncomplete() — g
 });
 
 describe('initialTabFor()', () => {
-    it('prioritizes discord > slack > telegram > mastodon > bluesky over email', () => {
-        expect(initialTabFor({ discordEnabled: true, bskyEnabled: true })).toBe('discord');
+    it('prioritizes discord > slack > telegram > mastodon over email', () => {
+        expect(initialTabFor({ discordEnabled: true, mastodonEnabled: true })).toBe('discord');
         expect(initialTabFor({ slackChannelEnabled: true, telegramEnabled: true })).toBe('slack');
         expect(initialTabFor({ telegramDmEnabled: true, mastodonEnabled: true })).toBe('telegram');
-        expect(initialTabFor({ mastodonEnabled: true, bskyEnabled: true })).toBe('mastodon');
-        expect(initialTabFor({ bskyEnabled: true })).toBe('bluesky');
+        expect(initialTabFor({ mastodonEnabled: true })).toBe('mastodon');
     });
 
     it('falls back to email when nothing else is enabled', () => {

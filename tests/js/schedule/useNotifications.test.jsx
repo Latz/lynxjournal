@@ -31,7 +31,7 @@ describe('useNotifications — initial tab / enabled state', () => {
 
     it('derives anyNotifyEnabled from anyChannelEnabled(form.notify)', () => {
         expect(setup({}).result.current.anyNotifyEnabled).toBe(false);
-        expect(setup({ bskyEnabled: true }).result.current.anyNotifyEnabled).toBe(true);
+        expect(setup({ mastodonEnabled: true }).result.current.anyNotifyEnabled).toBe(true);
     });
 });
 

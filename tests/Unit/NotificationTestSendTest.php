@@ -53,11 +53,6 @@ describe('LynxJournal::dispatchTestNotification() — missing fields', function 
         expect($result->get_error_message())->toBe('Enable Mastodon notifications and fill in the instance URL, access token, and recipient handle first.');
     });
 
-    it('returns test_missing_field for bluesky when incomplete', function (): void {
-        $result = $this->plugin->dispatchTestNotification('bluesky', ['bskyEnabled' => true]);
-        expect($result->get_error_message())->toBe('Enable Bluesky notifications and fill in the handle, app password, and recipient handle first.');
-    });
-
     it('returns invalid_channel for an unknown channel', function (): void {
         $result = $this->plugin->dispatchTestNotification('not_a_channel', []);
         expect($result->get_error_code())->toBe('invalid_channel');
@@ -168,36 +163,4 @@ describe('LynxJournal::dispatchTestNotification() — success', function (): voi
         expect($body['visibility'])->toBe('direct');
     });
 
-    it('sends a test Bluesky DM running the full handshake', function (): void {
-        Functions\when('add_query_arg')->alias(fn ($key, $value, $url) => $url . '?' . $key . '=' . $value);
-        Functions\when('is_wp_error')->justReturn(false);
-        Functions\when('wp_remote_retrieve_response_code')->justReturn(200);
-        Functions\when('wp_remote_retrieve_body')->alias(fn ($response) => $response['body'] ?? '');
-
-        $captured = [];
-        Functions\when('wp_remote_post')->alias(function ($url, $args) use (&$captured): array {
-            $captured[$url] = compact('args');
-            if (str_contains($url, 'createSession')) {
-                return ['body' => json_encode(['accessJwt' => 'jwt123', 'did' => 'did:plc:sender'])];
-            }
-            if (str_contains($url, 'getConvoForMembers')) {
-                return ['body' => json_encode(['convo' => ['id' => 'convo123']])];
-            }
-            return ['body' => json_encode(['id' => 'msg123'])];
-        });
-        Functions\when('wp_remote_get')->alias(function ($url, $args) use (&$captured): array {
-            $captured[$url] = compact('args');
-            return ['body' => json_encode(['did' => 'did:plc:recipient'])];
-        });
-
-        $result = $this->plugin->dispatchTestNotification('bluesky', [
-            'bskyEnabled' => true, 'bskyHandle' => 'you.bsky.social', 'bskyAppPassword' => 'aaaa-bbbb-cccc-dddd', 'bskyRecipient' => 'friend.bsky.social',
-        ]);
-
-        expect($result)->toBeTrue();
-        $sendCall = $captured['https://bsky.chat/xrpc/chat.bsky.convo.sendMessage'];
-        $sendBody = json_decode($sendCall['args']['body'], true);
-        expect($sendBody['convoId'])->toBe('convo123');
-        expect($sendBody['message']['text'])->toBe('This is a test notification from LynxJournal.');
-    });
 });
