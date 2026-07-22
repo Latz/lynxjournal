@@ -27,6 +27,8 @@ chrome-extension/
 pest.php
 phpunit.xml
 phpcs.xml
+phpstan.neon
+trivy.yaml
 sonar-project.properties
 constants.json
 composer.json
@@ -39,6 +41,7 @@ playwright.config.mjs
 playwright.config.js
 playwright.extension.config.mjs
 *.diff
+*.tmp
 test-results/
 dist/
 chrome-extension.rar
