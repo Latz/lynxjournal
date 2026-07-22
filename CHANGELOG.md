@@ -30,7 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 
 - Merged the `messaging` branch's multi-channel notification system (Discord/Slack/Telegram/Mastodon/
-  Bluesky/Email) into master alongside master's Categories & Tags, Post Template, and CI/tooling work.
+  Email) into master alongside master's Categories & Tags, Post Template, and CI/tooling work.
 - Testing or saving one Slack or Telegram target no longer fails because the *other*, unrelated target
   (e.g. the DM tab) is enabled but incomplete.
 - Removed eight dead `maybeSend*Notification()` methods that were never hooked to any action; the real
