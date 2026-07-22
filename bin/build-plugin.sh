@@ -73,6 +73,9 @@ rsync -a \
     --exclude='README.md' \
     "$PROJECT_DIR/chrome-extension/" "$STAGE_DIR/chrome-extension/"
 
+echo "Regenerating translation template (languages/lynx-journal.pot)..."
+(cd "$PROJECT_DIR" && composer run i18n:pot)
+
 echo "Copying languages/..."
 rsync -a "$PROJECT_DIR/languages/" "$STAGE_DIR/languages/"
 

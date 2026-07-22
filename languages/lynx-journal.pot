@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: LynxJournal 1.1.0\n"
+"Project-Id-Version: LynxJournal 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lynxjournal\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-19T21:59:05+00:00\n"
+"POT-Creation-Date: 2026-07-22T15:08:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: lynx-journal\n"
@@ -37,58 +37,9 @@ msgid "notify must be an object"
 msgstr ""
 
 #: src/php/class-lynxjournal.php:215
-#: src/php/notifications/Manager.php:228
-#: src/php/notifications/Manager.php:244
+#: src/php/notifications/Manager.php:226
+#: src/php/notifications/Manager.php:242
 msgid "Unknown notification channel."
-msgstr ""
-
-#: src/php/notifications/channels/BlueskyChannel.php:60
-msgid "notify.bskyHandle must be a valid Bluesky handle, e.g. user.bsky.social"
-msgstr ""
-
-#: src/php/notifications/channels/BlueskyChannel.php:61
-msgid "notify.bskyAppPassword must be a valid Bluesky app password (xxxx-xxxx-xxxx-xxxx)"
-msgstr ""
-
-#: src/php/notifications/channels/BlueskyChannel.php:62
-msgid "notify.bskyRecipient must be a valid Bluesky handle, e.g. friend.bsky.social"
-msgstr ""
-
-#: src/php/notifications/channels/BlueskyChannel.php:81
-msgid "notify.bskyHandle is required when Bluesky notifications are enabled"
-msgstr ""
-
-#: src/php/notifications/channels/BlueskyChannel.php:82
-msgid "notify.bskyAppPassword is required when Bluesky notifications are enabled"
-msgstr ""
-
-#: src/php/notifications/channels/BlueskyChannel.php:83
-msgid "notify.bskyRecipient is required when Bluesky notifications are enabled"
-msgstr ""
-
-#: src/php/notifications/channels/BlueskyChannel.php:97
-msgid "Enable Bluesky notifications and fill in the handle, app password, and recipient handle first."
-msgstr ""
-
-#: src/php/notifications/channels/BlueskyChannel.php:99
-#: src/php/notifications/channels/DiscordChannel.php:59
-#: src/php/notifications/channels/EmailChannel.php:61
-#: src/php/notifications/channels/MastodonChannel.php:92
-#: src/php/notifications/channels/SlackBase.php:152
-#: src/php/notifications/channels/TelegramBase.php:155
-msgid "This is a test notification from LynxJournal."
-msgstr ""
-
-#: src/php/notifications/channels/BlueskyChannel.php:223
-msgid "Bluesky did not return a valid session. Check the handle and app password."
-msgstr ""
-
-#: src/php/notifications/channels/BlueskyChannel.php:250
-msgid "Could not resolve the Bluesky recipient handle."
-msgstr ""
-
-#: src/php/notifications/channels/BlueskyChannel.php:277
-msgid "Could not open a Bluesky DM conversation with the recipient."
 msgstr ""
 
 #: src/php/notifications/channels/DiscordChannel.php:37
@@ -108,6 +59,14 @@ msgstr ""
 msgid "Test notification"
 msgstr ""
 
+#: src/php/notifications/channels/DiscordChannel.php:59
+#: src/php/notifications/channels/EmailChannel.php:61
+#: src/php/notifications/channels/MastodonChannel.php:92
+#: src/php/notifications/channels/SlackBase.php:152
+#: src/php/notifications/channels/TelegramBase.php:155
+msgid "This is a test notification from LynxJournal."
+msgstr ""
+
 #: src/php/notifications/channels/DiscordChannel.php:97
 #: src/php/traits/Admin/TemplatePage.php:44
 #: build/taxonomies.js:3
@@ -119,7 +78,7 @@ msgstr ""
 
 #: src/php/notifications/channels/DiscordChannel.php:98
 #: build/schedule.js:3
-#: src/schedule/App.jsx:269
+#: src/schedule/App.jsx:273
 msgid "Mode"
 msgstr ""
 
@@ -296,13 +255,13 @@ msgid "notify.telegramBotToken is required when Telegram DM notifications are en
 msgstr ""
 
 #. translators: %s: channel name
-#: src/php/notifications/Manager.php:150
+#: src/php/notifications/Manager.php:149
 #, php-format
 msgid "[LynxJournal] %s notification failed to send"
 msgstr ""
 
 #. translators: 1: channel name, 2: error message
-#: src/php/notifications/Manager.php:152
+#: src/php/notifications/Manager.php:151
 #, php-format
 msgid ""
 "The %1$s notification failed to send:\n"
@@ -310,53 +269,46 @@ msgid ""
 "%2$s"
 msgstr ""
 
-#: src/php/notifications/Manager.php:169
+#: src/php/notifications/Manager.php:168
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:19
 msgid "Email"
 msgstr ""
 
-#: src/php/notifications/Manager.php:170
+#: src/php/notifications/Manager.php:169
 #: src/php/traits/Admin/Menu.php:107
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:28
 msgid "Discord"
 msgstr ""
 
-#: src/php/notifications/Manager.php:171
+#: src/php/notifications/Manager.php:170
 msgid "Slack (Channel)"
 msgstr ""
 
-#: src/php/notifications/Manager.php:172
+#: src/php/notifications/Manager.php:171
 msgid "Slack (DM)"
 msgstr ""
 
-#: src/php/notifications/Manager.php:173
+#: src/php/notifications/Manager.php:172
 #: src/php/traits/Admin/Menu.php:125
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:64
 msgid "Telegram"
 msgstr ""
 
-#: src/php/notifications/Manager.php:174
+#: src/php/notifications/Manager.php:173
 msgid "Telegram (DM)"
 msgstr ""
 
-#: src/php/notifications/Manager.php:175
+#: src/php/notifications/Manager.php:174
 #: src/php/traits/Admin/Menu.php:133
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:91
 msgid "Mastodon"
 msgstr ""
 
-#: src/php/notifications/Manager.php:176
-#: src/php/traits/Admin/Menu.php:141
-#: build/schedule.js:1
-#: src/schedule/lib/notificationChannels.js:102
-msgid "Bluesky"
-msgstr ""
-
-#: src/php/notifications/Manager.php:211
+#: src/php/notifications/Manager.php:209
 msgid "notify.adminAlertEmail is not a valid email address"
 msgstr ""
 
@@ -424,7 +376,7 @@ msgid "Add Link"
 msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:92
-#: src/php/traits/Admin/Menu.php:234
+#: src/php/traits/Admin/Menu.php:226
 #: build/taxonomies.js:1
 #: build/taxonomies.js:3
 #: src/categories/App.jsx:122
@@ -455,7 +407,7 @@ msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:213
 #: src/php/traits/Admin/Dashboard.php:418
-#: src/php/traits/RestApi.php:506
+#: src/php/traits/RestApi.php:509
 msgid "Link added successfully!"
 msgstr ""
 
@@ -505,7 +457,6 @@ msgstr ""
 #: src/php/traits/Admin/Dashboard.php:97
 #: src/php/traits/Admin/Dashboard.php:349
 #: src/php/traits/Admin/LinksPage.php:334
-#: src/php/traits/Admin/LinksPage.php:359
 msgid "View Post"
 msgstr ""
 
@@ -577,7 +528,7 @@ msgstr ""
 
 #: src/php/traits/Admin/Dashboard.php:316
 #: build/schedule.js:3
-#: src/schedule/App.jsx:290
+#: src/schedule/App.jsx:294
 msgid "Publish"
 msgstr ""
 
@@ -597,7 +548,7 @@ msgstr ""
 #: src/php/traits/Admin/Dashboard.php:377
 #: src/php/traits/Admin/LinksPage.php:348
 #: build/schedule.js:3
-#: src/schedule/App.jsx:291
+#: src/schedule/App.jsx:295
 msgid "Draft"
 msgstr ""
 
@@ -746,6 +697,10 @@ msgstr ""
 msgid "Edit Draft"
 msgstr ""
 
+#: src/php/traits/Admin/LinksPage.php:359
+msgid "View"
+msgstr ""
+
 #: src/php/traits/Admin/LinksPage.php:360
 #: src/php/traits/Admin/LinksPage.php:364
 msgid "Are you sure you want to unpublish this link?"
@@ -818,7 +773,6 @@ msgstr ""
 #: src/php/traits/Admin/Menu.php:118
 #: src/php/traits/Admin/Menu.php:127
 #: src/php/traits/Admin/Menu.php:135
-#: src/php/traits/Admin/Menu.php:143
 msgid "Setup:"
 msgstr ""
 
@@ -886,7 +840,6 @@ msgstr ""
 
 #: src/php/traits/Admin/Menu.php:128
 #: src/php/traits/Admin/Menu.php:136
-#: src/php/traits/Admin/Menu.php:144
 msgid "Accepted formats:"
 msgstr ""
 
@@ -914,35 +867,19 @@ msgstr ""
 msgid "This is not end-to-end encrypted — it's a regular post restricted to the people mentioned. Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the access token hasn't been revoked and the recipient handle is spelled exactly right."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:142
-msgid "Sends a genuine private direct message via Bluesky's Chat API to a recipient handle every time a scheduled run publishes (or attempts to publish) a roundup."
-msgstr ""
-
-#: src/php/traits/Admin/Menu.php:143
-msgid "In the Bluesky app, go to Settings → App Passwords → Add App Password, name it, and copy the generated password (format xxxx-xxxx-xxxx-xxxx) — you can't view it again after leaving that screen."
-msgstr ""
-
-#: src/php/traits/Admin/Menu.php:144
-msgid "handles are bare, e.g. you.bsky.social (no @ prefix); the app password must be exactly four groups of four characters separated by hyphens."
-msgstr ""
-
-#: src/php/traits/Admin/Menu.php:145
-msgid "Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the app password hasn't been revoked and both handles are spelled exactly right."
-msgstr ""
-
-#: src/php/traits/Admin/Menu.php:160
+#: src/php/traits/Admin/Menu.php:152
 msgid "Detailed instructions"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:232
+#: src/php/traits/Admin/Menu.php:224
 msgid "Delete?"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:233
+#: src/php/traits/Admin/Menu.php:225
 msgid "Yes"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:538
+#: src/php/traits/Admin/Menu.php:530
 msgid "LynxJournal Summary"
 msgstr ""
 
@@ -1243,33 +1180,33 @@ msgstr ""
 msgid "Could not delete link"
 msgstr ""
 
-#: src/php/traits/RestApi.php:383
+#: src/php/traits/RestApi.php:386
 msgid "Invalid schedule data"
 msgstr ""
 
-#: src/php/traits/RestApi.php:436
+#: src/php/traits/RestApi.php:439
 msgid "A schedule run is already in progress"
 msgstr ""
 
-#: src/php/traits/RestApi.php:492
+#: src/php/traits/RestApi.php:495
 msgid "Failed to create link."
 msgstr ""
 
-#: src/php/traits/RestApi.php:527
+#: src/php/traits/RestApi.php:530
 msgid "Failed to fetch categories."
 msgstr ""
 
-#: src/php/traits/RestApi.php:623
+#: src/php/traits/RestApi.php:626
 #: build/taxonomies.js:3
 #: src/categories/App.jsx:76
 msgid "Could not delete category."
 msgstr ""
 
-#: src/php/traits/RestApi.php:656
+#: src/php/traits/RestApi.php:659
 msgid "Failed to fetch tags."
 msgstr ""
 
-#: src/php/traits/RestApi.php:752
+#: src/php/traits/RestApi.php:755
 #: build/taxonomies.js:5
 #: src/tags/App.jsx:76
 msgid "Could not delete tag."
@@ -1307,27 +1244,31 @@ msgstr ""
 msgid "recurrence must be an object"
 msgstr ""
 
-#: src/php/traits/ScheduleValidator.php:69
+#: src/php/traits/ScheduleValidator.php:65
+msgid "At least one weekday must be selected for weekly schedules."
+msgstr ""
+
+#: src/php/traits/ScheduleValidator.php:72
 msgid "trigger must be an object"
 msgstr ""
 
-#: src/php/traits/ScheduleValidator.php:78
+#: src/php/traits/ScheduleValidator.php:81
 msgid "trigger.count must be a positive integer"
 msgstr ""
 
-#: src/php/traits/ScheduleValidator.php:84
+#: src/php/traits/ScheduleValidator.php:87
 msgid "trigger.days must be a positive integer"
 msgstr ""
 
-#: src/php/traits/ScheduleValidator.php:96
+#: src/php/traits/ScheduleValidator.php:99
 msgid "post_status must be \"publish\" or \"draft\""
 msgstr ""
 
-#: src/php/traits/ScheduleValidator.php:111
+#: src/php/traits/ScheduleValidator.php:114
 msgid "publishAs must be a non-negative integer"
 msgstr ""
 
-#: src/php/traits/ScheduleValidator.php:114
+#: src/php/traits/ScheduleValidator.php:117
 msgid "publishAs must refer to a user who can publish posts"
 msgstr ""
 
@@ -1782,43 +1723,12 @@ msgstr ""
 
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:97
-#: src/schedule/lib/notificationChannels.js:108
 msgid "Recipient handle"
 msgstr ""
 
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:97
 msgid "@you@mastodon.social"
-msgstr ""
-
-#: build/schedule.js:1
-#: src/schedule/lib/notificationChannels.js:104
-msgid "Send a Bluesky direct message after each run"
-msgstr ""
-
-#: build/schedule.js:1
-#: src/schedule/lib/notificationChannels.js:106
-msgid "Bluesky handle"
-msgstr ""
-
-#: build/schedule.js:1
-#: src/schedule/lib/notificationChannels.js:106
-msgid "you.bsky.social"
-msgstr ""
-
-#: build/schedule.js:1
-#: src/schedule/lib/notificationChannels.js:107
-msgid "Bluesky app password"
-msgstr ""
-
-#: build/schedule.js:1
-#: src/schedule/lib/notificationChannels.js:107
-msgid "xxxx-xxxx-xxxx-xxxx"
-msgstr ""
-
-#: build/schedule.js:1
-#: src/schedule/lib/notificationChannels.js:108
-msgid "friend.bsky.social"
 msgstr ""
 
 #: build/schedule.js:1
@@ -2372,17 +2282,17 @@ msgid "Alert email address"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:125
+#: src/schedule/App.jsx:124
 msgid "WP-Cron is disabled."
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:127
+#: src/schedule/App.jsx:126
 msgid "Scheduled runs will not fire automatically. Add a real server cron job or remove"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:129
+#: src/schedule/App.jsx:128
 msgid "from"
 msgstr ""
 
@@ -2407,52 +2317,57 @@ msgid "Failed to save."
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:227
+#: src/schedule/App.jsx:231
 msgid "Recurrence"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:227
+#: src/schedule/App.jsx:231
 msgid "Condition"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:239
+#: src/schedule/App.jsx:243
 msgid "No automatic trigger — posts must be triggered manually."
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:278
+#: src/schedule/App.jsx:282
 msgid "Execution Times"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:286
+#: src/schedule/App.jsx:290
 msgid "Post Status"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:299
+#: src/schedule/App.jsx:303
 msgid "Notifications"
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:188
+#: src/schedule/App.jsx:187
 msgid "Execution times must be unique."
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:195
+#: src/schedule/App.jsx:192
+msgid "Select at least one day for weekly schedules."
+msgstr ""
+
+#: build/schedule.js:3
+#: src/schedule/App.jsx:199
 msgid "Schedule saved."
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:198
+#: src/schedule/App.jsx:202
 msgid "Failed to save schedule."
 msgstr ""
 
 #: build/schedule.js:3
-#: src/schedule/App.jsx:315
+#: src/schedule/App.jsx:319
 msgid "Save Schedule"
 msgstr ""
 
