@@ -2,7 +2,7 @@
 /**
  * Plugin Name: LynxJournal
  * Description: Self-hosted link aggregation and micro-blogging. Transform web references into structured blog posts.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Latz
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html

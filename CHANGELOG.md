@@ -3,6 +3,21 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.2.0]
+
+### Removed
+
+- The Bluesky notification channel — Bluesky's Chat API does not support the DM mechanism it relied
+  on, so it could no longer function reliably.
+
+### Fixed
+
+- Weekly schedules could be saved with no weekdays selected, causing them to silently never fire.
+- Monthly "nth weekday" schedule entries (e.g. "first Monday") never fired due to a type-string mismatch.
+- Shortened the "View Post" link to "View" on the Links admin page.
+- Several readme.txt documentation inaccuracies (Dashboard, Post Template, Chrome Extension, Managing
+  Links, and Publishing sections).
+
 ## [Unreleased]
 
 ### Added

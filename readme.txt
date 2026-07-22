@@ -2,9 +2,9 @@
 Contributors: latz
 Tags: links, blogging, roundup, curation
 Requires at least: 6.0
-Tested up to: 7.0.2
+Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -167,6 +167,13 @@ The unminified source code, build scripts, and configuration files are publicly 
 https://github.com/Latz/lynxjournal
 
 == Changelog ==
+
+= 1.2.0 =
+* Removed the Bluesky notification channel: Bluesky's Chat API does not support the DM mechanism it relied on, so it could no longer function reliably.
+* Fixed: weekly schedules could be saved with no weekdays selected, causing them to silently never fire.
+* Fixed: monthly "nth weekday" schedule entries (e.g. "first Monday") never fired due to a type-string mismatch.
+* Fixed: shortened the "View Post" link to "View" on the Links admin page.
+* Fixed several readme.txt documentation inaccuracies (Dashboard, Post Template, Chrome Extension, Managing Links, and Publishing sections).
 
 = 1.1.0 =
 * Added Slack, Telegram, and Mastodon notification channels, joining Email and Discord (all five channels: Email, Discord, Slack, Telegram, Mastodon).
