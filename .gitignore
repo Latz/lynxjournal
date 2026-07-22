@@ -63,4 +63,3 @@ bin/*.bak
 /.claude-dev-helper
 /bin/deploy.sh
 /bin/sonar-project.properties
-/bin/sonar-scanner.sh
