@@ -583,3 +583,28 @@ textarea.lynxjournal-cat-inline-input {
 .lynxjournal-template-card {
 	max-width: none;
 }
+
+/* ── Contextual Help: fixed-height tab panels ───────────────
+   Stacks all help-tab panels in the same grid cell so the wrapper's
+   height always equals the tallest panel; switching tabs no longer
+   resizes (and jumps) the page. Panels stay in the DOM's normal flow
+   (display:block, just visually hidden), so the grid auto-sizing
+   algorithm accounts for every panel's height automatically — no JS
+   measurement needed, and it stays correct across resize/zoom/text
+   changes for free. */
+.contextual-help-tabs-wrap {
+	display: grid;
+}
+
+.contextual-help-tabs-wrap .help-tab-content {
+	display: block !important;
+	grid-column: 1;
+	grid-row: 1;
+	visibility: hidden;
+	pointer-events: none;
+}
+
+.contextual-help-tabs-wrap .help-tab-content.active {
+	visibility: visible;
+	pointer-events: auto;
+}

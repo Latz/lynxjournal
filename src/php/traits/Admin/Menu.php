@@ -26,7 +26,11 @@ trait LynxJournal_Admin_Menu {
         );
 
         $this->addSubmenu(__('Dashboard',        'lynx-journal'), __('Dashboard',        'lynx-journal'), 'read',              'lynxjournal-dashboard',                                    'dashboardPage');
-        $this->addSubmenu(__('Show Links',       'lynx-journal'), __('All Links',        'lynx-journal'), 'read',              'lynxjournal-admin',                                        'showLinksPage');
+        $links_hook = $this->addSubmenu(__('Show Links', 'lynx-journal'), __('All Links', 'lynx-journal'), 'read', 'lynxjournal-admin', 'showLinksPage');
+        if ($links_hook) {
+            add_action("load-{$links_hook}", [$this, 'showLinksHelpTabs']);
+        }
+
         $this->addSubmenu(__('Add Link',         'lynx-journal'), __('Add Link',         'lynx-journal'), 'read',              'lynxjournal-add',                                          'addLinkPage');
         $this->addSubmenu(__('Categories & Tags', 'lynx-journal'), __('Categories & Tags', 'lynx-journal'), 'edit_posts', 'lynxjournal-categories',                                   'categoriesPage');
         $this->addSubmenu(__('Browser Extension', 'lynx-journal'), __('Browser Extension', 'lynx-journal'), 'edit_posts', 'lynxjournal-settings',                                     'settingsPage');
@@ -136,6 +140,62 @@ trait LynxJournal_Admin_Menu {
                 . '<p><strong>' . __('Accepted formats:', 'lynx-journal') . '</strong> ' . __('instance URL must start with https:// and include a host; recipient handle must include both parts, e.g. @you@mastodon.social.', 'lynx-journal') . '</p>'
                 . '<p>' . __('This is not end-to-end encrypted — it\'s a regular post restricted to the people mentioned. Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the access token hasn\'t been revoked and the recipient handle is spelled exactly right.', 'lynx-journal') . '</p>'
                 . $this->helpDocLink('mastodon'),
+            ],
+        ];
+    }
+
+    /**
+     * Register contextual Help tabs on the All Links screen.
+     *
+     * @since 1.2.0
+     * @return void
+     */
+    public function showLinksHelpTabs(): void {
+        $screen = get_current_screen();
+        if (!$screen) {
+            return;
+        }
+
+        foreach ($this->showLinksHelpTabContent() as $id => [$title, $content]) {
+            $screen->add_help_tab([
+                'id'      => "lynxjournal-help-{$id}",
+                'title'   => $title,
+                'content' => wp_kses_post($content),
+            ]);
+        }
+    }
+
+    /**
+     * Content for each All Links screen Help tab, keyed by tab id.
+     *
+     * @since 1.2.0
+     * @return array<string, array{0: string, 1: string}> Map of tab id to [title, HTML content].
+     */
+    private function showLinksHelpTabContent(): array {
+        return [
+            'overview' => [
+                __('Overview', 'lynx-journal'),
+                '<p>' . __('All Links shows your saved links in a paginated table, grouped by category.', 'lynx-journal') . '</p>'
+                . '<p>' . __('Use the search box, or filter by date or category, to narrow the list.', 'lynx-journal') . '</p>',
+            ],
+            'status' => [
+                __('Status Badges', 'lynx-journal'),
+                '<p>' . __('Each link shows one of three status badges:', 'lynx-journal') . '</p>'
+                . '<ul>'
+                . '<li><strong>' . __('Unpublished', 'lynx-journal') . '</strong> — ' . __('not yet included in any roundup post.', 'lynx-journal') . '</li>'
+                . '<li><strong>' . __('Draft', 'lynx-journal') . '</strong> — ' . __('included in a roundup post that was saved as a draft.', 'lynx-journal') . '</li>'
+                . '<li><strong>' . __('Published', 'lynx-journal') . '</strong> — ' . __('included in a roundup post that is live.', 'lynx-journal') . '</li>'
+                . '</ul>',
+            ],
+            'actions' => [
+                __('Row Actions', 'lynx-journal'),
+                '<p>' . __('Each link can offer these actions:', 'lynx-journal') . '</p>'
+                . '<ul>'
+                . '<li><strong>' . __('View', 'lynx-journal') . '</strong> — ' . __('opens the published post or draft (published/draft links only).', 'lynx-journal') . '</li>'
+                . '<li><strong>' . __('Unpublish', 'lynx-journal') . '</strong> — ' . __('reverts a published or draft link back to unpublished (published/draft links only).', 'lynx-journal') . '</li>'
+                . '<li><strong>' . __('Edit', 'lynx-journal') . '</strong> — ' . __('opens the link in the standard WordPress post editor.', 'lynx-journal') . '</li>'
+                . '<li><strong>' . __('Delete', 'lynx-journal') . '</strong> — ' . __('removes the link permanently (confirmation required).', 'lynx-journal') . '</li>'
+                . '</ul>',
             ],
         ];
     }
