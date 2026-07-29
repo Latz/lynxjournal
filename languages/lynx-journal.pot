@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-22T15:08:48+00:00\n"
+"POT-Creation-Date: 2026-07-28T22:15:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: lynx-journal\n"
@@ -31,12 +31,12 @@ msgstr ""
 msgid "Latz"
 msgstr ""
 
-#: src/php/class-lynxjournal.php:170
-#: src/php/class-lynxjournal.php:189
+#: src/php/class-lynxjournal.php:180
+#: src/php/class-lynxjournal.php:199
 msgid "notify must be an object"
 msgstr ""
 
-#: src/php/class-lynxjournal.php:215
+#: src/php/class-lynxjournal.php:225
 #: src/php/notifications/Manager.php:226
 #: src/php/notifications/Manager.php:242
 msgid "Unknown notification channel."
@@ -276,7 +276,7 @@ msgid "Email"
 msgstr ""
 
 #: src/php/notifications/Manager.php:169
-#: src/php/traits/Admin/Menu.php:107
+#: src/php/traits/Admin/Menu.php:115
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:28
 msgid "Discord"
@@ -291,7 +291,7 @@ msgid "Slack (DM)"
 msgstr ""
 
 #: src/php/notifications/Manager.php:172
-#: src/php/traits/Admin/Menu.php:125
+#: src/php/traits/Admin/Menu.php:133
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:64
 msgid "Telegram"
@@ -302,7 +302,7 @@ msgid "Telegram (DM)"
 msgstr ""
 
 #: src/php/notifications/Manager.php:174
-#: src/php/traits/Admin/Menu.php:133
+#: src/php/traits/Admin/Menu.php:141
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:91
 msgid "Mastodon"
@@ -330,16 +330,16 @@ msgid "Add New Link"
 msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:42
-#: src/php/traits/Admin/Dashboard.php:423
-#: src/php/traits/Admin/LinksPage.php:168
-#: src/php/traits/Admin/LinksPage.php:199
+#: src/php/traits/Admin/Dashboard.php:453
+#: src/php/traits/Admin/LinksPage.php:219
+#: src/php/traits/Admin/LinksPage.php:250
 msgid "Title"
 msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:51
-#: src/php/traits/Admin/Dashboard.php:428
-#: src/php/traits/Admin/LinksPage.php:169
-#: src/php/traits/Admin/LinksPage.php:200
+#: src/php/traits/Admin/Dashboard.php:458
+#: src/php/traits/Admin/LinksPage.php:220
+#: src/php/traits/Admin/LinksPage.php:251
 msgid "URL"
 msgstr ""
 
@@ -370,13 +370,13 @@ msgid "Separate multiple tags with commas (e.g., tag1, tag2, tag3)"
 msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:91
-#: src/php/traits/Admin/Dashboard.php:446
-#: src/php/traits/Admin/Menu.php:30
+#: src/php/traits/Admin/Dashboard.php:476
+#: src/php/traits/Admin/Menu.php:36
 msgid "Add Link"
 msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:92
-#: src/php/traits/Admin/Menu.php:226
+#: src/php/traits/Admin/Menu.php:290
 #: build/taxonomies.js:1
 #: build/taxonomies.js:3
 #: src/categories/App.jsx:122
@@ -406,278 +406,282 @@ msgid "Failed to add link."
 msgstr ""
 
 #: src/php/traits/Admin/AddLink.php:213
-#: src/php/traits/Admin/Dashboard.php:418
-#: src/php/traits/RestApi.php:509
+#: src/php/traits/Admin/Dashboard.php:448
+#: src/php/traits/RestApi.php:600
 msgid "Link added successfully!"
 msgstr ""
 
 #: src/php/traits/Admin/Categories.php:16
-#: src/php/traits/Admin/Menu.php:31
+#: src/php/traits/Admin/Menu.php:37
 msgid "Categories & Tags"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:30
-msgid "Total"
-msgstr ""
-
-#: src/php/traits/Admin/Dashboard.php:34
-#: src/php/traits/Admin/Dashboard.php:646
-#: src/php/traits/Admin/LinksPage.php:171
-#: src/php/traits/Admin/LinksPage.php:202
-#: src/php/traits/Admin/LinksPage.php:347
-msgid "Published"
-msgstr ""
-
-#: src/php/traits/Admin/Dashboard.php:38
-#: src/php/traits/Admin/Dashboard.php:651
-#: src/php/traits/Admin/LinksPage.php:349
-msgid "Unpublished"
-msgstr ""
-
-#: src/php/traits/Admin/Dashboard.php:44
+#: src/php/traits/Admin/Dashboard.php:23
 msgid "Recent Unpublished"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:66
+#: src/php/traits/Admin/Dashboard.php:30
 msgid "Go to LynxJournal"
 msgstr ""
 
+#: src/php/traits/Admin/Dashboard.php:62
+msgid "Total"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:63
+#: src/php/traits/Admin/Dashboard.php:676
+#: src/php/traits/Admin/LinksPage.php:222
+#: src/php/traits/Admin/LinksPage.php:253
+#: src/php/traits/Admin/LinksPage.php:398
+#: src/php/traits/Admin/Menu.php:191
+msgid "Published"
+msgstr ""
+
+#: src/php/traits/Admin/Dashboard.php:64
+#: src/php/traits/Admin/Dashboard.php:681
+#: src/php/traits/Admin/LinksPage.php:400
+#: src/php/traits/Admin/Menu.php:189
+msgid "Unpublished"
+msgstr ""
+
 #. translators: 1: number of successfully processed links, 2: optional failure message
-#: src/php/traits/Admin/Dashboard.php:84
+#: src/php/traits/Admin/Dashboard.php:114
 #, php-format
 msgid "%d failed."
 msgstr ""
 
 #. translators: 1: number of successfully processed links, 2: optional failure message
-#: src/php/traits/Admin/Dashboard.php:87
+#: src/php/traits/Admin/Dashboard.php:117
 #, php-format
 msgid "Successfully processed %1$d link(s). %2$s"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:97
-#: src/php/traits/Admin/Dashboard.php:349
-#: src/php/traits/Admin/LinksPage.php:334
+#: src/php/traits/Admin/Dashboard.php:127
+#: src/php/traits/Admin/Dashboard.php:379
+#: src/php/traits/Admin/LinksPage.php:385
 msgid "View Post"
 msgstr ""
 
 #. translators: %s: formatted next publish datetime
-#: src/php/traits/Admin/Dashboard.php:140
+#: src/php/traits/Admin/Dashboard.php:170
 #, php-format
 msgid "next: %s"
 msgstr ""
 
 #. translators: 1: remaining links needed, 2: threshold
-#: src/php/traits/Admin/Dashboard.php:160
+#: src/php/traits/Admin/Dashboard.php:190
 #, php-format
 msgid "%1$d out of %2$d left until publish"
 msgid_plural "%1$d out of %2$d left until publish"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/php/traits/Admin/Dashboard.php:181
+#: src/php/traits/Admin/Dashboard.php:211
 msgid "Recent Unpublished Links"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:195
+#: src/php/traits/Admin/Dashboard.php:225
 msgid "No unpublished links at the moment."
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:200
+#: src/php/traits/Admin/Dashboard.php:230
 msgid "View All Links"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:228
+#: src/php/traits/Admin/Dashboard.php:258
 msgid "Delete link"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:259
+#: src/php/traits/Admin/Dashboard.php:289
 msgid "Recently Published"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:264
+#: src/php/traits/Admin/Dashboard.php:294
 msgid "No published links yet."
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:269
+#: src/php/traits/Admin/Dashboard.php:299
 msgid "View all links →"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:289
+#: src/php/traits/Admin/Dashboard.php:319
 msgid "Publish Now"
 msgstr ""
 
 #. translators: %d: number of unpublished links
-#: src/php/traits/Admin/Dashboard.php:298
+#: src/php/traits/Admin/Dashboard.php:328
 #, php-format
 msgid "You have <strong>%d</strong> unpublished link ready to publish."
 msgid_plural "You have <strong>%d</strong> unpublished links ready to publish."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/php/traits/Admin/Dashboard.php:307
+#: src/php/traits/Admin/Dashboard.php:337
 msgid "Post Title"
 msgstr ""
 
 #. translators: %s is the current date (e.g. "April 15, 2026")
 #. translators: %s: formatted date, e.g. "April 15, 2026"
-#: src/php/traits/Admin/Dashboard.php:311
+#: src/php/traits/Admin/Dashboard.php:341
 #: src/php/traits/Batch.php:72
 #, php-format
 msgid "Links Roundup - %s"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:316
+#: src/php/traits/Admin/Dashboard.php:346
 #: build/schedule.js:3
 #: src/schedule/App.jsx:294
 msgid "Publish"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:318
+#: src/php/traits/Admin/Dashboard.php:348
 msgid "Save as Draft"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:322
+#: src/php/traits/Admin/Dashboard.php:352
 msgid "No pending links to publish. Add links first, then come back here to publish a roundup."
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:349
-#: src/php/traits/Admin/LinksPage.php:363
+#: src/php/traits/Admin/Dashboard.php:379
+#: src/php/traits/Admin/LinksPage.php:414
 msgid "View Draft"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:377
-#: src/php/traits/Admin/LinksPage.php:348
+#: src/php/traits/Admin/Dashboard.php:407
+#: src/php/traits/Admin/LinksPage.php:399
+#: src/php/traits/Admin/Menu.php:190
 #: build/schedule.js:3
 #: src/schedule/App.jsx:295
 msgid "Draft"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:413
+#: src/php/traits/Admin/Dashboard.php:443
 msgid "Quick Add"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:425
+#: src/php/traits/Admin/Dashboard.php:455
 msgid "Enter link title"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:434
-#: src/php/traits/Admin/Dashboard.php:641
+#: src/php/traits/Admin/Dashboard.php:464
+#: src/php/traits/Admin/Dashboard.php:671
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/php/traits/Admin/Dashboard.php:436
+#: src/php/traits/Admin/Dashboard.php:466
 msgid "— Select category —"
 msgstr ""
 
 #. translators: %s: formatted next run datetime
-#: src/php/traits/Admin/Dashboard.php:475
+#: src/php/traits/Admin/Dashboard.php:505
 #, php-format
 msgid "Next run: %s"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:483
+#: src/php/traits/Admin/Dashboard.php:513
 msgid "No automatic schedule active."
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:487
+#: src/php/traits/Admin/Dashboard.php:517
 msgid "Schedule settings →"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:511
-#: src/php/traits/Admin/Menu.php:102
+#: src/php/traits/Admin/Dashboard.php:541
+#: src/php/traits/Admin/Menu.php:110
+#: src/php/traits/Admin/Menu.php:181
 msgid "Overview"
 msgstr ""
 
 #. translators: %s: link to the category admin page
-#: src/php/traits/Admin/Dashboard.php:612
+#: src/php/traits/Admin/Dashboard.php:642
 #, php-format
 msgid "No categories defined yet. %s"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:613
+#: src/php/traits/Admin/Dashboard.php:643
 msgid "Add a category"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:624
+#: src/php/traits/Admin/Dashboard.php:654
 msgid "No links yet."
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:625
+#: src/php/traits/Admin/Dashboard.php:655
 msgid "Start by adding your first link."
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:627
+#: src/php/traits/Admin/Dashboard.php:657
 msgid "Add your first link →"
 msgstr ""
 
-#: src/php/traits/Admin/Dashboard.php:636
+#: src/php/traits/Admin/Dashboard.php:666
 msgid "Total Links"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:69
-#: src/php/traits/Admin/Menu.php:29
+#: src/php/traits/Admin/LinksPage.php:34
+#: src/php/traits/Admin/Menu.php:31
 #: src/php/traits/trait-post-type.php:29
 msgid "All Links"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:107
+#: src/php/traits/Admin/LinksPage.php:158
 msgid "Filter by date"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:109
+#: src/php/traits/Admin/LinksPage.php:160
 msgid "All dates"
 msgstr ""
 
 #. translators: 1: month name, 2: year
-#: src/php/traits/Admin/LinksPage.php:114
+#: src/php/traits/Admin/LinksPage.php:165
 #, php-format
 msgctxt "month year"
 msgid "%1$s %2$d"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:123
+#: src/php/traits/Admin/LinksPage.php:174
 msgid "Filter by category"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:125
+#: src/php/traits/Admin/LinksPage.php:176
 msgid "All categories"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:131
+#: src/php/traits/Admin/LinksPage.php:182
 msgid "Filter"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:135
-#: src/php/traits/Admin/LinksPage.php:137
+#: src/php/traits/Admin/LinksPage.php:186
+#: src/php/traits/Admin/LinksPage.php:188
 msgid "Search Links"
 msgstr ""
 
 #. translators: %s: number of items in the list table
-#: src/php/traits/Admin/LinksPage.php:145
+#: src/php/traits/Admin/LinksPage.php:196
 #, php-format
 msgid "%s item"
 msgid_plural "%s items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/php/traits/Admin/LinksPage.php:161
+#: src/php/traits/Admin/LinksPage.php:212
 msgid "No links found. Add your first link!"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:170
-#: src/php/traits/Admin/LinksPage.php:201
+#: src/php/traits/Admin/LinksPage.php:221
+#: src/php/traits/Admin/LinksPage.php:252
 msgid "Status"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:172
-#: src/php/traits/Admin/LinksPage.php:203
+#: src/php/traits/Admin/LinksPage.php:223
+#: src/php/traits/Admin/LinksPage.php:254
 msgid "Date"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:173
-#: src/php/traits/Admin/LinksPage.php:204
+#: src/php/traits/Admin/LinksPage.php:224
+#: src/php/traits/Admin/LinksPage.php:255
 #: build/taxonomies.js:3
 #: build/taxonomies.js:5
 #: src/categories/App.jsx:172
@@ -685,33 +689,36 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:177
+#: src/php/traits/Admin/LinksPage.php:228
 msgid "No links found."
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:323
+#: src/php/traits/Admin/LinksPage.php:374
 msgid "Link deleted successfully."
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:332
+#: src/php/traits/Admin/LinksPage.php:383
 msgid "Edit Draft"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:359
+#: src/php/traits/Admin/LinksPage.php:410
+#: src/php/traits/Admin/Menu.php:198
 msgid "View"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:360
-#: src/php/traits/Admin/LinksPage.php:364
+#: src/php/traits/Admin/LinksPage.php:411
+#: src/php/traits/Admin/LinksPage.php:415
 msgid "Are you sure you want to unpublish this link?"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:360
-#: src/php/traits/Admin/LinksPage.php:364
+#: src/php/traits/Admin/LinksPage.php:411
+#: src/php/traits/Admin/LinksPage.php:415
+#: src/php/traits/Admin/Menu.php:199
 msgid "Unpublish"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:367
+#: src/php/traits/Admin/LinksPage.php:418
+#: src/php/traits/Admin/Menu.php:200
 #: build/taxonomies.js:1
 #: build/taxonomies.js:3
 #: src/categories/App.jsx:138
@@ -719,11 +726,12 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:368
+#: src/php/traits/Admin/LinksPage.php:419
 msgid "Are you sure you want to delete this link?"
 msgstr ""
 
-#: src/php/traits/Admin/LinksPage.php:368
+#: src/php/traits/Admin/LinksPage.php:419
+#: src/php/traits/Admin/Menu.php:201
 #: build/taxonomies.js:3
 #: build/taxonomies.js:5
 #: src/categories/App.jsx:142
@@ -731,155 +739,207 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:28
+#: src/php/traits/Admin/Menu.php:30
 msgid "Dashboard"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:29
+#: src/php/traits/Admin/Menu.php:31
 msgid "Show Links"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:32
-#: src/php/traits/Admin/Menu.php:51
+#: src/php/traits/Admin/Menu.php:38
+#: src/php/traits/Admin/Menu.php:59
 msgid "Browser Extension"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:34
+#: src/php/traits/Admin/Menu.php:42
 msgid "Schedule"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:39
+#: src/php/traits/Admin/Menu.php:47
 #: src/php/traits/Admin/TemplatePage.php:62
 msgid "Post Template"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:66
+#: src/php/traits/Admin/Menu.php:74
 msgid "Schedule Configuration"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:103
+#: src/php/traits/Admin/Menu.php:111
 msgid "The Schedule page controls when LynxJournal automatically publishes a roundup post, and (optionally) who gets notified when it does."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:104
+#: src/php/traits/Admin/Menu.php:112
 msgid "Choose a Mode (a recurring schedule like Daily/Weekly/Monthly, a trigger condition like \"every N links\" or \"every N days\", or Manual for no automatic trigger), set the Recurrence or Condition for that mode, and pick one or more Execution Times. Each notification channel below is an independent, optional add-on — you can enable any combination of them, or none at all."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:108
+#: src/php/traits/Admin/Menu.php:116
 msgid "Posts a rich embed to a Discord channel via a webhook every time a scheduled run actually publishes (or attempts to publish) a roundup."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:109
-#: src/php/traits/Admin/Menu.php:118
-#: src/php/traits/Admin/Menu.php:127
+#: src/php/traits/Admin/Menu.php:117
+#: src/php/traits/Admin/Menu.php:126
 #: src/php/traits/Admin/Menu.php:135
+#: src/php/traits/Admin/Menu.php:143
 msgid "Setup:"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:109
+#: src/php/traits/Admin/Menu.php:117
 msgid "In Discord, open Server Settings → Integrations → Webhooks, click New Webhook, pick a channel, then Copy Webhook URL."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:110
+#: src/php/traits/Admin/Menu.php:118
 msgid "Enable:"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:110
+#: src/php/traits/Admin/Menu.php:118
 msgid "Check \"Send a Discord notification after each run\", paste the webhook URL, then Save Schedule."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:111
+#: src/php/traits/Admin/Menu.php:119
 msgid "Accepted URL:"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:111
+#: src/php/traits/Admin/Menu.php:119
 msgid "must start with https:// and point to discord.com, discordapp.com, ptb.discord.com, or canary.discord.com with a path shaped like /api/webhooks/{id}/{token}."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:112
+#: src/php/traits/Admin/Menu.php:120
 msgid "Sending is fire-and-forget: a failed or unreachable webhook is silently skipped and never blocks the scheduled run itself. If messages stop arriving, re-copy a fresh webhook URL from Discord and re-save."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:116
+#: src/php/traits/Admin/Menu.php:124
 #: build/schedule.js:1
 #: src/schedule/lib/notificationChannels.js:37
 msgid "Slack"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:117
+#: src/php/traits/Admin/Menu.php:125
 msgid "Uses a single Slack Bot Token to post to a channel, DM a person, or both — independently — every time a scheduled run publishes (or attempts to publish) a roundup."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:118
+#: src/php/traits/Admin/Menu.php:126
 msgid "At api.slack.com/apps, create an app, add the chat:write Bot Token Scope under OAuth & Permissions, install the app to your workspace, and copy the Bot User OAuth Token (starts with xoxb-)."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:119
+#: src/php/traits/Admin/Menu.php:127
 msgid "For a channel message: invite the bot to that channel and grab its channel ID. For a DM: get the recipient's Slack user ID from their profile."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:120
+#: src/php/traits/Admin/Menu.php:128
 msgid "Accepted IDs:"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:120
+#: src/php/traits/Admin/Menu.php:128
 msgid "bot token starts with xoxb-; channel ID starts with C or G; user ID starts with U. Display names like #general or @someone are not accepted."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:121
+#: src/php/traits/Admin/Menu.php:129
 msgid "Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the bot is still in the channel and the token/IDs are current."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:126
+#: src/php/traits/Admin/Menu.php:134
 msgid "Uses a single Telegram bot token to post to a group/channel, DM you personally, or both — independently — every time a scheduled run publishes (or attempts to publish) a roundup."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:127
+#: src/php/traits/Admin/Menu.php:135
 msgid "Message @BotFather in Telegram and run /newbot to get a bot token (looks like 123456789:AAH...). To find a chat ID: message the bot then visit https://api.telegram.org/bot<TOKEN>/getUpdates and read message.chat.id, or use a helper bot like @userinfobot for your own user ID. For groups/channels, add the bot first (channels need it as admin); group/channel chat IDs are negative numbers."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:128
 #: src/php/traits/Admin/Menu.php:136
+#: src/php/traits/Admin/Menu.php:144
 msgid "Accepted formats:"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:128
+#: src/php/traits/Admin/Menu.php:136
 msgid "bot token is a numeric ID, a colon, and a secret; chat ID is any integer (negative for groups/channels, positive for a personal chat)."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:129
+#: src/php/traits/Admin/Menu.php:137
 msgid "Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the token is still valid and the bot is still a member of the target chat."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:134
+#: src/php/traits/Admin/Menu.php:142
 msgid "Sends a visibility-restricted status (Mastodon's equivalent of a DM) to a recipient handle every time a scheduled run publishes (or attempts to publish) a roundup."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:135
+#: src/php/traits/Admin/Menu.php:143
 msgid "On your Mastodon instance, go to Settings → Development → New application, check only the write:statuses scope, save, then copy the Access Token and note your instance URL (e.g. https://mastodon.social)."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:136
+#: src/php/traits/Admin/Menu.php:144
 msgid "instance URL must start with https:// and include a host; recipient handle must include both parts, e.g. @you@mastodon.social."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:137
+#: src/php/traits/Admin/Menu.php:145
 msgid "This is not end-to-end encrypted — it's a regular post restricted to the people mentioned. Sending is fire-and-forget and never blocks the scheduled run. If messages stop arriving, confirm the access token hasn't been revoked and the recipient handle is spelled exactly right."
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:152
+#: src/php/traits/Admin/Menu.php:182
+msgid "All Links shows your saved links in a paginated table, grouped by category."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:183
+msgid "Use the search box, or filter by date or category, to narrow the list."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:186
+msgid "Status Badges"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:187
+msgid "Each link shows one of three status badges:"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:189
+msgid "not yet included in any roundup post."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:190
+msgid "included in a roundup post that was saved as a draft."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:191
+msgid "included in a roundup post that is live."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:195
+msgid "Row Actions"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:196
+msgid "Each link can offer these actions:"
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:198
+msgid "opens the published post or draft (published/draft links only)."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:199
+msgid "reverts a published or draft link back to unpublished (published/draft links only)."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:200
+msgid "opens the link in the standard WordPress post editor."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:201
+msgid "removes the link permanently (confirmation required)."
+msgstr ""
+
+#: src/php/traits/Admin/Menu.php:216
 msgid "Detailed instructions"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:224
+#: src/php/traits/Admin/Menu.php:288
 msgid "Delete?"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:225
+#: src/php/traits/Admin/Menu.php:289
 msgid "Yes"
 msgstr ""
 
-#: src/php/traits/Admin/Menu.php:530
+#: src/php/traits/Admin/Menu.php:665
 msgid "LynxJournal Summary"
 msgstr ""
 
@@ -894,7 +954,7 @@ msgid "%1$s on %2$s: %3$s"
 msgstr ""
 
 #: src/php/traits/Admin/NotificationFailureNotice.php:79
-#: src/php/traits/RestApi.php:326
+#: src/php/traits/RestApi.php:414
 msgid "Forbidden"
 msgstr ""
 
@@ -1107,7 +1167,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/php/traits/Batch.php:229
-#: src/php/traits/TemplateRenderer.php:89
+#: src/php/traits/TemplateRenderer.php:125
 msgid "Other"
 msgstr ""
 
@@ -1143,16 +1203,16 @@ msgstr ""
 msgid "Failed to create blog post."
 msgstr ""
 
-#: src/php/traits/Publishing.php:160
+#: src/php/traits/Publishing.php:165
 msgid "Link saved as draft successfully."
 msgstr ""
 
-#: src/php/traits/Publishing.php:161
+#: src/php/traits/Publishing.php:166
 msgid "Link published successfully."
 msgstr ""
 
 #: src/php/traits/Queries.php:94
-#: src/php/traits/Scheduler.php:315
+#: src/php/traits/Scheduler.php:431
 msgid "Uncategorized"
 msgstr ""
 
@@ -1168,45 +1228,45 @@ msgstr ""
 msgid "Link unpublished successfully."
 msgstr ""
 
-#: src/php/traits/RestApi.php:278
+#: src/php/traits/RestApi.php:345
 msgid "No API key configured."
 msgstr ""
 
-#: src/php/traits/RestApi.php:341
+#: src/php/traits/RestApi.php:429
 msgid "Link not found"
 msgstr ""
 
-#: src/php/traits/RestApi.php:345
+#: src/php/traits/RestApi.php:433
 msgid "Could not delete link"
 msgstr ""
 
-#: src/php/traits/RestApi.php:386
+#: src/php/traits/RestApi.php:474
 msgid "Invalid schedule data"
 msgstr ""
 
-#: src/php/traits/RestApi.php:439
+#: src/php/traits/RestApi.php:530
 msgid "A schedule run is already in progress"
 msgstr ""
 
-#: src/php/traits/RestApi.php:495
+#: src/php/traits/RestApi.php:586
 msgid "Failed to create link."
 msgstr ""
 
-#: src/php/traits/RestApi.php:530
+#: src/php/traits/RestApi.php:621
 msgid "Failed to fetch categories."
 msgstr ""
 
-#: src/php/traits/RestApi.php:626
+#: src/php/traits/RestApi.php:717
 #: build/taxonomies.js:3
 #: src/categories/App.jsx:76
 msgid "Could not delete category."
 msgstr ""
 
-#: src/php/traits/RestApi.php:659
+#: src/php/traits/RestApi.php:750
 msgid "Failed to fetch tags."
 msgstr ""
 
-#: src/php/traits/RestApi.php:755
+#: src/php/traits/RestApi.php:846
 #: build/taxonomies.js:5
 #: src/tags/App.jsx:76
 msgid "Could not delete tag."
@@ -1217,7 +1277,7 @@ msgid "This URL has already been saved."
 msgstr ""
 
 #. translators: %s is the formatted date (e.g. "April 15, 2026")
-#: src/php/traits/Scheduler.php:129
+#: src/php/traits/Scheduler.php:210
 #, php-format
 msgid "Links: %s"
 msgstr ""

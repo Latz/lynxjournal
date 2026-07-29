@@ -115,6 +115,7 @@ isn't invisible. This never affects the roundup publish itself; a failed
 Slack notification never blocks or breaks a scheduled run.
 
 Common causes of a missing message:
+
 - The bot hasn't been invited to the target channel (channel messages
   only — DMs don't need an invite).
 - The bot token was regenerated/revoked in the Slack App settings.
